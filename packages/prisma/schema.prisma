@@ -58,9 +58,10 @@ model Account {
   id                String     @id @default(cuid())
   type              AuthType
   provider          String
-  providerAccountId String
+  providerAccountId String?
   refresh_token     String?
   access_token      String?
+  password          String?
   expiresAt         Int?
   tokenType         TokenType?
   scope             String?
@@ -72,6 +73,7 @@ model Account {
 
 enum AuthType {
   oauth
+  credentials
 }
 
 enum TokenType {
