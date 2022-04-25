@@ -1,0 +1,40 @@
+{
+  "name": "next-nest-starter",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "clean": "turbo run clean && rm -rf node_modules",
+    "build": "turbo run build",
+    "predev": "dotenv-checker --schema .env.example --env .env",
+    "dev": "turbo run dev --parallel",
+    "start": "turbo run start",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "turbo": "^1.2.5"
+  },
+  "devDependencies": {
+    "commitizen": "^4.2.4",
+    "cz-conventional-changelog": "^3.3.0",
+    "dotenv-checker": "^1.1.5",
+    "prettier": "^2.6.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "engines": {
+    "node": ">=14.x",
+    "npm": ">=7.0.0",
+    "yarn": ">=1.19.0 < 2.x"
+  },
+  "packageManager": "yarn@1.22.17"
+}

@@ -1,0 +1,48 @@
+{
+  "globalDependencies": [".env", "packages/prisma/.env"],
+  "pipeline": {
+    "@lib/prisma#build": {
+      "dependsOn": ["$DATABASE_URL"]
+    },
+    "@lib/prisma#db:deploy": {
+      "dependsOn": ["$DATABASE_URL"]
+    },
+    "@lib/prisma#db:reset": {
+      "cache": false
+    },
+    "@lib/prisma#db:down": {
+      "cache": false
+    },
+    "@lib/prisma#db:seed": {
+      "cache": false,
+      "dependsOn": ["@lib/prisma#db:deploy"]
+    },
+    "api#dev": {
+      "cache": false
+    },
+    "clean": {
+      "dependsOn": ["@lib/prisma#db:down"],
+      "cache": false
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**"]
+    },
+    "dev": {
+      "cache": false
+    },
+    "start": {
+      "cache": false
+    },
+    "lint": {
+      "outputs": []
+    },
+    "test": {
+      "dependsOn": ["^test"]
+    },
+    "test:e2e": {
+      "cache": false,
+      "dependsOn": ["@lib/prisma#db:reset"]
+    }
+  }
+}
