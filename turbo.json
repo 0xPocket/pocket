@@ -17,8 +17,12 @@
       "cache": false,
       "dependsOn": ["@lib/prisma#db:deploy"]
     },
-    "api#dev": {
+    "@lib/prisma#dev": {
       "cache": false
+    },
+    "api#dev": {
+      "cache": false,
+      "dependsOn": ["@lib/prisma#dev"]
     },
     "clean": {
       "dependsOn": ["@lib/prisma#db:down"],
