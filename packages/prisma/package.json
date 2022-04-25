@@ -16,12 +16,14 @@
     "db:setup": "run-s db:up db:deploy db:seed",
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
-    "dev": "dotenv-checker --schema .env.example --env .env && yarn db:setup"
+    "predev": "dotenv-checker --schema .env.example --env .env",
+    "dev": "yarn db:setup"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.5",
     "prisma": "^3.12.0",
-    "ts-node": "^10.4.0"
+    "ts-node": "^10.4.0",
+    "dotenv-checker": "^1.1.5"
   },
   "dependencies": {
     "@prisma/client": "^3.12.0"

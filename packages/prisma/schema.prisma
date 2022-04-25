@@ -12,33 +12,60 @@ datasource db {
 
 // User
 
-model User {
-  id            String    @id @default(cuid())
-  name          String?
-  username      String?
-  displayName   String?
-  email         String?   @unique
+model UserParent {
+  id            String           @id @default(cuid())
+  firstName     String
+  lastName      String
+  email         String           @unique
   emailVerified DateTime?
-  image         String?
-  accounts      Account[]
+  account       Account?
+  children      UserChild[]
+  wallet        UserParentWallet @relation(fields: [userWalletId], references: [id])
+  userWalletId  String
+}
+
+model UserChild {
+  id            String       @id @default(cuid())
+  firstName     String
+  lastName      String
+  username      String?      @unique
+  email         String       @unique
+  web3Account   Web3Account? @relation(fields: [web3AccountId], references: [id])
+  web3AccountId String?
+  userParent    UserParent   @relation(fields: [userParentId], references: [id])
+  userParentId  String
+}
+
+// Wallet
+
+model UserParentWallet {
+  id         String       @id @default(cuid())
+  publicKey  String
+  privateKey String?
+  UserParent UserParent[]
 }
 
 // Authentication Account
+
+model Web3Account {
+  id        String      @id @default(cuid())
+  address   String      @unique
+  nonce     String
+  UserChild UserChild[]
+}
 
 model Account {
   id                String     @id @default(cuid())
   type              AuthType
   provider          String
   providerAccountId String
-  refresh_token     String?    @db.Text
-  access_token      String?    @db.Text
-  expires_at        Int?
-  token_type        TokenType?
+  refresh_token     String?
+  access_token      String?
+  expiresAt         Int?
+  tokenType         TokenType?
   scope             String?
-  user              User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId            String
-
-  @@unique([provider, providerAccountId])
+  user              UserParent @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String     @unique
 }
 
 // Auth Enums
