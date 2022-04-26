@@ -1,5 +1,6 @@
 import { HttpService } from "@nestjs/axios";
 import { Injectable, Inject } from "@nestjs/common";
+import { OAuth2Provider } from "../providers/types";
 import { lastValueFrom, map } from "rxjs";
 
 interface OAuthTokenResponse {
@@ -13,14 +14,16 @@ interface OAuthTokenResponse {
 export class NestAuthService {
   constructor(private httpService: HttpService) {}
 
-  getAccessToken$(provider: any, code: string) {
+  getAccessToken$(provider: OAuth2Provider, code: string) {
+    // console.log(provider);
     return this.httpService
       .post<OAuthTokenResponse>(
-        provider.token,
+        provider.endpoints.token!,
         {
           code: code,
           client_id: provider.clientId,
-          client_secret: "e1a5542598e286578cda9369b1b51620ba491b6b",
+          client_secret: provider.secretId,
+          redirect_uri: provider.redirectUri,
         },
         {
           headers: {
@@ -31,15 +34,47 @@ export class NestAuthService {
       .pipe(map((res) => res.data));
   }
 
-  async login(provider: any, code: string) {
-    const data = await lastValueFrom(this.getAccessToken$(provider, code));
+  getUserProfile$(provider: OAuth2Provider, access_token: string) {
+    return this.httpService
+      .post<OAuthTokenResponse>(
+        provider.endpoints.userInfo,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + access_token,
+          },
+        }
+      )
+      .pipe(map((res) => res.data));
+  }
 
-    const profile = await provider.userinfo.request(data.access_token);
+  async login(provider: OAuth2Provider, code: string) {
+    try {
+      if (provider.endpoints.token) {
+        const data = await lastValueFrom(this.getAccessToken$(provider, code));
 
-    return {
-      tokens: data,
-      profile: profile,
-      provider: provider.id,
-    };
+        const profile = await lastValueFrom(
+          this.getUserProfile$(provider, data.access_token)
+        );
+
+        return {
+          tokens: data,
+          profile: profile,
+          provider: provider.id,
+        };
+      } else {
+        const profile = await lastValueFrom(
+          this.getUserProfile$(provider, code)
+        );
+
+        return {
+          tokens: code,
+          profile: profile,
+          provider: provider.id,
+        };
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }
 }

@@ -1,14 +1,22 @@
-import { OAuthUserConfig, Provider } from ".";
+// import { OAuthUserConfig, Provider } from ".";
 
-export default function GitHubProvider(
-  options: OAuthUserConfig<any>
-): Provider {
-  return {
+import { OAuth2Provider } from "./types";
+import { merge } from "./utils";
+
+export function github(options: Partial<OAuth2Provider>) {
+  const DEFAULTS: typeof options = {
+    type: "oauth",
     id: "github",
     name: "GitHub",
-    type: "oauth",
-    authorization:
-      "https://github.com/login/oauth/authorize?scope=read:user+user:email",
-    options,
+    endpoints: {
+      authorization: "https://github.com/login/oauth/authorize",
+      token: "https://github.com/login/oauth/access_token",
+      userInfo: "https://api.github.com/user",
+    },
+    scope: ["user", "user:email"],
   };
+
+  const strategy = merge(DEFAULTS, options);
+
+  return strategy;
 }

@@ -1,6 +1,7 @@
 import { Inject } from "@nestjs/common";
 import { Injectable, CanActivate, ExecutionContext } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
+import { OAuth2Provider } from "../providers/types";
 import { NestAuthService } from "./nest-auth.service";
 
 @Injectable()
@@ -12,7 +13,10 @@ export class NestAuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const provider = this.reflector.get<any>("provider", context.getHandler());
+    const strategy = this.reflector.get<OAuth2Provider>(
+      "strategy",
+      context.getHandler()
+    );
 
     const request = context.switchToHttp().getRequest();
 
@@ -20,7 +24,7 @@ export class NestAuthGuard implements CanActivate {
 
     if (!code) return false;
 
-    const data = await this.nestAuthService.login(provider, code);
+    const data = await this.nestAuthService.login(strategy, code);
 
     request.nest_auth = data;
 
