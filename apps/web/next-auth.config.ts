@@ -1,15 +1,15 @@
-import Credentials from '@lib/nest-auth/providers/credentials';
-
 const NextAuth = {
   popup: true,
-  authEndpoint: 'http://localhost:5000/auth',
-  providers: [
-    // OAuth authentication providers
-    Credentials({
-      id: 'local',
-      name: 'Local Signin',
-    }),
-  ],
+  endpoint: 'http://localhost:5000/auth',
+  strategies: {
+    githubb: {
+      clientId: 'ea0c0484c5065e20d140',
+    },
+    facebook: {
+      clientId: '1565875930465432',
+      redirectUri: 'http://localhost:3000/',
+    },
+  },
 };
 
 export default NextAuth;
