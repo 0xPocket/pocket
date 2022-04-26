@@ -13,7 +13,7 @@
     "db:up": "docker-compose up -d --build",
     "db:down": "docker-compose down",
     "db:drop": "prisma migrate reset --force",
-    "db:reset": "run-s db:drop db:seed",
+    "db:reset": "run-s db:drop",
     "db:setup": "run-s db:up db:deploy db:seed",
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
