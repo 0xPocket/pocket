@@ -1,6 +1,6 @@
-name: test
+name: Unit tests
 
-on: workflow_dispatch
+on: [pull_request, push]
 
 env:
   FOUNDRY_PROFILE: ci
@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: true
 
-    name: Foundry project
+    name: Pocket
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -18,17 +18,18 @@ jobs:
           submodules: recursive
 
       - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@v1
+        uses: foundry-rs/foundry-toolchain
         with:
           version: nightly
 
-      - name: Run Forge build
+      - name: Run build
         run: |
           forge --version
           forge build --sizes
         id: build
 
-      - name: Run Forge tests
+      - name: Run tests
+      # add rpc in env
         run: |
-          forge test -vvv
+          forge test -f https://polygon-mainnet.g.alchemy.com/v2/qLBCKN0pvsl20MhmJ2DdyQr1RhmQ_eSK -vvv
         id: test
