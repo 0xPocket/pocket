@@ -1,5 +1,23 @@
-const base = require('config/tailwind.config');
+// const base = require('config/tailwind.config');
+// module.exports = {
+//   ...base,
+//   content: [...base.content],
+// };
+
 module.exports = {
-  ...base,
-  content: [...base.content],
+  content: [
+    '../../packages/ui/**/*.{js,ts,jsx,tsx}',
+    './pages/**/*.{js,ts,jsx,tsx}',
+    './components/**/*.{js,ts,jsx,tsx}',
+  ],
+  theme: {
+    colors: {
+      primary: '#FAE59C',
+      dark: '#000',
+      bright: '#fff',
+      danger: '#FF0000',
+    },
+    extend: {},
+  },
+  plugins: [],
 };
