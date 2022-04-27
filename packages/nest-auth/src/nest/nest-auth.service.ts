@@ -36,6 +36,7 @@ export class NestAuthService {
           client_id: provider.clientId,
           client_secret: provider.secretId,
           redirect_uri: provider.redirectUri,
+          grant_type: "authorization_code",
         },
         {
           headers: {
@@ -65,8 +66,6 @@ export class NestAuthService {
     try {
       const data = await lastValueFrom(this.getAccessToken$(provider, code));
 
-      console.log(provider.params);
-
       const profile = await lastValueFrom(
         this.getUserProfile$(provider, data.access_token)
       );
@@ -79,6 +78,7 @@ export class NestAuthService {
         provider: provider.id,
       };
     } catch (e) {
+      console.log(e);
       throw new UnauthorizedException();
     }
   }

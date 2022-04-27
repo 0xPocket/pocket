@@ -26,7 +26,7 @@ export class NestAuthGuard implements CanActivate {
 
     try {
       const data = await this.nestAuthService.login(strategy, code);
-      console.log(data.profile);
+
       request.nest_auth = data;
     } catch (e) {
       return false;

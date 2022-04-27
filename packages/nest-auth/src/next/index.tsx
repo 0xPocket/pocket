@@ -27,6 +27,7 @@ function oAuthSignIn(provider: OAuth2Provider, isPopup: boolean) {
     client_id: provider.clientId,
     redirect_uri: provider.redirectUri,
     scope: provider.scope.join(" "),
+    response_type: "code",
   };
 
   const windowOpts = {
