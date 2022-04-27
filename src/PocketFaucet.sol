@@ -52,13 +52,14 @@ contract PocketFaucet is AccessControl {
         require(nbOfChild == 0, "Parent exists already");
         require(
             childrenToParent[conf.child] == bytes32(0),
-            "Child is already taken"
+            "Child is already associated to another parent"
         );
         conf.lastPeriod = timestamp;
         parentToChildren[parentUID].push(conf);
 
         if (conf.child != address(0)) childrenToParent[conf.child] = parentUID;
     }
+
 
     function getParentConfig(bytes32 parentUID)
         public
@@ -73,11 +74,11 @@ contract PocketFaucet is AccessControl {
         require(conf.child != address(0), "Child address is 0");
         if (childrenToParent[conf.child] == bytes32(0))
             childrenToParent[conf.child] = parentUID;
+        require(childrenToParent[conf.child] == parentUID, "Child is already associated to another parent");
         config[] storage children = parentToChildren[parentUID];
         for (uint256 i; i < children.length; i++) {
             if (children[i].child == conf.child) {
-                children[i] = conf;
-                return;
+                require(children[i].child != conf.child, "Child is already set up");
             }
         }
         children.push(conf);
