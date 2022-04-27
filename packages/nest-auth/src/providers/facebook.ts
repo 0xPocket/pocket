@@ -1,9 +1,20 @@
-// import { OAuthUserConfig, Provider } from ".";
-
 import { OAuth2Provider } from "./types";
 import { merge } from "./utils";
 
-export function facebook(options: Partial<OAuth2Provider>) {
+export interface FacebookProfile {
+  id: string;
+  name: string;
+  email: string;
+  picture: {
+    data: {
+      url: string;
+    };
+  };
+}
+
+export function facebook<P extends FacebookProfile>(
+  options: Partial<OAuth2Provider<P>>
+) {
   const DEFAULTS: typeof options = {
     type: "oauth",
     id: "facebook",
@@ -11,9 +22,20 @@ export function facebook(options: Partial<OAuth2Provider>) {
     endpoints: {
       authorization: "https://www.facebook.com/v11.0/dialog/oauth",
       token: "https://graph.facebook.com/oauth/access_token",
-      userInfo: "https://graph.facebook.com/me?fields=id,name,email,picture",
+      userInfo: "https://graph.facebook.com/me",
+    },
+    params: {
+      fields: "id,name,picture,email",
     },
     scope: ["email"],
+    profile: (profile) => {
+      return {
+        id: profile.id,
+        name: profile.name,
+        email: profile.email,
+        image: profile.picture.data.url,
+      };
+    },
   };
 
   const strategy = merge(DEFAULTS, options);

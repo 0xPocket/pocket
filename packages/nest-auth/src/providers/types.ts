@@ -1,10 +1,15 @@
+import { NestAuthUser } from "../";
+
 interface CommonProviderOptions {
   type: "oauth" | "credentials";
   id: string;
   name: string;
+  params?: {
+    [key: string]: string;
+  };
 }
 
-export interface OAuth2Provider extends CommonProviderOptions {
+export interface OAuth2Provider<T = unknown> extends CommonProviderOptions {
   type: "oauth";
   endpoints: {
     authorization: string;
@@ -15,6 +20,7 @@ export interface OAuth2Provider extends CommonProviderOptions {
   clientId: string;
   secretId?: string;
   redirectUri?: string;
+  profile?: (profile: T) => NestAuthUser;
 }
 
 export interface CredentialsProvider extends CommonProviderOptions {
@@ -22,6 +28,11 @@ export interface CredentialsProvider extends CommonProviderOptions {
   endpoints: {
     token: string;
   };
+}
+
+export interface NestOAuth2UserConfig extends Partial<OAuth2Provider> {
+  clientId: string;
+  secretId: string;
 }
 
 export type NestAuthProvider = OAuth2Provider | CredentialsProvider;

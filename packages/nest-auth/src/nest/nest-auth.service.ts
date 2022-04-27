@@ -1,5 +1,5 @@
 import { HttpService } from "@nestjs/axios";
-import { Injectable, Inject } from "@nestjs/common";
+import { Injectable, Param, UnauthorizedException } from "@nestjs/common";
 import { OAuth2Provider } from "../providers/types";
 import { lastValueFrom, map } from "rxjs";
 
@@ -10,12 +10,24 @@ interface OAuthTokenResponse {
   expires_in?: string;
 }
 
+export function encodeQuery(queryObject: {
+  [key: string]: string | number | boolean | undefined;
+}): string {
+  return Object.entries(queryObject)
+    .filter(([_key, value]) => typeof value !== "undefined")
+    .map(
+      ([key, value]) =>
+        encodeURIComponent(key) +
+        (value != null ? "=" + encodeURIComponent(value) : "")
+    )
+    .join("&");
+}
+
 @Injectable()
 export class NestAuthService {
   constructor(private httpService: HttpService) {}
 
   getAccessToken$(provider: OAuth2Provider, code: string) {
-    // console.log(provider);
     return this.httpService
       .post<OAuthTokenResponse>(
         provider.endpoints.token!,
@@ -36,10 +48,11 @@ export class NestAuthService {
 
   getUserProfile$(provider: OAuth2Provider, access_token: string) {
     return this.httpService
-      .post<OAuthTokenResponse>(
+      .post<unknown>(
         provider.endpoints.userInfo,
         {},
         {
+          params: provider.params,
           headers: {
             Authorization: "Bearer " + access_token,
           },
@@ -50,31 +63,23 @@ export class NestAuthService {
 
   async login(provider: OAuth2Provider, code: string) {
     try {
-      if (provider.endpoints.token) {
-        const data = await lastValueFrom(this.getAccessToken$(provider, code));
+      const data = await lastValueFrom(this.getAccessToken$(provider, code));
 
-        const profile = await lastValueFrom(
-          this.getUserProfile$(provider, data.access_token)
-        );
+      console.log(provider.params);
 
-        return {
-          tokens: data,
-          profile: profile,
-          provider: provider.id,
-        };
-      } else {
-        const profile = await lastValueFrom(
-          this.getUserProfile$(provider, code)
-        );
+      const profile = await lastValueFrom(
+        this.getUserProfile$(provider, data.access_token)
+      );
 
-        return {
-          tokens: code,
-          profile: profile,
-          provider: provider.id,
-        };
-      }
+      console.log(profile);
+
+      return {
+        tokens: data,
+        profile: profile,
+        provider: provider.id,
+      };
     } catch (e) {
-      console.log(e);
+      throw new UnauthorizedException();
     }
   }
 }

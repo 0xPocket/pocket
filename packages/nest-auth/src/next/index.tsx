@@ -1,7 +1,12 @@
 import axios from "axios";
 import { NestAuthProviders, OAuth2Provider } from "providers/types";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import * as PROVIDERS from "../providers";
+import { BroadcastChannel, createCtx, encodeQuery } from "./utils";
+import { EventEmitter } from "events";
+
+const broadcast = BroadcastChannel();
+const emitter = new EventEmitter();
 
 interface IAuthContext {
   session: any;
@@ -9,34 +14,10 @@ interface IAuthContext {
   signIn: (id: string) => void;
 }
 
-function createCtx<A extends {} | null>() {
-  const ctx = createContext<A | undefined>(undefined);
-  function useCtx() {
-    const c = useContext(ctx);
-    if (c === undefined)
-      throw new Error("useCtx must be inside a Provider with a value");
-    return c;
-  }
-  return [useCtx, ctx.Provider] as const; // 'as const' makes TypeScript infer a tuple
-}
-
 export const [useAuth, AuthContextProvider] = createCtx<IAuthContext>();
 
 function getProvider(providerId: string, providers: NestAuthProviders) {
   return providers.find((provider) => provider.id === providerId);
-}
-
-export function encodeQuery(queryObject: {
-  [key: string]: string | number | boolean | undefined;
-}): string {
-  return Object.entries(queryObject)
-    .filter(([_key, value]) => typeof value !== "undefined")
-    .map(
-      ([key, value]) =>
-        encodeURIComponent(key) +
-        (value != null ? "=" + encodeURIComponent(value) : "")
-    )
-    .join("&");
 }
 
 function oAuthSignIn(provider: OAuth2Provider, isPopup: boolean) {
@@ -56,29 +37,20 @@ function oAuthSignIn(provider: OAuth2Provider, isPopup: boolean) {
       : "",
   };
 
-  const popupWindow = window.open(
-    windowOpts.url,
-    windowOpts.target,
-    windowOpts.features
-  );
+  window.open(windowOpts.url, windowOpts.target, windowOpts.features);
 
-  const storageListener = async () => {
-    try {
-      if (localStorage.getItem("code")) {
-        window.removeEventListener("storage", storageListener);
-        console.log(localStorage.getItem("code"));
-        console.log(`send code to test/${provider.id}`);
-        const test = await axios.post(provider.endpoints.token!, {
-          code: localStorage.getItem("code"),
+  const unsubscribe = broadcast.receive((msg) => {
+    if (msg.event === "code" && msg.data.code) {
+      axios
+        .post(provider.endpoints.token!, {
+          code: msg.data.code,
+        })
+        .then((res) => {
+          emitter.emit("access_token", res.data.access_token);
+          unsubscribe();
         });
-        console.log(test.data);
-      }
-    } catch (e) {
-      window.removeEventListener("storage", storageListener);
     }
-  };
-
-  window.addEventListener("storage", storageListener);
+  });
 }
 
 async function credentialsSignIn(provider: any, data: object) {
@@ -121,13 +93,17 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children, config }: AuthProviderProps) {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<any>();
   const [popup, setPopup] = useState(false);
 
   const strategies = useMemo(() => {
     return parseProviders(config);
   }, [config]);
+
+  /**
+   * useEffect when the popup is redirecting to our front-end
+   */
 
   useEffect(() => {
     const currentUrl = window.location.href;
@@ -138,14 +114,47 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
     const code = searchParams.get("code");
     const error = searchParams.get("error");
 
-    if (code) {
-      localStorage.setItem("code", code);
-      window.close();
-      setPopup(true);
-    } else if (error) {
+    if (code || error) {
+      broadcast.post({ event: "code", data: { code } });
       window.close();
       setPopup(true);
     }
+  }, []);
+
+  /**
+   * useEffect to get user and listen on access_token change
+   */
+
+  useEffect(() => {
+    const getUser = (token: string) => {
+      axios
+        .get("http://localhost:5000/auth/me", {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        })
+        .then((res) => {
+          setUser(res.data);
+          setLoading(false);
+        });
+    };
+
+    const token = localStorage.getItem("access_token");
+
+    if (token) {
+      getUser(token);
+    }
+
+    emitter.on("access_token", (token: string) => {
+      localStorage.setItem("access_token", token);
+      getUser(token);
+    });
+
+    setLoading(false);
+
+    return () => {
+      emitter.removeAllListeners("access_token");
+    };
   }, []);
 
   const value: IAuthContext = useMemo(

@@ -1,8 +1,10 @@
 import { createParamDecorator, ExecutionContext } from "@nestjs/common";
+import { NestAuthData } from "../types";
 
 export const GetNestAuth = createParamDecorator(
-  (data: unknown, ctx: ExecutionContext) => {
+  (data: string, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
-    return request.nest_auth;
+    const nestAuthData: NestAuthData = request.nest_auth;
+    return data ? nestAuthData[data] : nestAuthData;
   }
 );
