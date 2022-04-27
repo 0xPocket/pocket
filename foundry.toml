@@ -7,6 +7,4 @@ libs = ['lib']
 src = 'src'
 out = 'out'
 libs = ['lib']
-optimizer = false
 fuzz_runs = 512
-cache = false
