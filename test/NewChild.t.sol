@@ -21,9 +21,9 @@ contract NewChild is Test, HelperInitParent {
     }
 
     function addNewChildToParent(bytes32 parent) internal {
-        uint256 newChildAddr = addrToUint256(lastChildrenAdded) + 1;
-        lastChildrenAdded = uint256ToAddr(newChildAddr);
-        stdConf.child = lastChildrenAdded;
+        uint256 newChildAddr = addrToUint256(lastChildAdded) + 1;
+        lastChildAdded = uint256ToAddr(newChildAddr);
+        stdConf.child = lastChildAdded;
         PF.addNewChild(stdConf, parent);
     }
 

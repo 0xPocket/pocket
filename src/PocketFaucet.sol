@@ -11,6 +11,7 @@ import "openzeppelin-contracts/contracts/access/AccessControl.sol";
 // TO DO : check multisig
 // TO DO : gouvernor should be -> TimelockController
 // TO DO : test roles
+// TO DO : requiere => modifier
 
 contract PocketFaucet is AccessControl {
     using SafeERC20 for IERC20;
@@ -60,7 +61,6 @@ contract PocketFaucet is AccessControl {
         if (conf.child != address(0)) childrenToParent[conf.child] = parentUID;
     }
 
-
     function getParentConfig(bytes32 parentUID)
         public
         view
@@ -74,17 +74,33 @@ contract PocketFaucet is AccessControl {
         require(conf.child != address(0), "Child address is 0");
         if (childrenToParent[conf.child] == bytes32(0))
             childrenToParent[conf.child] = parentUID;
-        require(childrenToParent[conf.child] == parentUID, "Child is already associated to another parent");
+        require(
+            childrenToParent[conf.child] == parentUID,
+            "Child is already associated to another parent"
+        );
         config[] storage children = parentToChildren[parentUID];
         for (uint256 i; i < children.length; i++) {
             if (children[i].child == conf.child) {
-                require(children[i].child != conf.child, "Child is already set up");
+                require(
+                    children[i].child != conf.child,
+                    "Child is already set up"
+                );
             }
         }
         children.push(conf);
     }
 
     // gestion de l'enfant => claim, change address...
+
+    // TO DO : test
+    function addFunds(bytes32 parent, uint256 amount)
+        public
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        // require();
+        IERC20(baseToken).safeTransferFrom(msg.sender, address(this), amount);
+        parentBalance[parent] += amount;
+    }
 
     // TO DO : test
     function claim() public onlyRole(CHILD_ROLE) {

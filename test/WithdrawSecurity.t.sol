@@ -16,7 +16,7 @@ abstract contract HelperContract {
     PocketFaucet pocket = new PocketFaucet(block.timestamp, JEUR);
 }
 
-contract WithdrawTest is Erc20Handler, HelperContract {
+contract WithdrawSecurityTest is Erc20Handler, HelperContract {
     function testWithdrawTokenParent() public {
         pocket.grantRole(PARENT_ROLE, addr1);
         vm.prank(addr1);
