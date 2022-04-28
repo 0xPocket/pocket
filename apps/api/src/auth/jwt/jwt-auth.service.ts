@@ -6,9 +6,10 @@ import { JwtTokenPayload } from './dto/JwtTokenPayload.dto';
 export class JwtAuthService {
   constructor(private jwtService: JwtService) {}
 
-  login(userId: string) {
+  generateUserToken(userId: string, isParent = true) {
     const payload: JwtTokenPayload = {
       userId: userId,
+      isParent,
     };
     return this.jwtService.sign(payload);
   }
