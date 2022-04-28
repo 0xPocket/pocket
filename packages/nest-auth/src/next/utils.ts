@@ -1,14 +1,11 @@
+import { NestAuthProviders, OAuth2Provider } from "../providers";
 import { createContext, useContext } from "react";
+import * as PROVIDERS from "../providers";
+import { NextAuthConfig } from ".";
 
 export function createCtx<A extends {} | null>() {
   const ctx = createContext<A | undefined>(undefined);
-  function useCtx() {
-    const c = useContext(ctx);
-    if (c === undefined)
-      throw new Error("useCtx must be inside a Provider with a value");
-    return c;
-  }
-  return [useCtx, ctx.Provider] as const; // 'as const' makes TypeScript infer a tuple
+  return [ctx, ctx.Provider] as const; // 'as const' makes TypeScript infer a tuple
 }
 
 export function encodeQuery(queryObject: {
@@ -24,8 +21,26 @@ export function encodeQuery(queryObject: {
     .join("&");
 }
 
-export function now() {
+function now() {
   return Math.floor(Date.now() / 1000);
+}
+
+export function parseProviders(config: NextAuthConfig) {
+  const strategies: NestAuthProviders = [];
+
+  for (const key in config.strategies) {
+    const strategyOptions = config.strategies[key];
+    if (!PROVIDERS[key]) {
+      continue;
+    }
+    const strategy: OAuth2Provider = PROVIDERS[key](strategyOptions);
+
+    if (config.endpoint) {
+      strategy.endpoints.token = `${config.endpoint}/${strategy.id}`;
+    }
+    strategies.push(strategy);
+  }
+  return strategies;
 }
 
 export interface BroadcastMessage {
@@ -41,6 +56,7 @@ export interface BroadcastMessage {
  *
  * https://caniuse.com/?search=broadcastchannel
  */
+
 export function BroadcastChannel(name = "nestauth.message") {
   return {
     /** Get notified by other tabs/windows. */

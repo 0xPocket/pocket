@@ -30,10 +30,6 @@ export function NestAuth(
   }
   const strategy: NestAuthProvider = PROVIDERS[providerId](options);
 
-  if (strategy.type === "credentials") {
-    return applyDecorators(Post(strategy.id));
-  }
-
   return applyDecorators(
     Post(strategy.id),
     SetMetadata("strategy", strategy),

@@ -7,7 +7,7 @@ interface OAuthTokenResponse {
   access_token: string;
   refresh_token: string;
   token_type: string;
-  expires_in?: string;
+  expires_in: string;
 }
 
 export function encodeQuery(queryObject: {
@@ -30,7 +30,7 @@ export class NestAuthService {
   getAccessToken$(provider: OAuth2Provider, code: string) {
     return this.httpService
       .post<OAuthTokenResponse>(
-        provider.endpoints.token!,
+        provider.endpoints.token,
         {
           code: code,
           client_id: provider.clientId,
@@ -65,6 +65,8 @@ export class NestAuthService {
   async login(provider: OAuth2Provider, code: string) {
     try {
       const data = await lastValueFrom(this.getAccessToken$(provider, code));
+
+      console.log(data);
 
       const profile = await lastValueFrom(
         this.getUserProfile$(provider, data.access_token)

@@ -1,20 +1,33 @@
 import axios from "axios";
 import { NestAuthProviders, OAuth2Provider } from "providers/types";
-import { useEffect, useMemo, useState } from "react";
-import * as PROVIDERS from "../providers";
-import { BroadcastChannel, createCtx, encodeQuery } from "./utils";
+import { useContext, useEffect, useMemo, useState } from "react";
+import {
+  BroadcastChannel,
+  createCtx,
+  encodeQuery,
+  parseProviders,
+} from "./utils";
 import { EventEmitter } from "events";
+import { NestAuthTokenPayload, NestAuthUser } from "../";
 
 const broadcast = BroadcastChannel();
 const emitter = new EventEmitter();
 
-interface IAuthContext {
-  session: any;
+interface IAuthContext<T = NestAuthUser> {
+  user: T | undefined;
   status: "loading" | "authenticated" | "unauthenticated";
   signIn: (id: string) => void;
+  signOut: () => void;
 }
 
-export const [useAuth, AuthContextProvider] = createCtx<IAuthContext>();
+const [AuthContext, AuthContextProvider] = createCtx<IAuthContext<any>>();
+
+export function useAuth<T = NestAuthUser>() {
+  const c = useContext<IAuthContext<T> | undefined>(AuthContext);
+  if (c === undefined)
+    throw new Error("useCtx must be inside a Provider with a value");
+  return c;
+}
 
 function getProvider(providerId: string, providers: NestAuthProviders) {
   return providers.find((provider) => provider.id === providerId);
@@ -43,7 +56,7 @@ function oAuthSignIn(provider: OAuth2Provider, isPopup: boolean) {
   const unsubscribe = broadcast.receive((msg) => {
     if (msg.event === "code" && msg.data.code) {
       axios
-        .post(provider.endpoints.token!, {
+        .post<NestAuthTokenPayload>(provider.endpoints.token!, {
           code: msg.data.code,
         })
         .then((res) => {
@@ -60,29 +73,11 @@ async function credentialsSignIn(provider: any, data: object) {
   // console.log(test);
 }
 
-function parseProviders(config: NextAuthConfig) {
-  const strategies: NestAuthProviders = [];
-
-  for (const key in config.strategies) {
-    const strategyOptions = config.strategies[key];
-    if (!PROVIDERS[key]) {
-      continue;
-    }
-    const strategy: OAuth2Provider = PROVIDERS[key](strategyOptions);
-
-    if (config.endpoint) {
-      strategy.endpoints.token = `${config.endpoint}/${strategy.id}`;
-    }
-    strategies.push(strategy);
-  }
-  return strategies;
-}
-
 type Strategies = {
   [key: string]: Partial<OAuth2Provider>;
 };
 
-interface NextAuthConfig {
+export interface NextAuthConfig {
   popup?: boolean;
   endpoint?: string;
   strategies: Strategies;
@@ -95,7 +90,7 @@ interface AuthProviderProps {
 
 export function AuthProvider({ children, config }: AuthProviderProps) {
   const [loading, setLoading] = useState<boolean>(true);
-  const [user, setUser] = useState<any>();
+  const [user, setUser] = useState<NestAuthUser>();
   const [popup, setPopup] = useState(false);
 
   const strategies = useMemo(() => {
@@ -160,7 +155,7 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
 
   const value: IAuthContext = useMemo(
     () => ({
-      session: user,
+      user: user,
       status: loading ? "loading" : user ? "authenticated" : "unauthenticated",
       signIn: (providerId: string, formData = null) => {
         const provider = getProvider(providerId, strategies);
@@ -177,6 +172,10 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
           }
           credentialsSignIn(provider, formData);
         }
+      },
+      signOut: () => {
+        localStorage.removeItem("access_token");
+        setUser(undefined);
       },
     }),
     [user, loading]

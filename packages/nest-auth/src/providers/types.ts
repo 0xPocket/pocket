@@ -13,7 +13,7 @@ export interface OAuth2Provider<T = unknown> extends CommonProviderOptions {
   type: "oauth";
   endpoints: {
     authorization: string;
-    token?: string;
+    token: string;
     userInfo: string;
   };
   scope: string[];
