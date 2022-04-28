@@ -1,10 +1,12 @@
 import Button from '../common/Button';
 import { useRouter } from 'next/router';
+import { useAuth } from '@lib/nest-auth/next';
 
 type HeaderProps = {};
 
 function Header({}: HeaderProps) {
   const router = useRouter();
+  const { user, status, signOut } = useAuth();
 
   const handleLogIn = () => {
     console.log('Log');
@@ -16,14 +18,27 @@ function Header({}: HeaderProps) {
     router.push('/signin');
   };
 
+  const handleLogout = () => {
+    signOut();
+  };
+
   return (
     <header className="flex h-20 w-full items-center justify-between border-b border-opacity-40 bg-primary px-8">
       <div className="text-3xl font-bold">Brand.</div>
       <div className="flex justify-between gap-8">
-        <Button action={handleLogIn} light={true}>
-          Log In
-        </Button>
-        <Button action={handleSignIn}>Sign In</Button>
+        {status === 'authenticated' ? (
+          <>
+            <div> Welcome {user?.firstName}</div>
+            <Button action={handleLogout}>Logout</Button>
+          </>
+        ) : (
+          <>
+            <Button action={handleLogIn} light={true}>
+              Log In
+            </Button>
+            <Button action={handleSignIn}>Sign In</Button>
+          </>
+        )}
       </div>
     </header>
   );

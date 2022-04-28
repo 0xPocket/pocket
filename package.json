@@ -1,6 +1,6 @@
 {
-  "name": "next-nest-starter",
-  "version": "0.0.0",
+  "name": "pocket",
+  "version": "0.0.1",
   "private": true,
   "workspaces": [
     "apps/*",
