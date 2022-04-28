@@ -7,13 +7,12 @@ const NextAuth = {
   endpoint: 'http://localhost:5000/auth',
   strategies: {
     google: {
-      clientId:
-        '481747438343-bb09iaqu9de9db4pbvq5nthphf6bnbpd.apps.googleusercontent.com',
-      redirectUri: 'http://localhost:3000/',
+      clientId: process.env.NEXT_PUBLIC_OAUTH_GOOGLE_ID,
+      redirectUri: process.env.NEXT_PUBLIC_OAUTH_GOOGLE_REDIRECT_URL,
     },
     facebook: {
-      clientId: '1565875930465432',
-      redirectUri: 'http://localhost:3000/',
+      clientId: process.env.NEXT_PUBLIC_OAUTH_FACEBOOK_ID,
+      redirectUri: process.env.NEXT_PUBLIC_OAUTH_FACEBOOK_REDIRECT_URL,
     },
   },
 };
