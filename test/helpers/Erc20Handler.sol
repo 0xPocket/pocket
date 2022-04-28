@@ -8,7 +8,7 @@ import "src/PocketFaucet.sol";
 contract Erc20Handler is Test {
     using stdStorage for StdStorage;
 
-    function increaseErc20Amount(
+    function setErc20Amount(
         address account,
         address token,
         uint256 amount

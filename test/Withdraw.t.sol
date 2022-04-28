@@ -36,7 +36,7 @@ contract WithdrawTest is Erc20Handler, HelperContract {
     }
 
     function testWithdrawToken(uint256 amount) public {
-        increaseErc20Amount(address(pocket), JEUR, amount);
+        setErc20Amount(address(pocket), JEUR, amount);
 
         uint256 preBalance = IERC20(JEUR).balanceOf(address(this));
         pocket.withdrawToken(JEUR, amount);

@@ -21,15 +21,15 @@ contract PocketFaucet is AccessControl {
     bytes32 public constant CHILD_ROLE = keccak256("CHILD_ROLE");
 
     address immutable baseToken;
-    uint256 timestamp;
+    uint256 lastPeriod;
 
     mapping(bytes32 => uint256) public parentBalance;
-    mapping(bytes32 => config[]) public parentToChildren;
-    mapping(address => bytes32) public childrenToParent;
+    mapping(bytes32 => address[]) public parentToChildren;
+    mapping(address => config) public childToconfig;
 
     constructor(uint256 begin, address token) {
         baseToken = token;
-        timestamp = begin;
+        lastPeriod = begin;
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
@@ -38,56 +38,32 @@ contract PocketFaucet is AccessControl {
         uint256 claimable;
         bool active;
         uint256 lastPeriod;
-        address child;
+        bytes32 parent;
     }
 
     // TO DO : test update
-    function updateTimestamp() public {
+    function updateLastPeriod() public {
         // TO DO : emit update
-        while (timestamp + 1 weeks < block.timestamp) timestamp += 1 weeks;
+        while (lastPeriod + 1 weeks < block.timestamp) lastPeriod += 1 weeks;
     }
 
-    // gestion des parents => initialisation config, change config, add money...
-    function setNewParent(config memory conf, bytes32 parentUID) external {
-        uint256 nbOfChild = parentToChildren[parentUID].length;
-        require(nbOfChild == 0, "Parent exists already");
+    // function getParentConfig(bytes32 parentUID)
+    //     public
+    //     view
+    //     returns (config[] memory)
+    // {
+    //     return parentToChildren[parentUID];
+    // }
+
+    function addNewChild(config memory conf, address child) external {
+        require(conf.parent != bytes32(0), "conf is not good");
+        require(child != address(0), "address is not ok");
         require(
-            childrenToParent[conf.child] == bytes32(0),
-            "Child is already associated to another parent"
+            childToconfig[child].parent == bytes32(0),
+            "child already exist"
         );
-        conf.lastPeriod = timestamp;
-        parentToChildren[parentUID].push(conf);
-
-        if (conf.child != address(0)) childrenToParent[conf.child] = parentUID;
-    }
-
-    function getParentConfig(bytes32 parentUID)
-        public
-        view
-        returns (config[] memory)
-    {
-        return parentToChildren[parentUID];
-    }
-
-    function addNewChild(config memory conf, bytes32 parentUID) external {
-        require(parentToChildren[parentUID].length != 0, "Parent is not set");
-        require(conf.child != address(0), "Child address is 0");
-        if (childrenToParent[conf.child] == bytes32(0))
-            childrenToParent[conf.child] = parentUID;
-        require(
-            childrenToParent[conf.child] == parentUID,
-            "Child is already associated to another parent"
-        );
-        config[] storage children = parentToChildren[parentUID];
-        for (uint256 i; i < children.length; i++) {
-            if (children[i].child == conf.child) {
-                require(
-                    children[i].child != conf.child,
-                    "Child is already set up"
-                );
-            }
-        }
-        children.push(conf);
+        childToconfig[child] = conf;
+        parentToChildren[conf.parent].push(child);
     }
 
     // gestion de l'enfant => claim, change address...
@@ -102,20 +78,33 @@ contract PocketFaucet is AccessControl {
         parentBalance[parent] += amount;
     }
 
+    function _calculateClaimable(config memory conf) internal view {
+        if (conf.lastPeriod >= lastPeriod + 1 weeks)
+            conf.claimable += conf.ceiling;
+        else revert("!calculateClaimable: period not finished");
+    }
+
     // TO DO : test
     function claim() public onlyRole(CHILD_ROLE) {
-        updateTimestamp();
-        bytes32 parent = childrenToParent[msg.sender];
-        require(parent != bytes32(0), "!claim : no parent found");
+        updateLastPeriod();
+        config memory conf = childToconfig[msg.sender];
+        _calculateClaimable(conf);
+        bytes32 parent = conf.parent;
 
         uint256 balance = parentBalance[parent];
-        require(balance != 0, "!claim : zero balance");
+        require(balance != 0, "!claim : zero parent balance");
         require(
-            IERC20(baseToken).balanceOf(address(this)) >= balance,
-            "!claim : faucet not enough"
+            IERC20(baseToken).balanceOf(address(this)) >= conf.claimable,
+            "!claim : faucet liquidity low"
         );
 
-        IERC20(baseToken).safeTransfer(msg.sender, balance);
+        uint256 pocketMoney;
+        conf.claimable > balance
+            ? pocketMoney = conf.claimable
+            : pocketMoney = balance;
+
+        IERC20(baseToken).safeTransfer(msg.sender, pocketMoney);
+        conf.lastPeriod = lastPeriod;
     }
 
     function withdrawToken(address token, uint256 amount)

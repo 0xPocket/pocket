@@ -6,16 +6,37 @@ import "src/PocketFaucet.sol";
 import "forge-std/console2.sol";
 import "forge-std/Test.sol";
 import "./helpers/HelperInitParent.sol";
+import "./helpers/Erc20Handler.sol";
 
-contract NewChild is Test, HelperInitParent {
-    // function setUp() public {
-    //     addNewParent(parent1, child1, ceiling, claimable, active);
+contract ClaimTest is Erc20Handler, HelperInitParent {
+    using SafeERC20 for IERC20;
+
+    function setUp() public {
+        setErc20Amount(address(PF), JEUR, 1000e18);
+        PF.grantRole(CHILD_ROLE, child1);
+    }
+
+    // function testNoParent() public {
+    //     vm.prank(child1);
+    //     vm.expectRevert(bytes("!claim : no parent found"));
+    //     PF.claim();
     // }
 
-    function addNewChildToParent(bytes32 parent) internal {
-        uint256 newChildAddr = addrToUint256(lastChildAdded) + 1;
-        lastChildAdded = uint256ToAddr(newChildAddr);
-        stdConf.child = lastChildAdded;
-        PF.addNewChild(stdConf, parent);
-    }
+    // function testNoBalance() public {
+    //     addNewParent(parent1, child1, 10e18, true);
+    //     vm.prank(child1);
+    //     vm.expectRevert(bytes("!claim : zero balance"));
+    //     PF.claim();
+    // }
+
+    // function testNotEnoughInFaucet() public {
+    //     addNewParent(parent1, child1, 10e18, true);
+    //     setErc20Amount(address(this), JEUR, 1000e18);
+    //     IERC20(JEUR).safeIncreaseAllowance(address(PF), 10e18);
+    //     PF.addFunds(parent1, 10e18);
+    //     setErc20Amount(address(PF), JEUR, 10);
+    //     vm.prank(child1);
+    //     vm.expectRevert(bytes("!claim : faucet not enough"));
+    //     PF.claim();
+    // }
 }
