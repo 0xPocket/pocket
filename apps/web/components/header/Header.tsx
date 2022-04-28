@@ -17,7 +17,7 @@ function Header({}: HeaderProps) {
   };
 
   return (
-    <div className="flex h-20 w-full items-center justify-between border-b border-opacity-40 bg-primary p-8">
+    <header className="flex h-20 w-full items-center justify-between border-b border-opacity-40 bg-primary px-8">
       <div className="text-3xl font-bold">Brand.</div>
       <div className="flex justify-between gap-8">
         <Button action={handleLogIn} light={true}>
@@ -25,7 +25,7 @@ function Header({}: HeaderProps) {
         </Button>
         <Button action={handleSignIn}>Sign In</Button>
       </div>
-    </div>
+    </header>
   );
 }
 
