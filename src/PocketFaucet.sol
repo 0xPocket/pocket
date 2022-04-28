@@ -23,9 +23,9 @@ contract PocketFaucet is AccessControl {
     address immutable baseToken;
     uint256 lastPeriod;
 
-    mapping(bytes32 => uint256) public parentBalance;
-    mapping(bytes32 => address[]) public parentToChildren;
-    mapping(address => config) public childToconfig;
+    mapping(bytes32 => uint256) public parentsBalance;
+    mapping(bytes32 => mapping(address => bool)) public parentToChildren;
+    mapping(address => config) public childToConfig;
 
     constructor(uint256 begin, address token) {
         baseToken = token;
@@ -47,23 +47,23 @@ contract PocketFaucet is AccessControl {
         while (lastPeriod + 1 weeks < block.timestamp) lastPeriod += 1 weeks;
     }
 
-    // function getParentConfig(bytes32 parentUID)
-    //     public
-    //     view
-    //     returns (config[] memory)
-    // {
-    //     return parentToChildren[parentUID];
-    // }
-
     function addNewChild(config memory conf, address child) external {
-        require(conf.parent != bytes32(0), "conf is not good");
-        require(child != address(0), "address is not ok");
+        require(conf.parent != bytes32(0), "ParentUID is 0");
+        require(conf.claimable == 0, "Claimable is not 0");
+        require(child != address(0), "Address is 0");
         require(
-            childToconfig[child].parent == bytes32(0),
-            "child already exist"
+            childToConfig[child].parent == bytes32(0),
+            "Child address already taken"
         );
-        childToconfig[child] = conf;
-        parentToChildren[conf.parent].push(child);
+        childToConfig[child] = conf;
+        parentToChildren[conf.parent][child] = true;
+    }
+
+    function rmChild(address child) external {
+        config memory childConfig = childToConfig[child];
+        require(childConfig.parent != bytes32(0), "Child is not set");
+        parentToChildren[childConfig.parent][child] = false;
+        delete childToConfig[child];
     }
 
     // gestion de l'enfant => claim, change address...
@@ -75,7 +75,7 @@ contract PocketFaucet is AccessControl {
     {
         // require();
         IERC20(baseToken).safeTransferFrom(msg.sender, address(this), amount);
-        parentBalance[parent] += amount;
+        parentsBalance[parent] += amount;
     }
 
     function _calculateClaimable(config memory conf) internal view {
@@ -87,11 +87,11 @@ contract PocketFaucet is AccessControl {
     // TO DO : test
     function claim() public onlyRole(CHILD_ROLE) {
         updateLastPeriod();
-        config memory conf = childToconfig[msg.sender];
+        config memory conf = childToConfig[msg.sender];
         _calculateClaimable(conf);
         bytes32 parent = conf.parent;
 
-        uint256 balance = parentBalance[parent];
+        uint256 balance = parentsBalance[parent];
         require(balance != 0, "!claim : zero parent balance");
         require(
             IERC20(baseToken).balanceOf(address(this)) >= conf.claimable,
