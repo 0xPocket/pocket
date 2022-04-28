@@ -11,7 +11,7 @@ import "openzeppelin-contracts/contracts/access/AccessControl.sol";
 // TO DO : check multisig
 // TO DO : gouvernor should be -> TimelockController
 // TO DO : test roles
-// TO DO : requiere => modifier
+// TO DO : require => modifier
 
 contract PocketFaucet is AccessControl {
     using SafeERC20 for IERC20;
@@ -37,7 +37,7 @@ contract PocketFaucet is AccessControl {
         uint256 ceiling;
         uint256 claimable;
         bool active;
-        uint256 lastPeriod;
+        uint256 lastClaim;
         bytes32 parent;
     }
 
@@ -73,38 +73,51 @@ contract PocketFaucet is AccessControl {
         public
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
-        // require();
+        require(amount != 0);
         IERC20(baseToken).safeTransferFrom(msg.sender, address(this), amount);
         parentsBalance[parent] += amount;
     }
 
-    function _calculateClaimable(config memory conf) internal view {
-        if (conf.lastPeriod >= lastPeriod + 1 weeks)
+    function _calculateClaimable(config storage conf) internal {
+        require(
+            conf.lastClaim != lastPeriod,
+            "!calculateClaimable: period is not finished"
+        );
+        if (conf.lastClaim == 0) {
+            conf.lastClaim = lastPeriod;
             conf.claimable += conf.ceiling;
-        else revert("!calculateClaimable: period not finished");
+        } else {
+            while (conf.lastClaim != lastPeriod) {
+                conf.claimable += conf.ceiling;
+                conf.lastClaim += 1 weeks;
+            }
+        }
     }
 
     // TO DO : test
     function claim() public onlyRole(CHILD_ROLE) {
         updateLastPeriod();
-        config memory conf = childToConfig[msg.sender];
+        config storage conf = childToConfig[msg.sender];
         _calculateClaimable(conf);
+
         bytes32 parent = conf.parent;
 
-        uint256 balance = parentsBalance[parent];
-        require(balance != 0, "!claim : zero parent balance");
+        uint256 parentBalance = parentsBalance[parent];
+        require(parentBalance != 0, "!claim : zero parent balance");
         require(
             IERC20(baseToken).balanceOf(address(this)) >= conf.claimable,
             "!claim : faucet liquidity low"
         );
+        //TO DO : emit BIG TROUBLE
 
         uint256 pocketMoney;
-        conf.claimable > balance
-            ? pocketMoney = conf.claimable
-            : pocketMoney = balance;
+        conf.claimable > parentBalance
+            ? pocketMoney = parentBalance
+            : pocketMoney = conf.claimable;
 
+        conf.claimable -= pocketMoney;
+        parentsBalance[conf.parent] -= pocketMoney;
         IERC20(baseToken).safeTransfer(msg.sender, pocketMoney);
-        conf.lastPeriod = lastPeriod;
     }
 
     function withdrawToken(address token, uint256 amount)
