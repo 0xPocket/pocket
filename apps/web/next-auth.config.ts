@@ -1,9 +1,15 @@
+/**
+ * TODO: use environnement variables
+ */
+
 const NextAuth = {
   popup: true,
   endpoint: 'http://localhost:5000/auth',
   strategies: {
-    githubb: {
-      clientId: 'ea0c0484c5065e20d140',
+    google: {
+      clientId:
+        '481747438343-bb09iaqu9de9db4pbvq5nthphf6bnbpd.apps.googleusercontent.com',
+      redirectUri: 'http://localhost:3000/',
     },
     facebook: {
       clientId: '1565875930465432',
