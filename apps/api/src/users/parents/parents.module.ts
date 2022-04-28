@@ -8,5 +8,6 @@ import { ParentExistsRule } from './validators/ParentExists.validator';
   imports: [PrismaModule],
   controllers: [ParentsController],
   providers: [ParentsService, ParentExistsRule],
+  exports: [ParentsService],
 })
 export class ParentsModule {}

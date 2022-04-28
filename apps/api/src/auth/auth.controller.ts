@@ -1,41 +1,65 @@
-import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from './jwt/jwt-auth.guard';
-import { NestAuth } from '@lib/nest-auth/nest';
-import { JwtAuthService } from './jwt/jwt-auth.service';
-import { AuthGuard } from './auth.guard';
+import { GetNestAuth, NestAuth } from '@lib/nest-auth/nest';
 import { GetUserParent } from './decorators/get-user.decorator';
-import { UserParent } from '@lib/prisma';
+import { NestAuthData } from '@lib/nest-auth/nest/types';
+import { FacebookProfile, GoogleProfile } from '@lib/nest-auth/providers';
+import { AuthService } from './auth.service';
+import { LocalSigninDto } from './local/dto/local-signin.dto';
+import { JwtTokenPayload } from './jwt/dto/JwtTokenPayload.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private jwtService: JwtAuthService) {}
+  constructor(private authService: AuthService) {}
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  me(@Req() req: any) {
-    return req.user;
+  me(@GetUserParent() user: JwtTokenPayload) {
+    return this.authService.getParent(user.userId);
   }
 
-  @NestAuth(
-    'facebook',
-    {
-      clientId: '1565875930465432',
-      secretId: 'f89c565919e7c6d3060389919101e16c',
-      redirectUri: 'http://localhost:3000/',
-      params: {
-        fields: 'id,email,name,first_name,last_name',
-      },
+  @NestAuth('facebook', {
+    clientId: '1565875930465432',
+    secretId: 'f89c565919e7c6d3060389919101e16c',
+    redirectUri: 'http://localhost:3000/',
+    params: {
+      fields: 'id,email,name,first_name,last_name',
     },
-    AuthGuard,
-  )
-  facebook(@GetUserParent() user: UserParent) {
-    return {
-      access_token: this.jwtService.login(user),
-    };
+  })
+  facebook(@GetNestAuth() data: NestAuthData<FacebookProfile>) {
+    return this.authService.authenticateParent(
+      {
+        id: data.profile.id,
+        name: data.profile.name,
+        firstName: data.profile.first_name,
+        lastName: data.profile.last_name,
+        email: data.profile.email,
+      },
+      data.provider,
+    );
   }
 
-  // @NestAuth('local', {})
-  // local(@Body() body: LocalSigninDto) {
-  //   return this.jwtService.login(body as any);
-  // }
+  @NestAuth('google', {
+    clientId:
+      '481747438343-bb09iaqu9de9db4pbvq5nthphf6bnbpd.apps.googleusercontent.com',
+    secretId: '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',
+    redirectUri: 'http://localhost:3000/',
+  })
+  google(@GetNestAuth() data: NestAuthData<GoogleProfile>) {
+    return this.authService.authenticateParent(
+      {
+        id: data.profile.sub,
+        name: data.profile.name,
+        firstName: data.profile.given_name,
+        lastName: data.profile.family_name,
+        email: data.profile.email,
+      },
+      data.provider,
+    );
+  }
+
+  @Post('local')
+  local(@Body() body: LocalSigninDto) {
+    return this.authService.authenticateParentLocal(body, 'local');
+  }
 }

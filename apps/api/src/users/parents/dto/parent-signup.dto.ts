@@ -17,5 +17,5 @@ export class ParentSignupDto {
    * TODO: add regex for a secure password
    */
   @IsString()
-  password: string;
+  password?: string;
 }

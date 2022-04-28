@@ -1,4 +1,3 @@
-import { UserParent } from '@lib/prisma';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { JwtTokenPayload } from './dto/JwtTokenPayload.dto';
@@ -7,9 +6,9 @@ import { JwtTokenPayload } from './dto/JwtTokenPayload.dto';
 export class JwtAuthService {
   constructor(private jwtService: JwtService) {}
 
-  login(user: UserParent) {
+  login(userId: string) {
     const payload: JwtTokenPayload = {
-      userId: user.id,
+      userId: userId,
     };
     return this.jwtService.sign(payload);
   }
