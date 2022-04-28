@@ -1,0 +1,44 @@
+name: E2E test
+
+on: push
+
+jobs:
+  test:
+    timeout-minutes: 15
+
+    strategy:
+      matrix:
+        node: ["16.x"]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+
+    env:
+      DATABASE_URL: postgresql://postgres:@localhost:5432/postgres
+      JWT_SECRET: "random_string"
+
+    services:
+      postgres:
+        image: postgres:12.1
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Run E2E Test
+        run: yarn test:e2e

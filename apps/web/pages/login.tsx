@@ -2,13 +2,25 @@ import MainWrapper from '../components/wrappers/MainWrapper';
 import LoginForm from '../components/forms/LoginForm';
 import Button from '../components/common/Button';
 import Image from 'next/image';
+import { useAuth } from '@lib/nest-auth/next';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 type loginProps = {};
 type formProps = {};
 
-function login({}: loginProps) {
+function Login({}: loginProps) {
   const handleFacebookLogIn = () => {};
   const handleGoogleLogIn = () => {};
+
+  const router = useRouter();
+  const { status, signIn } = useAuth();
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      router.push('/');
+    }
+  }, [router, status]);
 
   return (
     <MainWrapper header={false}>
@@ -21,7 +33,7 @@ function login({}: loginProps) {
             <div className="w-full border-b"></div>
           </div>
           <div className="flex flex-col gap-4">
-            <Button action={handleGoogleLogIn}>
+            <Button action={() => signIn('google')}>
               <div className="absolute -left-2 opacity-30">
                 <Image
                   src="/assets/social_icons/google.svg"
@@ -32,7 +44,7 @@ function login({}: loginProps) {
               </div>
               <span className="ml-6">Connect with Google</span>
             </Button>
-            <Button action={handleFacebookLogIn}>
+            <Button action={() => signIn('facebook')}>
               <div className="absolute -left-2 opacity-30">
                 <Image
                   src="/assets/social_icons/facebook.svg"
@@ -51,4 +63,4 @@ function login({}: loginProps) {
   );
 }
 
-export default login;
+export default Login;
