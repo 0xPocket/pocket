@@ -2,13 +2,14 @@ import { Body, Controller, Get, Put, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { GetUserParent } from 'src/auth/decorators/get-user.decorator';
 import { UserType } from 'src/auth/decorators/user-type.decorator';
+import { JwtTokenPayload } from 'src/auth/jwt/dto/JwtTokenPayload.dto';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt-auth.guard';
 import { CreateChildrenDto } from './dto/create-children.dto';
 import { ParentSignupDto } from './dto/parent-signup.dto';
 import { ParentsService } from './parents.service';
 
 @Controller('users/parents')
-@ApiTags('users/parents')
+@ApiTags('Parents')
 @UserType('parent')
 export class ParentsController {
   constructor(private readonly parentsService: ParentsService) {}
@@ -27,19 +28,19 @@ export class ParentsController {
   /**
    * Route to GET a parent's children
    *
-   * @param parentId id of the parent
+   * @param user token payload with userId
    * @returns array of the parent's children
    */
 
   @Get('children')
   @UseGuards(JwtAuthGuard)
-  getChildren(@GetUserParent() parentId: string) {
-    return this.parentsService.getParentChildren(parentId);
+  getChildren(@GetUserParent() user: JwtTokenPayload) {
+    return this.parentsService.getParentChildren(user.userId);
   }
 
   /**
    *
-   * @param parentId id of the parent
+   * @param user token payload with userId
    * @param data object containing data for creating the child
    * @returns
    */
@@ -47,9 +48,9 @@ export class ParentsController {
   @Put('children')
   @UseGuards(JwtAuthGuard)
   createChildren(
-    @GetUserParent() parentId: string,
+    @GetUserParent() user: JwtTokenPayload,
     @Body() data: CreateChildrenDto,
   ) {
-    return this.parentsService.createChildrenFromParent(parentId, data);
+    return this.parentsService.createChildrenFromParent(user.userId, data);
   }
 }

@@ -1,5 +1,5 @@
 import { NestAuthUser } from '@lib/nest-auth';
-import { UserParent } from '@lib/prisma';
+import { UserChild, UserParent } from '@lib/prisma';
 import {
   BadRequestException,
   ForbiddenException,
@@ -30,6 +30,8 @@ export class ParentsService {
       },
     });
   }
+
+  // LOCAL SIGNUP/SIGNIN
 
   async localSignup(data: ParentSignupDto, verification = true) {
     const user = await this.create(data, verification);
@@ -181,19 +183,43 @@ export class ParentsService {
    * @returns
    */
 
-  async createChildrenFromParent(parentId: string, data: CreateChildrenDto) {
-    const user = await this.prisma.userChild.create({
-      data: {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-        userParent: {
-          connect: {
-            id: parentId,
-          },
-        },
+  async createChildrenFromParent(
+    parentId: string,
+    data: CreateChildrenDto,
+    verification = true,
+  ) {
+    const parent = await this.prisma.userParent.findUnique({
+      where: {
+        id: parentId,
       },
     });
-    return user;
+    try {
+      const child = await this.prisma.userChild.create({
+        data: {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          userParent: {
+            connect: {
+              id: parentId,
+            },
+          },
+        },
+      });
+      if (verification) await this.sendChildSignupEmail(child, parent);
+      return child;
+    } catch (e) {
+      throw new BadRequestException("Could't create child");
+    }
+  }
+
+  async sendChildSignupEmail(child: UserChild, parent: UserParent) {
+    const confirmationToken = this.jwtAuthService.generateChildSignupToken(
+      child.id,
+    );
+    const url = `${this.configService.get(
+      'NEXT_PUBLIC_URL',
+    )}/?token=${confirmationToken}`;
+    return this.emailService.sendChildSignupEmail(parent, child, url);
   }
 }

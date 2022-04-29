@@ -20,7 +20,7 @@ export class ParentExistsRule implements ValidatorConstraintInterface {
           email: email,
         },
       });
-      if (found && found.emailVerified) return false;
+      if (found) return false;
     } catch (e) {
       return false;
     }

@@ -1,4 +1,4 @@
-import { UserParent } from '@lib/prisma';
+import { UserChild, UserParent } from '@lib/prisma';
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 
@@ -13,6 +13,22 @@ export class EmailService {
       template: 'confirmation',
       context: {
         name: userParent.firstName,
+        url: url,
+      },
+    });
+  }
+
+  async sendChildSignupEmail(
+    userParent: UserParent,
+    userChild: UserChild,
+    url: string,
+  ) {
+    await this.mailerService.sendMail({
+      to: userChild.email,
+      subject: `You've been invited to Pocket by ${userParent.firstName} !`,
+      template: 'child_invitation',
+      context: {
+        name: userChild.firstName,
         url: url,
       },
     });
