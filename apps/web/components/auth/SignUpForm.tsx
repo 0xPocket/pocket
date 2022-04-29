@@ -1,12 +1,11 @@
 import { useForm } from 'react-hook-form';
 
-type SignInFormProps = {};
+type SignUpFormProps = {};
 
-function SignInForm({}: SignInFormProps) {
+function SignUpForm({}: SignUpFormProps) {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
 
@@ -67,4 +66,4 @@ function SignInForm({}: SignInFormProps) {
   );
 }
 
-export default SignInForm;
+export default SignUpForm;

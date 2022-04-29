@@ -1,16 +1,13 @@
-import MainWrapper from '../components/wrappers/MainWrapper';
-import LoginForm from '../components/auth/LoginForm';
-import Button from '../components/common/Button';
-import Image from 'next/image';
 import { useAuth } from '@lib/nest-auth/next';
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import MainWrapper from '../components/wrappers/MainWrapper';
 import SocialAuth from '../components/auth/SocialAuth';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import SignUpForm from '../components/auth/SignUpForm';
 
-type loginProps = {};
-type formProps = {};
+type signinProps = {};
 
-function Login({}: loginProps) {
+function SignUp({}: signinProps) {
   const router = useRouter();
   const { status } = useAuth();
 
@@ -25,7 +22,7 @@ function Login({}: loginProps) {
     <MainWrapper noHeader>
       <section className="grid min-h-screen grid-cols-2">
         <div className="flex flex-col items-center justify-center gap-8 border-r bg-primary">
-          <LoginForm />
+          <SignUpForm />
           <div className="flex w-72 items-center">
             <div className="w-full border-b"></div>
             <h2 className="m-4 font-bold">OR</h2>
@@ -39,4 +36,4 @@ function Login({}: loginProps) {
   );
 }
 
-export default Login;
+export default SignUp;
