@@ -1,6 +1,8 @@
 import Button from '../common/Button';
 import { useRouter } from 'next/router';
 import { useAuth } from '@lib/nest-auth/next';
+import Link from 'next/link';
+import Nav from './Nav';
 
 type HeaderProps = {};
 
@@ -15,7 +17,7 @@ function Header({}: HeaderProps) {
 
   const handleSignIn = () => {
     console.log('Sign');
-    router.push('/signin');
+    router.push('/signup');
   };
 
   const handleLogout = () => {
@@ -24,11 +26,20 @@ function Header({}: HeaderProps) {
 
   return (
     <header className="flex h-20 w-full items-center justify-between border-b border-opacity-40 bg-primary px-8">
-      <div className="text-3xl font-bold">Brand.</div>
-      <div className="flex justify-between gap-8">
+      <div className="flex">
+        <Link href="/" passHref>
+          <div className="cursor-pointer text-3xl font-bold">Brand.</div>
+        </Link>
+        {status === 'authenticated' && <Nav />}
+      </div>
+      <div className="flex items-center justify-between gap-8">
         {status === 'authenticated' ? (
           <>
-            <div> Welcome {user?.firstName}</div>
+            <Link href="/dashboard" passHref>
+              <div className=" cursor-pointer">
+                {user?.firstName} {user?.lastName?.charAt(0)}.
+              </div>
+            </Link>
             <Button action={handleLogout}>Logout</Button>
           </>
         ) : (
@@ -36,7 +47,7 @@ function Header({}: HeaderProps) {
             <Button action={handleLogIn} light={true}>
               Log In
             </Button>
-            <Button action={handleSignIn}>Sign In</Button>
+            <Button action={handleSignIn}>Sign Up</Button>
           </>
         )}
       </div>
