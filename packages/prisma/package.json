@@ -6,7 +6,6 @@
   "types": "index.d.ts",
   "scripts": {
     "postinstall": "yarn build",
-    "prebuild": "dotenv-checker --schema .env.example --env .env",
     "build": "prisma generate",
     "clean": "rm -rf .turbo && rm -rf node_modules",
     "db:deploy": "prisma migrate deploy",
@@ -18,6 +17,7 @@
     "db:setup": "run-s db:up db:deploy db:seed",
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
+    "predev": "dotenv-checker --schema .env.example --env .env",
     "dev": "yarn db:setup"
   },
   "devDependencies": {
