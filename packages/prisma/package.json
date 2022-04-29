@@ -15,7 +15,7 @@
     "db:drop": "prisma migrate reset --force",
     "db:reset": "run-s db:drop",
     "db:setup": "run-s db:up db:deploy db:seed",
-    "db:seed": "prisma db seed",
+    "db:seed": "run-s db:drop",
     "db:studio": "prisma studio",
     "predev": "dotenv-checker --schema .env.example --env .env",
     "dev": "yarn db:setup"
