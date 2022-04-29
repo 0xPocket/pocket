@@ -30,7 +30,7 @@ export class AuthService {
     data: LocalSigninDto,
     providerId: string,
   ): Promise<NestAuthTokenPayload> {
-    const user = await this.parentsService.signInParentLocal(data, providerId);
+    const user = await this.parentsService.localSignin(data, providerId);
     return {
       access_token: this.jwtService.generateAuthenticationToken(user.id),
     };
