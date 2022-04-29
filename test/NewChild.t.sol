@@ -8,7 +8,6 @@ import "forge-std/Test.sol";
 import "./helpers/HelperInitParent.sol";
 
 contract NewChild is Test, HelperInitParent {
-
     function testNoParentInConf() public {
         PocketFaucet.config memory conf = PocketFaucet.config(
             10,
@@ -44,7 +43,6 @@ contract NewChild is Test, HelperInitParent {
         PF.addNewChild(stdConf, child1);
     }
 
-
     function testAddRandomChildren(uint8 nb) public {
         if (nb > 20) return;
         for (uint256 i; i < nb; i++) {
@@ -52,6 +50,7 @@ contract NewChild is Test, HelperInitParent {
             PF.addNewChild(stdConf, lastChildAdded);
             PF.parentToChildren(parent1, lastChildAdded);
             assertTrue(PF.parentToChildren(parent1, lastChildAdded));
+            checkChildIsInit(lastChildAdded);
         }
     }
 }

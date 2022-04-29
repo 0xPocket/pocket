@@ -6,7 +6,10 @@ import "src/PocketFaucet.sol";
 import "./Utils.sol";
 import "./Erc20Handler.sol";
 
-contract HelperInitParent is Utils, Erc20Handler {
+contract HelperInitParent is
+    Utils,
+    Erc20Handler // TO DO change name
+{
     using SafeERC20 for IERC20;
 
     address JEUR = 0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c;
@@ -40,14 +43,22 @@ contract HelperInitParent is Utils, Erc20Handler {
         PF.addNewChild(newConf, child);
     }
 
-    function addNToAddr(uint256 n, address addr) public pure returns (address) {
-        uint256 newChildAddr = addrToUint256(addr) + n;
-        return uint256ToAddr(newChildAddr);
-    }
-
     function addFundToParent(bytes32 parent, uint256 amount) public {
         setErc20Amount(address(this), JEUR, amount);
         IERC20(JEUR).safeIncreaseAllowance(address(PF), amount);
         PF.addFunds(parent, amount);
+    }
+
+    function checkChildIsNotInit(address child) public {
+        bytes32 parent;
+        (, , , , parent) = PF.childToConfig(child);
+        assertEq(parent, bytes32(0));
+    }
+
+    function checkChildIsInit(address child) public {
+        bytes32 parent;
+        (, , , , parent) = PF.childToConfig(child);
+        assertTrue(parent != bytes32(0));
+        assertTrue(PF.parentToChildren(parent, child));
     }
 }
