@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { GetUserParent } from 'src/auth/decorators/get-user.decorator';
 import { UserType } from 'src/auth/decorators/user-type.decorator';
 import { JwtTokenPayload } from 'src/auth/jwt/dto/JwtTokenPayload.dto';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt-auth.guard';
+import { ConfirmEmailDto } from './dto/confirm-email.dto';
 import { CreateChildrenDto } from './dto/create-children.dto';
 import { ParentSignupDto } from './dto/parent-signup.dto';
 import { ParentsService } from './parents.service';
@@ -22,11 +23,22 @@ export class ParentsController {
 
   @Put()
   signup(@Body() body: ParentSignupDto) {
-    return this.parentsService.create(body);
+    return this.parentsService.localSignup(body);
   }
 
   /**
-   * Route to GET a parent's children
+   * Route to confirm email
+   * @param body
+   * @returns
+   */
+
+  @Post('confirm-email')
+  confirmEmail(@Body() body: ConfirmEmailDto) {
+    return this.parentsService.confirmEmail(body.token);
+  }
+
+  /**
+   * Route to GET all parent's children
    *
    * @param user token payload with userId
    * @returns array of the parent's children
@@ -39,6 +51,7 @@ export class ParentsController {
   }
 
   /**
+   * Route to create new children
    *
    * @param user token payload with userId
    * @param data object containing data for creating the child

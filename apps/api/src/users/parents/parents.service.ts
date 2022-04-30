@@ -83,6 +83,22 @@ export class ParentsService {
     return this.emailService.sendConfirmationEmail(user, url);
   }
 
+  confirmEmail(token: string) {
+    const payload = this.jwtAuthService.verifyEmailConfirmationToken(token);
+
+    if (!payload)
+      throw new BadRequestException('Verification link is invalid or expired');
+
+    return this.prisma.userParent.update({
+      where: {
+        email: payload.email,
+      },
+      data: {
+        emailVerified: new Date(),
+      },
+    });
+  }
+
   /**
    * Method used to create the user for the parents (local)
    * It will also send a confirmation email

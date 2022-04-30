@@ -30,6 +30,12 @@ export class JwtAuthService {
     });
   }
 
+  verifyEmailConfirmationToken(token: string) {
+    return this.jwtService.verify<JwtEmailTokenPayload>(token, {
+      secret: this.configService.get<string>('JWT_EMAIL_SECRET'),
+    });
+  }
+
   generateChildSignupToken(userId: string) {
     const payload: JwtChildSignupTokenPayload = {
       userId,
