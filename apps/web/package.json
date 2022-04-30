@@ -21,6 +21,7 @@
     "ui": "*"
   },
   "devDependencies": {
+		"@lib/contract": "*",
     "@lib/types": "*",
     "@types/node": "^17.0.27",
     "@types/react": "18.0.6",
