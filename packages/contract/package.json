@@ -1,0 +1,25 @@
+{
+  "name": "@lib/contract",
+  "version": "0.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "files": [
+    "eslint-next.js",
+    "eslint-nest.js",
+    "prettier-preset.js",
+    "postcss.config.js",
+    "tailwind.config.js"
+  ],
+  "dependencies": {
+    "eslint-config-next": "^12.1.5",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "7.29.4",
+    "prettier-plugin-prisma": "^3.12.0",
+    "prettier-plugin-tailwindcss": "^0.1.10"
+  },
+  "devDependencies": {
+    "eslint": "8.14.0",
+    "prettier": "^2.6.2"
+  }
+}
