@@ -6,6 +6,7 @@ import { useContainer } from 'class-validator';
 import { ParentSignupDto } from 'src/users/parents/dto/parent-signup.dto';
 import { LocalSigninDto } from 'src/auth/local/dto/local-signin.dto';
 import { ParentsService } from 'src/users/parents/parents.service';
+import { JwtAuthService } from 'src/auth/jwt/jwt-auth.service';
 
 const PARENT = {
   firstName: 'Solal',
@@ -13,11 +14,11 @@ const PARENT = {
   email: 'solaldunckelb@gmail.com',
   password: 'test1234',
 };
-const EMAIL_TEST = !!process.env.EMAIL_TEST;
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
   let parentsService: ParentsService;
+  let jwtAuthService: JwtAuthService;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -25,6 +26,7 @@ describe('AuthController (e2e)', () => {
     }).compile();
 
     parentsService = module.get<ParentsService>(ParentsService);
+    jwtAuthService = module.get<JwtAuthService>(JwtAuthService);
 
     app = module.createNestApplication();
     app.useGlobalPipes(new ValidationPipe());
@@ -51,7 +53,7 @@ describe('AuthController (e2e)', () => {
 
     it('PUT /users/parents - should create user', () => {
       body.email = PARENT.email;
-      return parentsService.create(body, false);
+      return parentsService.create(body, true);
     });
 
     it('PUT /users/parents - user already exists', () => {
@@ -63,6 +65,35 @@ describe('AuthController (e2e)', () => {
   });
 
   let access_token: string;
+
+  describe('Confirm Email', () => {
+    it('POST /users/parents/confirm-email - invalid token', () => {
+      return request(app.getHttpServer())
+        .post('/users/parents/confirm-email')
+        .send({ token: 'gadgadgadgaga' })
+        .expect(400);
+    });
+
+    it('POST /users/parents/confirm-email - valid token with invalid email', () => {
+      const token = jwtAuthService.generateEmailConfirmationToken(
+        'sosodunckel@gmail.com',
+      );
+
+      return request(app.getHttpServer())
+        .post('/users/parents/confirm-email')
+        .send({ token })
+        .expect(400);
+    });
+
+    it('POST /users/parents/confirm-email - should confirm email', () => {
+      const token = jwtAuthService.generateEmailConfirmationToken(PARENT.email);
+
+      return request(app.getHttpServer())
+        .post('/users/parents/confirm-email')
+        .send({ token })
+        .expect(201);
+    });
+  });
 
   describe('Login', () => {
     const login: LocalSigninDto = {

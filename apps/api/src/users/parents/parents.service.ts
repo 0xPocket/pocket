@@ -83,20 +83,25 @@ export class ParentsService {
     return this.emailService.sendConfirmationEmail(user, url);
   }
 
-  confirmEmail(token: string) {
-    const payload = this.jwtAuthService.verifyEmailConfirmationToken(token);
+  async confirmEmail(token: string) {
+    try {
+      const payload = this.jwtAuthService.verifyEmailConfirmationToken(token);
 
-    if (!payload)
+      return this.prisma.userParent
+        .update({
+          where: {
+            email: payload.email,
+          },
+          data: {
+            emailVerified: new Date(),
+          },
+        })
+        .catch(() => {
+          throw new BadRequestException('Invalid token');
+        });
+    } catch (e) {
       throw new BadRequestException('Verification link is invalid or expired');
-
-    return this.prisma.userParent.update({
-      where: {
-        email: payload.email,
-      },
-      data: {
-        emailVerified: new Date(),
-      },
-    });
+    }
   }
 
   /**
