@@ -1,13 +1,20 @@
+import { MouseEventHandler } from 'react';
+
 type ButtonProps = {
   children: React.ReactNode;
   action?: (data: any) => void;
+  arg?: any;
   light?: Boolean;
 };
 
-function Button({ children, action, light }: ButtonProps) {
+function Button({ children, action, light, arg }: ButtonProps) {
+  const handleClick: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault;
+    if (action) action(arg);
+  };
   return (
     <button
-      onClick={action ? action : undefined}
+      onClick={handleClick}
       className={
         light
           ? 'underline'
