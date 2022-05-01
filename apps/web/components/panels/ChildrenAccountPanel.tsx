@@ -1,7 +1,7 @@
 import { UserParent } from '@lib/types/interfaces';
 import AddChildCard from '../cards/AddChildCard';
 import ChildCard from '../cards/ChildCard';
-import { ChildContract } from '@lib/contract';
+
 type ChildrenAccountPanelProps = {
   user: UserParent;
 };

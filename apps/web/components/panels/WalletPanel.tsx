@@ -14,10 +14,7 @@ function WalletPanel({ user }: WalletPanelProps) {
     <div className="">
       <div className="flex justify-between">
         <h2 className="mb-4">My Wallet</h2>
-        <Button
-          action={(isOpenTopup: boolean) => setIsOpenTopup(!isOpenTopup)}
-          arg={isOpenTopup}
-        >
+        <Button isOpen={isOpenTopup} setIsOpen={setIsOpenTopup}>
           Top-up
         </Button>
         <DialogPopupWrapper isOpen={isOpenTopup} setIsOpen={setIsOpenTopup}>
@@ -28,7 +25,7 @@ function WalletPanel({ user }: WalletPanelProps) {
         <p>Available funds: 600 $JEUR</p>
       </div>
       <div className="mt-8 flex gap-4">
-        <Button action={(isOpen: boolean) => setIsOpen(!isOpen)} arg={isOpen}>
+        <Button isOpen={isOpen} setIsOpen={setIsOpen}>
           Withdraw
         </Button>
         <DialogPopupWrapper isOpen={isOpen} setIsOpen={setIsOpen}>

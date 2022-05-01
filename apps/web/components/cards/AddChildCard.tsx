@@ -11,7 +11,7 @@ function AddChildCard({}: AddChildCardProps) {
 
   return (
     <>
-      <Button action={(isOpen: boolean) => setIsOpen(!isOpen)} arg={isOpen}>
+      <Button isOpen={isOpen} setIsOpen={setIsOpen}>
         Setup an account
       </Button>
 

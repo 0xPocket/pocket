@@ -9,6 +9,12 @@ function Nav({}: NavProps) {
       <Link href="/dashboard" passHref={true}>
         <a>Dashboard</a>
       </Link>
+      <Link href="/#" passHref={true}>
+        <a>F.A.Q.</a>
+      </Link>
+      <Link href="/#" passHref={true}>
+        <a>Blog</a>
+      </Link>
     </div>
   );
 }

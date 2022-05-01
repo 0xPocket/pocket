@@ -1,7 +1,5 @@
 import MainWrapper from '../components/wrappers/MainWrapper';
 import LoginForm from '../components/auth/LoginForm';
-import Button from '../components/common/Button';
-import Image from 'next/image';
 import { useAuth } from '@lib/nest-auth/next';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
