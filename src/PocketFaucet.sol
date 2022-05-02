@@ -35,7 +35,7 @@ contract PocketFaucet is AccessControl {
     );
 
     address immutable baseToken;
-    uint256 lastPeriod;
+    uint256 public lastPeriod;
 
     mapping(bytes32 => uint256) public parentsBalance;
     mapping(bytes32 => mapping(address => bool)) public parentToChildren;
@@ -70,6 +70,9 @@ contract PocketFaucet is AccessControl {
             childToConfig[child].parent == bytes32(0),
             "Child address already taken"
         );
+
+        conf.lastClaim = lastPeriod - 1 weeks;
+
         childToConfig[child] = conf;
         parentToChildren[conf.parent][child] = true;
         emit newChildAdded(conf.parent, child);
@@ -131,14 +134,10 @@ contract PocketFaucet is AccessControl {
             conf.lastClaim != lastPeriod,
             "!calculateClaimable: period is not finished"
         );
-        if (conf.lastClaim == 0) {
-            conf.lastClaim = lastPeriod;
+
+        while (conf.lastClaim != lastPeriod) {
             conf.claimable += conf.ceiling;
-        } else {
-            while (conf.lastClaim != lastPeriod) {
-                conf.claimable += conf.ceiling;
-                conf.lastClaim += 1 weeks;
-            }
+            conf.lastClaim += 1 weeks;
         }
     }
 

@@ -84,6 +84,7 @@ contract PFHelper is Utils, Erc20Handler {
             lastClaim,
             parent
         );
+
         return conf;
     }
 
