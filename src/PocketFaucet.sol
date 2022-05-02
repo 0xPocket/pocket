@@ -67,7 +67,21 @@ contract PocketFaucet is AccessControl {
         delete childToConfig[child];
     }
 
-    // gestion de l'enfant => claim, change address...
+    function changeAddress(address oldAddr, address newAddr)
+        public
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        config memory conf = childToConfig[oldAddr];
+        require(
+            conf.parent != bytes32(0),
+            "!changeAddr : child does not exist"
+        );
+
+        childToConfig[newAddr] = conf;
+        parentToChildren[conf.parent][newAddr] = true;
+        parentToChildren[conf.parent][oldAddr] = false;
+        delete (childToConfig[oldAddr]);
+    }
 
     // TO DO : test
     function addFunds(bytes32 parent, uint256 amount)
@@ -95,7 +109,6 @@ contract PocketFaucet is AccessControl {
         }
     }
 
-    // TO DO : test
     function claim() public onlyRole(CHILD_ROLE) {
         updateLastPeriod();
         config storage conf = childToConfig[msg.sender];

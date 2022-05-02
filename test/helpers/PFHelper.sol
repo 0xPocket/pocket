@@ -6,10 +6,7 @@ import "src/PocketFaucet.sol";
 import "./Utils.sol";
 import "./Erc20Handler.sol";
 
-contract PFHelper is
-    Utils,
-    Erc20Handler
-{
+contract PFHelper is Utils, Erc20Handler {
     using SafeERC20 for IERC20;
 
     address JEUR = 0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c;
@@ -60,5 +57,42 @@ contract PFHelper is
         (, , , , parent) = PF.childToConfig(child);
         assertTrue(parent != bytes32(0));
         assertTrue(PF.parentToChildren(parent, child));
+    }
+
+    function getConfig(address child)
+        public
+        view
+        returns (PocketFaucet.config memory)
+    {
+        uint256 ceiling;
+        uint256 claimable;
+        bool active;
+        uint256 lastClaim;
+        bytes32 parent;
+
+        (ceiling, claimable, active, lastClaim, parent) = PF.childToConfig(
+            child
+        );
+
+        PocketFaucet.config memory conf = PocketFaucet.config(
+            ceiling,
+            claimable,
+            active,
+            lastClaim,
+            parent
+        );
+        return conf;
+    }
+
+    function compareConfig(
+        PocketFaucet.config memory first,
+        PocketFaucet.config memory sec
+    ) public pure returns (bool) {
+        if (first.ceiling != sec.ceiling) return false;
+        if (first.claimable != sec.claimable) return false;
+        if (first.active != sec.active) return false;
+        if (first.lastClaim != sec.lastClaim) return false;
+        if (first.parent != sec.parent) return false;
+        return true;
     }
 }
