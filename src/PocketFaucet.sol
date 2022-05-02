@@ -84,8 +84,10 @@ contract PocketFaucet is AccessControl {
         emit childRm(childConfig.parent, child);
     }
 
-    function changeChildConfig(config memory newConf, address child) public {
+    function changeConfig(config memory newConf, address child) public {
+        require(child != address(0), "Child address is 0");
         config storage conf = childToConfig[child];
+        require(conf.parent != bytes32(0), "Child is not set");
         conf.active = newConf.active;
         conf.claimable = newConf.claimable;
         conf.ceiling = newConf.ceiling;

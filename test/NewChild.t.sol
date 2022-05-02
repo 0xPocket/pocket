@@ -46,9 +46,7 @@ contract NewChild is Test, PFHelper {
     function testAddUpTo20Children(uint8 nb) public {
         if (nb > 20) return;
         for (uint256 i; i < nb; i++) {
-            lastChildAdded = addNToAddr(1, lastChildAdded);
-            PF.addNewChild(stdConf, lastChildAdded);
-            PF.parentToChildren(parent1, lastChildAdded);
+            addChildToParent(parent1, address(0), 10, true);
             assertTrue(PF.parentToChildren(parent1, lastChildAdded));
             checkChildIsInit(lastChildAdded);
         }

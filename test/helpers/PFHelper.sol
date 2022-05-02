@@ -28,7 +28,10 @@ contract PFHelper is Utils, Erc20Handler {
         uint256 ceiling,
         bool active
     ) public {
-        if (child == address(0)) lastChildAdded = addNToAddr(1, lastChildAdded);
+        if (child == address(0)) {
+            lastChildAdded = addNToAddr(1, lastChildAdded);
+            child = lastChildAdded;
+        }
 
         PocketFaucet.config memory newConf = PocketFaucet.config(
             ceiling,
