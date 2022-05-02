@@ -59,6 +59,7 @@ contract PocketFaucet is AccessControl {
         parentToChildren[conf.parent][child] = true;
     }
 
+    // TO DO add a security by asking for the parent uid first --> avoid front mistakes
     function rmChild(address child) external {
         config memory childConfig = childToConfig[child];
         require(childConfig.parent != bytes32(0), "Child is not set");

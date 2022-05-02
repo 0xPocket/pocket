@@ -15,6 +15,11 @@ contract Utils {
         return address(uint160(a));
     }
 
+    function addNToAddr(uint256 n, address addr) public pure returns (address) {
+        uint256 newChildAddr = addrToUint256(addr) + n;
+        return uint256ToAddr(newChildAddr);
+    }
+
     function findLastSunday() public view returns (uint256) {
         uint256 lastPeriod = SUNDAY;
         while (lastPeriod + 1 weeks < block.timestamp) lastPeriod += 1 weeks;
