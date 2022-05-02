@@ -24,10 +24,17 @@ contract ChangeAddrTest is PFHelper {
         PF.changeAddress(child1, child2);
         assertFalse(PF.parentToChildren(parent1, child1));
         assertTrue(PF.parentToChildren(parent1, child2));
+        assertEq(getConfig(child1).parent, bytes32(0));
+        assertTrue(compareConfig(getConfig(child2), stdConf));
+    }
 
-        bytes32 parent;
-        (, , , , parent) = PF.childToConfig(child1);
-        assertEq(parent, bytes32(0));
-        // assertEq(stdConf.ceiling, );
+    function testNewChildCanWithdraw() public {
+        PF.grantRole(CHILD_ROLE, child2);
+        PF.changeAddress(child1, child2);
+        vm.warp(block.timestamp + 3 weeks);
+        addFundToParent(parent1, 1000e18);
+        vm.prank(child2);
+        PF.claim();
+        assertEq(stdConf.ceiling * 4, IERC20(JEUR).balanceOf(child2));
     }
 }

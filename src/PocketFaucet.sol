@@ -70,6 +70,9 @@ contract PocketFaucet is AccessControl {
             childToConfig[child].parent == bytes32(0),
             "Child address already taken"
         );
+
+        conf.lastClaim = lastPeriod - 1 weeks;
+
         childToConfig[child] = conf;
         parentToChildren[conf.parent][child] = true;
         emit newChildAdded(conf.parent, child);
