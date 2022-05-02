@@ -7,7 +7,7 @@ import "forge-std/console2.sol";
 import "forge-std/Test.sol";
 import "./helpers/PFHelper.sol";
 
-contract NewChild is Test, PFHelper {
+contract changeConf is Test, PFHelper {
     function testNoParentInConf() public {
         PocketFaucet.config memory conf = PocketFaucet.config(
             10,
