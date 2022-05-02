@@ -6,9 +6,9 @@ import "src/PocketFaucet.sol";
 import "./Utils.sol";
 import "./Erc20Handler.sol";
 
-contract HelperInitParent is
+contract PFHelper is
     Utils,
-    Erc20Handler // TO DO change name
+    Erc20Handler
 {
     using SafeERC20 for IERC20;
 

@@ -5,9 +5,9 @@ import "ds-test/test.sol";
 import "src/PocketFaucet.sol";
 import "forge-std/console2.sol";
 import "forge-std/Test.sol";
-import "./helpers/HelperInitParent.sol";
+import "./helpers/PFHelper.sol";
 
-contract ClaimTest is HelperInitParent {
+contract ClaimTest is PFHelper {
     using SafeERC20 for IERC20;
 
     function setUp() public {

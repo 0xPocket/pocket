@@ -5,9 +5,9 @@ import "ds-test/test.sol";
 import "src/PocketFaucet.sol";
 import "forge-std/console2.sol";
 import "forge-std/Test.sol";
-import "./helpers/HelperInitParent.sol";
+import "./helpers/PFHelper.sol";
 
-contract NewChild is Test, HelperInitParent {
+contract NewChild is Test, PFHelper {
     function testNoParentInConf() public {
         PocketFaucet.config memory conf = PocketFaucet.config(
             10,

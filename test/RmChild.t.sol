@@ -5,9 +5,9 @@ import "ds-test/test.sol";
 import "src/PocketFaucet.sol";
 import "forge-std/console2.sol";
 import "forge-std/Test.sol";
-import "./helpers/HelperInitParent.sol";
+import "./helpers/PFHelper.sol";
 
-contract RmChild is Test, HelperInitParent {
+contract RmChild is Test, PFHelper {
     function testRmChild() public {
         PF.addNewChild(stdConf, child1);
         PF.rmChild(child1);
