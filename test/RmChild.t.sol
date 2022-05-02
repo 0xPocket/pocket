@@ -33,7 +33,7 @@ contract RmChild is Test, PFHelper {
         checkChildIsNotInit(child3);
     }
 
-    function testRmRandomChildren(uint8 nb) public {
+    function testRmUnorderedChildren(uint8 nb) public {
         if (nb > 20) return;
         address[21] memory childrenAdded;
 

@@ -20,6 +20,20 @@ contract PocketFaucet is AccessControl {
     bytes32 public constant PARENT_ROLE = keccak256("PARENT_ROLE");
     bytes32 public constant CHILD_ROLE = keccak256("CHILD_ROLE");
 
+    event newChildAdded(bytes32 indexed parentUID, address indexed child);
+    event childRm(bytes32 indexed parentUID, address indexed child);
+    event fundsAdded(bytes32 indexed parentUID, uint256 amount);
+    event moneyClaimed(address indexed child, uint256 amount);
+    event bigIssue(string indexed errorMsg);
+    event tokenWithdrawed(address token, uint256 amount);
+    event coinWithdrawed(uint256 amount);
+    event configChanged(
+        address indexed child,
+        bool active,
+        uint256 ceiling,
+        uint256 claimable
+    );
+
     address immutable baseToken;
     uint256 lastPeriod;
 
@@ -41,6 +55,7 @@ contract PocketFaucet is AccessControl {
         bytes32 parent;
     }
 
+    // event (bytes32 indexed parentUID, address indexed child);
     // TO DO : test update
     function updateLastPeriod() public {
         // TO DO : emit update
@@ -57,6 +72,7 @@ contract PocketFaucet is AccessControl {
         );
         childToConfig[child] = conf;
         parentToChildren[conf.parent][child] = true;
+        emit newChildAdded(conf.parent, child);
     }
 
     // TO DO add a security by asking for the parent uid first --> avoid front mistakes
@@ -65,6 +81,20 @@ contract PocketFaucet is AccessControl {
         require(childConfig.parent != bytes32(0), "Child is not set");
         parentToChildren[childConfig.parent][child] = false;
         delete childToConfig[child];
+        emit childRm(childConfig.parent, child);
+    }
+
+    function changeChildConfig(config memory newConf, address child) public {
+        config storage conf = childToConfig[child];
+        conf.active = newConf.active;
+        conf.claimable = newConf.claimable;
+        conf.ceiling = newConf.ceiling;
+        emit configChanged(
+            child,
+            newConf.active,
+            newConf.claimable,
+            newConf.ceiling
+        );
     }
 
     function changeAddress(address oldAddr, address newAddr)
@@ -91,6 +121,7 @@ contract PocketFaucet is AccessControl {
         require(amount != 0);
         IERC20(baseToken).safeTransferFrom(msg.sender, address(this), amount);
         parentsBalance[parent] += amount;
+        emit fundsAdded(parent, amount);
     }
 
     function _calculateClaimable(config storage conf) internal {
@@ -122,7 +153,10 @@ contract PocketFaucet is AccessControl {
             IERC20(baseToken).balanceOf(address(this)) >= conf.claimable,
             "!claim : faucet liquidity low"
         );
-        //TO DO : emit BIG TROUBLE
+        if (IERC20(baseToken).balanceOf(address(this)) < conf.claimable) {
+            emit bigIssue("!claim : faucet liquidity low");
+            revert("!claim : faucet liquidity low");
+        }
 
         uint256 pocketMoney;
         conf.claimable > parentBalance
@@ -132,6 +166,7 @@ contract PocketFaucet is AccessControl {
         conf.claimable -= pocketMoney;
         parentsBalance[conf.parent] -= pocketMoney;
         IERC20(baseToken).safeTransfer(msg.sender, pocketMoney);
+        emit moneyClaimed(msg.sender, pocketMoney);
     }
 
     function withdrawToken(address token, uint256 amount)
@@ -139,11 +174,13 @@ contract PocketFaucet is AccessControl {
         onlyRole(WITHDRAW_ROLE)
     {
         IERC20(token).safeTransfer(msg.sender, amount);
+        emit tokenWithdrawed(token, amount);
     }
 
     function withdrawCoin(uint256 amount) public onlyRole(WITHDRAW_ROLE) {
         if (amount == 0) amount = address(this).balance;
         payable(msg.sender).transfer(amount);
+        emit coinWithdrawed(amount);
     }
 
     receive() external payable {}
