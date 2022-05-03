@@ -50,12 +50,12 @@ describe('ParentsController (e2e)', () => {
     await Promise.all([app.close()]);
   });
 
-  describe('Create a children', () => {
+  describe('Create a children - PUT /users/parents/children', () => {
     const child: CreateChildrenDto = {
       ...CHILD,
     };
 
-    it('PUT /users/parents - invalid email', () => {
+    it('invalid email', () => {
       child.email = 'theopalhol';
       return request(app.getHttpServer())
         .put('/users/parents/children')
@@ -63,20 +63,20 @@ describe('ParentsController (e2e)', () => {
         .expect(400);
     });
 
-    it('PUT /users/parents - should create the child', () => {
+    it('should create the child', () => {
       child.email = CHILD.email;
       return parentsService.createChildrenFromParent(userId, child, EMAIL_TEST);
     });
 
-    it('PUT /users/parents - child already exists', async () => {
+    it('child already exists', async () => {
       return expect(
         parentsService.createChildrenFromParent(userId, child, EMAIL_TEST),
       ).rejects.toThrow(BadRequestException);
     });
   });
 
-  describe(`Get parent children`, () => {
-    it('GET /users/parents/children - should get children', async () => {
+  describe(`Get parent children - GET /users/parents/children`, () => {
+    it('should get children', async () => {
       const res = await request(app.getHttpServer())
         .get('/users/parents/children')
         .expect(200);

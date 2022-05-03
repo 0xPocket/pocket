@@ -56,7 +56,7 @@ export class ParentsService {
     }
 
     if (!user.emailVerified) {
-      throw new ForbiddenException(
+      throw new BadRequestException(
         'You must verify your email before logging in',
       );
     }
@@ -209,24 +209,26 @@ export class ParentsService {
     data: CreateChildrenDto,
     verification = true,
   ) {
-    const parent = await this.prisma.userParent.findUnique({
-      where: {
-        id: parentId,
-      },
-    });
     try {
-      const child = await this.prisma.userChild.create({
-        data: {
-          firstName: data.firstName,
-          lastName: data.lastName,
-          email: data.email,
-          userParent: {
-            connect: {
-              id: parentId,
+      const [parent, child] = await Promise.all([
+        this.prisma.userParent.findUnique({
+          where: {
+            id: parentId,
+          },
+        }),
+        this.prisma.userChild.create({
+          data: {
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+            userParent: {
+              connect: {
+                id: parentId,
+              },
             },
           },
-        },
-      });
+        }),
+      ]);
       if (verification) await this.sendChildSignupEmail(child, parent);
       return child;
     } catch (e) {
@@ -240,7 +242,7 @@ export class ParentsService {
     );
     const url = `${this.configService.get(
       'NEXT_PUBLIC_URL',
-    )}/?token=${confirmationToken}`;
+    )}/children-signup?token=${confirmationToken}`;
     return this.emailService.sendChildSignupEmail(parent, child, url);
   }
 }

@@ -45,4 +45,10 @@ export class JwtAuthService {
       expiresIn: '12h',
     });
   }
+
+  verifyChildSignupToken(token: string) {
+    return this.jwtService.verify<JwtChildSignupTokenPayload>(token, {
+      secret: this.configService.get<string>('JWT_CHILD_SECRET'),
+    });
+  }
 }
