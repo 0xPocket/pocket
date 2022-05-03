@@ -10,8 +10,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^1.6.0",
     "@lib/nest-auth": "*",
     "axios": "^0.26.1",
+    "framer-motion": "^6.3.3",
     "next": "12.1.5",
     "react": "18.0.0",
     "react-cookie": "^4.1.1",
@@ -20,6 +22,8 @@
     "ui": "*"
   },
   "devDependencies": {
+    "@lib/contract": "*",
+    "@lib/types": "*",
     "@types/node": "^17.0.27",
     "@types/react": "18.0.6",
     "autoprefixer": "^10.4.5",

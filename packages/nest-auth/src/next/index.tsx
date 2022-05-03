@@ -139,14 +139,14 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
 
     if (token) {
       getUser(token);
+    } else {
+      setLoading(false);
     }
 
     emitter.on("access_token", (token: string) => {
       localStorage.setItem("access_token", token);
       getUser(token);
     });
-
-    setLoading(false);
 
     return () => {
       emitter.removeAllListeners("access_token");

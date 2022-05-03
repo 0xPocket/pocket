@@ -17,7 +17,12 @@ module.exports = {
       bright: '#fff',
       danger: '#FF0000',
     },
-    extend: {},
+    extend: {
+      fontFamily: {
+        raleway: ["'Raleway'", 'sans-serif'],
+        bitter: ["'Bitter'", 'serif'],
+      },
+    },
   },
   plugins: [],
 };
