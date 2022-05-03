@@ -1,8 +1,10 @@
 import { Tab } from '@headlessui/react';
 import { UserChild, UserParent } from '@lib/types/interfaces';
 import { useState } from 'react';
-import { DialogFullWrapper } from '../wrappers/Dialogs';
+import { DialogFullWrapper } from '../wrappers/DialogsWrapper';
 import { ChildContract } from '@lib/contract';
+import SectionContainer from '../containers/SectionContainer';
+import ChildSettingsForm from '../forms/ChildSettingsForm';
 
 type ChildCardProps = {
   child: UserChild;
@@ -15,26 +17,35 @@ function ChildCard({ child }: ChildCardProps) {
   return (
     <>
       <div
-        className="relative aspect-square rounded-lg bg-primary text-bright"
+        className="relative flex aspect-square items-end rounded-lg bg-primary p-4 text-bright"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <h2 className="absolute left-4 bottom-4">{child?.firstName}</h2>
-        <p>{cc.getBalance('test')}</p>
+        <div>
+          <h2 className="">{child?.firstName}</h2>
+          <p>Available funds : {cc.getBalance('test')}</p>
+        </div>
       </div>
 
       <DialogFullWrapper isOpen={isOpen} setIsOpen={setIsOpen}>
-        <div className="mb-8 flex h-full flex-col">
+        <div className="container h-screen">
+          <h1 className="mb-8">{child.firstName}</h1>
           <Tab.Group>
-            <div className="mb-8">
-              <Tab.List>
-                <Tab>Overview</Tab>
-                <Tab>Settings</Tab>
-              </Tab.List>
-            </div>
+            <Tab.List className="mb-8 flex gap-4">
+              <Tab className="border p-4">Overview</Tab>
+              <Tab className="border p-4">Settings</Tab>
+            </Tab.List>
             <Tab.Panels>
-              <Tab.Panel>Content 1</Tab.Panel>
-              <Tab.Panel>Content 2</Tab.Panel>
-              <Tab.Panel>Content 3</Tab.Panel>
+              <Tab.Panel>
+                <div className="grid  grid-cols-2 gap-8">
+                  <div className="h-60 bg-dark p-4 text-bright">
+                    Wallet Content
+                  </div>
+                  <div className="h-60 bg-dark p-4 text-bright">History</div>
+                </div>
+              </Tab.Panel>
+              <Tab.Panel>
+                <ChildSettingsForm child={child} />
+              </Tab.Panel>
             </Tab.Panels>
           </Tab.Group>
         </div>

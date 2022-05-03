@@ -1,5 +1,7 @@
 class ParentContract {
-  getBalance = () => {};
+  getBalance = () => {
+    return 20;
+  };
 }
 
 export { ParentContract };
