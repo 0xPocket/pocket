@@ -16,6 +16,39 @@ function NewAccountForm({}: NewAccountFormProps) {
       onSubmit={handleSubmit(onSubmit)}
       className="flex w-72 flex-col gap-4"
     >
+      <div className="flex gap-4">
+        <div className="flex flex-col">
+          <input
+            className="border p-2"
+            placeholder="Firstname"
+            {...register('firstname', {
+              required: 'This field is required',
+            })}
+            type="text"
+          />
+          {errors.firstname && (
+            <span className="text-sm text-danger">
+              {errors.firstname.message}
+            </span>
+          )}
+        </div>
+        <div className="flex flex-col">
+          <input
+            className="border p-2"
+            placeholder="Lastname"
+            {...register('lastname', {
+              required: 'This field is required',
+            })}
+            type="text"
+          />
+          {errors.lastname && (
+            <span className="text-sm text-danger">
+              {errors.lastname.message}
+            </span>
+          )}
+        </div>
+      </div>
+
       <div className="flex flex-col">
         <input
           className="border p-2"
@@ -33,30 +66,6 @@ function NewAccountForm({}: NewAccountFormProps) {
           <span className="text-sm text-danger">{errors.email.message}</span>
         )}
       </div>
-
-      {/* (?=.*\d)          // should contain at least one digit
-	(?=.*[a-z])       // should contain at least one lower case
-	(?=.*[A-Z])       // should contain at least one upper case
-	[a-zA-Z0-9]{8,}   // should contain at least 8 from the mentioned characters */}
-      <div className="flex flex-col">
-        <input
-          className="border p-2"
-          placeholder="password"
-          {...register('password', {
-            required: 'This field is required',
-            pattern: {
-              value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/,
-              message:
-                'Password should at least contain one digit, one lower case, one upper case and be 8+ characters long.',
-            },
-          })}
-          type="password"
-        />
-        {errors.password && (
-          <span className="text-sm text-danger">{errors.password.message}</span>
-        )}
-      </div>
-
       <input
         type="submit"
         value="Submit"
