@@ -6,7 +6,6 @@ function LoginForm({}: LoginFormProps) {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
 

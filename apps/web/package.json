@@ -16,6 +16,8 @@
     "@web3-react/injected-connector": "^6.0.7",
     "axios": "^0.27.2",
     "ethers": "^5.6.4",
+    "@headlessui/react": "^1.6.0",
+    "framer-motion": "^6.3.3",
     "next": "12.1.5",
     "react": "18.0.0",
     "react-cookie": "^4.1.1",
@@ -25,6 +27,8 @@
   },
   "devDependencies": {
     "@types/node": "^17.0.30",
+    "@lib/contract": "*",
+    "@lib/types": "*",
     "@types/react": "18.0.6",
     "autoprefixer": "^10.4.5",
     "config": "*",
