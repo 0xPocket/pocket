@@ -35,10 +35,10 @@ function WalletPanel({ user }: WalletPanelProps) {
       </div>
       <div className="mt-8 flex gap-4">
         <Button isOpen={isOpen} setIsOpen={setIsOpen}>
-          Withdraw
+          Settings
         </Button>
         <DialogPopupWrapper isOpen={isOpen} setIsOpen={setIsOpen}>
-          Withdraw Dialog
+          Settings Dialog
         </DialogPopupWrapper>
       </div>
     </div>

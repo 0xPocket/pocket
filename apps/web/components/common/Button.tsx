@@ -18,7 +18,7 @@ function Button({
   isOpen,
 }: ButtonProps) {
   const handleClick: MouseEventHandler<HTMLButtonElement> = (e) => {
-    e.preventDefault;
+    e.preventDefault();
     if (action) action(arg);
     if (setIsOpen) setIsOpen(!isOpen);
   };
