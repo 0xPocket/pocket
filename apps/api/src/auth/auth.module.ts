@@ -5,6 +5,7 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtAuthModule } from './jwt/jwt-auth.module';
+import { MetamaskModule } from './metamask/metamask.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { JwtAuthModule } from './jwt/jwt-auth.module';
     JwtAuthModule,
     NestAuthModule.forRoot(),
     ParentsModule,
+    MetamaskModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],

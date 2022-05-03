@@ -15,19 +15,20 @@
     "db:drop": "prisma migrate reset --force",
     "db:reset": "run-s db:drop",
     "db:setup": "run-s db:up db:deploy db:seed",
-    "db:seed": "prisma db seed",
+    "db:seed": "run-s db:drop",
     "db:studio": "prisma studio",
     "predev": "dotenv-checker --schema .env.example --env .env",
     "dev": "yarn db:setup"
   },
   "devDependencies": {
+    "dotenv-checker": "^1.1.5",
+    "prettier-plugin-prisma": "^3.13.0",
     "npm-run-all": "^4.1.5",
-    "prisma": "^3.12.0",
-    "ts-node": "^10.4.0",
-    "dotenv-checker": "^1.1.5"
+    "prisma": "^3.13.0",
+    "ts-node": "^10.4.0"
   },
   "dependencies": {
-    "@prisma/client": "^3.12.0"
+    "@prisma/client": "^3.13.0"
   },
   "prisma": {
     "seed": "ts-node ./seed.ts"

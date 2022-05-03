@@ -25,15 +25,14 @@ model UserParent {
 }
 
 model UserChild {
-  id            String       @id @default(cuid())
-  firstName     String
-  lastName      String
-  username      String?      @unique
-  email         String       @unique
-  web3Account   Web3Account? @relation(fields: [web3AccountId], references: [id])
-  web3AccountId String?
-  userParent    UserParent   @relation(fields: [userParentId], references: [id])
-  userParentId  String
+  id           String       @id @default(cuid())
+  firstName    String
+  lastName     String
+  username     String?      @unique
+  email        String       @unique
+  web3Account  Web3Account?
+  userParent   UserParent   @relation(fields: [userParentId], references: [id])
+  userParentId String
 }
 
 // Wallet
@@ -48,10 +47,11 @@ model UserParentWallet {
 // Authentication Account
 
 model Web3Account {
-  id        String      @id @default(cuid())
-  address   String      @unique
-  nonce     String
-  UserChild UserChild[]
+  id      String    @id @default(cuid())
+  address String    @unique
+  nonce   String
+  user    UserChild @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  String    @unique
 }
 
 model Account {

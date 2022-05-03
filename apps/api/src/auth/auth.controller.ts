@@ -19,9 +19,9 @@ export class AuthController {
   }
 
   @NestAuth('facebook', {
-    clientId: '1565875930465432',
-    secretId: 'f89c565919e7c6d3060389919101e16c',
-    redirectUri: 'http://localhost:3000/',
+    clientId: process.env.OAUTH_FACEBOOK_ID,
+    secretId: process.env.OAUTH_FACEBOOK_SECRET,
+    redirectUri: process.env.OAUTH_FACEBOOK_REDIRECT_URL,
     params: {
       fields: 'id,email,name,first_name,last_name',
     },
@@ -40,10 +40,9 @@ export class AuthController {
   }
 
   @NestAuth('google', {
-    clientId:
-      '481747438343-bb09iaqu9de9db4pbvq5nthphf6bnbpd.apps.googleusercontent.com',
-    secretId: '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',
-    redirectUri: 'http://localhost:3000/',
+    clientId: process.env.OAUTH_GOOGLE_ID,
+    secretId: process.env.OAUTH_GOOGLE_SECRET,
+    redirectUri: process.env.OAUTH_GOOGLE_REDIRECT_URL,
   })
   google(@GetNestAuth() data: NestAuthData<GoogleProfile>) {
     return this.authService.authenticateParent(
