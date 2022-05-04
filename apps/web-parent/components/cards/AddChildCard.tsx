@@ -1,5 +1,4 @@
-import { Dialog, Transition } from '@headlessui/react';
-import { useState, Fragment } from 'react';
+import { useState } from 'react';
 import Button from '../common/Button';
 import NewAccountForm from '../forms/NewAccountForm';
 import { DialogFullWrapper } from '../wrappers/DialogsWrapper';

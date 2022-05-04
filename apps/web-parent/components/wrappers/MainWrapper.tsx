@@ -1,7 +1,4 @@
 import Header from '../header/Header';
-import { useAuth } from '@lib/nest-auth/next';
-import { Router, useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
 import AuthGuard from './AuthGuard';
 
 type MainWrapperProps = {

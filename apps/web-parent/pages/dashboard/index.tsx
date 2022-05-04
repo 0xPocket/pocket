@@ -1,4 +1,3 @@
-import { UserParent } from '@lib/types/interfaces';
 import SectionContainer from '../../components/containers/SectionContainer';
 import ChildrenAccountPanel from '../../components/panels/ChildrenAccountPanel';
 import WalletPanel from '../../components/panels/WalletPanel';

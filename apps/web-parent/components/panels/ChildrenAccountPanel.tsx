@@ -1,4 +1,4 @@
-import { UserChild, UserParent } from '@lib/types/interfaces';
+import { UserChild } from '@lib/types/interfaces';
 import { useEffect, useState } from 'react';
 import { useAxios } from '../../hooks/axios.hook';
 import AddChildCard from '../cards/AddChildCard';

@@ -1,4 +1,3 @@
-import { useAuth } from '@lib/nest-auth/next';
 import Link from 'next/link';
 
 type NavProps = {};

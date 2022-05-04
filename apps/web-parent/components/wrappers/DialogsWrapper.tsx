@@ -1,5 +1,4 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Dispatch, Fragment, SetStateAction } from 'react';
 
 type DialogFullWrapperProps = {
@@ -55,7 +54,6 @@ export function DialogPopupWrapper({
       <div className="fixed inset-0 flex items-center justify-center">
         <Dialog.Panel>
           <div className="rounded-lg bg-primary p-8">{children}</div>
-          {/* <button onClick={handleDeactivate}>Deactivate</button> */}
         </Dialog.Panel>
       </div>
     </Dialog>
