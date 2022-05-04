@@ -11,7 +11,6 @@ import "openzeppelin-contracts/contracts/access/AccessControl.sol";
 // TO DO : check multisig
 // TO DO : gouvernor should be -> TimelockController
 // TO DO : test roles
-// TO DO : require => modifier
 
 contract PocketFaucet is AccessControl {
     using SafeERC20 for IERC20;
@@ -38,7 +37,7 @@ contract PocketFaucet is AccessControl {
     uint256 public lastPeriod;
 
     mapping(bytes32 => uint256) public parentsBalance;
-    mapping(bytes32 => mapping(address => bool)) public parentToChildren;
+    mapping(bytes32 => address[]) public parentToChildren;
     mapping(address => config) public childToConfig;
 
     constructor(uint256 begin, address token) {
@@ -53,6 +52,10 @@ contract PocketFaucet is AccessControl {
         bool active;
         uint256 lastClaim;
         bytes32 parent;
+    }
+
+    function getNumberChildren(bytes32 parent) public view returns (uint256) {
+        return parentToChildren[parent].length;
     }
 
     // event (bytes32 indexed parentUID, address indexed child);
@@ -72,9 +75,9 @@ contract PocketFaucet is AccessControl {
         );
 
         conf.lastClaim = lastPeriod - 1 weeks;
-
         childToConfig[child] = conf;
-        parentToChildren[conf.parent][child] = true;
+        parentToChildren[conf.parent].push(child);
+
         emit newChildAdded(conf.parent, child);
     }
 
@@ -82,7 +85,18 @@ contract PocketFaucet is AccessControl {
     function rmChild(address child) external {
         config memory childConfig = childToConfig[child];
         require(childConfig.parent != bytes32(0), "Child is not set");
-        parentToChildren[childConfig.parent][child] = false;
+
+        uint256 length = parentToChildren[childConfig.parent].length;
+        for (uint256 i = 0; i < length; i++) {
+            if (parentToChildren[childConfig.parent][i] == child) {
+                delete (parentToChildren[childConfig.parent][i]);
+                parentToChildren[childConfig.parent][i] = parentToChildren[
+                    childConfig.parent
+                ][length - 1];
+                break;
+            }
+        }
+
         delete childToConfig[child];
         emit childRm(childConfig.parent, child);
     }
@@ -113,8 +127,16 @@ contract PocketFaucet is AccessControl {
         );
 
         childToConfig[newAddr] = conf;
-        parentToChildren[conf.parent][newAddr] = true;
-        parentToChildren[conf.parent][oldAddr] = false;
+
+        uint256 length = parentToChildren[conf.parent].length;
+        for (uint256 i = 0; i < length; i++) {
+            if (parentToChildren[conf.parent][i] == oldAddr) {
+                delete (parentToChildren[conf.parent][i]);
+                parentToChildren[conf.parent][i] = newAddr;
+                break;
+            }
+        }
+
         delete (childToConfig[oldAddr]);
     }
 

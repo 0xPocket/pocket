@@ -10,7 +10,6 @@ import "./helpers/PFHelper.sol";
 contract ChangeConf is Test, PFHelper {
     function setUp() public {
         addChildToParent(parent2, child2, 20, true);
-        assertTrue(PF.parentToChildren(parent2, child2));
     }
 
     function testChildAddrIsZero() public {
@@ -58,7 +57,7 @@ contract ChangeConf is Test, PFHelper {
         assertEq(getConfig(child2).lastClaim, lastClaim);
     }
 
-     function testParentNotChanged() public {
+    function testParentNotChanged() public {
         assertEq(getConfig(child2).parent, parent2);
         stdConf.parent = parent1;
         PF.changeConfig(stdConf, child2);

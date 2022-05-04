@@ -11,7 +11,6 @@ contract RmChild is Test, PFHelper {
     function testRmChild() public {
         PF.addNewChild(stdConf, child1);
         PF.rmChild(child1);
-        assertFalse(PF.parentToChildren(parent1, child1));
         checkChildIsNotInit(child1);
     }
 
@@ -41,8 +40,7 @@ contract RmChild is Test, PFHelper {
             lastChildAdded = addNToAddr(1, lastChildAdded);
             childrenAdded[i] = lastChildAdded;
             PF.addNewChild(stdConf, lastChildAdded);
-            PF.parentToChildren(parent1, lastChildAdded);
-            assertTrue(PF.parentToChildren(parent1, lastChildAdded));
+            checkChildIsInit(lastChildAdded, parent1);
             if (i % 2 == 0 || i % 5 == 0) PF.rmChild(lastChildAdded);
         }
         for (uint256 i; i < nb; i++) {

@@ -55,11 +55,20 @@ contract PFHelper is Utils, Erc20Handler {
         assertEq(parent, bytes32(0));
     }
 
-    function checkChildIsInit(address child) public {
+    function checkChildIsInit(address child, bytes32 parentFrom) public {
         bytes32 parent;
         (, , , , parent) = PF.childToConfig(child);
         assertTrue(parent != bytes32(0));
-        assertTrue(PF.parentToChildren(parent, child));
+        assertTrue(parent == parentFrom);
+        uint256 size = PF.getNumberChildren(parent);
+        bool exist = false;
+        for (uint256 i = 0; i < size; i++) {
+            if (PF.parentToChildren(parent, i) == child) {
+                exist = true;
+                break;
+            }
+        }
+        assertTrue(exist);
     }
 
     function getConfig(address child)
