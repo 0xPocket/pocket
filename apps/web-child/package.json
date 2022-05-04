@@ -21,10 +21,10 @@
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-hook-form": "^7.30.0",
-    "ui": "*"
+    "ui": "*",
+    "@lib/contract": "*"
   },
   "devDependencies": {
-    "@lib/contract": "*",
     "@lib/types": "*",
     "@types/node": "^17.0.31",
     "@types/react": "18.0.8",
