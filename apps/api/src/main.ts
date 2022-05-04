@@ -4,6 +4,9 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { useContainer } from 'class-validator';
 import { AppModule } from './app.module';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('dotenv').config({ path: '../../contract.env' });
+
 async function bootstrap() {
   const logger = new Logger('EntryPoint');
   const app = await NestFactory.create(AppModule);

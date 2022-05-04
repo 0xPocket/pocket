@@ -10,6 +10,11 @@
     "postcss.config.js",
     "tailwind.config.js"
   ],
+  "scripts": {
+    "deploy:node": "yarn hardhat node --fork https://polygon-mainnet.g.alchemy.com/v2/qLBCKN0pvsl20MhmJ2DdyQr1RhmQ_eSK",
+    "dev": "yarn deploy:node",
+    "healthcheck": "curl -m 10 --retry 5 --retry-connrefused --retry-delay 3 http://127.0.0.1:8545/"
+  },
   "dependencies": {
     "eslint-config-next": "^12.1.6",
     "eslint-config-prettier": "^8.3.0",
@@ -22,7 +27,7 @@
   "devDependencies": {
     "eslint": "8.14.0",
     "prettier": "^2.6.2",
-    "typescript": "^4.6.4",
-    "@lib/types": "*"
+    "hardhat": "^2.9.3",
+    "typescript": "^4.6.4"
   }
 }
