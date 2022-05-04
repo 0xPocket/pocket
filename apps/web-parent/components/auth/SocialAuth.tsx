@@ -5,7 +5,7 @@ import Button from '../common/Button';
 type SocialAuthProps = {};
 
 function SocialAuth({}: SocialAuthProps) {
-  const { status, signIn } = useAuth();
+  const { signIn } = useAuth();
 
   return (
     <div className="flex flex-col gap-4">

@@ -1,4 +1,3 @@
-import { UserParent } from '@lib/types/interfaces';
 import { useState } from 'react';
 import Button from '../common/Button';
 import { DialogPopupWrapper } from '../wrappers/DialogsWrapper';

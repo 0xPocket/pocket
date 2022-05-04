@@ -1,4 +1,3 @@
-import { ParentContract } from '@lib/contract';
 import { UserChild } from '@lib/types/interfaces';
 import { useForm } from 'react-hook-form';
 
@@ -16,8 +15,6 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
   } = useForm();
 
   const onSubmit = (data: any) => console.log(data);
-
-  const parentContract = new ParentContract();
 
   return (
     <form
@@ -37,7 +34,7 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
               message: 'Topup cannot be negative',
             },
             max: {
-              value: parentContract.getBalance(),
+              value: 20,
               message: 'Insufisant funds',
             },
           })}

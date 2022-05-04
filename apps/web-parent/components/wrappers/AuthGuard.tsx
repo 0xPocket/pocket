@@ -1,5 +1,5 @@
 import { useAuth } from '@lib/nest-auth/next';
-import { Router, useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 type AuthGuardProps = {
