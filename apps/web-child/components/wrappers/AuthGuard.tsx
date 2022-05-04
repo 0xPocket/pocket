@@ -1,6 +1,4 @@
-import { useAuth } from '@lib/nest-auth/next';
-import { Router, useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 type AuthGuardProps = {
   children: React.ReactNode;
@@ -8,18 +6,6 @@ type AuthGuardProps = {
 
 function AuthGuard({ children }: AuthGuardProps) {
   const router = useRouter();
-  const { status } = useAuth();
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/');
-    } else if (status === 'authenticated') {
-      setLoading(false);
-    }
-  }, [router, status]);
-
-  if (loading) return <h1>Loading</h1>;
 
   return <>{children}</>;
 }

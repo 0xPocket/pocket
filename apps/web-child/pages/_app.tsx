@@ -1,6 +1,4 @@
 import type { AppProps } from 'next/app';
-import { AuthProvider } from '@lib/nest-auth/next';
-import config from '../next-auth.config';
 import '../styles/globals.css';
 import { Web3ReactProvider } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
@@ -14,9 +12,7 @@ function getLibrary(provider: any) {
 function App({ Component, pageProps: { ...pageProps } }: AppProps) {
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
-      <AuthProvider config={config}>
-        <Component {...pageProps} />
-      </AuthProvider>
+      <Component {...pageProps} />
     </Web3ReactProvider>
   );
 }
