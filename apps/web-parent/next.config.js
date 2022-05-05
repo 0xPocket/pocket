@@ -1,6 +1,6 @@
 require('dotenv').config({ path: '../../.env' });
 
-const withTM = require('next-transpile-modules')(['ui', '@lib/contract']);
+const withTM = require('next-transpile-modules')(['ui']);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {

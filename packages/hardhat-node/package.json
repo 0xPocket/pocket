@@ -1,0 +1,14 @@
+{
+  "name": "@lib/hardhat-node",
+  "version": "0.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "clean": "rm -rf node_modules && rm -rf .turbo",
+    "dev": "yarn deploy:node",
+    "healthcheck": "curl -m 10 --retry 5 --retry-connrefused --retry-delay 3 http://127.0.0.1:8545/"
+  },
+  "devDependencies": {
+    "hardhat": "^2.9.3"
+  }
+}

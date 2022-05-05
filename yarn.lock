@@ -8916,7 +8916,7 @@ prettier-linter-helpers@^1.0.0:
   dependencies:
     fast-diff "^1.1.2"
 
-prettier-plugin-prisma@^3.12.0, prettier-plugin-prisma@^3.13.0:
+prettier-plugin-prisma@^3.13.0:
   version "3.13.0"
   resolved "https://registry.yarnpkg.com/prettier-plugin-prisma/-/prettier-plugin-prisma-3.13.0.tgz#e74287c7539a92e377d2b3d06d2d5c4f0410ed7f"
   integrity sha512-wI5wVf1v5SIPaoqDVlnSK7VDAOn2mlgjbWqNYsXgjwh16367+u0g8l3r1YDxlQxCiSepCEPTtokQiCnZDin05A==
