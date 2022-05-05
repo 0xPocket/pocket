@@ -8,6 +8,10 @@ import "forge-std/Test.sol";
 import "./helpers/PFHelper.sol";
 
 contract NewChild is Test, PFHelper {
+    function setUp() public {
+        vm.startPrank(parent1);
+    }
+
     function testNoParentInConf() public {
         PocketFaucet.config memory conf = PocketFaucet.config(
             true,
@@ -16,24 +20,12 @@ contract NewChild is Test, PFHelper {
             0,
             address(0)
         );
-        vm.expectRevert(bytes("ParentUID is 0"));
-        PF.addNewChild(conf, child1);
-    }
-
-    function testChildClaimableNotZero() public {
-        PocketFaucet.config memory conf = PocketFaucet.config(
-            true,
-            4,
-            10,
-            0,
-            parent1
-        );
-        vm.expectRevert(bytes("Claimable is not 0"));
+        vm.expectRevert(bytes("!addNewChild: wrong parent in config"));
         PF.addNewChild(conf, child1);
     }
 
     function testChildAddrZero() public {
-        vm.expectRevert(bytes("Address is 0"));
+        vm.expectRevert(bytes("Address is null"));
         PF.addNewChild(stdConf, address(0));
     }
 

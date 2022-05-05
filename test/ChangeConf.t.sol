@@ -9,22 +9,23 @@ import "./helpers/PFHelper.sol";
 
 contract ChangeConf is Test, PFHelper {
     function setUp() public {
+        vm.startPrank(parent2);
         addChildToParent(parent2, child2, 20, true);
     }
 
     function testChildAddrIsZero() public {
-        vm.expectRevert(bytes("Child address is 0"));
+        vm.expectRevert(bytes("!isRelated : parent doesn't match"));
         PF.changeConfig(stdConf, address(0));
     }
 
     function testChildIsNotSet() public {
-        vm.expectRevert(bytes("Child is not set"));
+        vm.expectRevert(bytes("!isRelated : parent doesn't match"));
         PF.changeConfig(stdConf, child3);
     }
 
     function testChildIsRm() public {
         PF.rmChild(child2);
-        vm.expectRevert(bytes("Child is not set"));
+        vm.expectRevert(bytes("!isRelated : parent doesn't match"));
         PF.changeConfig(stdConf, child2);
     }
 
