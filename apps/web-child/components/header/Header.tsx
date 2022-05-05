@@ -1,17 +1,12 @@
 import Button from '../common/Button';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Nav from './Nav';
+import { useWeb3Auth } from '../../contexts/web3hook';
 
 type HeaderProps = {};
 
 function Header({}: HeaderProps) {
-  const router = useRouter();
-
-  const handleConnect = () => {
-    console.log('Sign');
-    router.push('/signup');
-  };
+  const { address, status, connect, disconnect } = useWeb3Auth();
 
   return (
     <header className="flex h-20 w-full items-center justify-between border-b border-opacity-40 bg-primary px-8">
@@ -22,8 +17,13 @@ function Header({}: HeaderProps) {
         <Nav />
       </div>
       <div className="flex items-center justify-between gap-8">
+        <div>{address}</div>
         <div>
-          <Button action={handleConnect}>Connect Wallet</Button>
+          {status === 'unauthenticated' ? (
+            <Button action={() => connect()}>Connect Wallet</Button>
+          ) : (
+            <Button action={() => disconnect()}>Disconnect Wallet</Button>
+          )}
         </div>
       </div>
     </header>

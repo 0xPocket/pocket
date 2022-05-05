@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { compare, hash } from 'bcrypt';
+import { Wallet } from 'ethers';
 import { JwtAuthService } from 'src/auth/jwt/jwt-auth.service';
 import { LocalSigninDto } from 'src/auth/local/dto/local-signin.dto';
 import { EmailService } from 'src/email/email.service';
@@ -108,11 +109,14 @@ export class ParentsService {
    * Method used to create the user for the parents (local)
    * It will also send a confirmation email
    * ! we need a token here to make sure it's only for the correct user
+   * ! separate service for wallet creation
    * @param data - Object with the parent's infos
    * @returns
    */
 
   async create(data: ParentSignupDto, verification = true) {
+    const wallet = Wallet.createRandom();
+
     return this.prisma.userParent.create({
       data: {
         firstName: data.firstName,
@@ -128,7 +132,8 @@ export class ParentsService {
         },
         wallet: {
           create: {
-            publicKey: 'test',
+            publicKey: wallet.address,
+            privateKey: wallet.privateKey,
           },
         },
       },
@@ -161,6 +166,8 @@ export class ParentsService {
       }
     }
 
+    const wallet = Wallet.createRandom();
+
     return this.prisma.userParent.upsert({
       where: {
         email: data.email,
@@ -179,8 +186,8 @@ export class ParentsService {
         },
         wallet: {
           create: {
-            publicKey: 'public_key',
-            privateKey: 'asgfagdag',
+            publicKey: wallet.address,
+            privateKey: wallet.privateKey,
           },
         },
       },

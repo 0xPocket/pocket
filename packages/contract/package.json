@@ -12,6 +12,8 @@
   ],
   "scripts": {
     "deploy:node": "yarn hardhat node --fork https://polygon-mainnet.g.alchemy.com/v2/qLBCKN0pvsl20MhmJ2DdyQr1RhmQ_eSK",
+    "build:typescript": "typechain --target ethers-v5 --out-dir=types ./abi.json",
+    "predev": "cp ../blockchain-side-pocket/out/PocketFaucet.sol/PocketFaucet.json ./abi.json && yarn build:typescript",
     "dev": "yarn deploy:node",
     "healthcheck": "curl -m 10 --retry 5 --retry-connrefused --retry-delay 3 http://127.0.0.1:8545/"
   },
@@ -25,9 +27,11 @@
     "prettier-plugin-tailwindcss": "^0.1.10"
   },
   "devDependencies": {
+    "@typechain/ethers-v5": "^10.0.0",
     "eslint": "8.14.0",
-    "prettier": "^2.6.2",
     "hardhat": "^2.9.3",
+    "prettier": "^2.6.2",
+    "typechain": "^8.0.0",
     "typescript": "^4.6.4"
   }
 }
