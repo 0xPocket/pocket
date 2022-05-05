@@ -161,9 +161,15 @@ contract PocketFaucet is AccessControl {
             conf.claimable += conf.ceiling;
             conf.lastClaim += 1 weeks;
         }
+
+        uint256 parentBalance = parentsBalance[conf.parent];
+
+        conf.claimable = conf.claimable > parentBalance
+            ? parentBalance
+            : conf.claimable;
     }
 
-    function claim() public onlyRole(CHILD_ROLE) {
+    function claim() public onlyRole(CHILD_ROLE) { // TO DO maybe check for active ?
         updateLastPeriod();
         config storage conf = childToConfig[msg.sender];
         _calculateClaimable(conf);
@@ -172,19 +178,23 @@ contract PocketFaucet is AccessControl {
 
         uint256 parentBalance = parentsBalance[parent];
         require(parentBalance != 0, "!claim : zero parent balance");
-        require(
-            IERC20(baseToken).balanceOf(address(this)) >= conf.claimable,
-            "!claim : faucet liquidity low"
-        );
+
+        // require(
+        //     IERC20(baseToken).balanceOf(address(this)) >= conf.claimable,
+        //     "!claim : faucet liquidity low"
+        // );
+
+    
+        // TO DO : in current conf it could happen if claimable > parent balance and parent balance == balanceOf(this)
         if (IERC20(baseToken).balanceOf(address(this)) < conf.claimable) {
             emit bigIssue("!claim : faucet liquidity low");
             revert("!claim : faucet liquidity low");
         }
 
-        uint256 pocketMoney;
-        conf.claimable > parentBalance
-            ? pocketMoney = parentBalance
-            : pocketMoney = conf.claimable;
+        uint256 pocketMoney = conf.claimable;
+        // conf.claimable > parentBalance
+        //     ? pocketMoney = parentBalance
+        //     : pocketMoney = conf.claimable;
 
         conf.claimable -= pocketMoney;
         parentsBalance[conf.parent] -= pocketMoney;

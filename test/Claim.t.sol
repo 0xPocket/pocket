@@ -76,4 +76,27 @@ contract ClaimTest is PFHelper {
         assertEq(balanceBefore + amount, balanceAfter);
         assertGt(balanceAfter, balanceBefore);
     }
+
+    function testCanClaimMultipleWeeksNotEnough() public {
+        uint256 timestamp = block.timestamp;
+        addFundToParent(parent1, 55e18);
+        for (uint256 nbWeek = 0; nbWeek < 10; nbWeek++) {
+            vm.warp(timestamp);
+            uint256 balanceBefore = checkBalance(JEUR, child1);
+            PF.updateLastPeriod();
+            uint256 claimable = helperCalculateClaimable(child1);
+            if (PF.parentsBalance(parent1) * 1e18 <= claimable) {
+                vm.expectRevert(bytes("!claim : zero parent balance"));
+                vm.prank(child1);
+                PF.claim();
+                return;
+            }
+            vm.prank(child1);
+            PF.claim();
+            uint256 balanceAfter = checkBalance(JEUR, child1);
+            assertEq(balanceBefore + claimable, balanceAfter);
+            assertGt(balanceAfter, balanceBefore);
+            timestamp += 1 weeks;
+        }
+    }
 }
