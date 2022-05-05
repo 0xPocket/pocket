@@ -160,9 +160,7 @@ contract PocketFaucet is AccessControl {
         _isRelated(msg.sender, child)
     {
         uint256 balanceBefore = IERC20(baseToken).balanceOf(address(this));
-        console2.log("ICI");
         IERC20(baseToken).safeTransferFrom(msg.sender, address(this), amount);
-        console2.log("asd");
 
         require(
             balanceBefore + amount == IERC20(baseToken).balanceOf(address(this))
