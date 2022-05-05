@@ -2,7 +2,7 @@ import { Tab } from '@headlessui/react';
 import { UserChild, UserParent } from '@lib/types/interfaces';
 import { useState } from 'react';
 import { DialogFullWrapper } from '../wrappers/DialogsWrapper';
-import { ChildContract } from '@lib/contract';
+import { ChildContract } from '@lib/contract/web';
 import SectionContainer from '../containers/SectionContainer';
 import ChildSettingsForm from '../forms/ChildSettingsForm';
 
