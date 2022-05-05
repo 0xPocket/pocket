@@ -12,8 +12,8 @@ contract PFHelper is Utils, Erc20Handler {
     address JEUR = 0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c;
     PocketFaucet PF = new PocketFaucet(findLastSunday(), JEUR);
 
-    bytes32 parent1 = keccak256("Parent1");
-    bytes32 parent2 = keccak256("Parent2");
+    address parent1 = address(0x1994);
+    address parent2 = address(0x1995);
     address child1 = address(0x1);
     address child2 = address(0x2);
     address child3 = address(0x3);
@@ -23,7 +23,7 @@ contract PFHelper is Utils, Erc20Handler {
         PocketFaucet.config(10e18, 0, true, 0, parent1);
 
     function addChildToParent(
-        bytes32 parent,
+        address parent,
         address child,
         uint256 ceiling,
         bool active
@@ -43,22 +43,22 @@ contract PFHelper is Utils, Erc20Handler {
         PF.addNewChild(newConf, child);
     }
 
-    function addFundToParent(bytes32 parent, uint256 amount) public {
+    function addFundToParent(address parent, uint256 amount) public {
         setErc20Amount(address(this), JEUR, amount);
         IERC20(JEUR).safeIncreaseAllowance(address(PF), amount);
         PF.addFunds(parent, amount);
     }
 
     function checkChildIsNotInit(address child) public {
-        bytes32 parent;
+        address parent;
         (, , , , parent) = PF.childToConfig(child);
-        assertEq(parent, bytes32(0));
+        assertEq(parent, address(0));
     }
 
-    function checkChildIsInit(address child, bytes32 parentFrom) public {
-        bytes32 parent;
+    function checkChildIsInit(address child, address parentFrom) public {
+        address parent;
         (, , , , parent) = PF.childToConfig(child);
-        assertTrue(parent != bytes32(0));
+        assertTrue(parent != address(0));
         assertTrue(parent == parentFrom);
         uint256 size = PF.getNumberChildren(parent);
         bool exist = false;
@@ -80,7 +80,7 @@ contract PFHelper is Utils, Erc20Handler {
         uint256 claimable;
         bool active;
         uint256 lastClaim;
-        bytes32 parent;
+        address parent;
 
         (ceiling, claimable, active, lastClaim, parent) = PF.childToConfig(
             child
