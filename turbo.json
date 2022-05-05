@@ -20,16 +20,16 @@
     "@lib/prisma#dev": {
       "cache": false
     },
-    "blockchain-side-pocket#dev": {
-      "dependsOn": ["@lib/contract#healthcheck"],
+    "@lib/contract#dev": {
+      "dependsOn": ["@lib/hardhat-node#healthcheck"],
       "cache": false
     },
-    "@lib/contract#healthcheck": {
+    "@lib/hardhat-node#healthcheck": {
       "cache": false
     },
     "api#dev": {
       "cache": false,
-      "dependsOn": ["blockchain-side-pocket#dev", "@lib/prisma#dev"]
+      "dependsOn": ["@lib/contract#dev", "@lib/prisma#dev"]
     },
     "clean": {
       "dependsOn": ["@lib/prisma#db:down"],
