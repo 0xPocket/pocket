@@ -49,35 +49,9 @@ contract WithdrawSecurityTest is Erc20Handler, HelperContract {
         pocket.withdrawToken(JEUR, 10000);
     }
 
-    function testWithdrawCoinParent() public {
-        pocket.grantRole(PARENT_ROLE, addr1);
-        vm.prank(addr1);
-        vm.expectRevert(
-            bytes(
-                "AccessControl: account 0x0000000000000000000000000000000000000001 is missing role 0x5d8e12c39142ff96d79d04d15d1ba1269e4fe57bb9d26f43523628b34ba108ec"
-            )
-        );
-        pocket.withdrawCoin(0);
-    }
-
-    function testWithdrawCoinChild() public {
-        pocket.grantRole(CHILD_ROLE, addr1);
-        vm.prank(addr1);
-        vm.expectRevert(
-            bytes(
-                "AccessControl: account 0x0000000000000000000000000000000000000001 is missing role 0x5d8e12c39142ff96d79d04d15d1ba1269e4fe57bb9d26f43523628b34ba108ec"
-            )
-        );
-        pocket.withdrawCoin(0);
-    }
-
     function testWithdrawCoinNoRole() public {
         vm.prank(addr1);
-        vm.expectRevert(
-            bytes(
-                "AccessControl: account 0x0000000000000000000000000000000000000001 is missing role 0x5d8e12c39142ff96d79d04d15d1ba1269e4fe57bb9d26f43523628b34ba108ec"
-            )
-        );
+        vm.expectRevert();
         pocket.withdrawCoin(0);
     }
 }

@@ -11,13 +11,13 @@ contract ClaimTest is PFHelper {
     using SafeERC20 for IERC20;
 
     function setUp() public {
-        PF.grantRole(CHILD_ROLE, child1);
+        vm.prank(parent1);
         PF.addNewChild(stdConf, child1);
     }
 
     function testZeroParentBalance() public {
         vm.prank(child1);
-        vm.expectRevert(bytes("!claim : zero parent balance"));
+        vm.expectRevert(bytes("!claim: null balance"));
         PF.claim();
     }
 
@@ -25,7 +25,7 @@ contract ClaimTest is PFHelper {
         addFundToChild(parent1, 10e18, child1);
         vm.startPrank(child1);
         PF.claim();
-        vm.expectRevert(bytes("!calculateClaimable: period is not finished"));
+        vm.expectRevert(bytes("!claim: null balance"));
         PF.claim();
         vm.stopPrank();
     }
@@ -57,6 +57,7 @@ contract ClaimTest is PFHelper {
 
     function testClaimableGtBalance(uint8 amount) public {
         if (amount == 0) return;
+        vm.prank(parent1);
         addChildToParent(parent1, child2, 1000e18, true);
         PF.grantRole(CHILD_ROLE, child2);
         addFundToChild(parent1, amount, child2);
@@ -78,7 +79,7 @@ contract ClaimTest is PFHelper {
             PF.updateLastPeriod();
             uint256 claimable = helperCalculateClaimable(child1);
             if (getConfig(child1).balance * 1e18 == claimable) {
-                vm.expectRevert(bytes("!claim : zero parent balance"));
+                vm.expectRevert(bytes("!claim: null balance"));
                 vm.prank(child1);
                 PF.claim();
                 return;
