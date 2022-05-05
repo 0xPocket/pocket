@@ -1,0 +1,3 @@
+[submodule "packages/contract"]
+	path = packages/contract
+	url = git@github.com:sadarnau/blockchain-side-pocket.git
