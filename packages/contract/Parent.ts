@@ -1,6 +1,6 @@
 import { Contract } from "ethers";
 import { BigNumberish } from "ethers";
-import { PocketFaucet } from "types/PocketFaucet";
+import { AddNewChildRequest, PocketFaucet } from "types/PocketFaucet";
 
 export interface ChildConfig {
   ceiling: BigNumberish;
@@ -34,10 +34,10 @@ class ParentContract {
     return await this.getPocketFaucetContract().rmChild(childAddress);
   };
 
-  addNewChild = async (config: ChildConfig, childAddress: string) => {
+  addNewChild = async (config: AddNewChildRequest, childAddress: string) => {
+    config.
     return await this.getPocketFaucetContract().addNewChild(
-      config,
-      childAddress
+      {}
     );
   };
 
