@@ -169,7 +169,7 @@ contract PocketFaucet is AccessControl {
             : conf.claimable;
     }
 
-    function claim() public onlyRole(CHILD_ROLE) {
+    function claim() public onlyRole(CHILD_ROLE) { // TO DO maybe check for active ?
         updateLastPeriod();
         config storage conf = childToConfig[msg.sender];
         _calculateClaimable(conf);
@@ -184,6 +184,7 @@ contract PocketFaucet is AccessControl {
         //     "!claim : faucet liquidity low"
         // );
 
+        // TO DO : in current conf it could happen if claimable > parent balance and parent balance == balanceOf(this)
         if (IERC20(baseToken).balanceOf(address(this)) < conf.claimable) {
             emit bigIssue("!claim : faucet liquidity low");
             revert("!claim : faucet liquidity low");

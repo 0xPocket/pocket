@@ -108,4 +108,22 @@ contract PFHelper is Utils, Erc20Handler {
         if (first.parent != sec.parent) return false;
         return true;
     }
+
+    function helperCalculateClaimable(address child)
+        public
+        view
+        returns (uint256)
+    {
+        PocketFaucet.config memory conf = getConfig(child);
+        if (conf.lastClaim == PF.lastPeriod()) return 0;
+        while (conf.lastClaim != PF.lastPeriod()) {
+            conf.claimable += conf.ceiling;
+            conf.lastClaim += 1 weeks;
+        }
+        uint256 parentBalance = PF.parentsBalance(conf.parent);
+        conf.claimable = (conf.claimable > parentBalance)
+            ? parentBalance
+            : conf.claimable;
+        return conf.claimable;
+    }
 }
