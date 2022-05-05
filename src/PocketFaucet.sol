@@ -21,22 +21,16 @@ contract PocketFaucet is AccessControl {
 
     event newChildAdded(address indexed parent, address indexed child);
     event childRm(address indexed parent, address indexed child);
-    event fundsAdded(address indexed parent, uint256 amount);
+    event fundsAdded(address indexed parent, uint256 amount, address child);
     event moneyClaimed(address indexed child, uint256 amount);
     event bigIssue(string indexed errorMsg);
     event tokenWithdrawed(address token, uint256 amount);
     event coinWithdrawed(uint256 amount);
-    event configChanged(
-        address indexed child,
-        bool active,
-        uint256 ceiling,
-        uint256 claimable
-    );
+    event configChanged(bool active, uint256 ceiling, address indexed child);
 
     address immutable baseToken;
     uint256 public lastPeriod;
 
-    mapping(address => uint256) public parentsBalance;
     mapping(address => address[]) public parentToChildren;
     mapping(address => config) public childToConfig;
 
@@ -47,11 +41,28 @@ contract PocketFaucet is AccessControl {
     }
 
     struct config {
-        uint256 ceiling;
-        uint256 claimable;
         bool active;
+        uint256 balance;
+        uint256 ceiling;
         uint256 lastClaim;
         address parent;
+    }
+
+    modifier _isRelated(address parent, address child) {
+        bool isChild = false;
+        uint256 length = parentToChildren[parent].length;
+        for (uint256 i = 0; i < length; i++) {
+            if (parentToChildren[parent][i] == child) {
+                isChild = true;
+                break;
+            }
+        }
+        require(
+            childToConfig[child].parent == parent,
+            "!isRelated : parent doesn't match"
+        );
+        require(isChild == true, "!isRelated : child doesn't exist");
+        _;
     }
 
     function getNumberChildren(address parent) public view returns (uint256) {
@@ -66,139 +77,131 @@ contract PocketFaucet is AccessControl {
     }
 
     function addNewChild(config memory conf, address child) external {
-        require(conf.parent != address(0), "ParentUID is 0");
-        require(conf.claimable == 0, "Claimable is not 0");
-        require(child != address(0), "Address is 0");
+        require(child != address(0), "Address is null");
+        require(
+            conf.parent == msg.sender,
+            "!addNewChild: wrong parent in config"
+        );
         require(
             childToConfig[child].parent == address(0),
             "Child address already taken"
         );
 
+        conf.balance = 0;
         conf.lastClaim = lastPeriod - 1 weeks;
         childToConfig[child] = conf;
-        parentToChildren[conf.parent].push(child);
+        parentToChildren[msg.sender].push(child);
 
-        emit newChildAdded(conf.parent, child);
+        emit newChildAdded(msg.sender, child);
     }
 
-    // TO DO add a security by asking for the parent uid first --> avoid front mistakes
-    function rmChild(address child) external {
+    function rmChild(address child) external _isRelated(msg.sender, child) {
         config memory childConfig = childToConfig[child];
-        require(childConfig.parent != address(0), "Child is not set");
 
         uint256 length = parentToChildren[childConfig.parent].length;
         for (uint256 i = 0; i < length; i++) {
             if (parentToChildren[childConfig.parent][i] == child) {
-                delete (parentToChildren[childConfig.parent][i]);
                 parentToChildren[childConfig.parent][i] = parentToChildren[
                     childConfig.parent
                 ][length - 1];
+                delete (parentToChildren[childConfig.parent][length - 1]);
                 break;
             }
         }
 
         delete childToConfig[child];
+        // revoke child role ??
         emit childRm(childConfig.parent, child);
     }
 
-    function changeConfig(config memory newConf, address child) public {
+    function changeConfig(config memory newConf, address child)
+        public
+        _isRelated(msg.sender, child)
+    {
         require(child != address(0), "Child address is 0");
         config storage conf = childToConfig[child];
         require(conf.parent != address(0), "Child is not set");
         conf.active = newConf.active;
-        conf.claimable = newConf.claimable;
         conf.ceiling = newConf.ceiling;
-        emit configChanged(
-            child,
-            newConf.active,
-            newConf.claimable,
-            newConf.ceiling
-        );
+
+        emit configChanged(conf.active, conf.ceiling, child);
     }
 
-    function changeAddress(address oldAddr, address newAddr)
+    function changeChildAddress(address oldChild, address newChild)
         public
-        onlyRole(DEFAULT_ADMIN_ROLE)
+        _isRelated(msg.sender, oldChild)
     {
-        config memory conf = childToConfig[oldAddr];
+        config memory conf = childToConfig[oldChild];
         require(
             conf.parent != address(0),
             "!changeAddr : child does not exist"
         );
+        require(
+            childToConfig[newChild].parent == address(0),
+            "!changeChildAddress : child already exist"
+        );
 
-        childToConfig[newAddr] = conf;
+        childToConfig[newChild] = conf;
 
         uint256 length = parentToChildren[conf.parent].length;
         for (uint256 i = 0; i < length; i++) {
-            if (parentToChildren[conf.parent][i] == oldAddr) {
-                delete (parentToChildren[conf.parent][i]);
-                parentToChildren[conf.parent][i] = newAddr;
+            if (parentToChildren[conf.parent][i] == oldChild) {
+                parentToChildren[conf.parent][i] = newChild;
                 break;
             }
         }
 
-        delete (childToConfig[oldAddr]);
+        delete (childToConfig[oldChild]);
     }
 
     // TO DO : test
-    function addFunds(address parent, uint256 amount)
+    function addFunds(uint256 amount, address child)
         public
-        onlyRole(DEFAULT_ADMIN_ROLE)
+        _isRelated(msg.sender, child)
     {
-        require(amount != 0);
+        uint256 balanceBefore = IERC20(baseToken).balanceOf(address(this));
         IERC20(baseToken).safeTransferFrom(msg.sender, address(this), amount);
-        parentsBalance[parent] += amount;
-        emit fundsAdded(parent, amount);
+        require(
+            balanceBefore + amount == IERC20(baseToken).balanceOf(address(this))
+        );
+        childToConfig[child].balance += amount;
+
+        emit fundsAdded(msg.sender, amount, child);
     }
 
-    function _calculateClaimable(config storage conf) internal {
+    function _calculateClaimable(config storage conf)
+        internal
+        returns (uint256)
+    {
         require(
             conf.lastClaim != lastPeriod,
             "!calculateClaimable: period is not finished"
         );
 
+        uint256 claimable;
         while (conf.lastClaim != lastPeriod) {
-            conf.claimable += conf.ceiling;
+            claimable += conf.ceiling;
             conf.lastClaim += 1 weeks;
         }
 
-        uint256 parentBalance = parentsBalance[conf.parent];
-
-        conf.claimable = conf.claimable > parentBalance
-            ? parentBalance
-            : conf.claimable;
+        return (claimable > conf.balance ? conf.balance : claimable);
     }
 
-    function claim() public onlyRole(CHILD_ROLE) { // TO DO maybe check for active ?
+    function claim() public {
         updateLastPeriod();
+
         config storage conf = childToConfig[msg.sender];
-        _calculateClaimable(conf);
+        require(conf.balance > 0, "!claim: null balance");
+        require(
+            childToConfig[msg.sender].active == true,
+            "!claim: account is inactive"
+        );
 
-        address parent = conf.parent;
+        uint256 claimable = _calculateClaimable(conf);
+        conf.balance -= claimable;
 
-        uint256 parentBalance = parentsBalance[parent];
-        require(parentBalance != 0, "!claim : zero parent balance");
-
-        // require(
-        //     IERC20(baseToken).balanceOf(address(this)) >= conf.claimable,
-        //     "!claim : faucet liquidity low"
-        // );
-
-        // TO DO : in current conf it could happen if claimable > parent balance and parent balance == balanceOf(this)
-        if (IERC20(baseToken).balanceOf(address(this)) < conf.claimable) {
-            emit bigIssue("!claim : faucet liquidity low");
-            revert("!claim : faucet liquidity low");
-        }
-
-        uint256 pocketMoney = conf.claimable;
-        // conf.claimable > parentBalance
-        //     ? pocketMoney = parentBalance
-        //     : pocketMoney = conf.claimable;
-
-        conf.claimable -= pocketMoney;
-        parentsBalance[conf.parent] -= pocketMoney;
-        IERC20(baseToken).safeTransfer(msg.sender, pocketMoney);
-        emit moneyClaimed(msg.sender, pocketMoney);
+        IERC20(baseToken).safeTransfer(msg.sender, claimable);
+        emit moneyClaimed(msg.sender, claimable);
     }
 
     function withdrawToken(address token, uint256 amount)
@@ -209,7 +212,7 @@ contract PocketFaucet is AccessControl {
         emit tokenWithdrawed(token, amount);
     }
 
-    function withdrawCoin(uint256 amount) public onlyRole(WITHDRAW_ROLE) {
+    function withdrawCoin(uint256 amount) public {
         if (amount == 0) amount = address(this).balance;
         payable(msg.sender).transfer(amount);
         emit coinWithdrawed(amount);

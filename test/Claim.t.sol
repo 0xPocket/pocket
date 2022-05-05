@@ -21,16 +21,8 @@ contract ClaimTest is PFHelper {
         PF.claim();
     }
 
-    function testNotEnoughInFaucet() public {
-        addFundToParent(parent1, 10e18);
-        setErc20Amount(address(PF), JEUR, 10);
-        vm.prank(child1);
-        vm.expectRevert(bytes("!claim : faucet liquidity low"));
-        PF.claim();
-    }
-
     function testNoReentryClaim() public {
-        addFundToParent(parent1, 10e18);
+        addFundToChild(parent1, 10e18, child1);
         vm.startPrank(child1);
         PF.claim();
         vm.expectRevert(bytes("!calculateClaimable: period is not finished"));
@@ -39,7 +31,7 @@ contract ClaimTest is PFHelper {
     }
 
     function testCanClaim() public {
-        addFundToParent(parent1, 10e18);
+        addFundToChild(parent1, 10e18, child1);
         uint256 balanceBefore = checkBalance(JEUR, child1);
         vm.prank(child1);
         PF.claim();
@@ -50,7 +42,7 @@ contract ClaimTest is PFHelper {
 
     function testCanClaimMultipleWeeks() public {
         uint256 timestamp = block.timestamp;
-        addFundToParent(parent1, 100e18);
+        addFundToChild(parent1, 100e18, child1);
         for (uint256 nbWeek = 0; nbWeek < 10; nbWeek++) {
             vm.warp(timestamp);
             uint256 balanceBefore = checkBalance(JEUR, child1);
@@ -63,11 +55,11 @@ contract ClaimTest is PFHelper {
         }
     }
 
-    function testClaimableGtParentBalance(uint8 amount) public {
+    function testClaimableGtBalance(uint8 amount) public {
         if (amount == 0) return;
         addChildToParent(parent1, child2, 1000e18, true);
         PF.grantRole(CHILD_ROLE, child2);
-        addFundToParent(parent1, amount);
+        addFundToChild(parent1, amount, child2);
         setErc20Amount(address(PF), JEUR, 1000000e18);
         uint256 balanceBefore = checkBalance(JEUR, child2);
         vm.prank(child2);
@@ -79,13 +71,13 @@ contract ClaimTest is PFHelper {
 
     function testCanClaimMultipleWeeksNotEnough() public {
         uint256 timestamp = block.timestamp;
-        addFundToParent(parent1, 55e18);
+        addFundToChild(parent1, 55e18, child1);
         for (uint256 nbWeek = 0; nbWeek < 10; nbWeek++) {
             vm.warp(timestamp);
             uint256 balanceBefore = checkBalance(JEUR, child1);
             PF.updateLastPeriod();
             uint256 claimable = helperCalculateClaimable(child1);
-            if (PF.parentsBalance(parent1) * 1e18 <= claimable) {
+            if (getConfig(child1).balance * 1e18 == claimable) {
                 vm.expectRevert(bytes("!claim : zero parent balance"));
                 vm.prank(child1);
                 PF.claim();

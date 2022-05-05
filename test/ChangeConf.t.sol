@@ -35,13 +35,6 @@ contract ChangeConf is Test, PFHelper {
         assertFalse(conf.active);
     }
 
-    function testChangeClaimable() public {
-        assertEq(getConfig(child2).claimable, 0);
-        stdConf.claimable = 40;
-        PF.changeConfig(stdConf, child2);
-        assertEq(getConfig(child2).claimable, 40);
-    }
-
     function testChangeCeiling() public {
         assertEq(getConfig(child2).ceiling, 20);
         stdConf.ceiling = 50;

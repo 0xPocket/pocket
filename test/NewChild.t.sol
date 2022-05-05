@@ -10,9 +10,9 @@ import "./helpers/PFHelper.sol";
 contract NewChild is Test, PFHelper {
     function testNoParentInConf() public {
         PocketFaucet.config memory conf = PocketFaucet.config(
-            10,
-            0,
             true,
+            0,
+            10,
             0,
             address(0)
         );
@@ -22,9 +22,9 @@ contract NewChild is Test, PFHelper {
 
     function testChildClaimableNotZero() public {
         PocketFaucet.config memory conf = PocketFaucet.config(
-            10,
-            4,
             true,
+            4,
+            10,
             0,
             parent1
         );

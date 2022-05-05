@@ -20,7 +20,7 @@ contract PFHelper is Utils, Erc20Handler {
     address lastChildAdded = address(0x5000000);
 
     PocketFaucet.config stdConf =
-        PocketFaucet.config(10e18, 0, true, 0, parent1);
+        PocketFaucet.config(true, 0, 10e18, 0, parent1);
 
     function addChildToParent(
         address parent,
@@ -34,19 +34,24 @@ contract PFHelper is Utils, Erc20Handler {
         }
 
         PocketFaucet.config memory newConf = PocketFaucet.config(
-            ceiling,
-            0,
             active,
+            0,
+            ceiling,
             0,
             parent
         );
         PF.addNewChild(newConf, child);
     }
 
-    function addFundToParent(address parent, uint256 amount) public {
-        setErc20Amount(address(this), JEUR, amount);
+    function addFundToChild(
+        address parent,
+        uint256 amount,
+        address child
+    ) public {
+        setErc20Amount(parent, JEUR, amount);
+        vm.prank(parent);
         IERC20(JEUR).safeIncreaseAllowance(address(PF), amount);
-        PF.addFunds(parent, amount);
+        PF.addFunds(amount, child);
     }
 
     function checkChildIsNotInit(address child) public {
@@ -76,20 +81,18 @@ contract PFHelper is Utils, Erc20Handler {
         view
         returns (PocketFaucet.config memory)
     {
-        uint256 ceiling;
-        uint256 claimable;
         bool active;
+        uint256 balance;
+        uint256 ceiling;
         uint256 lastClaim;
         address parent;
 
-        (ceiling, claimable, active, lastClaim, parent) = PF.childToConfig(
-            child
-        );
+        (active, balance, ceiling, lastClaim, parent) = PF.childToConfig(child);
 
         PocketFaucet.config memory conf = PocketFaucet.config(
-            ceiling,
-            claimable,
             active,
+            balance,
+            ceiling,
             lastClaim,
             parent
         );
@@ -101,9 +104,9 @@ contract PFHelper is Utils, Erc20Handler {
         PocketFaucet.config memory first,
         PocketFaucet.config memory sec
     ) public pure returns (bool) {
-        if (first.ceiling != sec.ceiling) return false;
-        if (first.claimable != sec.claimable) return false;
         if (first.active != sec.active) return false;
+        if (first.balance != sec.balance) return false;
+        if (first.ceiling != sec.ceiling) return false;
         if (first.lastClaim != sec.lastClaim) return false;
         if (first.parent != sec.parent) return false;
         return true;
@@ -116,14 +119,13 @@ contract PFHelper is Utils, Erc20Handler {
     {
         PocketFaucet.config memory conf = getConfig(child);
         if (conf.lastClaim == PF.lastPeriod()) return 0;
+
+        uint256 claimable;
         while (conf.lastClaim != PF.lastPeriod()) {
-            conf.claimable += conf.ceiling;
+            claimable += conf.ceiling;
             conf.lastClaim += 1 weeks;
         }
-        uint256 parentBalance = PF.parentsBalance(conf.parent);
-        conf.claimable = (conf.claimable > parentBalance)
-            ? parentBalance
-            : conf.claimable;
-        return conf.claimable;
+
+        return (claimable > conf.balance ? conf.balance : claimable);
     }
 }

@@ -17,11 +17,11 @@ contract ChangeAddrTest is PFHelper {
 
     function testDoesntExist() public {
         vm.expectRevert("!changeAddr : child does not exist");
-        PF.changeAddress(child2, child1);
+        PF.changeChildAddress(child2, child1);
     }
 
     function testNewAddr() public {
-        PF.changeAddress(child1, child2);
+        PF.changeChildAddress(child1, child2);
         checkChildIsNotInit(child1);
         checkChildIsInit(child2, parent1);
         assertEq(getConfig(child1).parent, address(0));
@@ -31,9 +31,9 @@ contract ChangeAddrTest is PFHelper {
 
     function testNewChildCanWithdraw() public {
         PF.grantRole(CHILD_ROLE, child2);
-        PF.changeAddress(child1, child2);
+        PF.changeChildAddress(child1, child2);
         vm.warp(block.timestamp + 3 weeks);
-        addFundToParent(parent1, 1000e18);
+        addFundToChild(parent1, 1000e18, child2);
         vm.prank(child2);
         PF.claim();
         assertEq(stdConf.ceiling * 4, IERC20(JEUR).balanceOf(child2));
