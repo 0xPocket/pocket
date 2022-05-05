@@ -19,9 +19,9 @@ contract PocketFaucet is AccessControl {
     bytes32 public constant PARENT_ROLE = keccak256("PARENT_ROLE");
     bytes32 public constant CHILD_ROLE = keccak256("CHILD_ROLE");
 
-    event newChildAdded(bytes32 indexed parentUID, address indexed child);
-    event childRm(bytes32 indexed parentUID, address indexed child);
-    event fundsAdded(bytes32 indexed parentUID, uint256 amount);
+    event newChildAdded(address indexed parent, address indexed child);
+    event childRm(address indexed parent, address indexed child);
+    event fundsAdded(address indexed parent, uint256 amount);
     event moneyClaimed(address indexed child, uint256 amount);
     event bigIssue(string indexed errorMsg);
     event tokenWithdrawed(address token, uint256 amount);
@@ -36,8 +36,8 @@ contract PocketFaucet is AccessControl {
     address immutable baseToken;
     uint256 public lastPeriod;
 
-    mapping(bytes32 => uint256) public parentsBalance;
-    mapping(bytes32 => address[]) public parentToChildren;
+    mapping(address => uint256) public parentsBalance;
+    mapping(address => address[]) public parentToChildren;
     mapping(address => config) public childToConfig;
 
     constructor(uint256 begin, address token) {
@@ -51,10 +51,10 @@ contract PocketFaucet is AccessControl {
         uint256 claimable;
         bool active;
         uint256 lastClaim;
-        bytes32 parent;
+        address parent;
     }
 
-    function getNumberChildren(bytes32 parent) public view returns (uint256) {
+    function getNumberChildren(address parent) public view returns (uint256) {
         return parentToChildren[parent].length;
     }
 
@@ -66,11 +66,11 @@ contract PocketFaucet is AccessControl {
     }
 
     function addNewChild(config memory conf, address child) external {
-        require(conf.parent != bytes32(0), "ParentUID is 0");
+        require(conf.parent != address(0), "ParentUID is 0");
         require(conf.claimable == 0, "Claimable is not 0");
         require(child != address(0), "Address is 0");
         require(
-            childToConfig[child].parent == bytes32(0),
+            childToConfig[child].parent == address(0),
             "Child address already taken"
         );
 
@@ -84,7 +84,7 @@ contract PocketFaucet is AccessControl {
     // TO DO add a security by asking for the parent uid first --> avoid front mistakes
     function rmChild(address child) external {
         config memory childConfig = childToConfig[child];
-        require(childConfig.parent != bytes32(0), "Child is not set");
+        require(childConfig.parent != address(0), "Child is not set");
 
         uint256 length = parentToChildren[childConfig.parent].length;
         for (uint256 i = 0; i < length; i++) {
@@ -104,7 +104,7 @@ contract PocketFaucet is AccessControl {
     function changeConfig(config memory newConf, address child) public {
         require(child != address(0), "Child address is 0");
         config storage conf = childToConfig[child];
-        require(conf.parent != bytes32(0), "Child is not set");
+        require(conf.parent != address(0), "Child is not set");
         conf.active = newConf.active;
         conf.claimable = newConf.claimable;
         conf.ceiling = newConf.ceiling;
@@ -122,7 +122,7 @@ contract PocketFaucet is AccessControl {
     {
         config memory conf = childToConfig[oldAddr];
         require(
-            conf.parent != bytes32(0),
+            conf.parent != address(0),
             "!changeAddr : child does not exist"
         );
 
@@ -141,7 +141,7 @@ contract PocketFaucet is AccessControl {
     }
 
     // TO DO : test
-    function addFunds(bytes32 parent, uint256 amount)
+    function addFunds(address parent, uint256 amount)
         public
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
@@ -161,6 +161,12 @@ contract PocketFaucet is AccessControl {
             conf.claimable += conf.ceiling;
             conf.lastClaim += 1 weeks;
         }
+
+        uint256 parentBalance = parentsBalance[conf.parent];
+
+        conf.claimable = conf.claimable > parentBalance
+            ? parentBalance
+            : conf.claimable;
     }
 
     function claim() public onlyRole(CHILD_ROLE) {
@@ -168,23 +174,25 @@ contract PocketFaucet is AccessControl {
         config storage conf = childToConfig[msg.sender];
         _calculateClaimable(conf);
 
-        bytes32 parent = conf.parent;
+        address parent = conf.parent;
 
         uint256 parentBalance = parentsBalance[parent];
         require(parentBalance != 0, "!claim : zero parent balance");
-        require(
-            IERC20(baseToken).balanceOf(address(this)) >= conf.claimable,
-            "!claim : faucet liquidity low"
-        );
+
+        // require(
+        //     IERC20(baseToken).balanceOf(address(this)) >= conf.claimable,
+        //     "!claim : faucet liquidity low"
+        // );
+
         if (IERC20(baseToken).balanceOf(address(this)) < conf.claimable) {
             emit bigIssue("!claim : faucet liquidity low");
             revert("!claim : faucet liquidity low");
         }
 
-        uint256 pocketMoney;
-        conf.claimable > parentBalance
-            ? pocketMoney = parentBalance
-            : pocketMoney = conf.claimable;
+        uint256 pocketMoney = conf.claimable;
+        // conf.claimable > parentBalance
+        //     ? pocketMoney = parentBalance
+        //     : pocketMoney = conf.claimable;
 
         conf.claimable -= pocketMoney;
         parentsBalance[conf.parent] -= pocketMoney;

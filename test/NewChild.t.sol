@@ -14,7 +14,7 @@ contract NewChild is Test, PFHelper {
             0,
             true,
             0,
-            bytes32(0)
+            address(0)
         );
         vm.expectRevert(bytes("ParentUID is 0"));
         PF.addNewChild(conf, child1);
