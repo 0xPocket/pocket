@@ -50,7 +50,8 @@ contract PFHelper is Utils, Erc20Handler {
     ) public {
         setErc20Amount(parent, JEUR, amount);
         vm.prank(parent);
-        IERC20(JEUR).safeIncreaseAllowance(address(PF), amount);
+        IERC20(JEUR).approve(address(PF), amount);
+        vm.prank(parent);
         PF.addFunds(amount, child);
     }
 

@@ -8,6 +8,10 @@ import "forge-std/Test.sol";
 import "./helpers/PFHelper.sol";
 
 contract RmChild is Test, PFHelper {
+    function setUp() public {
+        vm.startPrank(parent1);
+    }
+
     function testRmChild() public {
         PF.addNewChild(stdConf, child1);
         PF.rmChild(child1);
@@ -16,7 +20,7 @@ contract RmChild is Test, PFHelper {
 
     function testRmChildNotSet() public {
         PF.addNewChild(stdConf, child1);
-        vm.expectRevert(bytes("Child is not set"));
+        vm.expectRevert(bytes("!isRelated : parent doesn't match"));
         PF.rmChild(child2);
     }
 

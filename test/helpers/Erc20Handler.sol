@@ -28,4 +28,12 @@ contract Erc20Handler is Test {
     {
         return IERC20(token).balanceOf(account);
     }
+
+    function getAllowance(address token, address owner, address spender)
+        public
+        view
+        returns (uint256)
+    {
+        return IERC20(token).allowance(owner, spender);
+    }
 }
