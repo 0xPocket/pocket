@@ -1,13 +1,19 @@
 {
-  "name": "blockchain-side-pocket",
+  "name": "@lib/contract",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
+    "clean": "rm -rf node_modules",
     "dev": "echo -n CONTRACT_ADDRESS= > ../../contract.env && yarn forge:deploy | grep Deployed | cut -c14- >> ../../contract.env",
-    "postinstall": "yarn forge:install && yarn forge:build",
+    "postinstall": "yarn forge:install && yarn forge:build && yarn build:types",
     "forge:install": "forge install",
     "forge:build": "forge build",
+    "build:types": "typechain --target ethers-v5 --out-dir=web/types ./out/PocketFaucet.sol/PocketFaucet.json",
     "forge:deploy": "forge create src/PocketFaucet.sol:PocketFaucet --private-key 0x47c99abed3324a2707c28affff1267e45918ec8c3f20b8aa892e8b065d2942dd --constructor-args 1651449600 0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c --rpc-url http://127.0.0.1:8545"
+  },
+  "devDependencies": {
+    "@typechain/ethers-v5": "^10.0.0",
+    "typechain": "^8.0.0"
   }
 }
