@@ -1,3 +1,5 @@
+import { formatEther } from 'ethers/lib/utils';
+import { useEffect, useState } from 'react';
 import Button from '../components/common/Button';
 import MainWrapper from '../components/wrappers/MainWrapper';
 import { useWeb3Auth } from '../contexts/web3hook';
@@ -5,7 +7,18 @@ import { useWeb3Auth } from '../contexts/web3hook';
 type ChildrenSignupProps = {};
 
 function ChildrenSignup({}: ChildrenSignupProps) {
-  const { status, provider } = useWeb3Auth();
+  const { address, status, provider } = useWeb3Auth();
+  const [balance, setBalance] = useState<string>();
+
+  useEffect(() => {
+    if (address) {
+      provider?.getBalance(address!).then((balance) => {
+        const balanceInEth = formatEther(balance);
+
+        setBalance(balanceInEth);
+      });
+    }
+  }, [provider, address]);
 
   return (
     <MainWrapper>
@@ -14,6 +27,7 @@ function ChildrenSignup({}: ChildrenSignupProps) {
       ) : (
         <section className=" h-screen bg-primary">You must connect</section>
       )}
+      <div>Balance : {balance} ETH</div>
     </MainWrapper>
   );
 }
