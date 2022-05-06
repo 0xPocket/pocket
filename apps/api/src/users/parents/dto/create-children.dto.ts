@@ -10,4 +10,7 @@ export class CreateChildrenDto {
   @IsString()
   @IsEmail()
   email: string;
+
+  @IsString()
+  publicKey?: string;
 }

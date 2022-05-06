@@ -29,6 +29,9 @@ export class ParentsService {
       where: {
         id: userId,
       },
+      include: {
+        wallet: true,
+      },
     });
   }
 
@@ -216,6 +219,29 @@ export class ParentsService {
     data: CreateChildrenDto,
     verification = true,
   ) {
+    if (data.publicKey) {
+      const [parent, child] = await Promise.all([
+        this.prisma.userParent.findUnique({
+          where: {
+            id: parentId,
+          },
+        }),
+        this.prisma.userChild.create({
+          data: {
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+            userParent: {
+              connect: {
+                id: parentId,
+              },
+            },
+          },
+        }),
+      ]);
+
+      return child;
+    }
     try {
       const [parent, child] = await Promise.all([
         this.prisma.userParent.findUnique({

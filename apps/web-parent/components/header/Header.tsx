@@ -3,12 +3,13 @@ import { useRouter } from 'next/router';
 import { useAuth } from '@lib/nest-auth/next';
 import Link from 'next/link';
 import Nav from './Nav';
+import { UserParent } from '@lib/types/interfaces';
 
 type HeaderProps = {};
 
 function Header({}: HeaderProps) {
   const router = useRouter();
-  const { user, status, signOut } = useAuth();
+  const { user, status, signOut } = useAuth<UserParent>();
 
   const handleLogIn = () => {
     console.log('Log');
@@ -37,7 +38,8 @@ function Header({}: HeaderProps) {
           <>
             <Link href="/dashboard" passHref>
               <div className=" cursor-pointer">
-                {user?.firstName} {user?.lastName?.charAt(0)}.
+                {user?.firstName} {user?.lastName?.charAt(0)}. {'   '}
+                {user?.wallet.publicKey}
               </div>
             </Link>
             <Button action={handleLogout}>Logout</Button>
