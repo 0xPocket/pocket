@@ -1,4 +1,5 @@
-import { Contract } from "ethers";
+import { Wallet } from "ethers";
+import { PocketFaucet__factory } from "types";
 import { PocketFaucet } from "./types/PocketFaucet";
 
 // import
@@ -8,40 +9,51 @@ class ParentContract {
   address: any; // TO DO move
   signer: any;
   UID: string;
+  contract: PocketFaucet;
 
-  getPocketFaucetContract = (): PocketFaucet | Contract => {
-    return new Contract(this.address, this.abi, this.signer);
-  };
+  constructor(address: string, signer: Wallet) {
+    this.contract = PocketFaucet__factory.connect(address, signer);
+  }
 
-  getBalance = async () => {
-    return this.getPocketFaucetContract().parentsBalance(this.UID);
-  };
+  // getPocketFaucetContract = (): PocketFaucet | Contract => {
+  //   return new Contract(this.address, this.abi, this.signer);
+  // };
+
+  // getBalance = async () => {
+  //   return this.getPocketFaucetContract().parentsBalance(this.UID);
+  // };
 
   getChildren = async () => {
     // TO DO need contract modification
   };
 
-  rmChild = async (childAddress: string) => {
-    return this.getPocketFaucetContract().rmChild(childAddress);
+  // rmChild = async (childAddress: string) => {
+  //   return this.getPocketFaucetContract().rmChild(childAddress);
+  // };
+
+  getNumberOfChildren = (address: string) => {
+    return this.contract.getNumberChildren(address).then((res) => {
+      return res.toNumber();
+    });
   };
 
   addNewChild = async (
     config: PocketFaucet.ConfigStruct,
     childAddress: string
   ) => {
-    return this.getPocketFaucetContract().addNewChild(config, childAddress);
+    return this.contract.addNewChild(config, childAddress);
   };
 
-  changeConfig = async (
-    config: PocketFaucet.ConfigStruct,
-    childAddress: string
-  ) => {
-    return this.getPocketFaucetContract().changeConfig(config, childAddress);
-  };
+  // changeConfig = async (
+  //   config: PocketFaucet.ConfigStruct,
+  //   childAddress: string
+  // ) => {
+  //   return this.getPocketFaucetContract().changeConfig(config, childAddress);
+  // };
 
-  changeAddress = async (oldAddr: string, newAddr: string) => {
-    return this.getPocketFaucetContract().changeAddress(oldAddr, newAddr);
-  };
+  // changeAddress = async (oldAddr: string, newAddr: string) => {
+  //   return this.getPocketFaucetContract().changeAddress(oldAddr, newAddr);
+  // };
 }
 
 export { ParentContract };
