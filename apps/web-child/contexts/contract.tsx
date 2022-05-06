@@ -1,16 +1,6 @@
-import { Web3Provider } from '@ethersproject/providers';
-import axios from 'axios';
-import WalletConnectProvider from '@walletconnect/web3-provider';
-import Web3Modal from 'web3modal';
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
-import test from '@lib/contract/abi.json';
-import { Contract, ethers } from 'ethers';
+import { createContext, useContext, useEffect, useState } from 'react';
+import PocketFaucet from '@lib/contract/PocketFaucet.json';
+import { Contract } from 'ethers';
 import { useWeb3Auth } from './web3hook';
 
 interface SmartContractProviderProps {
@@ -40,7 +30,7 @@ export const SmartContractProvider = ({
   useEffect(() => {
     const newContract = new Contract(
       '0x62a4b53a1de480be4bdb9c10d0f7de69aeb30abd',
-      test.abi,
+      PocketFaucet.abi,
     );
     setContract(newContract);
     console.log('new contract set');

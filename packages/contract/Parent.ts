@@ -1,14 +1,5 @@
 import { Contract } from "ethers";
-import { BigNumberish } from "ethers";
-import { AddNewChildRequest, PocketFaucet } from "types/PocketFaucet";
-
-export interface ChildConfig {
-  ceiling: BigNumberish;
-  claimable: BigNumberish;
-  active: Boolean;
-  lactClaim: BigNumberish;
-  parent: string;
-}
+import { PocketFaucet } from "./types/PocketFaucet";
 
 // import
 class ParentContract {
@@ -23,7 +14,7 @@ class ParentContract {
   };
 
   getBalance = async () => {
-    return await this.getPocketFaucetContract().parentsBalance(this.UID);
+    return this.getPocketFaucetContract().parentsBalance(this.UID);
   };
 
   getChildren = async () => {
@@ -31,25 +22,25 @@ class ParentContract {
   };
 
   rmChild = async (childAddress: string) => {
-    return await this.getPocketFaucetContract().rmChild(childAddress);
+    return this.getPocketFaucetContract().rmChild(childAddress);
   };
 
-  addNewChild = async (config: AddNewChildRequest, childAddress: string) => {
-    config.
-    return await this.getPocketFaucetContract().addNewChild(
-      {}
-    );
+  addNewChild = async (
+    config: PocketFaucet.ConfigStruct,
+    childAddress: string
+  ) => {
+    return this.getPocketFaucetContract().addNewChild(config, childAddress);
   };
 
-  changeConfig = async (config: ChildConfig, childAddress: string) => {
-    return await this.getPocketFaucetContract().changeConfig(
-      config,
-      childAddress
-    );
+  changeConfig = async (
+    config: PocketFaucet.ConfigStruct,
+    childAddress: string
+  ) => {
+    return this.getPocketFaucetContract().changeConfig(config, childAddress);
   };
 
   changeAddress = async (oldAddr: string, newAddr: string) => {
-    return await this.getPocketFaucetContract().changeAddress(oldAddr, newAddr);
+    return this.getPocketFaucetContract().changeAddress(oldAddr, newAddr);
   };
 }
 
