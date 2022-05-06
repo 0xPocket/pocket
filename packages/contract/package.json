@@ -11,9 +11,10 @@
     "tailwind.config.js"
   ],
   "scripts": {
+    "clean": "rm -rf node_modules types PocketFaucet.json",
     "deploy:node": "yarn hardhat node --fork https://polygon-mainnet.g.alchemy.com/v2/qLBCKN0pvsl20MhmJ2DdyQr1RhmQ_eSK",
-    "build:typescript": "typechain --target ethers-v5 --out-dir=types ./abi.json",
-    "predev": "cp ../blockchain-side-pocket/out/PocketFaucet.sol/PocketFaucet.json ./abi.json && yarn build:typescript",
+    "build:types": "typechain --target ethers-v5 --out-dir=types ./PocketFaucet.json",
+    "predev": "cp ../blockchain-side-pocket/out/PocketFaucet.sol/PocketFaucet.json ./PocketFaucet.json && yarn build:types",
     "dev": "yarn deploy:node",
     "healthcheck": "curl -m 10 --retry 5 --retry-connrefused --retry-delay 3 http://127.0.0.1:8545/"
   },
