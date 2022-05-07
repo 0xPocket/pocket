@@ -14,7 +14,6 @@
   "scripts": {
     "clean": "rimraf nest next providers && rm -rf node_modules",
     "postinstall": "yarn run build",
-    "prebuild": "yarn run clean",
     "build": "tsc -p tsconfig.json",
     "dev": "tsc -p tsconfig.json -w"
   },
