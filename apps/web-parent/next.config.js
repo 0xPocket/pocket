@@ -1,4 +1,7 @@
-require('dotenv').config({ path: '../../.env' });
+const dotenv = require('dotenv');
+
+dotenv.config({ path: '../../.env' });
+dotenv.config({ path: '../../contract.env' });
 
 const withTM = require('next-transpile-modules')(['ui', '@lib/contract']);
 

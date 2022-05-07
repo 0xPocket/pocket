@@ -20,12 +20,20 @@
     "@lib/prisma#dev": {
       "cache": false
     },
+    "@lib/contract#healthcheck": {
+      "cache": false
+    },
     "blockchain-side-pocket#dev": {
       "dependsOn": ["@lib/contract#healthcheck"],
       "cache": false
     },
-    "@lib/contract#healthcheck": {
-      "cache": false
+    "web-parent#dev": {
+      "cache": false,
+      "dependsOn": ["blockchain-side-pocket#dev"]
+    },
+    "web-child#dev": {
+      "cache": false,
+      "dependsOn": ["blockchain-side-pocket#dev"]
     },
     "api#dev": {
       "cache": false,
