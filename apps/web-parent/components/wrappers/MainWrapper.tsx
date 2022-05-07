@@ -3,8 +3,8 @@ import AuthGuard from './AuthGuard';
 
 type MainWrapperProps = {
   children: React.ReactNode;
-  noHeader?: Boolean;
-  authProtected?: Boolean;
+  noHeader?: boolean;
+  authProtected?: boolean;
 };
 
 function MainWrapper({

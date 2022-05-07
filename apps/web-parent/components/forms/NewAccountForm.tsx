@@ -28,11 +28,13 @@ function NewAccountForm({ setIsOpen }: NewAccountFormProps) {
   const axios = useAxios();
 
   const onSubmit = (data: FormValues) => {
+    if (!user) return;
+
     parentContract
       ?.addNewChild(
         {
           active: true,
-          parent: user?.wallet.publicKey!,
+          parent: user?.wallet.publicKey,
           ceiling: 20,
           lastClaim: 20,
           balance: 0,

@@ -5,7 +5,7 @@ type ButtonProps = {
   action?: () => void;
   setIsOpen?: Dispatch<SetStateAction<boolean>>;
   isOpen?: boolean;
-  light?: Boolean;
+  light?: boolean;
 };
 
 function Button({ children, action, light, setIsOpen, isOpen }: ButtonProps) {

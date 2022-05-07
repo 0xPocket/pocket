@@ -25,7 +25,6 @@ const [SmartContractContext, SmartContractContextProvider] =
 export const SmartContractProvider = ({
   children,
 }: SmartContractProviderProps) => {
-  const [loading, setLoading] = useState<boolean>(false);
   const [provider, setProvider] = useState<providers.JsonRpcProvider>();
   const [parentContract, setParentContract] = useState<ParentContract>();
   const { user } = useAuth<UserParent>();
@@ -42,7 +41,7 @@ export const SmartContractProvider = ({
     const signer = new Wallet(user?.wallet.privateKey!, provider);
 
     const parentContract = new ParentContract(
-      '0x62a4b53a1de480be4bdb9c10d0f7de69aeb30abd',
+      process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
       signer,
     );
     setParentContract(parentContract);

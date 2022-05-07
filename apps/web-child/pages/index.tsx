@@ -12,7 +12,7 @@ function ChildrenSignup({}: ChildrenSignupProps) {
 
   useEffect(() => {
     if (address) {
-      provider?.getBalance(address!).then((balance) => {
+      provider?.getBalance(address).then((balance) => {
         const balanceInEth = formatEther(balance);
 
         setBalance(balanceInEth);
