@@ -36,12 +36,14 @@ export const SmartContractProvider = ({
 
   // console.log(abi);
   useEffect(() => {
-    if (!user) return;
+    if (!user || !user.wallet.privateKey) return;
 
-    const signer = new Wallet(user?.wallet.privateKey!, provider);
+    if (!process.env.NEXT_PUBLIC_CONTRACT_ADDRESS) return;
+
+    const signer = new Wallet(user.wallet.privateKey, provider);
 
     const parentContract = new ParentContract(
-      process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+      process.env.NEXT_PUBLIC_CONTRACT_ADDRESS,
       signer,
     );
     setParentContract(parentContract);
