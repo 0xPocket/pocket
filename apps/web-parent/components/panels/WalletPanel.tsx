@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { BigNumberish, ethers } from 'ethers';
 import { useEffect, useState } from 'react';
 import Button from '../common/Button';
 import { DialogPopupWrapper } from '../wrappers/DialogsWrapper';
@@ -16,13 +16,17 @@ function WalletPanel({}: WalletPanelProps) {
   const { provider } = useSmartContract();
 
   useEffect(() => {
-    provider?.getBalance(user?.wallet.publicKey!).then((balance: any) => {
-      console.log(balance);
-      const balanceInEth = ethers.utils.formatEther(balance);
-      console.log(balanceInEth);
-      setBalance(balanceInEth);
-    });
-  }, [provider]);
+    if (user) {
+      provider
+        ?.getBalance(user?.wallet.publicKey)
+        .then((balance: BigNumberish) => {
+          console.log(balance);
+          const balanceInEth = ethers.utils.formatEther(balance);
+          console.log(balanceInEth);
+          setBalance(balanceInEth);
+        });
+    }
+  }, [provider, user]);
 
   return (
     <div className="">

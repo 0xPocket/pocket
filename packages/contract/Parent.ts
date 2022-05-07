@@ -1,5 +1,5 @@
 import { Wallet } from "ethers";
-import { PocketFaucet__factory } from "types";
+import { PocketFaucet__factory } from "./types";
 import { PocketFaucet } from "./types/PocketFaucet";
 
 // import
