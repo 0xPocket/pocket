@@ -17,12 +17,9 @@ function WalletPanel({}: WalletPanelProps) {
 
   useEffect(() => {
     provider?.getBalance(user?.wallet.publicKey!).then((balance: any) => {
-      console.log(balance);
-      const balanceInEth = ethers.utils.formatEther(balance);
-      console.log(balanceInEth);
-      setBalance(balanceInEth);
+      setBalance(ethers.utils.formatEther(balance));
     });
-  }, [provider]);
+  }, [provider, user]);
 
   return (
     <div className="">
