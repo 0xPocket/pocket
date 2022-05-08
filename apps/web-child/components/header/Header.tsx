@@ -6,7 +6,7 @@ import { useWeb3Auth } from '../../contexts/web3hook';
 type HeaderProps = {};
 
 function Header({}: HeaderProps) {
-  const { address, status, connect, disconnect } = useWeb3Auth();
+  const { user, address, status, toggleModal, disconnect } = useWeb3Auth();
 
   return (
     <header className="flex h-20 w-full items-center justify-between border-b border-opacity-40 bg-primary px-8">
@@ -17,10 +17,14 @@ function Header({}: HeaderProps) {
         <Nav />
       </div>
       <div className="flex items-center justify-between gap-8">
-        <div>{address}</div>
+        {status === 'authenticated' && (
+          <div>
+            {user?.firstName} ({address?.substring(0, 4)}...)
+          </div>
+        )}
         <div>
           {status === 'unauthenticated' ? (
-            <Button action={() => connect()}>Connect Wallet</Button>
+            <Button action={() => toggleModal()}>Connect Wallet</Button>
           ) : (
             <Button action={() => disconnect()}>Disconnect Wallet</Button>
           )}

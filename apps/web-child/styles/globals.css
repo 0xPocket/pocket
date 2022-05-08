@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  padding-right: 0px !important;
+}
 @layer base {
   body {
     @apply font-raleway;
