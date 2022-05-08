@@ -1,4 +1,9 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtAuthService } from '../jwt/jwt-auth.service';
 import { MetamaskNonceDto } from './dto/nonce.dto';
@@ -17,26 +22,28 @@ export class MetamaskService {
   ) {}
 
   registerWithToken(data: MetamaskTokenDto) {
-    const payload = this.jwtAuthService.verifyChildSignupToken(data.token);
+    try {
+      const payload = this.jwtAuthService.verifyChildSignupToken(data.token);
 
-    console.log(payload);
-
-    if (payload) {
-      return this.prisma.web3Account.upsert({
-        where: {
-          address: data.walletAddress.toLowerCase(),
-        },
-        create: {
-          address: data.walletAddress.toLowerCase(),
-          nonce: uuidv4(),
-          user: {
-            connect: {
-              id: payload.userId,
+      if (payload) {
+        return this.prisma.web3Account.upsert({
+          where: {
+            address: data.walletAddress.toLowerCase(),
+          },
+          create: {
+            address: data.walletAddress.toLowerCase(),
+            nonce: uuidv4(),
+            user: {
+              connect: {
+                id: payload.userId,
+              },
             },
           },
-        },
-        update: {},
-      });
+          update: {},
+        });
+      }
+    } catch (e) {
+      throw new BadRequestException();
     }
   }
 
@@ -54,6 +61,7 @@ export class MetamaskService {
   async generateNonce(data: MetamaskNonceDto) {
     const web3Account = await this.getWeb3Account(data.walletAddress);
 
+    if (!web3Account) throw new NotFoundException("This user doesn't exists");
     return {
       nonce: this.getMessageFromNonce(web3Account.nonce),
     };

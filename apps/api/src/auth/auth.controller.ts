@@ -15,7 +15,7 @@ export class AuthController {
   @Get('me')
   @UseGuards(JwtAuthGuard)
   me(@GetUserParent() user: JwtTokenPayload) {
-    return this.authService.getParent(user.userId);
+    return this.authService.getParent(user);
   }
 
   @NestAuth('facebook', {

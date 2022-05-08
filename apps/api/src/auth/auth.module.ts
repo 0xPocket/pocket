@@ -1,5 +1,6 @@
 import { NestAuthModule } from '@lib/nest-auth/nest';
 import { Module } from '@nestjs/common';
+import { ChildrenModule } from 'src/users/children/children.module';
 import { ParentsModule } from 'src/users/parents/parents.module';
 import { PrismaModule } from '../prisma/prisma.module';
 import { AuthController } from './auth.controller';
@@ -13,6 +14,7 @@ import { MetamaskModule } from './metamask/metamask.module';
     JwtAuthModule,
     NestAuthModule.forRoot(),
     ParentsModule,
+    ChildrenModule,
     MetamaskModule,
   ],
   controllers: [AuthController],

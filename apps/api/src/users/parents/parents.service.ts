@@ -14,6 +14,7 @@ import { EmailService } from 'src/email/email.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateChildrenDto } from './dto/create-children.dto';
 import { ParentSignupDto } from './dto/parent-signup.dto';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class ParentsService {
@@ -234,6 +235,12 @@ export class ParentsService {
             userParent: {
               connect: {
                 id: parentId,
+              },
+            },
+            web3Account: {
+              create: {
+                address: data.publicKey.toLowerCase(),
+                nonce: uuidv4(),
               },
             },
           },
