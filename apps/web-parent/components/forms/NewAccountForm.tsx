@@ -3,6 +3,7 @@ import { useSmartContract } from '../../contexts/contract';
 import { useAxios } from '../../hooks/axios.hook';
 import { useAuth } from '@lib/nest-auth/next';
 import { UserParent } from '@lib/types/interfaces';
+import { useQueryClient } from 'react-query';
 
 type NewAccountFormProps = {
   setIsOpen: () => void;
@@ -24,7 +25,7 @@ function NewAccountForm({ setIsOpen }: NewAccountFormProps) {
 
   const { parentContract } = useSmartContract();
   const { user } = useAuth<UserParent>();
-
+  const queryClient = useQueryClient();
   const axios = useAxios();
 
   const onSubmit = (data: FormValues) => {
@@ -40,10 +41,12 @@ function NewAccountForm({ setIsOpen }: NewAccountFormProps) {
         data.publicKey,
       )
       .then((res) => {
-        console.log(res);
-      });
+        console.log('Contrat (addNewChild): success :', res);
+      })
+      .catch((e) => console.log('Contrat (addNewChild): error :', e.message));
     axios
       .put('http://localhost:5000/users/parents/children', data)
+      .then(() => queryClient.invalidateQueries('children'))
       .finally(() => {
         setIsOpen();
       });
