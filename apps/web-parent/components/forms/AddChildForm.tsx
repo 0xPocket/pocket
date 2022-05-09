@@ -3,9 +3,9 @@ import { useSmartContract } from '../../contexts/contract';
 import { useAxios } from '../../hooks/axios.hook';
 import { useAuth } from '@lib/nest-auth/next';
 import { UserParent } from '@lib/types/interfaces';
-import { useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 
-type NewAccountFormProps = {
+type AddChildFormProps = {
   setIsOpen: () => void;
 };
 
@@ -16,7 +16,7 @@ type FormValues = {
   publicKey: string;
 };
 
-function NewAccountForm({ setIsOpen }: NewAccountFormProps) {
+function AddChildForm({ setIsOpen }: AddChildFormProps) {
   const {
     register,
     handleSubmit,
@@ -25,8 +25,19 @@ function NewAccountForm({ setIsOpen }: NewAccountFormProps) {
 
   const { parentContract } = useSmartContract();
   const { user } = useAuth<UserParent>();
-  const queryClient = useQueryClient();
+
   const axios = useAxios();
+  const queryClient = useQueryClient();
+  const mutation = useMutation(
+    (data: FormValues) =>
+      axios.put('http://localhost:5000/users/parents/children', data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('children');
+        queryClient.invalidateQueries('balance');
+      },
+    },
+  );
 
   const onSubmit = (data: FormValues) => {
     parentContract
@@ -41,15 +52,11 @@ function NewAccountForm({ setIsOpen }: NewAccountFormProps) {
         data.publicKey,
       )
       .then((res) => {
-        console.log('Contrat (addNewChild): success :', res);
+        mutation.mutate(data);
+        console.log('Contrat (addNewChild): success !');
       })
-      .catch((e) => console.log('Contrat (addNewChild): error :', e.message));
-    axios
-      .put('http://localhost:5000/users/parents/children', data)
-      .then(() => queryClient.invalidateQueries('children'))
-      .finally(() => {
-        setIsOpen();
-      });
+      .catch((e) => console.log('Contrat (addNewChild): error :', e.message))
+      .finally(() => setIsOpen());
   };
 
   return (
@@ -133,4 +140,4 @@ function NewAccountForm({ setIsOpen }: NewAccountFormProps) {
   );
 }
 
-export default NewAccountForm;
+export default AddChildForm;

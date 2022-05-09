@@ -8,6 +8,7 @@ import { Provider } from 'react-redux';
 import { store } from '../redux/store';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { useState } from 'react';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
 function getLibrary(provider: any) {
   const library = new Web3Provider(provider);
@@ -27,6 +28,7 @@ function App({ Component, pageProps: { ...pageProps } }: AppProps) {
           </Provider>
         </SmartContractProvider>
       </AuthProvider>
+      <ReactQueryDevtools />
     </QueryClientProvider>
   );
 }
