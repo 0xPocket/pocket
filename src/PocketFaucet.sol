@@ -28,14 +28,13 @@ contract PocketFaucet is AccessControl {
     event configChanged(bool active, uint256 ceiling, address indexed child);
 
     address immutable baseToken;
-    uint256 public lastPeriod;
+    // uint256 public lastPeriod;
 
     mapping(address => address[]) public parentToChildren;
     mapping(address => config) public childToConfig;
 
-    constructor(uint256 begin, address token) {
+    constructor(address token) {
         baseToken = token;
-        lastPeriod = begin;
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
@@ -44,6 +43,7 @@ contract PocketFaucet is AccessControl {
         uint256 balance;
         uint256 ceiling;
         uint256 lastClaim;
+        uint256 periodicity;
         address parent;
     }
 
@@ -70,31 +70,31 @@ contract PocketFaucet is AccessControl {
 
     // event (bytes32 indexed parentUID, address indexed child);
     // TO DO : test update
-    function updateLastPeriod() public {
-        // TO DO : emit update
-        while (lastPeriod + 1 weeks < block.timestamp) lastPeriod += 1 weeks;
-    }
+    // function updateLastPeriod() public {
+    //     // TO DO : emit update
+    //     while (lastPeriod + 1 weeks < block.timestamp) lastPeriod += 1 weeks;
+    // }
 
     function addChild(config memory conf, address child) external {
         require(child != address(0), "Address is null");
-        require(
-            conf.parent == msg.sender,
-            "!addChild: wrong parent in config"
-        );
+        require(conf.parent == msg.sender, "!addChild: wrong parent in config");
         require(
             childToConfig[child].parent == address(0),
             "Child address already taken"
         );
 
         conf.balance = 0;
-        conf.lastClaim = lastPeriod - 1 weeks;
+        conf.lastClaim = block.timestamp - conf.periodicity;
         childToConfig[child] = conf;
         parentToChildren[msg.sender].push(child);
 
         emit childAdded(msg.sender, child);
     }
 
-    function removeChild(address child) external _areRelated(msg.sender, child) {
+    function removeChild(address child)
+        external
+        _areRelated(msg.sender, child)
+    {
         config memory childConfig = childToConfig[child];
 
         uint256 length = parentToChildren[childConfig.parent].length;
@@ -122,6 +122,7 @@ contract PocketFaucet is AccessControl {
         require(conf.parent != address(0), "Child is not set");
         conf.active = newConf.active;
         conf.ceiling = newConf.ceiling;
+        conf.periodicity = newConf.periodicity;
 
         emit configChanged(conf.active, conf.ceiling, child);
     }
@@ -174,21 +175,21 @@ contract PocketFaucet is AccessControl {
         returns (uint256)
     {
         require(
-            conf.lastClaim != lastPeriod,
+            conf.lastClaim + conf.periodicity <= block.timestamp,
             "!calculateClaimable: period is not finished"
         );
 
         uint256 claimable;
-        while (conf.lastClaim != lastPeriod) {
+        while (conf.lastClaim < block.timestamp) {
             claimable += conf.ceiling;
-            conf.lastClaim += 1 weeks;
+            conf.lastClaim += conf.periodicity;
         }
 
         return (claimable > conf.balance ? conf.balance : claimable);
     }
 
     function claim() public {
-        updateLastPeriod();
+        // updateLastPeriod();
 
         config storage conf = childToConfig[msg.sender];
         require(conf.balance > 0, "!claim: null balance");
