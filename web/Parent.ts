@@ -34,9 +34,9 @@ class ParentContract {
     return await this.getPocketFaucetContract().rmChild(childAddress);
   };
 
-  addNewChild = async (config: AddNewChildRequest, childAddress: string) => {
+  addChild = async (config: AddNewChildRequest, childAddress: string) => {
     config.
-    return await this.getPocketFaucetContract().addNewChild(
+    return await this.getPocketFaucetContract().addChild(
       {}
     );
   };

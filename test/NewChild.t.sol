@@ -20,19 +20,19 @@ contract NewChild is Test, PFHelper {
             0,
             address(0)
         );
-        vm.expectRevert(bytes("!addNewChild: wrong parent in config"));
-        PF.addNewChild(conf, child1);
+        vm.expectRevert(bytes("!addChild: wrong parent in config"));
+        PF.addChild(conf, child1);
     }
 
     function testChildAddrZero() public {
         vm.expectRevert(bytes("Address is null"));
-        PF.addNewChild(stdConf, address(0));
+        PF.addChild(stdConf, address(0));
     }
 
     function testChildAlreadyExist() public {
-        PF.addNewChild(stdConf, child1);
+        PF.addChild(stdConf, child1);
         vm.expectRevert(bytes("Child address already taken"));
-        PF.addNewChild(stdConf, child1);
+        PF.addChild(stdConf, child1);
     }
 
     function testAddUpTo20Children(uint8 nb) public {

@@ -12,7 +12,7 @@ contract ClaimTest is PFHelper {
 
     function setUp() public {
         vm.prank(parent1);
-        PF.addNewChild(stdConf, child1);
+        PF.addChild(stdConf, child1);
     }
 
     function testZeroParentBalance() public {

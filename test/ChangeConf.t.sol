@@ -24,7 +24,7 @@ contract ChangeConf is Test, PFHelper {
     }
 
     function testChildIsRm() public {
-        PF.rmChild(child2);
+        PF.removeChild(child2);
         vm.expectRevert(bytes("!isRelated : parent doesn't match"));
         PF.changeConfig(stdConf, child2);
     }

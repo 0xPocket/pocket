@@ -19,11 +19,10 @@ contract PocketFaucet is AccessControl {
     bytes32 public constant PARENT_ROLE = keccak256("PARENT_ROLE");
     bytes32 public constant CHILD_ROLE = keccak256("CHILD_ROLE");
 
-    event newChildAdded(address indexed parent, address indexed child);
-    event childRm(address indexed parent, address indexed child);
+    event childAdded(address indexed parent, address indexed child);
+    event childRemoved(address indexed parent, address indexed child);
     event fundsAdded(address indexed parent, uint256 amount, address child);
     event moneyClaimed(address indexed child, uint256 amount);
-    event bigIssue(string indexed errorMsg);
     event tokenWithdrawed(address token, uint256 amount);
     event coinWithdrawed(uint256 amount);
     event configChanged(bool active, uint256 ceiling, address indexed child);
@@ -48,7 +47,7 @@ contract PocketFaucet is AccessControl {
         address parent;
     }
 
-    modifier _isRelated(address parent, address child) {
+    modifier _areRelated(address parent, address child) {
         bool isChild = false;
         uint256 length = parentToChildren[parent].length;
         for (uint256 i = 0; i < length; i++) {
@@ -76,11 +75,11 @@ contract PocketFaucet is AccessControl {
         while (lastPeriod + 1 weeks < block.timestamp) lastPeriod += 1 weeks;
     }
 
-    function addNewChild(config memory conf, address child) external {
+    function addChild(config memory conf, address child) external {
         require(child != address(0), "Address is null");
         require(
             conf.parent == msg.sender,
-            "!addNewChild: wrong parent in config"
+            "!addChild: wrong parent in config"
         );
         require(
             childToConfig[child].parent == address(0),
@@ -92,10 +91,10 @@ contract PocketFaucet is AccessControl {
         childToConfig[child] = conf;
         parentToChildren[msg.sender].push(child);
 
-        emit newChildAdded(msg.sender, child);
+        emit childAdded(msg.sender, child);
     }
 
-    function rmChild(address child) external _isRelated(msg.sender, child) {
+    function removeChild(address child) external _areRelated(msg.sender, child) {
         config memory childConfig = childToConfig[child];
 
         uint256 length = parentToChildren[childConfig.parent].length;
@@ -111,12 +110,12 @@ contract PocketFaucet is AccessControl {
 
         delete childToConfig[child];
         // revoke child role ??
-        emit childRm(childConfig.parent, child);
+        emit childRemoved(childConfig.parent, child);
     }
 
     function changeConfig(config memory newConf, address child)
         public
-        _isRelated(msg.sender, child)
+        _areRelated(msg.sender, child)
     {
         require(child != address(0), "Child address is 0");
         config storage conf = childToConfig[child];
@@ -129,7 +128,7 @@ contract PocketFaucet is AccessControl {
 
     function changeChildAddress(address oldChild, address newChild)
         public
-        _isRelated(msg.sender, oldChild)
+        _areRelated(msg.sender, oldChild)
     {
         config memory conf = childToConfig[oldChild];
         require(
@@ -157,7 +156,7 @@ contract PocketFaucet is AccessControl {
     // TO DO : test
     function addFunds(uint256 amount, address child)
         public
-        _isRelated(msg.sender, child)
+        _areRelated(msg.sender, child)
     {
         uint256 balanceBefore = IERC20(baseToken).balanceOf(address(this));
         IERC20(baseToken).safeTransferFrom(msg.sender, address(this), amount);

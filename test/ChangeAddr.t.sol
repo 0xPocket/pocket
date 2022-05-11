@@ -13,7 +13,7 @@ contract ChangeAddrTest is PFHelper {
     function setUp() public {
         PF.grantRole(CHILD_ROLE, child1);
         vm.prank(parent1);
-        PF.addNewChild(stdConf, child1);
+        PF.addChild(stdConf, child1);
     }
 
     function testDoesntExist() public {

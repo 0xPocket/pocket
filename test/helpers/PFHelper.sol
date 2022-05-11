@@ -40,7 +40,7 @@ contract PFHelper is Utils, Erc20Handler {
             0,
             parent
         );
-        PF.addNewChild(newConf, child);
+        PF.addChild(newConf, child);
     }
 
     function addFundToChild(

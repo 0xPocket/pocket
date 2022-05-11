@@ -7,31 +7,31 @@ import "forge-std/console2.sol";
 import "forge-std/Test.sol";
 import "./helpers/PFHelper.sol";
 
-contract RmChild is Test, PFHelper {
+contract removeChild is Test, PFHelper {
     function setUp() public {
         vm.startPrank(parent1);
     }
 
-    function testRmChild() public {
-        PF.addNewChild(stdConf, child1);
-        PF.rmChild(child1);
+    function testRemoveChild() public {
+        PF.addChild(stdConf, child1);
+        PF.removeChild(child1);
         checkChildIsNotInit(child1);
     }
 
-    function testRmChildNotSet() public {
-        PF.addNewChild(stdConf, child1);
+    function testRemoveChildNotSet() public {
+        PF.addChild(stdConf, child1);
         vm.expectRevert(bytes("!isRelated : parent doesn't match"));
-        PF.rmChild(child2);
+        PF.removeChild(child2);
     }
 
-    function testRmChildrenInDisorder() public {
-        PF.addNewChild(stdConf, child1);
-        PF.addNewChild(stdConf, child2);
-        PF.addNewChild(stdConf, child3);
-        PF.rmChild(child2);
-        PF.rmChild(child3);
-        PF.addNewChild(stdConf, child2);
-        PF.rmChild(child1);
+    function testRemoveChildrenInDisorder() public {
+        PF.addChild(stdConf, child1);
+        PF.addChild(stdConf, child2);
+        PF.addChild(stdConf, child3);
+        PF.removeChild(child2);
+        PF.removeChild(child3);
+        PF.addChild(stdConf, child2);
+        PF.removeChild(child1);
         checkChildIsNotInit(child1);
         checkChildIsNotInit(child3);
     }
@@ -43,12 +43,12 @@ contract RmChild is Test, PFHelper {
         for (uint256 i; i < nb; i++) {
             lastChildAdded = addNToAddr(1, lastChildAdded);
             childrenAdded[i] = lastChildAdded;
-            PF.addNewChild(stdConf, lastChildAdded);
+            PF.addChild(stdConf, lastChildAdded);
             checkChildIsInit(lastChildAdded, parent1);
-            if (i % 2 == 0 || i % 5 == 0) PF.rmChild(lastChildAdded);
+            if (i % 2 == 0 || i % 5 == 0) PF.removeChild(lastChildAdded);
         }
         for (uint256 i; i < nb; i++) {
-            if (i % 2 != 0 && i % 5 != 0) PF.rmChild(childrenAdded[i]);
+            if (i % 2 != 0 && i % 5 != 0) PF.removeChild(childrenAdded[i]);
         }
     }
 }
