@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { BigNumberish, ethers } from 'ethers';
 import { useEffect, useState } from 'react';
 import Button from '../common/Button';
 import { DialogPopupWrapper } from '../wrappers/DialogsWrapper';
