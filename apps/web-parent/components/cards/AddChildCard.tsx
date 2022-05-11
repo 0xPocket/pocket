@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Button from '../common/Button';
-import NewAccountForm from '../forms/NewAccountForm';
+import AddChildForm from '../forms/AddChildForm';
 import { DialogFullWrapper } from '../wrappers/DialogsWrapper';
 
 type AddChildCardProps = {};
@@ -14,7 +14,7 @@ function AddChildCard({}: AddChildCardProps) {
         Setup an account
       </Button>
       <DialogFullWrapper isOpen={isOpen} setIsOpen={setIsOpen}>
-        <NewAccountForm setIsOpen={() => setIsOpen(false)} />
+        <AddChildForm setIsOpen={() => setIsOpen(false)} />
       </DialogFullWrapper>
     </>
   );

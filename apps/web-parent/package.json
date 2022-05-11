@@ -13,6 +13,7 @@
     "@headlessui/react": "^1.6.1",
     "@lib/contract": "*",
     "@lib/nest-auth": "*",
+    "@reduxjs/toolkit": "^1.8.1",
     "axios": "^0.27.2",
     "ethers": "^5.6.5",
     "framer-motion": "^6.3.3",
@@ -20,6 +21,8 @@
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-hook-form": "^7.30.0",
+    "react-query": "^3.39.0",
+    "react-redux": "^8.0.1",
     "ui": "*"
   },
   "devDependencies": {
