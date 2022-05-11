@@ -12,7 +12,7 @@ import "openzeppelin-contracts/contracts/access/AccessControl.sol";
 // TO DO : gouvernor should be -> TimelockController
 // TO DO : secure all func with roles
 // TO DO : test roles
-
+// TO DO : check require (areRelated)
 contract PocketFaucet is AccessControl {
     using SafeERC20 for IERC20;
 
@@ -49,6 +49,7 @@ contract PocketFaucet is AccessControl {
     }
 
     modifier _areRelated(address parent, address child) {
+        require(child != address(0), "!_areRelated : null child address");
         bool isChild = false;
         uint256 length = parentToChildren[parent].length;
         for (uint256 i = 0; i < length; i++) {
@@ -115,6 +116,7 @@ contract PocketFaucet is AccessControl {
         emit childRemoved(childConfig.parent, child);
     }
 
+    // TO DO : test
     function activateSwitch(bool active, address child) public {
         require(child != address(0), "!activateSwitch : null child address");
         config storage conf = childToConfig[child];
@@ -127,7 +129,6 @@ contract PocketFaucet is AccessControl {
         uint256 periodicity,
         address child
     ) public _areRelated(msg.sender, child) {
-        require(child != address(0), "!changeConfig : null child address");
         config storage conf = childToConfig[child];
         require(conf.parent != address(0), "!changeConfig: child not set");
         conf.ceiling = ceiling;

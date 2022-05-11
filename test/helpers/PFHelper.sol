@@ -23,7 +23,7 @@ contract PFHelper is Utils, Erc20Handler {
     uint256 stdBalance = 0;
     uint256 stdCeiling = 10e18;
     uint256 stdLastClaim = 0;
-    uint256 stdperiodicity = 1 weeks;
+    uint256 stdPeriodicity = 1 weeks;
     address stdParent = parent1;
 
     PocketFaucet.config stdConf =
@@ -32,7 +32,7 @@ contract PFHelper is Utils, Erc20Handler {
             stdBalance,
             stdCeiling,
             stdLastClaim,
-            stdperiodicity,
+            stdPeriodicity,
             stdParent
         );
 
