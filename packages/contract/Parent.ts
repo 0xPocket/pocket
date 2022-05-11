@@ -1,59 +1,82 @@
-import { Wallet } from "ethers";
+import { BigNumberish, Wallet } from "ethers";
 import { PocketFaucet__factory } from "./types";
 import { PocketFaucet } from "./types/PocketFaucet";
 
 // import
 class ParentContract {
-  library: any; // TO DO move
-  abi: any; // TO DO move
-  address: any; // TO DO move
-  signer: any;
-  UID: string;
-  contract: PocketFaucet;
+	library: any;
+	abi: any;
+	address: any;
+	signer: any;
+	contract: PocketFaucet;
 
-  constructor(address: string, signer: Wallet) {
-    this.contract = PocketFaucet__factory.connect(address, signer);
-  }
+	constructor(address: string, signer: Wallet) {
+		this.contract = PocketFaucet__factory.connect(address, signer);
+	};
 
-  // getPocketFaucetContract = (): PocketFaucet | Contract => {
-  //   return new Contract(this.address, this.abi, this.signer);
-  // };
 
-  // getBalance = async () => {
-  //   return this.getPocketFaucetContract().parentsBalance(this.UID);
-  // };
+	// Helper functions
+	getChildren = async () => {
+		let childrenAddresses: string[] = [];
+		const length: number = await this.getNumberOfChildren();
+		for (let i = 0; i < length; i++) {
+			childrenAddresses.push(await this.contract.parentToChildren(this.address, i))
+		}
 
-  getChildren = async () => {
-    // TO DO need contract modification
-  };
+		return childrenAddresses;
+	};
 
-  // rmChild = async (childAddress: string) => {
-  //   return this.getPocketFaucetContract().rmChild(childAddress);
-  // };
+	getChildConfig = (childAddr: string) => {
+		return this.contract.childToConfig(childAddr);
+	};
 
-  getNumberOfChildren = (address: string) => {
-    return this.contract.getNumberChildren(address).then((res) => {
-      return res.toNumber();
-    });
-  };
+	getChildBalance = async (childAddr: string) => {
+		return (await this.getChildConfig(childAddr)).balance;
+	};
 
-  addNewChild = async (
-    config: PocketFaucet.ConfigStruct,
-    childAddress: string
-  ) => {
-    return this.contract.addNewChild(config, childAddress);
-  };
+	getNumberOfChildren = async () => {
+		return (await this.contract.getNumberChildren(this.address)).toNumber();
+	};
 
-  // changeConfig = async (
-  //   config: PocketFaucet.ConfigStruct,
-  //   childAddress: string
-  // ) => {
-  //   return this.getPocketFaucetContract().changeConfig(config, childAddress);
-  // };
+	// TO DO :
+	// getClaimable()
 
-  // changeAddress = async (oldAddr: string, newAddr: string) => {
-  //   return this.getPocketFaucetContract().changeAddress(oldAddr, newAddr);
-  // };
+	// Parent functions
+	addChild = (
+		config: PocketFaucet.ConfigStruct,
+		childAddr: string
+	) => {
+		return this.contract.addChild(config, childAddr);
+	};
+
+	removeChild = (
+		childAddr: string
+	) => {
+		return this.contract.removeChild(childAddr);
+	};
+
+	activateSwitch = (
+		active: boolean,
+		childAddr: string
+	) => {
+		return this.contract.activateSwitch(active, childAddr);
+	};
+
+	changeConfig = (
+		ceiling: BigNumberish,
+		periodicity: BigNumberish,
+		childAddr: string
+	) => {
+		return this.contract.changeConfig(ceiling, periodicity, childAddr);
+	};
+
+	changeChildAddress = (oldAddr: string, newAddr: string) => {
+		return this.contract.changeChildAddress(oldAddr, newAddr);
+	};
+
+	addFunds = async (amount: BigNumberish, childAddr: string) => {
+		return this.contract.addFunds(amount, childAddr);
+	};
 }
 
 export { ParentContract };
