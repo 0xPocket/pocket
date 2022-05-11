@@ -76,7 +76,7 @@ contract ClaimTest is PFHelper {
         for (uint256 nbWeek = 0; nbWeek < 10; nbWeek++) {
             vm.warp(timestamp);
             uint256 balanceBefore = checkBalance(JEUR, child1);
-            PF.updateLastPeriod();
+            // PF.updateLastPeriod();
             uint256 claimable = helperCalculateClaimable(child1);
             if (getConfig(child1).balance * 1e18 == claimable) {
                 vm.expectRevert(bytes("!claim: null balance"));

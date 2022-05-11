@@ -25,4 +25,8 @@ contract Utils {
         while (lastPeriod + 1 weeks < block.timestamp) lastPeriod += 1 weeks;
         return lastPeriod;
     }
+
+    function getSmallest(uint256 a, uint256 b) public pure returns (uint256) {
+        return (a < b ? a : b);
+    }
 }

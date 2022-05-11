@@ -14,32 +14,28 @@ contract ChangeConf is Test, PFHelper {
     }
 
     function testChildAddrIsZero() public {
-        vm.expectRevert(bytes("!isRelated : parent doesn't match"));
-        PF.changeConfig(stdConf, address(0));
+        vm.expectRevert(bytes("!_areRelated : null child address"));
+        PF.changeConfig(stdCeiling, stdPeriodicity, address(0));
     }
 
     function testChildIsNotSet() public {
-        vm.expectRevert(bytes("!isRelated : parent doesn't match"));
-        PF.changeConfig(stdConf, child3);
+        vm.expectRevert(
+            bytes("!_areRelated : child doesn't exist with this parent")
+        );
+        PF.changeConfig(stdCeiling, stdPeriodicity, child3);
     }
 
     function testChildIsRm() public {
         PF.removeChild(child2);
-        vm.expectRevert(bytes("!isRelated : parent doesn't match"));
-        PF.changeConfig(stdConf, child2);
-    }
-
-    function testChangeActive() public {
-        stdConf.active = false;
-        PF.changeConfig(stdConf, child2);
-        PocketFaucet.config memory conf = getConfig(child2);
-        assertFalse(conf.active);
+        vm.expectRevert(
+            bytes("!_areRelated : child doesn't exist with this parent")
+        );
+        PF.changeConfig(stdCeiling, stdPeriodicity, child2);
     }
 
     function testChangeCeiling() public {
         assertEq(getConfig(child2).ceiling, 20);
-        stdConf.ceiling = 50;
-        PF.changeConfig(stdConf, child2);
+        PF.changeConfig(50, stdPeriodicity, child2);
         assertEq(getConfig(child2).ceiling, 50);
     }
 
@@ -47,14 +43,14 @@ contract ChangeConf is Test, PFHelper {
         uint256 lastClaim = getConfig(child2).lastClaim;
         assertTrue(lastClaim != 200);
         stdConf.lastClaim = 200;
-        PF.changeConfig(stdConf, child2);
+        PF.changeConfig(stdCeiling, stdPeriodicity, child2);
         assertEq(getConfig(child2).lastClaim, lastClaim);
     }
 
     function testParentNotChanged() public {
         assertEq(getConfig(child2).parent, parent2);
         stdConf.parent = parent1;
-        PF.changeConfig(stdConf, child2);
+        PF.changeConfig(stdCeiling, stdPeriodicity, child2);
         assertEq(getConfig(child2).parent, parent2);
     }
 }

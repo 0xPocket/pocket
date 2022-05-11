@@ -18,6 +18,7 @@ contract NewChild is Test, PFHelper {
             0,
             10,
             0,
+            1 weeks,
             address(0)
         );
         vm.expectRevert(bytes("!addChild: wrong parent in config"));
