@@ -55,7 +55,12 @@ function AddChildForm({ setIsOpen }: AddChildFormProps) {
         mutation.mutate(data);
         console.log('Contrat (addNewChild): success !');
       })
-      .catch((e) => console.log('Contrat (addNewChild): error :', e.message))
+      .catch((e) => {
+        console.error(
+          'Contrat (addNewChild): error :',
+          JSON.parse(e.body).error.message,
+        );
+      })
       .finally(() => setIsOpen());
   };
 
