@@ -31,7 +31,7 @@ contract ClaimTest is PFHelper {
     }
 
     function testCanClaim() public {
-        addFundToChild(parent1, 10e18, child1);
+        addFundToChild(parent1, 100e18, child1);
         uint256 balanceBefore = checkBalance(JEUR, child1);
         vm.prank(child1);
         PF.claim();
@@ -76,7 +76,6 @@ contract ClaimTest is PFHelper {
         for (uint256 nbWeek = 0; nbWeek < 10; nbWeek++) {
             vm.warp(timestamp);
             uint256 balanceBefore = checkBalance(JEUR, child1);
-            // PF.updateLastPeriod();
             uint256 claimable = helperCalculateClaimable(child1);
             if (getConfig(child1).balance * 1e18 == claimable) {
                 vm.expectRevert(bytes("!claim: null balance"));
@@ -91,5 +90,27 @@ contract ClaimTest is PFHelper {
             assertGt(balanceAfter, balanceBefore);
             timestamp += 1 weeks;
         }
+    }
+
+    function testClaimIncreasePeriodicityClaim() public {
+        testCanClaim();
+        vm.prank(parent1);
+        PF.changeConfig(20e18, 1 weeks, child1);
+        vm.expectRevert(bytes("!calculateClaimable: period is not finished"));
+        vm.prank(child1);
+        PF.claim();
+        vm.warp(block.timestamp + 2 weeks + 6 days);
+        claimCompareBeforeAfter(child1);
+    }
+
+    function testClaimReducePeriodicityClaim() public {
+        testCanClaim();
+        vm.prank(parent1);
+        PF.changeConfig(20e18, 3 days, child1);
+        vm.expectRevert(bytes("!calculateClaimable: period is not finished"));
+        vm.prank(child1);
+        PF.claim();
+        vm.warp(block.timestamp + 6 weeks);
+        claimCompareBeforeAfter(child1);
     }
 }

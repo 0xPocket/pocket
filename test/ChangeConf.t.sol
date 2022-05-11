@@ -11,6 +11,7 @@ contract ChangeConf is Test, PFHelper {
     function setUp() public {
         vm.startPrank(parent2);
         addChildToParent(parent2, child2, 20, true);
+        // addFundToChild(parent2, 20, child2);
     }
 
     function testChildAddrIsZero() public {
@@ -52,5 +53,11 @@ contract ChangeConf is Test, PFHelper {
         stdConf.parent = parent1;
         PF.changeConfig(stdCeiling, stdPeriodicity, child2);
         assertEq(getConfig(child2).parent, parent2);
+    }
+
+    function testChangePeriodicity() public {
+        assertEq(getConfig(child2).periodicity, 1 weeks);
+        PF.changeConfig(20, 2 weeks, child2);
+        assertEq(getConfig(child2).periodicity, 2 weeks);
     }
 }
