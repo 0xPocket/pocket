@@ -10,8 +10,9 @@ import "openzeppelin-contracts/contracts/access/AccessControl.sol";
 
 // TO DO : check multisig
 // TO DO : gouvernor should be -> TimelockController
+// TO DO : secure all func with roles
 // TO DO : test roles
-
+// TO DO : check require (areRelated)
 contract PocketFaucet is AccessControl {
     using SafeERC20 for IERC20;
 
@@ -23,19 +24,18 @@ contract PocketFaucet is AccessControl {
     event childRemoved(address indexed parent, address indexed child);
     event fundsAdded(address indexed parent, uint256 amount, address child);
     event moneyClaimed(address indexed child, uint256 amount);
-    event tokenWithdrawed(address token, uint256 amount);
+    event tokenWithdrawed(address indexed token, uint256 amount);
     event coinWithdrawed(uint256 amount);
     event configChanged(bool active, uint256 ceiling, address indexed child);
+    event parentChanged(address indexed oldAddr, address newAddr);
 
     address immutable baseToken;
-    uint256 public lastPeriod;
 
     mapping(address => address[]) public parentToChildren;
     mapping(address => config) public childToConfig;
 
-    constructor(uint256 begin, address token) {
+    constructor(address token) {
         baseToken = token;
-        lastPeriod = begin;
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
@@ -44,10 +44,12 @@ contract PocketFaucet is AccessControl {
         uint256 balance;
         uint256 ceiling;
         uint256 lastClaim;
+        uint256 periodicity;
         address parent;
     }
 
     modifier _areRelated(address parent, address child) {
+        require(child != address(0), "!_areRelated : null child address");
         bool isChild = false;
         uint256 length = parentToChildren[parent].length;
         for (uint256 i = 0; i < length; i++) {
@@ -57,10 +59,13 @@ contract PocketFaucet is AccessControl {
             }
         }
         require(
-            childToConfig[child].parent == parent,
-            "!isRelated : parent doesn't match"
+            isChild == true,
+            "!_areRelated : child doesn't exist with this parent"
         );
-        require(isChild == true, "!isRelated : child doesn't exist");
+        require(
+            childToConfig[child].parent == parent,
+            "!_areRelated : parent doesn't match"
+        );
         _;
     }
 
@@ -68,33 +73,26 @@ contract PocketFaucet is AccessControl {
         return parentToChildren[parent].length;
     }
 
-    // event (bytes32 indexed parentUID, address indexed child);
-    // TO DO : test update
-    function updateLastPeriod() public {
-        // TO DO : emit update
-        while (lastPeriod + 1 weeks < block.timestamp) lastPeriod += 1 weeks;
-    }
-
     function addChild(config memory conf, address child) external {
         require(child != address(0), "Address is null");
-        require(
-            conf.parent == msg.sender,
-            "!addChild: wrong parent in config"
-        );
+        require(conf.parent == msg.sender, "!addChild: wrong parent in config");
         require(
             childToConfig[child].parent == address(0),
             "Child address already taken"
         );
 
         conf.balance = 0;
-        conf.lastClaim = lastPeriod - 1 weeks;
+        conf.lastClaim = block.timestamp - conf.periodicity;
         childToConfig[child] = conf;
         parentToChildren[msg.sender].push(child);
 
         emit childAdded(msg.sender, child);
     }
 
-    function removeChild(address child) external _areRelated(msg.sender, child) {
+    function removeChild(address child)
+        external
+        _areRelated(msg.sender, child)
+    {
         config memory childConfig = childToConfig[child];
 
         uint256 length = parentToChildren[childConfig.parent].length;
@@ -108,49 +106,62 @@ contract PocketFaucet is AccessControl {
             }
         }
 
+        IERC20(baseToken).safeTransfer(
+            msg.sender,
+            childToConfig[child].balance
+        );
+
         delete childToConfig[child];
         // revoke child role ??
         emit childRemoved(childConfig.parent, child);
     }
 
-    function changeConfig(config memory newConf, address child)
-        public
-        _areRelated(msg.sender, child)
-    {
-        require(child != address(0), "Child address is 0");
+    // TO DO : test
+    function activateSwitch(bool active, address child) public {
+        require(child != address(0), "!activateSwitch : null child address");
         config storage conf = childToConfig[child];
-        require(conf.parent != address(0), "Child is not set");
-        conf.active = newConf.active;
-        conf.ceiling = newConf.ceiling;
+        require(conf.parent != address(0), "!activateSwitch: child not set");
+        conf.active = active;
+    }
+
+    function changeConfig(
+        uint256 ceiling,
+        uint256 periodicity,
+        address child
+    ) public _areRelated(msg.sender, child) {
+        config storage conf = childToConfig[child];
+        require(conf.parent != address(0), "!changeConfig: child not set");
+        conf.ceiling = ceiling;
+        conf.periodicity = periodicity;
 
         emit configChanged(conf.active, conf.ceiling, child);
     }
 
-    function changeChildAddress(address oldChild, address newChild)
+    function changeChildAddress(address oldAddr, address newAddr)
         public
-        _areRelated(msg.sender, oldChild)
+        _areRelated(msg.sender, oldAddr)
     {
-        config memory conf = childToConfig[oldChild];
+        config memory conf = childToConfig[oldAddr];
         require(
             conf.parent != address(0),
             "!changeAddr : child does not exist"
         );
         require(
-            childToConfig[newChild].parent == address(0),
+            childToConfig[newAddr].parent == address(0),
             "!changeChildAddress : child already exist"
         );
 
-        childToConfig[newChild] = conf;
+        childToConfig[newAddr] = conf;
 
         uint256 length = parentToChildren[conf.parent].length;
         for (uint256 i = 0; i < length; i++) {
-            if (parentToChildren[conf.parent][i] == oldChild) {
-                parentToChildren[conf.parent][i] = newChild;
+            if (parentToChildren[conf.parent][i] == oldAddr) {
+                parentToChildren[conf.parent][i] = newAddr;
                 break;
             }
         }
 
-        delete (childToConfig[oldChild]);
+        delete (childToConfig[oldAddr]);
     }
 
     // TO DO : test
@@ -174,22 +185,20 @@ contract PocketFaucet is AccessControl {
         returns (uint256)
     {
         require(
-            conf.lastClaim != lastPeriod,
+            conf.lastClaim + conf.periodicity <= block.timestamp,
             "!calculateClaimable: period is not finished"
         );
 
         uint256 claimable;
-        while (conf.lastClaim != lastPeriod) {
+        while (conf.lastClaim < block.timestamp) {
             claimable += conf.ceiling;
-            conf.lastClaim += 1 weeks;
+            conf.lastClaim += conf.periodicity;
         }
 
         return (claimable > conf.balance ? conf.balance : claimable);
     }
 
     function claim() public {
-        updateLastPeriod();
-
         config storage conf = childToConfig[msg.sender];
         require(conf.balance > 0, "!claim: null balance");
         // TO DO : test on active / inactive
@@ -203,6 +212,24 @@ contract PocketFaucet is AccessControl {
 
         IERC20(baseToken).safeTransfer(msg.sender, claimable);
         emit moneyClaimed(msg.sender, claimable);
+    }
+
+    // TO DO : test
+    function changeParentAddr(address oldAddr, address newAddr) public {
+        require(
+            parentToChildren[oldAddr][0] != address(0),
+            "!changeParentAddr : parent not set"
+        );
+
+        address[] storage children = parentToChildren[newAddr];
+        children = parentToChildren[oldAddr];
+        uint256 nbChildren = children.length;
+
+        for (uint256 i = 0; i < nbChildren; i++) {
+            childToConfig[children[i]].parent = newAddr;
+        }
+
+        emit parentChanged(oldAddr, newAddr);
     }
 
     function withdrawToken(address token, uint256 amount)
