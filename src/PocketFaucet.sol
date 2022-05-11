@@ -115,8 +115,14 @@ contract PocketFaucet is AccessControl {
         emit childRemoved(childConfig.parent, child);
     }
 
+    function activateSwitch(bool active, address child) public {
+        require(child != address(0), "!activateSwitch : null child address");
+        config storage conf = childToConfig[child];
+        require(conf.parent != address(0), "!activateSwitch: child not set");
+        conf.active = active;
+    }
+
     function changeConfig(
-        bool active,
         uint256 ceiling,
         uint256 periodicity,
         address child
@@ -124,7 +130,6 @@ contract PocketFaucet is AccessControl {
         require(child != address(0), "!changeConfig : null child address");
         config storage conf = childToConfig[child];
         require(conf.parent != address(0), "!changeConfig: child not set");
-        conf.active = active;
         conf.ceiling = ceiling;
         conf.periodicity = periodicity;
 
