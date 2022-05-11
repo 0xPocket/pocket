@@ -1,5 +1,5 @@
-import { BigNumberish, ethers } from 'ethers';
-import { useEffect, useState } from 'react';
+import { ethers } from 'ethers';
+import { useState } from 'react';
 import Button from '../common/Button';
 import { DialogPopupWrapper } from '../wrappers/DialogsWrapper';
 import { useAuth } from '@lib/nest-auth/next';

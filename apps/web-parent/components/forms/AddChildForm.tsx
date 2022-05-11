@@ -51,7 +51,7 @@ function AddChildForm({ setIsOpen }: AddChildFormProps) {
         },
         data.publicKey,
       )
-      .then((res) => {
+      .then(() => {
         mutation.mutate(data);
         console.log('Contrat (addNewChild): success !');
       })
