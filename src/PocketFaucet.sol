@@ -30,14 +30,12 @@ contract PocketFaucet is AccessControl {
     event parentChanged(address indexed oldAddr, address newAddr);
 
     address immutable baseToken;
-    uint256 public lastPeriod;
 
     mapping(address => address[]) public parentToChildren;
     mapping(address => config) public childToConfig;
 
-    constructor(uint256 begin, address token) {
+    constructor(address token) {
         baseToken = token;
-        lastPeriod = begin;
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
@@ -46,6 +44,7 @@ contract PocketFaucet is AccessControl {
         uint256 balance;
         uint256 ceiling;
         uint256 lastClaim;
+        uint256 periodicity;
         address parent;
     }
 
@@ -82,7 +81,7 @@ contract PocketFaucet is AccessControl {
         );
 
         conf.balance = 0;
-        conf.lastClaim = lastPeriod - 1 weeks;
+        conf.lastClaim = block.timestamp - conf.periodicity;
         childToConfig[child] = conf;
         parentToChildren[msg.sender].push(child);
 
@@ -119,6 +118,7 @@ contract PocketFaucet is AccessControl {
     function changeConfig(
         bool active,
         uint256 ceiling,
+        uint256 periodicity,
         address child
     ) public _areRelated(msg.sender, child) {
         require(child != address(0), "!changeConfig : null child address");
@@ -126,6 +126,7 @@ contract PocketFaucet is AccessControl {
         require(conf.parent != address(0), "!changeConfig: child not set");
         conf.active = active;
         conf.ceiling = ceiling;
+        conf.periodicity = periodicity;
 
         emit configChanged(conf.active, conf.ceiling, child);
     }
@@ -178,14 +179,14 @@ contract PocketFaucet is AccessControl {
         returns (uint256)
     {
         require(
-            conf.lastClaim != lastPeriod,
+            conf.lastClaim + conf.periodicity <= block.timestamp,
             "!calculateClaimable: period is not finished"
         );
 
         uint256 claimable;
-        while (conf.lastClaim != lastPeriod) {
+        while (conf.lastClaim < block.timestamp) {
             claimable += conf.ceiling;
-            conf.lastClaim += 1 weeks;
+            conf.lastClaim += conf.periodicity;
         }
 
         return (claimable > conf.balance ? conf.balance : claimable);

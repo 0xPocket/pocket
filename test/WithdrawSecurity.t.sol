@@ -13,7 +13,7 @@ abstract contract HelperContract {
     bytes32 public constant PARENT_ROLE = keccak256("PARENT_ROLE");
     bytes32 public constant CHILD_ROLE = keccak256("CHILD_ROLE");
 
-    PocketFaucet pocket = new PocketFaucet(block.timestamp, JEUR);
+    PocketFaucet pocket = new PocketFaucet(JEUR);
 }
 
 contract WithdrawSecurityTest is Erc20Handler, HelperContract {

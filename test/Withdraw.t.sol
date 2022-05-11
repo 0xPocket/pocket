@@ -9,7 +9,7 @@ import "./helpers/Erc20Handler.sol";
 abstract contract HelperContract {
     address constant JEUR = 0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c;
     bytes32 public constant WITHDRAW_ROLE = keccak256("WITHDRAW_ROLE");
-    PocketFaucet pocket = new PocketFaucet(block.timestamp, JEUR);
+    PocketFaucet pocket = new PocketFaucet(JEUR);
 }
 
 contract WithdrawTest is Erc20Handler, HelperContract {

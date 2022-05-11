@@ -10,7 +10,7 @@ contract PFHelper is Utils, Erc20Handler {
     using SafeERC20 for IERC20;
 
     address JEUR = 0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c;
-    PocketFaucet PF = new PocketFaucet(findLastSunday(), JEUR);
+    PocketFaucet PF = new PocketFaucet(JEUR);
 
     address parent1 = address(0x1994);
     address parent2 = address(0x1995);
@@ -19,8 +19,22 @@ contract PFHelper is Utils, Erc20Handler {
     address child3 = address(0x3);
     address lastChildAdded = address(0x5000000);
 
+    bool stdActive = true;
+    uint256 stdBalance = 0;
+    uint256 stdCeiling = 10e18;
+    uint256 stdLastClaim = 0;
+    uint256 stdperiodicity = 1 weeks;
+    address stdParent = parent1;
+
     PocketFaucet.config stdConf =
-        PocketFaucet.config(true, 0, 10e18, 0, parent1);
+        PocketFaucet.config(
+            stdActive,
+            stdBalance,
+            stdCeiling,
+            stdLastClaim,
+            stdperiodicity,
+            stdParent
+        );
 
     function addChildToParent(
         address parent,
@@ -38,6 +52,7 @@ contract PFHelper is Utils, Erc20Handler {
             0,
             ceiling,
             0,
+            1 weeks,
             parent
         );
         PF.addChild(newConf, child);
@@ -57,13 +72,13 @@ contract PFHelper is Utils, Erc20Handler {
 
     function checkChildIsNotInit(address child) public {
         address parent;
-        (, , , , parent) = PF.childToConfig(child);
+        (, , , , , parent) = PF.childToConfig(child);
         assertEq(parent, address(0));
     }
 
     function checkChildIsInit(address child, address parentFrom) public {
         address parent;
-        (, , , , parent) = PF.childToConfig(child);
+        (, , , , , parent) = PF.childToConfig(child);
         assertTrue(parent != address(0));
         assertTrue(parent == parentFrom);
         uint256 size = PF.getNumberChildren(parent);
@@ -80,25 +95,32 @@ contract PFHelper is Utils, Erc20Handler {
     function getConfig(address child)
         public
         view
-        returns (PocketFaucet.config memory)
+        returns (PocketFaucet.config memory conf)
     {
         bool active;
         uint256 balance;
         uint256 ceiling;
         uint256 lastClaim;
+        uint256 nbOfDaysBetweenClaims;
         address parent;
 
-        (active, balance, ceiling, lastClaim, parent) = PF.childToConfig(child);
-
-        PocketFaucet.config memory conf = PocketFaucet.config(
+        (
             active,
             balance,
             ceiling,
             lastClaim,
+            nbOfDaysBetweenClaims,
+            parent
+        ) = PF.childToConfig(child);
+
+        conf = PocketFaucet.config(
+            active,
+            balance,
+            ceiling,
+            lastClaim,
+            nbOfDaysBetweenClaims,
             parent
         );
-
-        return conf;
     }
 
     function compareConfig(
@@ -119,14 +141,14 @@ contract PFHelper is Utils, Erc20Handler {
         returns (uint256)
     {
         PocketFaucet.config memory conf = getConfig(child);
-        if (conf.lastClaim == PF.lastPeriod()) return 0;
+        if (conf.lastClaim + conf.periodicity * 1 days < block.timestamp)
+            return 0;
 
         uint256 claimable;
-        while (conf.lastClaim != PF.lastPeriod()) {
+        while (conf.lastClaim < block.timestamp) {
             claimable += conf.ceiling;
-            conf.lastClaim += 1 weeks;
+            conf.lastClaim += conf.periodicity * 1 days;
         }
-
-        return (claimable > conf.balance ? conf.balance : claimable);
+        return getSmallest(claimable, conf.balance);
     }
 }

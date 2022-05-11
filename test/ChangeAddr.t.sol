@@ -28,7 +28,7 @@ contract ChangeAddrTest is PFHelper {
         checkChildIsNotInit(child1);
         checkChildIsInit(child2, parent1);
         assertEq(getConfig(child1).parent, address(0));
-        stdConf.lastClaim = PF.lastPeriod() - 1 weeks;
+        stdConf.lastClaim = getConfig(child2).lastClaim; 
         assertTrue(compareConfig(getConfig(child2), stdConf));
     }
 
