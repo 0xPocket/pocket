@@ -3,7 +3,6 @@ import { UserParent } from '@lib/types/interfaces';
 import { useEffect } from 'react';
 import SectionContainer from '../../components/containers/SectionContainer';
 import ChildrenAccountPanel from '../../components/panels/ChildrenAccountPanel';
-import WalletPanel from '../../components/panels/WalletPanel';
 import MainWrapper from '../../components/wrappers/MainWrapper';
 import { useSmartContract } from '../../contexts/contract';
 
@@ -27,7 +26,6 @@ function Index({}: IndexProps) {
           {/* Accounts list  */}
           <div className="grid grid-cols-2 gap-8">
             <ChildrenAccountPanel />
-            <WalletPanel />
           </div>
         </div>
       </SectionContainer>

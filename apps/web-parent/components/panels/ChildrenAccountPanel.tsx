@@ -1,7 +1,5 @@
 import { UserChild } from '@lib/types/interfaces';
-import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { useDispatch, useSelector } from 'react-redux';
 import { useAxios } from '../../hooks/axios.hook';
 import AddChildCard from '../cards/AddChildCard';
 import ChildCard from '../cards/ChildCard';
@@ -11,7 +9,7 @@ type ChildrenAccountPanelProps = {};
 function ChildrenAccountPanel({}: ChildrenAccountPanelProps) {
   const axios = useAxios();
 
-  const { isLoading, error, data, isFetching } = useQuery(
+  const { isLoading, data } = useQuery(
     'children',
     () =>
       axios
