@@ -36,9 +36,17 @@ export const SmartContractProvider = ({
 
   // console.log(abi);
   useEffect(() => {
-    if (!user || !user.wallet.privateKey) return;
+    if (!user || !user.wallet.privateKey) {
+      console.error('SmartContractProvider: user infos missing');
+      return;
+    }
 
-    if (!process.env.NEXT_PUBLIC_CONTRACT_ADDRESS) return;
+    if (!process.env.NEXT_PUBLIC_CONTRACT_ADDRESS) {
+      console.error(
+        "SmartContractProvider: cannot found smartcontract's address",
+      );
+      return;
+    }
 
     const signer = new Wallet(user.wallet.privateKey, provider);
 

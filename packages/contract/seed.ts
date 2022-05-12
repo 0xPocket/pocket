@@ -14,13 +14,14 @@ async function main() {
     parentWallet
   );
 
-  await parent.addNewChild(
+  await parent.addChild(
     {
       active: true,
       balance: 0,
       ceiling: 20,
       parent: "0x71be63f3384f5fb98995898a86b02fb2426c5788",
       lastClaim: 0,
+      periodicity: 0,
     },
     "0x2546bcd3c84621e976d8185a91a922ae77ecec30"
   );

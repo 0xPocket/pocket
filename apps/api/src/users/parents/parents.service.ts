@@ -211,32 +211,37 @@ export class ParentsService {
     data: CreateChildrenDto,
     verification = true,
   ) {
-    if (data.publicKey) {
-      await this.prisma.userParent.findUnique({
-        where: {
-          id: parentId,
-        },
-      });
-      const child = await this.prisma.userChild.create({
-        data: {
-          firstName: data.firstName,
-          lastName: data.lastName,
-          email: data.email,
-          userParent: {
-            connect: {
-              id: parentId,
+    try {
+      if (data.publicKey) {
+        await this.prisma.userParent.findUnique({
+          where: {
+            id: parentId,
+          },
+        });
+        const child = await this.prisma.userChild.create({
+          data: {
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+            userParent: {
+              connect: {
+                id: parentId,
+              },
+            },
+            web3Account: {
+              create: {
+                address: data.publicKey.toLowerCase(),
+                nonce: uuidv4(),
+              },
             },
           },
-          web3Account: {
-            create: {
-              address: data.publicKey.toLowerCase(),
-              nonce: uuidv4(),
-            },
-          },
-        },
-      });
-      return child;
+        });
+        return child;
+      }
+    } catch (e) {
+      throw new BadRequestException("Could't create child");
     }
+
     try {
       const [parent, child] = await Promise.all([
         this.prisma.userParent.findUnique({

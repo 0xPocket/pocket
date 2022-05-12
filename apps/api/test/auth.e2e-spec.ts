@@ -10,7 +10,6 @@ import { JwtAuthService } from 'src/auth/jwt/jwt-auth.service';
 import * as session from 'express-session';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import { PrismaService } from 'src/prisma/prisma.service';
-import * as superTestSession from 'supertest-session';
 
 const PARENT = {
   firstName: 'Solal',
@@ -23,7 +22,7 @@ describe('AuthController (e2e)', () => {
   let app: INestApplication;
   let parentsService: ParentsService;
   let jwtAuthService: JwtAuthService;
-  let agent: superTestRequest.SuperTest<superTestRequest.Test>;
+  let agent: superTestRequest.SuperAgentTest;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -55,7 +54,7 @@ describe('AuthController (e2e)', () => {
     app.useGlobalPipes(new ValidationPipe());
     useContainer(app.select(AppModule), { fallbackOnErrors: true });
     await app.init();
-    agent = superTestSession(app.getHttpServer());
+    agent = superTestRequest.agent(app.getHttpServer());
   });
 
   afterAll(async () => {
@@ -67,46 +66,46 @@ describe('AuthController (e2e)', () => {
       ...PARENT,
     };
 
-    it('PUT /users/parents - invalid arguments', async () => {
+    it('PUT /users/parents - invalid arguments', () => {
       body.email = 'solaldunckel';
-      await agent.put('/users/parents').send(body).expect(400);
+      return agent.put('/users/parents').send(body).expect(400);
     });
 
-    it('PUT /users/parents - should create user', async () => {
+    it('PUT /users/parents - should create user', () => {
       body.email = PARENT.email;
       return parentsService.create(body, true);
     });
 
-    it('PUT /users/parents - user already exists', async () => {
-      await agent.put('/users/parents').send(body).expect(400);
+    it('PUT /users/parents - user already exists', () => {
+      return agent.put('/users/parents').send(body).expect(400);
     });
   });
 
   // let access_token: string;
 
   describe('Confirm Email', () => {
-    it('POST /users/parents/confirm-email - invalid token', async () => {
-      await agent
+    it('POST /users/parents/confirm-email - invalid token', () => {
+      return agent
         .post('/users/parents/confirm-email')
         .send({ token: 'gadgadgadgaga' })
         .expect(400);
     });
 
-    it('POST /users/parents/confirm-email - valid token with invalid email', async () => {
+    it('POST /users/parents/confirm-email - valid token with invalid email', () => {
       const token = jwtAuthService.generateEmailConfirmationToken(
         'sosodunckel@gmail.com',
       );
 
-      await agent
+      return agent
         .post('/users/parents/confirm-email')
         .send({ token })
         .expect(400);
     });
 
-    it('POST /users/parents/confirm-email - should confirm email', async () => {
+    it('POST /users/parents/confirm-email - should confirm email', () => {
       const token = jwtAuthService.generateEmailConfirmationToken(PARENT.email);
 
-      await agent
+      return agent
         .post('/users/parents/confirm-email')
         .send({ token })
         .expect(201);
@@ -119,26 +118,26 @@ describe('AuthController (e2e)', () => {
       password: PARENT.password,
     };
 
-    it('POST /auth/local - invalid arguments', async () => {
+    it('POST /auth/local - invalid arguments', () => {
       login.email = 'solaldunckel';
-      await agent.post('/auth/local').send(login).expect(400);
+      return agent.post('/auth/local').send(login).expect(400);
     });
 
-    it('POST /auth/local - invalid email', async () => {
+    it('POST /auth/local - invalid email', () => {
       login.email = 'solaldunckeldunckel@gmail.com';
-      await agent.post('/auth/local').send(login).expect(400);
+      return agent.post('/auth/local').send(login).expect(400);
     });
 
-    it('POST /auth/local - invalid password', async () => {
+    it('POST /auth/local - invalid password', () => {
       login.email = PARENT.email;
       login.password = 'test12345';
-      await agent.post('/auth/local').send(login).expect(403);
+      return agent.post('/auth/local').send(login).expect(403);
     });
 
-    it('POST /auth/local - should be logged in', async () => {
+    it('POST /auth/local - should be logged in', () => {
       login.email = PARENT.email;
       login.password = PARENT.password;
-      await agent.post('/auth/local').send(login).expect(201);
+      return agent.post('/auth/local').send(login).expect(201);
       // access_token = res.body.access_token;
     });
 
@@ -159,7 +158,7 @@ describe('AuthController (e2e)', () => {
     //   expect(res.body.email).toBe(PARENT.email);
     // });
 
-    it('GET /auth/parents/me - should be unauthorized (session)', async () => {
+    it('GET /auth/parents/me - should be unauthorized (session)', () => {
       return superTestRequest(app.getHttpServer())
         .get('/auth/parents/me')
         .expect(403);
@@ -171,7 +170,7 @@ describe('AuthController (e2e)', () => {
         .get('/auth/parents/me')
         .withCredentials()
         .expect(200);
-      expect(res.body.email).toBe(PARENT.email);
+      return expect(res.body.email).toBe(PARENT.email);
     });
   });
 });

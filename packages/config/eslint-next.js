@@ -9,6 +9,8 @@ module.exports = {
   rules: {
     "@typescript-eslint/no-var-requires": "off",
     "@next/next/no-html-link-for-pages": "off",
+    "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
     "react/jsx-key": "off",
     "@typescript-eslint/ban-types": [
       "warn",
