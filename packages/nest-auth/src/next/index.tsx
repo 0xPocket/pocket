@@ -1,6 +1,10 @@
 import axios from "axios";
-import { NestAuthProviders, OAuth2Provider } from "providers/types";
-import { useContext, useEffect, useMemo, useState } from "react";
+import {
+  NestAuthProviders,
+  OAuth2Provider,
+  CredentialsProvider,
+} from "providers/types";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import {
   BroadcastChannel,
   createCtx,
@@ -16,16 +20,33 @@ const emitter = new EventEmitter();
 interface IAuthContext<T = NestAuthUser> {
   user: T | undefined;
   status: "loading" | "authenticated" | "unauthenticated";
-  signIn: (id: string) => void;
+  signIn: (id: string, formData?: object) => void;
   signOut: () => void;
 }
 
 const [AuthContext, AuthContextProvider] = createCtx<IAuthContext<any>>();
 
-export function useAuth<T = NestAuthUser>() {
+interface UseAuthConfig {
+  redirectTo?: string;
+}
+
+export function useAuth<T = NestAuthUser>(
+  config: UseAuthConfig | undefined = undefined
+) {
   const c = useContext<IAuthContext<T> | undefined>(AuthContext);
   if (c === undefined)
     throw new Error("useCtx must be inside a Provider with a value");
+
+  useEffect(() => {
+    if (
+      c.status === "unauthenticated" &&
+      config?.redirectTo &&
+      window.location.href !== config.redirectTo
+    ) {
+      window.location.href = config.redirectTo;
+    }
+  }, [c.status]);
+
   return c;
 }
 
@@ -33,7 +54,11 @@ function getProvider(providerId: string, providers: NestAuthProviders) {
   return providers.find((provider) => provider.id === providerId);
 }
 
-function oAuthSignIn(provider: OAuth2Provider, isPopup: boolean) {
+function oAuthSignIn(
+  provider: OAuth2Provider,
+  isPopup: boolean,
+  session: boolean = false
+) {
   console.log(`login with ${provider?.name}`);
 
   const opts = {
@@ -60,16 +85,24 @@ function oAuthSignIn(provider: OAuth2Provider, isPopup: boolean) {
           code: msg.data.code,
         })
         .then((res) => {
-          emitter.emit("access_token", res.data.access_token);
+          if (session) emitter.emit("session", true);
+          else emitter.emit("access_token", res.data.access_token);
           unsubscribe();
         });
     }
   });
 }
 
-async function credentialsSignIn(provider: any, data: object) {
+async function credentialsSignIn(
+  provider: CredentialsProvider,
+  data: object,
+  session = false
+) {
   console.log(`login with ${provider?.name} with data : `, data);
-  // const test = await axios.post(`${endpoint}/${provider.id}`);
+  await axios.post(provider.endpoints.token, data).then((res) => {
+    if (session) emitter.emit("session", true);
+    else emitter.emit("access_token", res.data.access_token);
+  });
   // console.log(test);
 }
 
@@ -81,6 +114,9 @@ export interface NextAuthConfig {
   popup?: boolean;
   endpoint?: string;
   strategies: Strategies;
+  session?: {
+    logout: string;
+  };
 }
 
 interface AuthProviderProps {
@@ -96,6 +132,28 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
   const strategies = useMemo(() => {
     return parseProviders(config);
   }, [config]);
+
+  const getUser = useCallback(
+    (token: string) => {
+      const conf = config.session
+        ? {
+            withCredentials: true,
+          }
+        : {
+            headers: { Authorization: "Bearer " + token },
+          };
+      axios
+        .get("/api/auth/parents/me", conf)
+        .then((res) => {
+          setUser(res.data);
+          setLoading(false);
+        })
+        .catch(() => {
+          setLoading(false);
+        });
+    },
+    [config]
+  );
 
   /**
    * useEffect when the popup is redirecting to our front-end
@@ -122,42 +180,45 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
    */
 
   useEffect(() => {
-    const getUser = (token: string) => {
-      axios
-        .get("http://localhost:5000/auth/me", {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        })
-        .then((res) => {
-          setUser(res.data);
-          setLoading(false);
-        });
-    };
+    const fetch =
+      localStorage.getItem("access_token") || localStorage.getItem("logged_in");
 
-    const token = localStorage.getItem("access_token");
-
-    if (token) {
-      getUser(token);
+    if (fetch) {
+      getUser(fetch);
     } else {
       setLoading(false);
     }
-
-    emitter.on("access_token", (token: string) => {
-      localStorage.setItem("access_token", token);
-      getUser(token);
-    });
-
-    return () => {
-      emitter.removeAllListeners("access_token");
-    };
   }, []);
+
+  if (!config.session) {
+    useEffect(() => {
+      emitter.on("access_token", (token: string) => {
+        localStorage.setItem("access_token", token);
+        getUser(token);
+      });
+
+      return () => {
+        emitter.removeAllListeners("access_token");
+      };
+    }, []);
+  } else {
+    useEffect(() => {
+      emitter.on("session", (token: string) => {
+        localStorage.setItem("logged_in", token);
+        getUser(token);
+      });
+
+      return () => {
+        emitter.removeAllListeners("session");
+      };
+    }, []);
+  }
 
   const value: IAuthContext = useMemo(
     () => ({
       user: user,
       status: loading ? "loading" : user ? "authenticated" : "unauthenticated",
-      signIn: (providerId: string, formData = null) => {
+      signIn: (providerId: string, formData = undefined) => {
         const provider = getProvider(providerId, strategies);
         if (!provider)
           throw new Error(
@@ -165,17 +226,24 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
           );
         setLoading(true);
         if (provider.type === "oauth") {
-          oAuthSignIn(provider, !!config.popup);
+          oAuthSignIn(provider, !!config.popup, !!config.session);
         } else if (provider.type === "credentials") {
           if (!formData) {
             throw new Error("Missing data for credentials signin");
           }
-          credentialsSignIn(provider, formData);
+          credentialsSignIn(provider, formData, !!config.session);
         }
       },
       signOut: () => {
-        localStorage.removeItem("access_token");
-        setUser(undefined);
+        if (config.session) {
+          localStorage.removeItem("logged_in");
+          axios.post(config.session.logout).then(() => {
+            setUser(undefined);
+          });
+        } else {
+          localStorage.removeItem("access_token");
+          setUser(undefined);
+        }
       },
     }),
     [user, loading]
