@@ -17,7 +17,7 @@
     "test:e2e": "turbo run test:e2e"
   },
   "dependencies": {
-    "dotenv": "^16.0.0",
+    "dotenv": "^16.0.1",
     "turbo": "1.2.2"
   },
   "devDependencies": {
