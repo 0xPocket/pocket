@@ -5,12 +5,13 @@ import { PocketFaucet } from "types/PocketFaucet";
 class ChildContract {
   // library: any;
   // abi: any;
-  address: any;
+  address: string;
   // signer: any;
   contract: PocketFaucet;
 
   constructor(address: string, signer: Wallet) {
     this.contract = PocketFaucet__factory.connect(address, signer);
+    this.address = signer.address;
   }
 
   // Helper functions

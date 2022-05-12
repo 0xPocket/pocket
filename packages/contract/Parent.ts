@@ -12,7 +12,7 @@ class ParentContract {
 
   constructor(address: string, signer: Wallet) {
     this.contract = PocketFaucet__factory.connect(address, signer);
-    this.address = address;
+    this.address = signer.address;
   }
 
   // Helper functions
