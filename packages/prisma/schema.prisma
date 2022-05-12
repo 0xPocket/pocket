@@ -13,15 +13,14 @@ datasource db {
 // User
 
 model UserParent {
-  id            String           @id @default(cuid())
+  id            String            @id @default(cuid())
   firstName     String
   lastName      String
-  email         String           @unique
+  email         String            @unique
   emailVerified DateTime?
   account       Account?
   children      UserChild[]
-  wallet        UserParentWallet @relation(fields: [userWalletId], references: [id])
-  userWalletId  String
+  wallet        UserParentWallet?
 }
 
 model UserChild {
@@ -38,10 +37,11 @@ model UserChild {
 // Wallet
 
 model UserParentWallet {
-  id         String       @id @default(cuid())
-  publicKey  String
-  privateKey String?
-  UserParent UserParent[]
+  id           String     @id @default(cuid())
+  publicKey    String
+  privateKey   String?
+  userParent   UserParent @relation(fields: [userParentId], references: [id])
+  userParentId String     @unique
 }
 
 // Authentication Account
@@ -67,6 +67,13 @@ model Account {
   scope             String?
   user              UserParent @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId            String     @unique
+}
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
 }
 
 // Auth Enums

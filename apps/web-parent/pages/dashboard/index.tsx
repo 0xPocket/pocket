@@ -14,9 +14,7 @@ function Index({}: IndexProps) {
 
   useEffect(() => {
     if (user) {
-      parentContract
-        ?.getNumberOfChildren(user?.wallet.publicKey)
-        .then(console.log);
+      parentContract?.getNumberOfChildren().then(console.log);
     }
   }, [user, parentContract]);
 

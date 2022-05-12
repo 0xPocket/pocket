@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const Axios = axios.create({});
+const Axios = axios.create({
+  withCredentials: true,
+});
 
 Axios.interceptors.request.use(
   (config) => {

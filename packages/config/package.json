@@ -15,7 +15,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "7.29.4",
-    "prettier-plugin-prisma": "^3.13.0",
+    "prettier-plugin-prisma": "^3.14.0",
     "prettier-plugin-tailwindcss": "^0.1.10"
   },
   "devDependencies": {

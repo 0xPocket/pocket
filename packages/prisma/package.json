@@ -22,13 +22,13 @@
   },
   "devDependencies": {
     "dotenv-checker": "^1.1.5",
-    "prettier-plugin-prisma": "^3.13.0",
     "npm-run-all": "^4.1.5",
-    "prisma": "^3.13.0",
+    "prettier-plugin-prisma": "^3.14.0",
+    "prisma": "^3.14.0",
     "ts-node": "^10.4.0"
   },
   "dependencies": {
-    "@prisma/client": "^3.13.0"
+    "@prisma/client": "^3.14.0"
   },
   "prisma": {
     "seed": "ts-node ./seed.ts"

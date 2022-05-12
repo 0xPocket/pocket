@@ -23,6 +23,10 @@
     "@lib/contract#healthcheck": {
       "cache": false
     },
+    "@lib/contract#seed": {
+      "cache": false,
+      "dependsOn": ["blockchain-side-pocket#dev"]
+    },
     "blockchain-side-pocket#dev": {
       "dependsOn": ["@lib/contract#healthcheck"],
       "cache": false
@@ -37,7 +41,11 @@
     },
     "api#dev": {
       "cache": false,
-      "dependsOn": ["blockchain-side-pocket#dev", "@lib/prisma#dev"]
+      "dependsOn": [
+        "blockchain-side-pocket#dev",
+        "@lib/prisma#dev",
+        "@lib/contract#seed"
+      ]
     },
     "clean": {
       "dependsOn": ["@lib/prisma#db:down"],

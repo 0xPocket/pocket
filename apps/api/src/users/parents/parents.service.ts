@@ -7,13 +7,14 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { compare, hash } from 'bcrypt';
-import { Wallet } from 'ethers';
 import { JwtAuthService } from 'src/auth/jwt/jwt-auth.service';
 import { LocalSigninDto } from 'src/auth/local/dto/local-signin.dto';
 import { EmailService } from 'src/email/email.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateChildrenDto } from './dto/create-children.dto';
 import { ParentSignupDto } from './dto/parent-signup.dto';
+import { v4 as uuidv4 } from 'uuid';
+import { WalletService } from 'src/wallet/wallet.service';
 
 @Injectable()
 export class ParentsService {
@@ -22,6 +23,7 @@ export class ParentsService {
     private emailService: EmailService,
     private jwtAuthService: JwtAuthService,
     private configService: ConfigService,
+    private walletService: WalletService,
   ) {}
 
   getParent(userId: string) {
@@ -118,8 +120,6 @@ export class ParentsService {
    */
 
   async create(data: ParentSignupDto, verification = true) {
-    const wallet = Wallet.createRandom();
-
     return this.prisma.userParent.create({
       data: {
         firstName: data.firstName,
@@ -134,10 +134,7 @@ export class ParentsService {
           },
         },
         wallet: {
-          create: {
-            publicKey: wallet.address,
-            privateKey: wallet.privateKey,
-          },
+          create: this.walletService.generateWallet(),
         },
       },
     });
@@ -169,8 +166,6 @@ export class ParentsService {
       }
     }
 
-    const wallet = Wallet.createRandom();
-
     return this.prisma.userParent.upsert({
       where: {
         email: data.email,
@@ -188,10 +183,7 @@ export class ParentsService {
           },
         },
         wallet: {
-          create: {
-            publicKey: wallet.address,
-            privateKey: wallet.privateKey,
-          },
+          create: this.walletService.generateWallet(),
         },
       },
       update: {},
@@ -219,14 +211,14 @@ export class ParentsService {
     data: CreateChildrenDto,
     verification = true,
   ) {
-    if (data.publicKey) {
-      const [parent, child] = await Promise.all([
-        this.prisma.userParent.findUnique({
+    try {
+      if (data.publicKey) {
+        await this.prisma.userParent.findUnique({
           where: {
             id: parentId,
           },
-        }),
-        this.prisma.userChild.create({
+        });
+        const child = await this.prisma.userChild.create({
           data: {
             firstName: data.firstName,
             lastName: data.lastName,
@@ -236,12 +228,20 @@ export class ParentsService {
                 id: parentId,
               },
             },
+            web3Account: {
+              create: {
+                address: data.publicKey.toLowerCase(),
+                nonce: uuidv4(),
+              },
+            },
           },
-        }),
-      ]);
-
-      return child;
+        });
+        return child;
+      }
+    } catch (e) {
+      throw new BadRequestException("Could't create child");
     }
+
     try {
       const [parent, child] = await Promise.all([
         this.prisma.userParent.findUnique({

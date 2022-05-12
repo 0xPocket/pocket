@@ -1,15 +1,24 @@
+import { useAuth } from '@lib/nest-auth/next';
 import { useForm } from 'react-hook-form';
 
 type LoginFormProps = {};
+
+type FormValues = {
+  email: string;
+  password: string;
+};
 
 function LoginForm({}: LoginFormProps) {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<FormValues>();
+  const { signIn } = useAuth();
 
-  const onSubmit = (data: any) => console.log(data);
+  const onSubmit = (data: FormValues) => {
+    signIn('local', data);
+  };
 
   return (
     <form
@@ -44,11 +53,11 @@ function LoginForm({}: LoginFormProps) {
           placeholder="password"
           {...register('password', {
             required: 'This field is required',
-            pattern: {
-              value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/,
-              message:
-                'Password should at least contain one digit, one lower case, one upper case and be 8+ characters long.',
-            },
+            // pattern: {
+            //   value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/,
+            //   message:
+            //     'Password should at least contain one digit, one lower case, one upper case and be 8+ characters long.',
+            // },
           })}
           type="password"
         />

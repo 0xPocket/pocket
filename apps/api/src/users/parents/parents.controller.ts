@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Post, Put, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { GetUserParent } from 'src/auth/decorators/get-user.decorator';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { GetParent } from 'src/auth/decorators/get-user.decorator';
 import { UserType } from 'src/auth/decorators/user-type.decorator';
-import { JwtTokenPayload } from 'src/auth/jwt/dto/JwtTokenPayload.dto';
-import { JwtAuthGuard } from 'src/auth/jwt/jwt-auth.guard';
+import { UserSessionPayload } from 'src/auth/session/dto/user-session.dto';
 import { ConfirmEmailDto } from './dto/confirm-email.dto';
 import { CreateChildrenDto } from './dto/create-children.dto';
 import { ParentSignupDto } from './dto/parent-signup.dto';
@@ -45,8 +45,8 @@ export class ParentsController {
    */
 
   @Get('children')
-  @UseGuards(JwtAuthGuard)
-  getChildren(@GetUserParent() user: JwtTokenPayload) {
+  @UseGuards(AuthGuard)
+  getChildren(@GetParent() user: UserSessionPayload) {
     return this.parentsService.getParentChildren(user.userId);
   }
 
@@ -59,9 +59,9 @@ export class ParentsController {
    */
 
   @Put('children')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AuthGuard)
   createChildren(
-    @GetUserParent() user: JwtTokenPayload,
+    @GetParent() user: UserSessionPayload,
     @Body() data: CreateChildrenDto,
   ) {
     return this.parentsService.createChildrenFromParent(user.userId, data);
