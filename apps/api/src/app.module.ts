@@ -8,6 +8,7 @@ import { ChildrenModule } from './users/children/children.module';
 import { AuthModule } from './auth/auth.module';
 import { EmailModule } from './email/email.module';
 import { WalletModule } from './wallet/wallet.module';
+import { NotifyModule } from './notify/notify.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { WalletModule } from './wallet/wallet.module';
     ChildrenModule,
     EmailModule,
     WalletModule,
+    NotifyModule,
   ],
   controllers: [AppController],
   providers: [AppService],
