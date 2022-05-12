@@ -4,6 +4,7 @@ import { useAxios } from '../../hooks/axios.hook';
 import { useAuth } from '@lib/nest-auth/next';
 import { UserParent } from '@lib/types/interfaces';
 import { useMutation, useQueryClient } from 'react-query';
+import { toast } from 'react-toastify';
 
 type AddChildFormProps = {
   setIsOpen: () => void;
@@ -35,6 +36,10 @@ function AddChildForm({ setIsOpen }: AddChildFormProps) {
       onSuccess: () => {
         queryClient.invalidateQueries('children');
         queryClient.invalidateQueries('balance');
+        toast.success(`Account created !`);
+      },
+      onError: () => {
+        toast.error(`DB call went wrong !`);
       },
     },
   );
@@ -56,10 +61,8 @@ function AddChildForm({ setIsOpen }: AddChildFormProps) {
         console.log('Contrat (addNewChild): success !');
       })
       .catch((e) => {
-        console.error(
-          'Contrat (addNewChild): error :',
-          JSON.parse(e.body).error.message,
-        );
+        console.error('Contrat (addNewChild): error :', e.body);
+        toast.error(`Call to contract failed...`);
       })
       .finally(() => setIsOpen());
   };
