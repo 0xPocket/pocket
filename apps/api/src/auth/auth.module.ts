@@ -7,10 +7,12 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtAuthModule } from './jwt/jwt-auth.module';
 import { MetamaskModule } from './metamask/metamask.module';
+import { SessionModule } from './session/session.module';
 
 @Module({
   imports: [
     PrismaModule,
+    SessionModule,
     JwtAuthModule,
     NestAuthModule.forRoot(),
     ParentsModule,

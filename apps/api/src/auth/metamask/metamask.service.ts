@@ -11,6 +11,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { ethers } from 'ethers';
 import { MetamaskSignatureDto } from './dto/signature.dto';
 import { MetamaskTokenDto } from './dto/token.dto';
+import { UserSession } from '../session/user-session.interface';
+import { SessionService } from '../session/session.service';
 
 @Injectable()
 export class MetamaskService {
@@ -19,6 +21,7 @@ export class MetamaskService {
   constructor(
     private jwtAuthService: JwtAuthService,
     private prisma: PrismaService,
+    private sessionService: SessionService,
   ) {}
 
   registerWithToken(data: MetamaskTokenDto) {
@@ -93,7 +96,7 @@ export class MetamaskService {
     return this.message.replace('\\nonce\\', nonce);
   }
 
-  async verifySignature(data: MetamaskSignatureDto) {
+  async verifySignature(data: MetamaskSignatureDto, session: UserSession) {
     const accountToVerify = await this.getWeb3AccountByAddress(
       data.walletAddress,
     );
@@ -110,6 +113,7 @@ export class MetamaskService {
 
     await this.regenerateNonce(accountToVerify.id);
 
+    this.sessionService.setUserSession(session, accountToVerify.user.id, false);
     return {
       access_token: this.jwtAuthService.generateAuthenticationToken(
         accountToVerify.user.id,

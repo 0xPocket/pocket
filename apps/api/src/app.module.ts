@@ -7,11 +7,12 @@ import { ParentsModule } from './users/parents/parents.module';
 import { ChildrenModule } from './users/children/children.module';
 import { AuthModule } from './auth/auth.module';
 import { EmailModule } from './email/email.module';
+import { WalletModule } from './wallet/wallet.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '../../.env',
+      envFilePath: ['../../.env', '../../contract.env'],
       isGlobal: true,
     }),
     AuthModule,
@@ -19,6 +20,7 @@ import { EmailModule } from './email/email.module';
     ParentsModule,
     ChildrenModule,
     EmailModule,
+    WalletModule,
   ],
   controllers: [AppController],
   providers: [AppService],
