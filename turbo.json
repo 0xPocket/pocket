@@ -47,6 +47,10 @@
         "@lib/contract#seed"
       ]
     },
+    "api#dx": {
+      "cache": false,
+      "dependsOn": ["@lib/prisma#dev"]
+    },
     "clean": {
       "dependsOn": ["@lib/prisma#db:down"],
       "cache": false
@@ -56,6 +60,9 @@
       "outputs": ["dist/**", ".next/**"]
     },
     "dev": {
+      "cache": false
+    },
+    "dx": {
       "cache": false
     },
     "start": {
