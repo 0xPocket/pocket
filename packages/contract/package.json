@@ -9,14 +9,17 @@
     "build:types": "typechain --target ethers-v5 --out-dir=types ./PocketFaucet.json",
     "predev": "cp ../blockchain-side-pocket/out/PocketFaucet.sol/PocketFaucet.json ./PocketFaucet.json && yarn build:types",
     "dev": "yarn deploy:node",
-    "healthcheck": "curl -m 10 --retry 5 --retry-connrefused --retry-delay 3 http://127.0.0.1:8545/"
+    "healthcheck": "curl -m 10 --retry 5 --retry-connrefused --retry-delay 3 http://127.0.0.1:8545/",
+    "seed": "ts-node ./seed.ts"
   },
   "dependencies": {
+    "dotenv": "^16.0.1",
     "ethers": "^5.6.5"
   },
   "devDependencies": {
     "@typechain/ethers-v5": "^10.0.0",
-    "hardhat": "^2.9.3",
+    "hardhat": "^2.9.4",
+    "ts-node": "^10.7.0",
     "typechain": "^8.0.0",
     "typescript": "^4.6.4"
   }

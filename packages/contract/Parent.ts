@@ -4,11 +4,11 @@ import { PocketFaucet } from "./types/PocketFaucet";
 
 // import
 class ParentContract {
-  library: any; // TO DO move
-  abi: any; // TO DO move
-  address: any; // TO DO move
-  signer: any;
-  UID: string;
+  // library: any; // TO DO move
+  // abi: any; // TO DO move
+  // address: any; // TO DO move
+  // signer: any;
+  // UID: string;
   contract: PocketFaucet;
 
   constructor(address: string, signer: Wallet) {

@@ -1,5 +1,5 @@
 class ChildContract {
-  getBalance = (adress) => {
+  getBalance = (adress: any) => {
     return 20;
   };
 }
