@@ -1,13 +1,14 @@
 import { Popover } from '@headlessui/react';
 import { useAuth } from '@lib/nest-auth/next';
 import { UserParent } from '@lib/types/interfaces';
-import { ethers } from 'ethers';
+import { BigNumber } from 'ethers';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { useSmartContract } from '../../contexts/contract';
 import Button from '../common/Button';
 import { usePopper } from 'react-popper';
 import { toast } from 'react-toastify';
+import { roundBigNumbertoString } from '../../utils/reactQuery';
 
 type WalletPopoverProps = {};
 
@@ -23,10 +24,13 @@ function WalletPopover({}: WalletPopoverProps) {
     placement: 'bottom-end',
   });
 
-  const balanceQuery = useQuery('balance', async () => {
-    const balanceEth = await provider?.getBalance(user?.wallet.publicKey!);
-    return ethers.utils.formatEther(balanceEth!);
-  });
+  const balanceQuery = useQuery(
+    'balance',
+    async () => await provider?.getBalance(user?.wallet.publicKey!),
+    {
+      select: (data: BigNumber | undefined) => roundBigNumbertoString(data, 2),
+    },
+  );
 
   return (
     <Popover className="relative">
