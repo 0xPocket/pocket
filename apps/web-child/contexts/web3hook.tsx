@@ -88,8 +88,8 @@ export const Web3AuthProvider = ({ children }: Web3AuthProviderProps) => {
   }, []);
 
   useEffect(() => {
-    if (localStorage.getItem('access_token')) {
-      myAxios.get('http://localhost:5000/auth/me').then((res) => {
+    if (localStorage.getItem('logged_in')) {
+      myAxios.get('/api/auth/children/me').then((res) => {
         setUser(res.data);
       });
     }
@@ -119,7 +119,7 @@ export const Web3AuthProvider = ({ children }: Web3AuthProviderProps) => {
 
     if (registerToken) {
       await axios
-        .post<{ nonce: string }>('http://localhost:5000/metamask/register', {
+        .post<{ nonce: string }>('/api/metamask/register', {
           token: registerToken,
           walletAddress: address,
         })
@@ -128,7 +128,7 @@ export const Web3AuthProvider = ({ children }: Web3AuthProviderProps) => {
 
     try {
       const nonce = await axios
-        .post<{ nonce: string }>('http://localhost:5000/metamask/nonce', {
+        .post<{ nonce: string }>('/api/metamask/nonce', {
           walletAddress: address,
         })
         .then((res) => res.data.nonce);
@@ -137,19 +137,16 @@ export const Web3AuthProvider = ({ children }: Web3AuthProviderProps) => {
         address,
       ]);
       const accessToken = await axios
-        .post<{ access_token: string }>(
-          'http://localhost:5000/metamask/verify',
-          {
-            signature: signature,
-            walletAddress: address,
-          },
-        )
+        .post<{ access_token: string }>('/api/metamask/verify', {
+          signature: signature,
+          walletAddress: address,
+        })
         .then((res) => {
           return res.data.access_token;
         });
       setStatus('hidden');
       setAccessToken(accessToken);
-      localStorage.setItem('access_token', accessToken);
+      localStorage.setItem('logged_in', 'true');
     } catch (e) {
       setStatus('hidden');
     }
@@ -165,12 +162,14 @@ export const Web3AuthProvider = ({ children }: Web3AuthProviderProps) => {
 
   const disconnect = useCallback(async () => {
     web3Modal?.clearCachedProvider();
-    setAddress(undefined);
-    setUser(undefined);
-    localStorage.removeItem('access_token');
+    localStorage.removeItem('logged_in');
+    myAxios.post('/api/auth/logout').then(() => {
+      setAddress(undefined);
+      setUser(undefined);
+    });
     // setProvider(undefined);
     // setWeb3Provider(undefined);
-  }, [web3Modal]);
+  }, [web3Modal, myAxios]);
 
   useEffect(() => {
     if (address && status === 'verifying_account') {

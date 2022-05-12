@@ -34,14 +34,14 @@ function AuthDialog({ status, setStatus, connectProvider }: AuthDialogProps) {
       >
         <Transition.Child
           as={Fragment}
-          enter="ease-out duration-300"
+          enter="ease-out duration-500"
           enterFrom="opacity-0"
           enterTo="opacity-100"
           leave="ease-in duration-200"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 flex items-center justify-center bg-dark/30 p-4 backdrop-blur-sm">
+          <div className="fixed inset-0 flex items-center justify-center bg-dark/30 p-4">
             <Dialog.Panel className="mx-auto rounded-lg bg-[#273138] p-4 text-bright">
               <div>Authenticate !</div>
               {status === 'choose_provider' ||
