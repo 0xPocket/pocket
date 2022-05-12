@@ -29,7 +29,6 @@ function Index({}: IndexProps) {
           {/* Accounts list  */}
           <div className="grid grid-cols-2 gap-8">
             <ChildrenAccountPanel />
-            <WalletPanel />
           </div>
         </div>
       </SectionContainer>

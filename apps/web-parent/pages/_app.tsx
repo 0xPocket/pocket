@@ -8,6 +8,8 @@ import { store } from '../redux/store';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { useState } from 'react';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App({ Component, pageProps: { ...pageProps } }: AppProps) {
   const [queryClient] = useState(() => new QueryClient());
@@ -21,6 +23,7 @@ function App({ Component, pageProps: { ...pageProps } }: AppProps) {
           </Provider>
         </SmartContractProvider>
       </AuthProvider>
+      <ToastContainer position="bottom-right" autoClose={3000} />
       <ReactQueryDevtools />
     </QueryClientProvider>
   );
