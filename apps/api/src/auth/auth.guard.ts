@@ -1,71 +1,29 @@
-import { NestAuthData } from '@lib/nest-auth/nest/types';
-import {
-  Injectable,
-  CanActivate,
-  ExecutionContext,
-  BadRequestException,
-} from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { IUserType } from './decorators/user-type.decorator';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private prisma: PrismaService) {}
-
-  async createOrGetUser(data: NestAuthData) {
-    const user = await this.prisma.userParent.findUnique({
-      where: {
-        email: data.profile.email,
-      },
-    });
-
-    if (user) {
-      const account = await this.prisma.account.findUnique({
-        where: {
-          userId: user.id,
-        },
-      });
-
-      if (account && account.provider !== data.provider) {
-        throw new BadRequestException(
-          `You must connect your account with ${account.provider}`,
-        );
-      }
-    }
-
-    return this.prisma.userParent.upsert({
-      where: {
-        email: data.profile.email,
-      },
-      create: {
-        firstName: data.profile.name,
-        lastName: data.profile.name,
-        email: data.profile.email,
-        account: {
-          create: {
-            type: 'oauth',
-            provider: data.provider,
-            providerAccountId: data.profile.id,
-          },
-        },
-        wallet: {
-          create: {
-            publicKey: 'public_key',
-            privateKey: 'asgfagdag',
-          },
-        },
-      },
-      update: {},
-    });
-  }
+  constructor(private reflector: Reflector) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
 
-    const data: NestAuthData = request.nest_auth;
+    if (!request.session) return false;
 
-    const user = await this.createOrGetUser(data);
+    if (!request.session.parent && !request.session.child) return false;
 
-    request.user = user;
+    const type = this.reflector.get<IUserType>('type', context.getHandler());
+
+    if (!type) return true;
+
+    if (type === 'child' && !request.session.child) {
+      return false;
+    }
+
+    if (type === 'parent' && !request.session.parent) {
+      return false;
+    }
 
     return true;
   }

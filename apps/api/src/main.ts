@@ -3,15 +3,35 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { useContainer } from 'class-validator';
 import { AppModule } from './app.module';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require('dotenv').config({ path: '../../contract.env' });
+import * as session from 'express-session';
+import { PrismaSessionStore } from '@quixo3/prisma-session-store';
+import { PrismaService } from './prisma/prisma.service';
 
 async function bootstrap() {
   const logger = new Logger('EntryPoint');
   const app = await NestFactory.create(AppModule);
 
-  app.enableCors();
+  const prisma = app.get(PrismaService);
+  app.use(
+    session({
+      secret: 'super-secret',
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        httpOnly: true,
+      },
+      store: new PrismaSessionStore(prisma, {
+        checkPeriod: 2 * 60 * 1000, //ms
+        dbRecordIdIsSessionId: true,
+        dbRecordIdFunction: undefined,
+      }),
+    }),
+  );
+
+  app.enableCors({
+    origin: ['http://localhost:3000', 'http://localhost:4000'],
+    credentials: true,
+  });
   app.useGlobalPipes(new ValidationPipe());
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 

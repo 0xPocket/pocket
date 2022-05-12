@@ -1,21 +1,44 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from './jwt/jwt-auth.guard';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  Session as GetSession,
+} from '@nestjs/common';
 import { GetNestAuth, NestAuth } from '@lib/nest-auth/nest';
-import { GetUserParent } from './decorators/get-user.decorator';
+import { GetChild, GetParent } from './decorators/get-user.decorator';
 import { NestAuthData } from '@lib/nest-auth/nest/types';
 import { FacebookProfile, GoogleProfile } from '@lib/nest-auth/providers';
 import { AuthService } from './auth.service';
 import { LocalSigninDto } from './local/dto/local-signin.dto';
-import { JwtTokenPayload } from './jwt/dto/JwtTokenPayload.dto';
+import { AuthGuard } from './auth.guard';
+import { UserSessionPayload } from './session/dto/user-session.dto';
+import { UserSession } from './session/user-session.interface';
+import { UserType } from './decorators/user-type.decorator';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Get('me')
-  @UseGuards(JwtAuthGuard)
-  me(@GetUserParent() user: JwtTokenPayload) {
-    return this.authService.getParent(user.userId);
+  @Get('/parents/me')
+  @UserType('parent')
+  @UseGuards(AuthGuard)
+  meParent(@GetParent() user: UserSessionPayload) {
+    return this.authService.getParent(user);
+  }
+
+  @Get('/children/me')
+  @UserType('child')
+  @UseGuards(AuthGuard)
+  meChild(@GetChild() user: UserSessionPayload) {
+    return this.authService.getChild(user);
+  }
+
+  @Post('logout')
+  @UseGuards(AuthGuard)
+  logout(@GetSession() session: UserSession) {
+    return this.authService.logout(session);
   }
 
   @NestAuth('facebook', {
@@ -26,7 +49,10 @@ export class AuthController {
       fields: 'id,email,name,first_name,last_name',
     },
   })
-  facebook(@GetNestAuth() data: NestAuthData<FacebookProfile>) {
+  facebook(
+    @GetNestAuth() data: NestAuthData<FacebookProfile>,
+    @GetSession() session: UserSession,
+  ) {
     return this.authService.authenticateParent(
       {
         id: data.profile.id,
@@ -36,6 +62,7 @@ export class AuthController {
         email: data.profile.email,
       },
       data.provider,
+      session,
     );
   }
 
@@ -44,7 +71,10 @@ export class AuthController {
     secretId: process.env.OAUTH_GOOGLE_SECRET,
     redirectUri: process.env.OAUTH_GOOGLE_REDIRECT_URL,
   })
-  google(@GetNestAuth() data: NestAuthData<GoogleProfile>) {
+  async google(
+    @GetNestAuth() data: NestAuthData<GoogleProfile>,
+    @GetSession() session: UserSession,
+  ) {
     return this.authService.authenticateParent(
       {
         id: data.profile.sub,
@@ -54,11 +84,12 @@ export class AuthController {
         email: data.profile.email,
       },
       data.provider,
+      session,
     );
   }
 
   @Post('local')
-  local(@Body() body: LocalSigninDto) {
-    return this.authService.authenticateParentLocal(body, 'local');
+  local(@Body() body: LocalSigninDto, @GetSession() session: UserSession) {
+    return this.authService.authenticateParentLocal(body, 'local', session);
   }
 }

@@ -3,41 +3,41 @@ import { PocketFaucet__factory } from "./types";
 import { PocketFaucet } from "types/PocketFaucet";
 
 class ChildContract {
-	library: any;
-	abi: any;
-	address: any;
-	signer: any;
-	contract: PocketFaucet;
+  // library: any;
+  // abi: any;
+  address: string;
+  // signer: any;
+  contract: PocketFaucet;
 
-	constructor(address: string, signer: Wallet) {
-		this.contract = PocketFaucet__factory.connect(address, signer);
-	};
+  constructor(address: string, signer: Wallet) {
+    this.contract = PocketFaucet__factory.connect(address, signer);
+    this.address = signer.address;
+  }
 
+  // Helper functions
+  getConfig = () => {
+    return this.contract.childToConfig(this.address);
+  };
 
-	// Helper functions
-	getConfig = () => {
-		return this.contract.childToConfig(this.address);
-	};
+  getParent = async () => {
+    return (await this.getConfig()).parent;
+  };
 
-	getParent = async () => {
-		return (await this.getConfig()).parent;
-	};
+  getPocketBalance = async () => {
+    return (await this.getConfig()).balance;
+  };
 
-	getPocketBalance = async () => {
-		return (await this.getConfig()).balance;
-	};
+  getLastClaim = async () => {
+    return (await this.getConfig()).lastClaim;
+  };
 
-	getLastClaim = async () => {
-		return (await this.getConfig()).lastClaim;
-	};
+  // TO DO :
+  // getClaimable()
 
-	// TO DO :
-	// getClaimable()
-
-	// Child functions
-	claim = () => {
-		return this.contract.claim();
-	};
+  // Child functions
+  claim = () => {
+    return this.contract.claim();
+  };
 }
 
 export { ChildContract };

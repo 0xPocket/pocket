@@ -41,13 +41,14 @@ function AddChildForm({ setIsOpen }: AddChildFormProps) {
 
   const onSubmit = (data: FormValues) => {
     parentContract
-      ?.addNewChild(
+      ?.addChild(
         {
           active: true,
           parent: user?.wallet.publicKey!,
           ceiling: 20,
           lastClaim: 20,
           balance: 0,
+          periodicity: 0,
         },
         data.publicKey,
       )

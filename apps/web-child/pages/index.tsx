@@ -22,12 +22,14 @@ function ChildrenSignup({}: ChildrenSignupProps) {
 
   return (
     <MainWrapper>
-      {status === 'authenticated' ? (
-        <Button>CLAIM</Button>
-      ) : (
-        <section className=" h-screen bg-primary">You must connect</section>
-      )}
-      <div>Balance : {balance} ETH</div>
+      <section className=" bg-primary">
+        {status === 'authenticated' ? (
+          <Button>CLAIM</Button>
+        ) : (
+          <div>You must connect</div>
+        )}
+        {/* <div>Balance : {balance} ETH</div> */}
+      </section>
     </MainWrapper>
   );
 }

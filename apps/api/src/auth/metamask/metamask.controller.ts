@@ -1,4 +1,5 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Session } from '@nestjs/common';
+import { UserSession } from '../session/user-session.interface';
 import { MetamaskNonceDto } from './dto/nonce.dto';
 import { MetamaskSignatureDto } from './dto/signature.dto';
 import { MetamaskTokenDto } from './dto/token.dto';
@@ -15,11 +16,12 @@ export class MetamaskController {
 
   @Post('nonce')
   nonceAuth(@Body() dto: MetamaskNonceDto) {
+    console.log('test');
     return this.metamaskService.generateNonce(dto);
   }
 
   @Post('verify')
-  verify(@Body() dto: MetamaskSignatureDto) {
-    return this.metamaskService.verifySignature(dto);
+  verify(@Body() dto: MetamaskSignatureDto, @Session() session: UserSession) {
+    return this.metamaskService.verifySignature(dto, session);
   }
 }

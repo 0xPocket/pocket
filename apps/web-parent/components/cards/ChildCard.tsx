@@ -9,8 +9,6 @@ type ChildCardProps = {
   child: UserChild;
 };
 
-const cc = new ChildContract();
-
 function ChildCard({ child }: ChildCardProps) {
   const [isOpen, setIsOpen] = useState(false);
   return (
@@ -21,7 +19,7 @@ function ChildCard({ child }: ChildCardProps) {
       >
         <div>
           <h2 className="">{child?.firstName}</h2>
-          <p>Available funds : {cc.getBalance('test')}</p>
+          <p>Available funds : {'placeholder'}</p>
         </div>
       </div>
 
