@@ -141,14 +141,23 @@ contract PFHelper is Utils, Erc20Handler {
         returns (uint256)
     {
         PocketFaucet.config memory conf = getConfig(child);
-        if (conf.lastClaim + conf.periodicity * 1 days < block.timestamp)
+        if (conf.lastClaim + conf.periodicity > block.timestamp)
             return 0;
 
         uint256 claimable;
-        while (conf.lastClaim < block.timestamp) {
+        while (conf.lastClaim + conf.periodicity <= block.timestamp) {
             claimable += conf.ceiling;
-            conf.lastClaim += conf.periodicity * 1 days;
+            conf.lastClaim += conf.periodicity;
         }
         return getSmallest(claimable, conf.balance);
+    }
+
+    function claimCompareBeforeAfter(address child) public {
+        uint256 balanceBefore = checkBalance(JEUR, child);
+        uint256 claimable = helperCalculateClaimable(child);
+        vm.prank(child);
+        PF.claim();
+        uint256 balanceAfter = checkBalance(JEUR, child);
+        assertEq(balanceAfter, balanceBefore + claimable);
     }
 }

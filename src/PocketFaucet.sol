@@ -190,7 +190,7 @@ contract PocketFaucet is AccessControl {
         );
 
         uint256 claimable;
-        while (conf.lastClaim < block.timestamp) {
+        while (conf.lastClaim + conf.periodicity <= block.timestamp) {
             claimable += conf.ceiling;
             conf.lastClaim += conf.periodicity;
         }
