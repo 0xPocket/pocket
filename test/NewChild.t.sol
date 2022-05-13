@@ -12,28 +12,15 @@ contract NewChild is Test, PFHelper {
         vm.startPrank(parent1);
     }
 
-    function testNoParentInConf() public {
-        PocketFaucet.config memory conf = PocketFaucet.config(
-            true,
-            0,
-            10,
-            0,
-            1 weeks,
-            address(0)
-        );
-        vm.expectRevert(bytes("!addChild: wrong parent in config"));
-        PF.addChild(conf, child1);
-    }
-
     function testChildAddrZero() public {
         vm.expectRevert(bytes("Address is null"));
-        PF.addChild(stdConf, address(0));
+        PF.addChild(stdConf.ceiling, stdConf.periodicity, address(0));
     }
 
     function testChildAlreadyExist() public {
-        PF.addChild(stdConf, child1);
+        PF.addChild(stdConf.ceiling, stdConf.periodicity, child1);
         vm.expectRevert(bytes("Child address already taken"));
-        PF.addChild(stdConf, child1);
+        PF.addChild(stdConf.ceiling, stdConf.periodicity, child1);
     }
 
     function testAddUpTo20Children(uint8 nb) public {

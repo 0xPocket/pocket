@@ -13,13 +13,13 @@ contract removeChild is Test, PFHelper {
     }
 
     function testRemoveChild() public {
-        PF.addChild(stdConf, child1);
+        PF.addChild(stdConf.ceiling, stdConf.periodicity, child1);
         PF.removeChild(child1);
         checkChildIsNotInit(child1);
     }
 
     function testRemoveChildNotSet() public {
-        PF.addChild(stdConf, child1);
+        PF.addChild(stdConf.ceiling, stdConf.periodicity, child1);
         vm.expectRevert(
             bytes("!_areRelated : child doesn't exist with this parent")
         );
@@ -27,12 +27,12 @@ contract removeChild is Test, PFHelper {
     }
 
     function testRemoveChildrenInDisorder() public {
-        PF.addChild(stdConf, child1);
-        PF.addChild(stdConf, child2);
-        PF.addChild(stdConf, child3);
+        PF.addChild(stdConf.ceiling, stdConf.periodicity, child1);
+        PF.addChild(stdConf.ceiling, stdConf.periodicity, child2);
+        PF.addChild(stdConf.ceiling, stdConf.periodicity, child3);
         PF.removeChild(child2);
         PF.removeChild(child3);
-        PF.addChild(stdConf, child2);
+        PF.addChild(stdConf.ceiling, stdConf.periodicity, child2);
         PF.removeChild(child1);
         checkChildIsNotInit(child1);
         checkChildIsNotInit(child3);
@@ -45,7 +45,7 @@ contract removeChild is Test, PFHelper {
         for (uint256 i; i < nb; i++) {
             lastChildAdded = addNToAddr(1, lastChildAdded);
             childrenAdded[i] = lastChildAdded;
-            PF.addChild(stdConf, lastChildAdded);
+            PF.addChild(stdConf.ceiling, stdConf.periodicity, lastChildAdded);
             checkChildIsInit(lastChildAdded, parent1);
             if (i % 2 == 0 || i % 5 == 0) PF.removeChild(lastChildAdded);
         }

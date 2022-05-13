@@ -55,7 +55,7 @@ contract PFHelper is Utils, Erc20Handler {
             1 weeks,
             parent
         );
-        PF.addChild(newConf, child);
+        PF.addChild(newConf.ceiling, newConf.periodicity, child);
     }
 
     function addFundToChild(
@@ -141,8 +141,7 @@ contract PFHelper is Utils, Erc20Handler {
         returns (uint256)
     {
         PocketFaucet.config memory conf = getConfig(child);
-        if (conf.lastClaim + conf.periodicity > block.timestamp)
-            return 0;
+        if (conf.lastClaim + conf.periodicity > block.timestamp) return 0;
 
         uint256 claimable;
         while (conf.lastClaim + conf.periodicity <= block.timestamp) {

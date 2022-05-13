@@ -73,16 +73,23 @@ contract PocketFaucet is AccessControl {
         return parentToChildren[parent].length;
     }
 
-    function addChild(config memory conf, address child) external {
+    function addChild(
+        uint256 ceiling,
+        uint256 periodicity,
+        address child
+    ) external {
         require(child != address(0), "Address is null");
-        require(conf.parent == msg.sender, "!addChild: wrong parent in config");
         require(
             childToConfig[child].parent == address(0),
             "Child address already taken"
         );
-
+        config memory conf;
         conf.balance = 0;
-        conf.lastClaim = block.timestamp - conf.periodicity;
+        conf.lastClaim = block.timestamp - periodicity;
+        conf.ceiling = ceiling;
+        conf.periodicity = periodicity;
+        conf.parent = msg.sender;
+        conf.active = true;
         childToConfig[child] = conf;
         parentToChildren[msg.sender].push(child);
 
@@ -117,7 +124,7 @@ contract PocketFaucet is AccessControl {
     }
 
     // TO DO : test
-    function activateSwitch(bool active, address child) public {
+    function setActive(bool active, address child) public {
         require(child != address(0), "!activateSwitch : null child address");
         config storage conf = childToConfig[child];
         require(conf.parent != address(0), "!activateSwitch: child not set");
