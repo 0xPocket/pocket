@@ -14,7 +14,7 @@ function ChildCard({ child }: ChildCardProps) {
   return (
     <>
       <div
-        className="relative flex aspect-square items-end rounded-lg bg-primary p-4 text-bright"
+        className="relative flex aspect-square items-end overflow-hidden rounded-lg border border-dark border-opacity-5 bg-bgWhite p-4 shadow-lg"
         onClick={() => setIsOpen(!isOpen)}
       >
         <div>

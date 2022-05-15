@@ -1,17 +1,28 @@
-import { Tab } from '@headlessui/react';
+import { Popover, Tab } from '@headlessui/react';
 import { useAuth } from '@lib/nest-auth/next';
 import { UserParent } from '@lib/types/interfaces';
 import { BigNumber } from 'ethers';
-import { useState } from 'react';
+import {
+  CSSProperties,
+  Dispatch,
+  Fragment,
+  SetStateAction,
+  useState,
+} from 'react';
 import { useQuery } from 'react-query';
 import { useSmartContract } from '../../contexts/contract';
 import { roundBigNumbertoString } from '../../utils/reactQuery';
 import SettingsTabPanel from './SettingsTabPanel';
 import MainTabPanel from './MainTabPanel';
+import { useTransition, animated } from 'react-spring';
 
-type WalletContentProps = {};
+type WalletContentProps = {
+  open: boolean;
+  popper: any;
+  setPopperElement: Dispatch<SetStateAction<HTMLDivElement | null>>;
+};
 
-function WalletContent({}: WalletContentProps) {
+function WalletContent({ open, popper, setPopperElement }: WalletContentProps) {
   const { user } = useAuth<UserParent>();
   const { provider } = useSmartContract();
   const balanceQuery = useQuery(
@@ -24,25 +35,55 @@ function WalletContent({}: WalletContentProps) {
 
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  return (
-    <Tab.Group selectedIndex={selectedIndex} onChange={setSelectedIndex}>
-      <Tab.List className="hidden">
-        <Tab>My Wallet</Tab>
-        <Tab>Settings</Tab>
-      </Tab.List>
-      <Tab.Panels>
-        <Tab.Panel>
-          <MainTabPanel
-            user={user}
-            balanceQuery={balanceQuery}
-            setSelectedIndex={setSelectedIndex}
-          />
-        </Tab.Panel>
-        <Tab.Panel>
-          <SettingsTabPanel setSelectedIndex={setSelectedIndex} user={user} />
-        </Tab.Panel>
-      </Tab.Panels>
-    </Tab.Group>
+  const transitions = useTransition(open, {
+    from: { opacity: 0, scale: 0 },
+    enter: { opacity: 1, scale: 1 },
+    config: {
+      mass: 0.7,
+      tension: 251,
+      friction: 21,
+      velocity: 0.021,
+    },
+  });
+
+  return transitions(
+    (styles, item) =>
+      item && (
+        <animated.div
+          className="absolute z-50 w-[400px] rounded-lg bg-bright py-4 px-8 shadow-lg"
+          style={{ ...styles, ...popper.styles.popper }}
+          {...popper.attributes.popper}
+          ref={setPopperElement}
+        >
+          <h1>Hello</h1>
+          <Popover.Panel>
+            <Tab.Group
+              selectedIndex={selectedIndex}
+              onChange={setSelectedIndex}
+            >
+              <Tab.List className="hidden">
+                <Tab>My Wallet</Tab>
+                <Tab>Settings</Tab>
+              </Tab.List>
+              <Tab.Panels>
+                <Tab.Panel>
+                  <MainTabPanel
+                    user={user}
+                    balanceQuery={balanceQuery}
+                    setSelectedIndex={setSelectedIndex}
+                  />
+                </Tab.Panel>
+                <Tab.Panel>
+                  <SettingsTabPanel
+                    setSelectedIndex={setSelectedIndex}
+                    user={user}
+                  />
+                </Tab.Panel>
+              </Tab.Panels>
+            </Tab.Group>
+          </Popover.Panel>
+        </animated.div>
+      ),
   );
 }
 

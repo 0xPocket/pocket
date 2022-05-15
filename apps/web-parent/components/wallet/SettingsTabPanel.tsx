@@ -10,7 +10,7 @@ type SettingsTabPanelProps = {
 
 function SettingsTabPanel({ user, setSelectedIndex }: SettingsTabPanelProps) {
   return (
-    <div className="flex w-[400px] flex-col gap-4 rounded-lg bg-bright px-8 py-4 shadow-lg">
+    <>
       <div className="flex items-center gap-4 border-b pb-4">
         <Button action={() => setSelectedIndex(0)}>back</Button>
         <h2 className="">Settings</h2>
@@ -26,7 +26,7 @@ function SettingsTabPanel({ user, setSelectedIndex }: SettingsTabPanelProps) {
         </div>
       </div>
       <div className="flex flex-col gap-2 pb-4"></div>
-    </div>
+    </>
   );
 }
 

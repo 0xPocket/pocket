@@ -4,7 +4,7 @@ type NavProps = {};
 
 function Nav({}: NavProps) {
   return (
-    <div className="ml-8 flex items-end gap-8">
+    <div className="ml-12 flex items-end gap-12">
       <Link href="/dashboard" passHref={true}>
         <a>Dashboard</a>
       </Link>

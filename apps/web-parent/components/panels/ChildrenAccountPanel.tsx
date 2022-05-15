@@ -20,14 +20,16 @@ function ChildrenAccountPanel({}: ChildrenAccountPanelProps) {
 
   return (
     <div>
-      <h2 className="mb-4">My accounts</h2>
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="">My accounts</h2>
+        <AddChildCard />
+      </div>
       <div className="grid grid-cols-2 gap-4">
         {isLoading ? (
           <div>Loading...</div>
         ) : (
           data?.map((child) => <ChildCard key={child.id} child={child} />)
         )}
-        <AddChildCard />
       </div>
     </div>
   );
