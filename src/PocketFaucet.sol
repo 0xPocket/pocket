@@ -228,7 +228,6 @@ contract PocketFaucet is AccessControl {
         config storage conf = childToConfig[msg.sender];
         require(conf.active, "!claim: not active");
         require(conf.balance > 0, "!claim: null balance");
-        // TO DO : test on active / inactive
         require(
             childToConfig[msg.sender].active == true,
             "!claim: account is inactive"
