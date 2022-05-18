@@ -1,20 +1,32 @@
 import { UserChild } from '@lib/types/interfaces';
 import { useForm } from 'react-hook-form';
+import { useSmartContract } from '../../contexts/contract';
 
 type ChildSettingsFormProps = {
   child: UserChild;
 };
 
-type FormValues = {};
+type FormValues = {
+  topup: number;
+  ceiling: number;
+};
 
 function ChildSettingsForm({ child }: ChildSettingsFormProps) {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<FormValues>();
 
-  const onSubmit = (data: any) => console.log(data);
+  const { parentContract } = useSmartContract();
+
+  const onSubmit = (data: FormValues) => {
+    parentContract
+      ?.addFunds(data.topup, child.web3Account.address)
+      .then((res) => {
+        console.log(res);
+      });
+  };
 
   return (
     <form

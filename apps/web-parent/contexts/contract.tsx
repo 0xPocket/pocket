@@ -36,7 +36,7 @@ export const SmartContractProvider = ({
 
   // console.log(abi);
   useEffect(() => {
-    if (!user || !user.wallet.privateKey) {
+    if (!user || !user.wallet?.privateKey) {
       console.error('SmartContractProvider: user infos missing');
       return;
     }
