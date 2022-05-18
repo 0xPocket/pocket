@@ -28,7 +28,7 @@ export interface AddressActivityEvent {
       decimal?: string;
     };
     log: unknown;
-  };
+  }[];
 }
 
 export interface AlchemyAddressActivity extends AlchemyWebhookCommon {
