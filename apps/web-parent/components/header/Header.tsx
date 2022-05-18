@@ -28,7 +28,7 @@ function Header({}: HeaderProps) {
   };
 
   return (
-    <header className="flex border-b border-dark border-opacity-10 bg-bright px-8 dark:bg-bgGray">
+    <header className="flex border-b border-dark border-opacity-10 bg-bright px-8">
       <div className="container mx-auto flex h-28 w-full items-center justify-between">
         <div className="flex">
           <Link href="/" passHref>

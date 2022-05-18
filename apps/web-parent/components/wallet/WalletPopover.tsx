@@ -13,7 +13,7 @@ function WalletPopover({}: WalletPopoverProps) {
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(
     null,
   );
-  const popper = usePopper(referenceElement, popperElement, {
+  const { styles, attributes } = usePopper(referenceElement, popperElement, {
     placement: 'bottom-end',
   });
 
@@ -25,11 +25,14 @@ function WalletPopover({}: WalletPopoverProps) {
             <FontAwesomeIcon icon={faWallet} />
           </Popover.Button>
           <Popover.Overlay className="fixed inset-0 z-50 bg-dark opacity-30" />
-          <WalletContent
-            open={open}
-            popper={popper}
-            setPopperElement={setPopperElement}
-          />
+          <Popover.Panel
+            ref={setPopperElement}
+            className="absolute z-50"
+            style={styles.popper}
+            {...attributes.popper}
+          >
+            {open && <WalletContent open={open} />}
+          </Popover.Panel>
         </>
       )}
     </Popover>
