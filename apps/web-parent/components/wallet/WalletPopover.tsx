@@ -31,7 +31,7 @@ function WalletPopover({}: WalletPopoverProps) {
             style={styles.popper}
             {...attributes.popper}
           >
-            {open && <WalletContent open={open} />}
+            {open && <WalletContent />}
           </Popover.Panel>
         </>
       )}
