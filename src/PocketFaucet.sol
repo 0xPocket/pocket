@@ -60,7 +60,7 @@ contract PocketFaucet is AccessControl {
         }
         require(
             isChild == true,
-            "!_areRelated : child doesn't exist with this parent"
+            "!_areRelated : child doesn't match"
         );
         require(
             childToConfig[child].parent == parent,
@@ -124,11 +124,16 @@ contract PocketFaucet is AccessControl {
     }
 
     // TO DO : test
-    function setActive(bool active, address child) public {
+    function setActive(bool active, address child)
+        public
+        _areRelated(msg.sender, child)
+    {
         require(child != address(0), "!activateSwitch : null child address");
         config storage conf = childToConfig[child];
         require(conf.parent != address(0), "!activateSwitch: child not set");
         conf.active = active;
+        if (conf.active == true)
+            conf.lastClaim = block.timestamp - conf.periodicity;
     }
 
     function changeConfig(
@@ -207,6 +212,7 @@ contract PocketFaucet is AccessControl {
 
     function claim() public {
         config storage conf = childToConfig[msg.sender];
+        require(conf.active, "!claim: not active");
         require(conf.balance > 0, "!claim: null balance");
         // TO DO : test on active / inactive
         require(

@@ -10,7 +10,7 @@ import "./helpers/PFHelper.sol";
 contract ChangeConf is Test, PFHelper {
     function setUp() public {
         vm.startPrank(parent2);
-        addChildToParent(parent2, child2, 20, true);
+        addChildToParent(parent2, child2, 20);
         // addFundToChild(parent2, 20, child2);
     }
 
@@ -20,17 +20,13 @@ contract ChangeConf is Test, PFHelper {
     }
 
     function testChildIsNotSet() public {
-        vm.expectRevert(
-            bytes("!_areRelated : child doesn't exist with this parent")
-        );
+        vm.expectRevert(bytes("!_areRelated : child doesn't match"));
         PF.changeConfig(stdCeiling, stdPeriodicity, child3);
     }
 
     function testChildIsRm() public {
         PF.removeChild(child2);
-        vm.expectRevert(
-            bytes("!_areRelated : child doesn't exist with this parent")
-        );
+        vm.expectRevert(bytes("!_areRelated : child doesn't match"));
         PF.changeConfig(stdCeiling, stdPeriodicity, child2);
     }
 

@@ -17,7 +17,7 @@ contract ChangeAddrTest is PFHelper {
     }
 
     function testDoesntExist() public {
-        vm.expectRevert("!_areRelated : child doesn't exist with this parent");
+        vm.expectRevert("!_areRelated : child doesn't match");
         vm.prank(parent1);
         PF.changeChildAddress(child2, child1);
     }

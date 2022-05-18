@@ -58,7 +58,7 @@ contract ClaimTest is PFHelper {
     function testClaimableGtBalance(uint8 amount) public {
         if (amount == 0) return;
         vm.prank(parent1);
-        addChildToParent(parent1, child2, 1000e18, true);
+        addChildToParent(parent1, child2, 1000e18);
         PF.grantRole(CHILD_ROLE, child2);
         addFundToChild(parent1, amount, child2);
         setErc20Amount(address(PF), JEUR, 1000000e18);
@@ -113,4 +113,12 @@ contract ClaimTest is PFHelper {
         vm.warp(block.timestamp + 6 weeks);
         claimCompareBeforeAfter(child1);
     }
+
+    // function testChangeActiveThenClaim() public {
+    //     bool activeBefore = getConfig(child1).active;
+    //     assertEq(activeBefore, true);
+    //     PF.setActive(!activeBefore, child1);
+    //     bool activeAfter = getConfig(child1).active;
+    //     assertEq(activeBefore, !activeAfter);
+    // }
 }

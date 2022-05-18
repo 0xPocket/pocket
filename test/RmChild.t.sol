@@ -20,9 +20,7 @@ contract removeChild is Test, PFHelper {
 
     function testRemoveChildNotSet() public {
         PF.addChild(stdConf.ceiling, stdConf.periodicity, child1);
-        vm.expectRevert(
-            bytes("!_areRelated : child doesn't exist with this parent")
-        );
+        vm.expectRevert(bytes("!_areRelated : child doesn't match"));
         PF.removeChild(child2);
     }
 

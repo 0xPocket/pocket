@@ -39,8 +39,7 @@ contract PFHelper is Utils, Erc20Handler {
     function addChildToParent(
         address parent,
         address child,
-        uint256 ceiling,
-        bool active
+        uint256 ceiling
     ) public {
         if (child == address(0)) {
             lastChildAdded = addNToAddr(1, lastChildAdded);
@@ -48,7 +47,7 @@ contract PFHelper is Utils, Erc20Handler {
         }
 
         PocketFaucet.config memory newConf = PocketFaucet.config(
-            active,
+            true,
             0,
             ceiling,
             0,
