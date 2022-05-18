@@ -2,9 +2,9 @@ type HeroSectionProps = {};
 
 function HeroSection({}: HeroSectionProps) {
   return (
-    <section className="relative z-0 h-[950px] overflow-hidden">
+    <section className="relative z-0 flex min-h-screen items-center overflow-hidden">
       <div className="container relative mx-auto grid h-full grid-cols-2">
-        <div className="z-10 mt-[-200px] flex  flex-col justify-center">
+        <div className="z-10 mt-[-200px]">
           <span className="text-4xl">The best place for your kid</span>
           <div className="max-w-fit bg-gradient-blue-text bg-clip-text text-[100px] font-bold leading-[120px] text-transparent">
             <span className="">to start his</span>
@@ -40,7 +40,7 @@ function HeroSection({}: HeroSectionProps) {
           </div>
         </div>
       </div>
-      <div className="absolute bottom-[-100px] right-0 h-[800px] w-[1800px] bg-light-radial-herosection"></div>
+      <div className="absolute bottom-[-100px] right-0 h-[800px] w-[1800px] bg-light-radial-herosection dark:opacity-10"></div>
     </section>
   );
 }

@@ -14,7 +14,7 @@ function MainWrapper({
 }: MainWrapperProps) {
   if (!authProtected) {
     return (
-      <div className="min-h-screen">
+      <div className="max-w-screen min-h-screen overflow-hidden">
         {!noHeader && <Header />}
         {children}
       </div>
@@ -23,7 +23,7 @@ function MainWrapper({
 
   return (
     <AuthGuard>
-      <div className="min-h-screen">
+      <div className="max-w-screen min-h-screen overflow-hidden">
         {!noHeader && <Header />}
         {children}
       </div>

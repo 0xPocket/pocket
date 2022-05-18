@@ -27,7 +27,7 @@ function WalletContent({}: WalletContentProps) {
 
   return (
     <WalletAnimation>
-      <div className="w-[400px] rounded-lg bg-bright py-4 px-8 shadow-lg">
+      <div className="w-[400px] rounded-lg bg-bright py-4 px-8 shadow-lg dark:bg-dark-light">
         <Tab.Group selectedIndex={selectedIndex} onChange={setSelectedIndex}>
           <Tab.List className="hidden">
             <Tab>My Wallet</Tab>

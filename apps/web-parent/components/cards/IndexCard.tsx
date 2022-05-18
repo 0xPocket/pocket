@@ -11,7 +11,7 @@ function IndexCard({ title, content, href, style }: IndexCardProps) {
   return (
     <div
       style={style}
-      className="relative aspect-[2/2] w-[400px] overflow-hidden rounded-2xl border border-gray-lightest bg-white p-8 shadow-xl"
+      className="relative aspect-[2/2] w-[400px] overflow-hidden rounded-2xl border border-gray-lightest bg-white p-8 shadow-xl dark:bg-dark-light"
     >
       <h2 className="z-10 mb-4 bg-gradient-blue-text bg-clip-text pb-4 text-5xl text-transparent">
         {title}

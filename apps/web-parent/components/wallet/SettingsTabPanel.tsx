@@ -20,8 +20,10 @@ function SettingsTabPanel({ user, setSelectedIndex }: SettingsTabPanelProps) {
           <p className="break-words">{user?.wallet.publicKey}</p>
         </div>
         <h3>My private key</h3>
-        <div className="rounded-md bg-dark p-2 text-bright">
-          <p className=" break-words">{user?.wallet.privateKey}</p>
+        <div className="relative overflow-hidden rounded-md bg-dark p-2 text-bright">
+          <p className="select-none break-words blur-sm">
+            {user?.wallet.privateKey}
+          </p>
         </div>
       </div>
       <div className="flex flex-col gap-2 pb-4"></div>

@@ -7,6 +7,7 @@ type WalletAnimationProps = {
 
 function WalletAnimation({ children }: WalletAnimationProps) {
   const [spring, api] = useSpring(() => ({}));
+
   useEffect(() => {
     api.start({
       from: { opacity: 0, scale: 0 },
@@ -18,7 +19,6 @@ function WalletAnimation({ children }: WalletAnimationProps) {
         velocity: 0.021,
       },
     });
-    console.log('ici');
   }, [api]);
 
   return <animated.div style={spring}>{children}</animated.div>;

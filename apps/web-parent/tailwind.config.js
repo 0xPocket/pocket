@@ -18,11 +18,18 @@ module.exports = {
         DEFAULT: 'rgb(13,176,233)',
         dark: 'rgb(10,150,251)',
       },
-      dark: '#000',
+      dark: {
+        DEFAULT: '#0f172a',
+        light: '#1e293b',
+      },
       bright: '#fff',
       danger: '#FF0000',
       black: '#000',
-      white: '#fff',
+      white: {
+        DEFAULT: '#fff',
+        dark: '#f0f9ff',
+        darker: '#64748b',
+      },
       gray: {
         light: '#cbd5e1',
         lightest: '#f1f5f9',

@@ -24,10 +24,10 @@ export function DialogFullWrapper({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 flex items-center justify-center bg-bgWhite ">
+          <div>
             <span className="absolute top-8 right-8 text-4xl font-bold">X</span>
             <Dialog.Panel>
-              <div className="flex h-screen w-screen flex-col items-center justify-center rounded-lg bg-bgWhite p-8">
+              <div className="flex h-screen w-screen flex-col items-center justify-center rounded-lg bg-white p-8">
                 {children}
               </div>
             </Dialog.Panel>
@@ -53,7 +53,7 @@ export function DialogPopupWrapper({
     <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
       <div className="fixed inset-0 flex items-center justify-center">
         <Dialog.Panel>
-          <div className="rounded-lg bg-bgWhite p-8">{children}</div>
+          <div className="rounded-lg bg-white p-8">{children}</div>
         </Dialog.Panel>
       </div>
     </Dialog>
