@@ -4,8 +4,8 @@ import { useAuth } from '@lib/nest-auth/next';
 import Link from 'next/link';
 import Nav from './Nav';
 import { UserParent } from '@lib/types/interfaces';
-import ToggleThemeMode from './ToggleThemeMode';
 import WalletPopover from '../wallet/WalletPopover';
+import DarkModeToggle from './DarkModeToggle';
 
 type HeaderProps = {};
 
@@ -28,11 +28,11 @@ function Header({}: HeaderProps) {
   };
 
   return (
-    <header className="flex border-b border-dark border-opacity-10 bg-bright px-8">
+    <header className="flex border-b border-dark border-opacity-10 bg-bright px-8 dark:border-bright dark:border-opacity-10 dark:bg-dark">
       <div className="container mx-auto flex h-28 w-full items-center justify-between">
         <div className="flex">
           <Link href="/" passHref>
-            <div className="cursor-pointer text-4xl font-bold">Kuryusi</div>
+            <div className="cursor-pointer text-4xl font-bold">CryptoKid</div>
           </Link>
           {status === 'authenticated' && <Nav />}
         </div>
@@ -55,7 +55,7 @@ function Header({}: HeaderProps) {
               <Button action={handleSignIn}>Sign Up</Button>
             </>
           )}
-          <ToggleThemeMode />
+          <DarkModeToggle />
         </div>
       </div>
     </header>

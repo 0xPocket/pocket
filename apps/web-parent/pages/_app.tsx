@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { ThemeProvider } from '../contexts/themeContext';
 
 function App({ Component, pageProps: { ...pageProps } }: AppProps) {
   const [queryClient] = useState(() => new QueryClient());
@@ -17,11 +18,13 @@ function App({ Component, pageProps: { ...pageProps } }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider config={config}>
-        <SmartContractProvider>
-          <Provider store={store}>
-            <Component {...pageProps} />
-          </Provider>
-        </SmartContractProvider>
+        <ThemeProvider>
+          <SmartContractProvider>
+            <Provider store={store}>
+              <Component {...pageProps} />
+            </Provider>
+          </SmartContractProvider>
+        </ThemeProvider>
       </AuthProvider>
       <ToastContainer position="bottom-right" autoClose={3000} />
       <ReactQueryDevtools />
