@@ -13,14 +13,22 @@ module.exports = {
   ],
   theme: {
     colors: {
-      primary: '#fff',
+      primary: {
+        light: '',
+        DEFAULT: 'rgb(13,176,233)',
+        dark: 'rgb(10,150,251)',
+      },
       dark: '#000',
       bright: '#fff',
       danger: '#FF0000',
-      pastelBlue: 'rgb(190,255, 242)',
+      black: '#000',
+      white: '#fff',
+      gray: {
+        light: '#cbd5e1',
+        lightest: '#f1f5f9',
+        DEFAULT: '#64748b',
+      },
       transparent: 'transparent',
-      bgWhite: '#fff',
-      bgGray: 'rgb(45,50,55)',
     },
     extend: {
       backgroundImage: {
