@@ -11,7 +11,6 @@ contract ChangeConf is Test, PFHelper {
     function setUp() public {
         vm.startPrank(parent2);
         addChildToParent(parent2, child2, 20);
-        // addFundToChild(parent2, 20, child2);
     }
 
     function testChildAddrIsZero() public {

@@ -9,8 +9,9 @@ import "./Erc20Handler.sol";
 contract PFHelper is Utils, Erc20Handler {
     using SafeERC20 for IERC20;
 
-    address JEUR = 0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c;
-    PocketFaucet PF = new PocketFaucet(JEUR);
+    address baseTokenHelper = 0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c;
+
+    PocketFaucet PF = new PocketFaucet(baseTokenHelper);
 
     address parent1 = address(0x1994);
     address parent2 = address(0x1995);
@@ -62,9 +63,9 @@ contract PFHelper is Utils, Erc20Handler {
         uint256 amount,
         address child
     ) public {
-        setErc20Amount(parent, JEUR, amount);
+        setErc20Amount(parent, baseTokenHelper, amount);
         vm.prank(parent);
-        IERC20(JEUR).approve(address(PF), amount);
+        IERC20(baseTokenHelper).approve(address(PF), amount);
         vm.prank(parent);
         PF.addFunds(amount, child);
     }
@@ -151,11 +152,12 @@ contract PFHelper is Utils, Erc20Handler {
     }
 
     function claimCompareBeforeAfter(address child) public {
-        uint256 balanceBefore = checkBalance(JEUR, child);
+        uint256 balanceBefore = checkBalance(baseTokenHelper, child);
         uint256 claimable = helperCalculateClaimable(child);
+        assertGt(claimable, 0);
         vm.prank(child);
         PF.claim();
-        uint256 balanceAfter = checkBalance(JEUR, child);
+        uint256 balanceAfter = checkBalance(baseTokenHelper, child);
         assertEq(balanceAfter, balanceBefore + claimable);
     }
 }

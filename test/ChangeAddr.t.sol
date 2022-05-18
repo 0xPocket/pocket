@@ -41,6 +41,6 @@ contract ChangeAddrTest is PFHelper {
         addFundToChild(parent1, 1000e18, child2);
         vm.prank(child2);
         PF.claim();
-        assertEq(stdConf.ceiling * 4, IERC20(JEUR).balanceOf(child2));
+        assertEq(stdConf.ceiling * 4, IERC20(baseTokenHelper).balanceOf(child2));
     }
 }

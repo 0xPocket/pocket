@@ -7,9 +7,9 @@ import "src/PocketFaucet.sol";
 import "./helpers/Erc20Handler.sol";
 
 abstract contract HelperContract {
-    address constant JEUR = 0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c;
+    address constant baseTokenHelper = 0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c;
     bytes32 public constant WITHDRAW_ROLE = keccak256("WITHDRAW_ROLE");
-    PocketFaucet pocket = new PocketFaucet(JEUR);
+    PocketFaucet pocket = new PocketFaucet(baseTokenHelper);
 }
 
 contract WithdrawTest is Erc20Handler, HelperContract {
@@ -19,7 +19,7 @@ contract WithdrawTest is Erc20Handler, HelperContract {
 
     function testWithdrawTokenNoBalance() public {
         vm.expectRevert(bytes("ERC20: transfer amount exceeds balance"));
-        pocket.withdrawToken(JEUR, 10000);
+        pocket.withdrawToken(baseTokenHelper, 10000);
     }
 
     function testWithdrawCoinNoBalance() public {
@@ -36,11 +36,11 @@ contract WithdrawTest is Erc20Handler, HelperContract {
     }
 
     function testWithdrawToken(uint256 amount) public {
-        setErc20Amount(address(pocket), JEUR, amount);
+        setErc20Amount(address(pocket), baseTokenHelper, amount);
 
-        uint256 preBalance = IERC20(JEUR).balanceOf(address(this));
-        pocket.withdrawToken(JEUR, amount);
-        uint256 postBalance = IERC20(JEUR).balanceOf(address(this));
+        uint256 preBalance = IERC20(baseTokenHelper).balanceOf(address(this));
+        pocket.withdrawToken(baseTokenHelper, amount);
+        uint256 postBalance = IERC20(baseTokenHelper).balanceOf(address(this));
         assertEq(preBalance + amount, postBalance);
     }
 

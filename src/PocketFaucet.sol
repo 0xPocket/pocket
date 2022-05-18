@@ -23,6 +23,7 @@ contract PocketFaucet is AccessControl {
     event childAdded(address indexed parent, address indexed child);
     event childRemoved(address indexed parent, address indexed child);
     event fundsAdded(address indexed parent, uint256 amount, address child);
+    event fundsWithdrawn(address indexed parent, uint256 amount, address child);
     event moneyClaimed(address indexed child, uint256 amount);
     event tokenWithdrawed(address indexed token, uint256 amount);
     event coinWithdrawed(uint256 amount);
@@ -58,10 +59,7 @@ contract PocketFaucet is AccessControl {
                 break;
             }
         }
-        require(
-            isChild == true,
-            "!_areRelated : child doesn't match"
-        );
+        require(isChild == true, "!_areRelated : child doesn't match");
         require(
             childToConfig[child].parent == parent,
             "!_areRelated : parent doesn't match"
@@ -118,6 +116,7 @@ contract PocketFaucet is AccessControl {
             childToConfig[child].balance
         );
 
+
         delete childToConfig[child];
         // revoke child role ??
         emit childRemoved(childConfig.parent, child);
@@ -133,6 +132,7 @@ contract PocketFaucet is AccessControl {
         require(conf.parent != address(0), "!activateSwitch: child not set");
         conf.active = active;
         if (conf.active == true)
+            // && conf.lastClaim < block.timestamp - conf.periodicity; --> avoid weird situation where jsut because you changed this parameter 2 times in a week (not grounded --> grounded --> not grounded anymore, your child get to get his money 2 times)
             conf.lastClaim = block.timestamp - conf.periodicity;
     }
 
@@ -190,6 +190,20 @@ contract PocketFaucet is AccessControl {
         childToConfig[child].balance += amount;
 
         emit fundsAdded(msg.sender, amount, child);
+    }
+
+    function withdrawFundsFromChild(uint256 amount, address child)
+        public
+        _areRelated(msg.sender, child)
+    {
+        config storage conf = childToConfig[child];
+        uint256 childBalance = conf.balance;
+        require(amount <= childBalance, "!withdrawFundsFromChild: amount > childBalance");
+        if (amount == 0)
+            amount = childBalance;
+        conf.balance -= amount;
+        IERC20(baseToken).safeTransfer(msg.sender, amount);
+        emit fundsWithdrawn(msg.sender, amount, child);
     }
 
     function _calculateClaimable(config storage conf)
