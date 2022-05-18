@@ -1,5 +1,4 @@
 import { UserParent } from '@lib/types/interfaces';
-import { userInfo } from 'os';
 import { Dispatch, SetStateAction } from 'react';
 import Button from '../common/Button';
 

@@ -1,10 +1,9 @@
 import { Popover } from '@headlessui/react';
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 import { usePopper } from 'react-popper';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWallet } from '@fortawesome/free-solid-svg-icons';
 import WalletContent from './WalletContent';
-import { animated, Transition, useSpring } from 'react-spring';
 
 type WalletPopoverProps = {};
 

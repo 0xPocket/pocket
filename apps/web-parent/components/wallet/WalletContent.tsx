@@ -2,13 +2,7 @@ import { Popover, Tab } from '@headlessui/react';
 import { useAuth } from '@lib/nest-auth/next';
 import { UserParent } from '@lib/types/interfaces';
 import { BigNumber } from 'ethers';
-import {
-  CSSProperties,
-  Dispatch,
-  Fragment,
-  SetStateAction,
-  useState,
-} from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useSmartContract } from '../../contexts/contract';
 import { roundBigNumbertoString } from '../../utils/reactQuery';
@@ -55,8 +49,7 @@ function WalletContent({ open, popper, setPopperElement }: WalletContentProps) {
           {...popper.attributes.popper}
           ref={setPopperElement}
         >
-          <h1>Hello</h1>
-          <Popover.Panel>
+          <Popover.Panel static={true}>
             <Tab.Group
               selectedIndex={selectedIndex}
               onChange={setSelectedIndex}
