@@ -19,8 +19,8 @@ function Button({ children, action, light, setIsOpen, isOpen }: ButtonProps) {
       onClick={handleClick}
       className={
         light
-          ? 'underline'
-          : 'bg-dark text-bright' +
+          ? 'text-primary-dark underline'
+          : 'bg-primary-dark text-bright' +
             ' relative flex items-center justify-center overflow-hidden rounded-md px-4 py-3'
       }
     >
