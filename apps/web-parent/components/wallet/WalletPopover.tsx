@@ -19,18 +19,22 @@ function WalletPopover({}: WalletPopoverProps) {
 
   return (
     <Popover className="relative">
-      <Popover.Button ref={setReferenceElement}>
-        <FontAwesomeIcon icon={faWallet} />
-      </Popover.Button>
-      <Popover.Overlay className="fixed inset-0 z-20 bg-dark opacity-30" />
-      <Popover.Panel
-        ref={setPopperElement}
-        className="absolute z-30"
-        style={styles.popper}
-        {...attributes.popper}
-      >
-        <WalletContent />
-      </Popover.Panel>
+      {({ open }) => (
+        <>
+          <Popover.Button ref={setReferenceElement}>
+            <FontAwesomeIcon icon={faWallet} />
+          </Popover.Button>
+          <Popover.Overlay className="fixed inset-0 z-50 bg-dark opacity-30" />
+          <Popover.Panel
+            ref={setPopperElement}
+            className="absolute z-50"
+            style={styles.popper}
+            {...attributes.popper}
+          >
+            {open && <WalletContent />}
+          </Popover.Panel>
+        </>
+      )}
     </Popover>
   );
 }

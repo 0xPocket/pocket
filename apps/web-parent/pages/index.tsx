@@ -1,11 +1,14 @@
+import ArgumentSection from '../components/page_landing/ArgumentSection';
+import HeroSection from '../components/page_landing/HeroSection';
+import IndexPageCards from '../components/page_landing/IndexPageCards';
 import MainWrapper from '../components/wrappers/MainWrapper';
 
 export default function Web() {
   return (
     <MainWrapper>
-      <section className="flex h-screen items-center justify-center bg-primary">
-        <span className="text-4xl">Hero Section</span>
-      </section>
+      <HeroSection />
+      <IndexPageCards />
+      <ArgumentSection />
     </MainWrapper>
   );
 }

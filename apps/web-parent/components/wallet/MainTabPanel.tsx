@@ -16,7 +16,7 @@ function MainTabPanel({
   setSelectedIndex,
 }: MainTabPanelProps) {
   return (
-    <div className="flex w-[400px] flex-col gap-4 rounded-lg bg-bright px-8 py-4 shadow-lg">
+    <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between border-b pb-4">
         <h2 className="">My Wallet</h2>
         <Button

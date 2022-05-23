@@ -6,6 +6,9 @@
   body {
     @apply font-raleway;
   }
+  html {
+    scroll-behavior: smooth;
+  }
   h1 {
     @apply font-raleway text-4xl font-bold;
   }

@@ -2,7 +2,6 @@ import { Tab } from '@headlessui/react';
 import { UserChild } from '@lib/types/interfaces';
 import { useState } from 'react';
 import { DialogFullWrapper } from '../wrappers/DialogsWrapper';
-import { ChildContract } from '@lib/contract';
 import ChildSettingsForm from '../forms/ChildSettingsForm';
 
 type ChildCardProps = {
@@ -14,7 +13,7 @@ function ChildCard({ child }: ChildCardProps) {
   return (
     <>
       <div
-        className="relative flex aspect-square items-end rounded-lg bg-primary p-4 text-bright"
+        className="relative flex aspect-square items-end overflow-hidden rounded-lg border border-dark border-opacity-5 bg-white p-4 shadow-lg dark:border-white-darker dark:bg-dark-light"
         onClick={() => setIsOpen(!isOpen)}
       >
         <div>
