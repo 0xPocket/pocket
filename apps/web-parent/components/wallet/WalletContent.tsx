@@ -1,6 +1,4 @@
 import { Tab } from '@headlessui/react';
-import { useAuth } from '@lib/nest-auth/next';
-import { UserParent } from '@lib/types/interfaces';
 import { BigNumber } from 'ethers';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
@@ -14,7 +12,6 @@ import { useWallet } from '../../contexts/wallet';
 type WalletContentProps = {};
 
 function WalletContent({}: WalletContentProps) {
-  const { user } = useAuth<UserParent>();
   const { provider } = useSmartContract();
   const { wallet } = useWallet();
   const balanceQuery = useQuery(
@@ -38,16 +35,12 @@ function WalletContent({}: WalletContentProps) {
           <Tab.Panels>
             <Tab.Panel>
               <MainTabPanel
-                user={user}
                 balanceQuery={balanceQuery}
                 setSelectedIndex={setSelectedIndex}
               />
             </Tab.Panel>
             <Tab.Panel>
-              <SettingsTabPanel
-                setSelectedIndex={setSelectedIndex}
-                user={user}
-              />
+              <SettingsTabPanel setSelectedIndex={setSelectedIndex} />
             </Tab.Panel>
           </Tab.Panels>
         </Tab.Group>

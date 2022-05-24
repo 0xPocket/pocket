@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
+import { useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 
 type CreateWalletFormProps = {};
@@ -17,6 +18,8 @@ function CreateWalletForm({}: CreateWalletFormProps) {
     formState: { errors },
   } = useForm<FormValues>();
   const router = useRouter();
+  const queryClient = useQueryClient();
+
   const onSubmit = (data: FormValues) => {
     axios
       .post('/api/wallet/create', {
@@ -24,7 +27,9 @@ function CreateWalletForm({}: CreateWalletFormProps) {
         privateKey: 'agaadga',
       })
       .catch(() => toast.error('Invalid password'))
-      .then(() => router.push('/dashboard'));
+      .then(() => {
+        router.push('/dashboard');
+      });
   };
 
   return (

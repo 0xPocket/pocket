@@ -1,8 +1,8 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useCallback, useContext, useState } from 'react';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 import { UserParentWallet } from '.prisma/client';
-import { AES } from 'crypto-js';
+import { AES, enc } from 'crypto-js';
 import { Wallet } from 'ethers';
 
 interface WalletProviderProps {
@@ -11,7 +11,10 @@ interface WalletProviderProps {
 
 interface IWalletContext {
   wallet: IWallet | undefined;
+  requestDecrypt: () => void;
+  cancelDecrypt: () => void;
   decryptKey: (passwordHash: string) => string | null;
+  decrypt: boolean;
 }
 
 interface IWallet {
@@ -29,6 +32,7 @@ const [WalletContext, WalletContextProvider] = createCtx<IWalletContext>();
 
 export const WalletProvider = ({ children }: WalletProviderProps) => {
   const [wallet, setWallet] = useState<IWallet | undefined>();
+  const [decrypt, setDecrypt] = useState(false);
 
   const { data } = useQuery<UserParentWallet>('wallet', async () => {
     const res = await axios.get('/api/wallet');
@@ -39,13 +43,28 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
     return res.data;
   });
 
+  const requestDecrypt = useCallback(() => {
+    setDecrypt(true);
+  }, []);
+
+  const cancelDecrypt = useCallback(() => {
+    setDecrypt(false);
+  }, []);
+
   const decryptKey = (passwordHash: string) => {
     const decryptedPK = AES.decrypt(
       wallet?.encryptedPrivateKey!,
       passwordHash,
-    ).toString();
+    ).toString(enc.Utf8);
     try {
       const wallet = new Wallet(decryptedPK);
+      setDecrypt(false);
+      setWallet((prev) => {
+        return {
+          ...prev,
+          privateKey: decryptedPK,
+        };
+      });
       return wallet.privateKey;
     } catch (e) {
       console.log('invalid password');
@@ -57,7 +76,10 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
     <WalletContextProvider
       value={{
         wallet,
+        requestDecrypt,
+        cancelDecrypt,
         decryptKey,
+        decrypt,
       }}
     >
       {children}

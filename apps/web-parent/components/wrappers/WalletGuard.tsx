@@ -1,5 +1,3 @@
-import { useAuth } from '@lib/nest-auth/next';
-import { UserParent } from '@lib/types/interfaces';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useWallet } from '../../contexts/wallet';
@@ -14,7 +12,7 @@ function WalletGuard({ children }: WalletGuardProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (wallet?.publicKey) {
+    if (!wallet?.publicKey) {
       router.push('/create-wallet');
     } else {
       setLoading(false);

@@ -34,7 +34,6 @@ export class ParentsService {
         id: userId,
       },
       include: {
-        wallet: true,
         account: {
           select: {
             type: true,
