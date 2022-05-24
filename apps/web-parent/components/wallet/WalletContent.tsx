@@ -9,15 +9,17 @@ import { roundBigNumbertoString } from '../../utils/reactQuery';
 import SettingsTabPanel from './SettingsTabPanel';
 import MainTabPanel from './MainTabPanel';
 import WalletAnimation from '../animations/WalletAnimation';
+import { useWallet } from '../../contexts/wallet';
 
 type WalletContentProps = {};
 
 function WalletContent({}: WalletContentProps) {
   const { user } = useAuth<UserParent>();
   const { provider } = useSmartContract();
+  const { wallet } = useWallet();
   const balanceQuery = useQuery(
     'balance',
-    async () => await provider?.getBalance(user?.wallet.publicKey!),
+    async () => await provider?.getBalance(wallet.publicKey!),
     {
       select: (data: BigNumber | undefined) => roundBigNumbertoString(data, 2),
     },

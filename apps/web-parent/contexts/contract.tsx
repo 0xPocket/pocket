@@ -3,6 +3,7 @@ import { providers, Wallet } from 'ethers';
 import { ParentContract } from '@lib/contract';
 import { useAuth } from '@lib/nest-auth/next';
 import { UserParent } from '@lib/types/interfaces';
+import { useWallet } from './wallet';
 
 interface SmartContractProviderProps {
   children: React.ReactNode;
@@ -28,6 +29,7 @@ export const SmartContractProvider = ({
   const [provider, setProvider] = useState<providers.JsonRpcProvider>();
   const [parentContract, setParentContract] = useState<ParentContract>();
   const { user } = useAuth<UserParent>();
+  const { wallet } = useWallet();
 
   useEffect(() => {
     const provider = new providers.JsonRpcProvider('http://localhost:8545');
@@ -36,8 +38,13 @@ export const SmartContractProvider = ({
 
   // console.log(abi);
   useEffect(() => {
-    if (!user || !user.wallet?.privateKey) {
-      console.error('SmartContractProvider: user infos missing');
+    if (!wallet) {
+      console.error('SmartContractProvider: wallet infos missing');
+      return;
+    }
+
+    if (!wallet.privateKey) {
+      console.error('SmartContractProvider: wallet must be decrypted');
       return;
     }
 
@@ -48,7 +55,7 @@ export const SmartContractProvider = ({
       return;
     }
 
-    const signer = new Wallet(user.wallet.privateKey, provider);
+    const signer = new Wallet(wallet.privateKey, provider);
 
     const parentContract = new ParentContract(
       process.env.NEXT_PUBLIC_CONTRACT_ADDRESS,
@@ -57,7 +64,7 @@ export const SmartContractProvider = ({
     setParentContract(parentContract);
 
     console.log('new contract set');
-  }, [provider, user]);
+  }, [provider, wallet]);
 
   return (
     <SmartContractContextProvider

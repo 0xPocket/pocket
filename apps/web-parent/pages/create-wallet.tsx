@@ -1,7 +1,4 @@
 import MainWrapper from '../components/wrappers/MainWrapper';
-import LoginForm from '../components/forms/LoginForm';
-import { useRouter } from 'next/router';
-import SocialAuth from '../components/auth/SocialAuth';
 import CreateWalletForm from '../components/forms/CreateWalletForm';
 
 type loginProps = {};

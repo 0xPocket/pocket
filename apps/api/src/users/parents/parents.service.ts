@@ -35,6 +35,11 @@ export class ParentsService {
       },
       include: {
         wallet: true,
+        account: {
+          select: {
+            type: true,
+          },
+        },
       },
     });
   }

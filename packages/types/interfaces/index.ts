@@ -1,4 +1,5 @@
 import {
+  Account,
   UserParent as Parent,
   UserParentWallet,
   Web3Account,
@@ -9,6 +10,9 @@ export * from "./Test.interface";
 export interface UserParent extends Parent {
   children: UserChild[];
   wallet?: UserParentWallet;
+  account: {
+    type: "oauth" | "credentials";
+  };
 }
 
 export interface UserChild extends Child {

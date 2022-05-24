@@ -1,7 +1,11 @@
 import { UserParent } from '@lib/types/interfaces';
+import { SHA256 } from 'crypto-js';
+import { useRouter } from 'next/router';
 import { Dispatch, SetStateAction } from 'react';
+import { useForm } from 'react-hook-form';
 import { UseQueryResult } from 'react-query';
 import { toast } from 'react-toastify';
+import { useWallet } from '../../contexts/wallet';
 import Button from '../common/Button';
 
 type MainTabPanelProps = {
@@ -10,11 +14,56 @@ type MainTabPanelProps = {
   setSelectedIndex: Dispatch<SetStateAction<number>>;
 };
 
+interface FormValues {
+  password: string;
+}
+
 function MainTabPanel({
   user,
   balanceQuery,
   setSelectedIndex,
 }: MainTabPanelProps) {
+  const router = useRouter();
+  const { wallet, decryptKey } = useWallet();
+  const { register, handleSubmit } = useForm<FormValues>();
+
+  const onSubmit = (data: FormValues) => {
+    const encryptedPassword = SHA256(data.password).toString();
+    decryptKey(encryptedPassword);
+  };
+
+  if (!user.wallet) {
+    return (
+      <div className="flex flex-col gap-4">
+        <Button action={() => router.push('/create-wallet')}>
+          CREATE YOUR WALLET
+        </Button>
+      </div>
+    );
+  }
+
+  if (!wallet?.privateKey) {
+    return (
+      <div className="flex flex-col gap-4">
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
+          <input
+            className="border p-2 text-dark"
+            type="password"
+            placeholder="Password"
+            {...register('password', {
+              required: 'This field is required',
+            })}
+          />
+          <input
+            type="submit"
+            value="Decrypt Wallet"
+            className="rounded-md bg-dark  px-4 py-3 text-bright"
+          />
+        </form>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between border-b pb-4">

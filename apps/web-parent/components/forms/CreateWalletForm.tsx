@@ -1,5 +1,7 @@
-import { useAuth } from '@lib/nest-auth/next';
+import axios from 'axios';
+import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
 type CreateWalletFormProps = {};
 
@@ -14,10 +16,15 @@ function CreateWalletForm({}: CreateWalletFormProps) {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
-  const { signIn } = useAuth();
-
+  const router = useRouter();
   const onSubmit = (data: FormValues) => {
-    signIn('local', data);
+    axios
+      .post('/api/wallet/create', {
+        password: data.password,
+        privateKey: 'agaadga',
+      })
+      .catch(() => toast.error('Invalid password'))
+      .then(() => router.push('/dashboard'));
   };
 
   return (
@@ -25,21 +32,12 @@ function CreateWalletForm({}: CreateWalletFormProps) {
       onSubmit={handleSubmit(onSubmit)}
       className="flex w-72 flex-col gap-4"
     >
-      {/* (?=.*\d)          // should contain at least one digit
-			(?=.*[a-z])       // should contain at least one lower case
-			(?=.*[A-Z])       // should contain at least one upper case
-			[a-zA-Z0-9]{8,}   // should contain at least 8 from the mentioned characters */}
       <div className="flex flex-col">
         <input
           className="border p-2"
           placeholder="password"
           {...register('password', {
             required: 'This field is required',
-            // pattern: {
-            //   value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/,
-            //   message:
-            //     'Password should at least contain one digit, one lower case, one upper case and be 8+ characters long.',
-            // },
           })}
           type="password"
         />

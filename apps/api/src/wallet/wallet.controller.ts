@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { GetParent } from 'src/auth/decorators/get-user.decorator';
 import { UserType } from 'src/auth/decorators/user-type.decorator';
@@ -9,6 +9,13 @@ import { WalletService } from './wallet.service';
 @Controller('wallet')
 export class WalletController {
   constructor(private readonly walletService: WalletService) {}
+
+  @Get()
+  @UserType('parent')
+  @UseGuards(AuthGuard)
+  getWallet(@GetParent() user: UserSessionPayload) {
+    return this.walletService.getWallet(user.userId);
+  }
 
   @Post('create')
   @UserType('parent')

@@ -32,6 +32,14 @@ export class WalletService {
     return AES.decrypt(encryptedPK, passwordHash).toString();
   }
 
+  getWallet(userId: string) {
+    return this.prisma.userParentWallet.findUnique({
+      where: {
+        userParentId: userId,
+      },
+    });
+  }
+
   async createWallet(userId: string, data: CreateWalletDto) {
     const user = await this.prisma.userParent.findUnique({
       where: {
