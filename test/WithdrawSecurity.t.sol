@@ -7,13 +7,13 @@ import "src/PocketFaucet.sol";
 import "./helpers/Erc20Handler.sol";
 
 abstract contract HelperContract {
-    address constant JEUR = 0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c;
+    address constant baseTokenHelper = 0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c;
     address addr1 = address(0x01);
 
     bytes32 public constant PARENT_ROLE = keccak256("PARENT_ROLE");
     bytes32 public constant CHILD_ROLE = keccak256("CHILD_ROLE");
 
-    PocketFaucet pocket = new PocketFaucet(JEUR);
+    PocketFaucet pocket = new PocketFaucet(baseTokenHelper);
 }
 
 contract WithdrawSecurityTest is Erc20Handler, HelperContract {
@@ -25,7 +25,7 @@ contract WithdrawSecurityTest is Erc20Handler, HelperContract {
                 "AccessControl: account 0x0000000000000000000000000000000000000001 is missing role 0x5d8e12c39142ff96d79d04d15d1ba1269e4fe57bb9d26f43523628b34ba108ec"
             )
         );
-        pocket.withdrawToken(JEUR, 10000);
+        pocket.withdrawToken(baseTokenHelper, 10000);
     }
 
     function testWithdrawTokenChild() public {
@@ -36,7 +36,7 @@ contract WithdrawSecurityTest is Erc20Handler, HelperContract {
                 "AccessControl: account 0x0000000000000000000000000000000000000001 is missing role 0x5d8e12c39142ff96d79d04d15d1ba1269e4fe57bb9d26f43523628b34ba108ec"
             )
         );
-        pocket.withdrawToken(JEUR, 10000);
+        pocket.withdrawToken(baseTokenHelper, 10000);
     }
 
     function testWithdrawTokenNoRole() public {
@@ -46,7 +46,7 @@ contract WithdrawSecurityTest is Erc20Handler, HelperContract {
                 "AccessControl: account 0x0000000000000000000000000000000000000001 is missing role 0x5d8e12c39142ff96d79d04d15d1ba1269e4fe57bb9d26f43523628b34ba108ec"
             )
         );
-        pocket.withdrawToken(JEUR, 10000);
+        pocket.withdrawToken(baseTokenHelper, 10000);
     }
 
     function testWithdrawCoinNoRole() public {
