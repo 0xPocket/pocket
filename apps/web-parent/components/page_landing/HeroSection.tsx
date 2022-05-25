@@ -1,8 +1,10 @@
+import Button from '../common/Button';
+
 type HeroSectionProps = {};
 
 function HeroSection({}: HeroSectionProps) {
   return (
-    <section className="relative z-0 flex min-h-screen items-center overflow-hidden">
+    <section className="relative z-0 flex min-h-[85vh] items-center ">
       <div className="container relative mx-auto grid h-full grid-cols-2">
         <div className="z-10 mt-[-200px]">
           <span className="text-4xl">The best place for your kid</span>
@@ -12,8 +14,8 @@ function HeroSection({}: HeroSectionProps) {
           </div>
           <div className="mt-16 flex flex-col gap-4 pl-16">
             <span className="max-w-sm text-lg">
-              Stay connected to your child while you keep an eye over his
-              discovery of the web3
+              Help us by answering a few questions and be selected for our beta
+              and more
             </span>
             <form className=" sm:flex">
               <label htmlFor="email-address" className="sr-only">
@@ -25,17 +27,10 @@ function HeroSection({}: HeroSectionProps) {
                 type="email"
                 autoComplete="email"
                 required
-                className="w-full rounded-md border border-gray-light px-5 py-3 placeholder-gray focus:border-primary-dark focus:ring-primary-dark sm:max-w-xs"
+                className="w-full rounded-md border border-gray-light px-5 py-3 placeholder-gray focus:border-primary-dark focus:ring-primary-dark dark:text-gray sm:max-w-xs"
                 placeholder="Enter your email"
               />
-              <div className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3 sm:flex-shrink-0">
-                <button
-                  type="submit"
-                  className="flex w-full items-center justify-center rounded-md border border-transparent bg-primary px-5 py-3 text-base font-medium text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                >
-                  Send
-                </button>
-              </div>
+              <Button className="ml-4">Get Started</Button>
             </form>
           </div>
         </div>
