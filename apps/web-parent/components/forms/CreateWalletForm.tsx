@@ -27,8 +27,10 @@ function CreateWalletForm({}: CreateWalletFormProps) {
         privateKey: 'agaadga',
       })
       .catch(() => toast.error('Invalid password'))
-      .then(() => {
-        router.push('/dashboard');
+      .then(async () => {
+        queryClient
+          .invalidateQueries('wallet')
+          .then(() => router.push('/dashboard'));
       });
   };
 

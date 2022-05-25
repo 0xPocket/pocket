@@ -1,5 +1,4 @@
 import Header from '../header/Header';
-import DecryptWalletModal from '../wallet/DecryptWalletModal';
 import AuthGuard from './AuthGuard';
 import WalletGuard from './WalletGuard';
 
@@ -19,7 +18,6 @@ function MainWrapper({
       <div className="max-w-screen min-h-screen overflow-hidden">
         {!noHeader && <Header />}
         {children}
-        <DecryptWalletModal />
       </div>
     );
   }
@@ -30,7 +28,6 @@ function MainWrapper({
         <div className="max-w-screen min-h-screen overflow-hidden">
           {!noHeader && <Header />}
           {children}
-          <DecryptWalletModal />
         </div>
       </WalletGuard>
     </AuthGuard>

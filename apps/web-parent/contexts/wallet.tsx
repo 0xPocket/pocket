@@ -34,14 +34,21 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
   const [wallet, setWallet] = useState<IWallet | undefined>();
   const [decrypt, setDecrypt] = useState(false);
 
-  const { data } = useQuery<UserParentWallet>('wallet', async () => {
-    const res = await axios.get('/api/wallet');
-    setWallet({
-      publicKey: res.data.publicKey,
-      encryptedPrivateKey: res.data.privateKey,
-    });
-    return res.data;
-  });
+  const { data } = useQuery<UserParentWallet>(
+    'wallet',
+    async () => {
+      const res = await axios.get('/api/wallet');
+      setWallet({
+        publicKey: res.data.publicKey,
+        encryptedPrivateKey: res.data.privateKey,
+      });
+      return res.data;
+    },
+    {
+      retry: false,
+      staleTime: 60 * 5 * 1000,
+    },
+  );
 
   const requestDecrypt = useCallback(() => {
     setDecrypt(true);

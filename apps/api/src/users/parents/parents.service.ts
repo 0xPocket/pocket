@@ -6,7 +6,6 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { compare, hash } from 'bcrypt';
 import { JwtAuthService } from 'src/auth/jwt/jwt-auth.service';
 import { LocalSigninDto } from 'src/auth/local/dto/local-signin.dto';
 import { EmailService } from 'src/email/email.service';

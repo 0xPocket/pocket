@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { useWallet } from '../../contexts/wallet';
 import Button from '../common/Button';
 

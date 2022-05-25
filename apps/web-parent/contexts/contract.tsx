@@ -1,8 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { providers, Wallet } from 'ethers';
 import { ParentContract } from '@lib/contract';
-import { useAuth } from '@lib/nest-auth/next';
-import { UserParent } from '@lib/types/interfaces';
 import { useWallet } from './wallet';
 
 interface SmartContractProviderProps {
@@ -28,7 +26,6 @@ export const SmartContractProvider = ({
 }: SmartContractProviderProps) => {
   const [provider, setProvider] = useState<providers.JsonRpcProvider>();
   const [parentContract, setParentContract] = useState<ParentContract>();
-  const { user } = useAuth<UserParent>();
   const { wallet } = useWallet();
 
   useEffect(() => {
