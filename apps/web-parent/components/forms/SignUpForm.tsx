@@ -2,14 +2,18 @@ import { useForm } from 'react-hook-form';
 
 type SignUpFormProps = {};
 
+type SignUpDataForm = {
+  email: string;
+  password: string;
+};
 function SignUpForm({}: SignUpFormProps) {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<SignUpDataForm>();
 
-  const onSubmit = (data: any) => console.log(data);
+  const onSubmit = (data: SignUpDataForm) => console.log(data);
 
   return (
     <form
@@ -18,7 +22,7 @@ function SignUpForm({}: SignUpFormProps) {
     >
       <div className="flex flex-col">
         <input
-          className="border p-2"
+          className="w-full rounded-md border border-gray-light px-5 py-3 placeholder-gray focus:border-primary-dark focus:ring-primary-dark dark:text-gray sm:max-w-xs"
           placeholder="john@doe.com"
           {...register('email', {
             required: 'This field is required',
@@ -40,7 +44,7 @@ function SignUpForm({}: SignUpFormProps) {
 			[a-zA-Z0-9]{8,}   // should contain at least 8 from the mentioned characters */}
       <div className="flex flex-col">
         <input
-          className="border p-2"
+          className="w-full rounded-md border border-gray-light px-5 py-3 placeholder-gray focus:border-primary-dark focus:ring-primary-dark dark:text-gray sm:max-w-xs"
           placeholder="password"
           {...register('password', {
             required: 'This field is required',

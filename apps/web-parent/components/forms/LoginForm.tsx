@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 
 type LoginFormProps = {};
 
-type FormValues = {
+type LoginDataForm = {
   email: string;
   password: string;
 };
@@ -13,10 +13,10 @@ function LoginForm({}: LoginFormProps) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormValues>();
+  } = useForm<LoginDataForm>();
   const { signIn } = useAuth();
 
-  const onSubmit = (data: FormValues) => {
+  const onSubmit = (data: LoginDataForm) => {
     signIn('local', data);
   };
 
@@ -27,7 +27,7 @@ function LoginForm({}: LoginFormProps) {
     >
       <div className="flex flex-col">
         <input
-          className="border p-2"
+          className="w-full rounded-md border border-gray-light px-5 py-3 placeholder-gray focus:border-primary-dark focus:ring-primary-dark dark:text-gray sm:max-w-xs"
           placeholder="john@doe.com"
           {...register('email', {
             required: 'This field is required',
@@ -39,7 +39,9 @@ function LoginForm({}: LoginFormProps) {
           type="email"
         />
         {errors.email && (
-          <span className="text-sm text-danger">{errors.email.message}</span>
+          <span className="mt-2 text-sm text-danger">
+            {errors.email.message}
+          </span>
         )}
       </div>
 
@@ -49,7 +51,7 @@ function LoginForm({}: LoginFormProps) {
 			[a-zA-Z0-9]{8,}   // should contain at least 8 from the mentioned characters */}
       <div className="flex flex-col">
         <input
-          className="border p-2"
+          className="w-full rounded-md border border-gray-light px-5 py-3 placeholder-gray focus:border-primary-dark focus:ring-primary-dark dark:text-gray sm:max-w-xs"
           placeholder="password"
           {...register('password', {
             required: 'This field is required',
@@ -62,7 +64,9 @@ function LoginForm({}: LoginFormProps) {
           type="password"
         />
         {errors.password && (
-          <span className="text-sm text-danger">{errors.password.message}</span>
+          <span className="mt-2 text-sm text-danger">
+            {errors.password.message}
+          </span>
         )}
       </div>
 
