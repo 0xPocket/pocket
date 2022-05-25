@@ -1,7 +1,7 @@
 import { Tab } from '@headlessui/react';
 import { UserChild } from '@lib/types/interfaces';
 import { useState } from 'react';
-import { DialogFullWrapper } from '../wrappers/DialogsWrapper';
+import { DialogFullWrapper } from '@lib/ui';
 import ChildSettingsForm from '../forms/ChildSettingsForm';
 
 type ChildCardProps = {

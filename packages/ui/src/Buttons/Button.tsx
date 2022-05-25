@@ -1,4 +1,4 @@
-import { Dispatch, MouseEventHandler, SetStateAction } from 'react';
+import { Dispatch, MouseEventHandler, SetStateAction } from "react";
 
 type ButtonProps = {
   children: React.ReactNode;
@@ -9,7 +9,7 @@ type ButtonProps = {
   className?: string;
 };
 
-function Button({
+export function Button({
   children,
   action,
   light,
@@ -28,14 +28,12 @@ function Button({
       className={`${className}
         ${
           light
-            ? 'text-primary-dark underline underline-offset-2 dark:text-primary-dark'
-            : ' bg-primary text-bright dark:bg-primary-dark'
+            ? "text-primary-dark underline underline-offset-2 dark:text-primary-dark"
+            : " bg-primary text-bright dark:bg-primary-dark"
         }
-            relative flex items-center justify-center overflow-hidden rounded-md px-4 py-3`}
+            bg- relative flex items-center justify-center overflow-hidden rounded-md px-4 py-3`}
     >
       {children}
     </button>
   );
 }
-
-export default Button;

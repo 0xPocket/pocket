@@ -1,4 +1,4 @@
-import ALink from '../common/ALink';
+import { ALink } from '@lib/ui';
 
 type IndexCardProps = {
   title: string;

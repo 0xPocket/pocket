@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import Button from '../common/Button';
+import { Button } from '@lib/ui';
 import AddChildForm from '../forms/AddChildForm';
-import { DialogFullWrapper } from '../wrappers/DialogsWrapper';
+import { DialogFullWrapper } from '@lib/ui';
 
 type AddChildCardProps = {};
 

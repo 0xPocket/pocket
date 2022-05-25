@@ -5,9 +5,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import SignUpForm from '../components/forms/SignUpForm';
 
-type signinProps = {};
-
-function SignUp({}: signinProps) {
+function SignUp() {
   const router = useRouter();
   const { status } = useAuth();
 

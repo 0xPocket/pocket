@@ -5,16 +5,19 @@ type ChildSettingsFormProps = {
   child: UserChild;
 };
 
-type FormValues = {};
+type FormValues = {
+  topup: number;
+  ceiling: number;
+};
 
 function ChildSettingsForm({ child }: ChildSettingsFormProps) {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<FormValues>();
 
-  const onSubmit = (data: any) => console.log(data);
+  const onSubmit = (data: FormValues) => console.log(data);
 
   return (
     <form

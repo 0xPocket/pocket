@@ -1,6 +1,6 @@
 import { UserParent } from '@lib/types/interfaces';
 import { Dispatch, SetStateAction } from 'react';
-import Button from '../common/Button';
+import { Button } from '@lib/ui';
 
 type SettingsTabPanelProps = {
   user: UserParent | undefined;
