@@ -6,9 +6,17 @@ type ButtonProps = {
   setIsOpen?: Dispatch<SetStateAction<boolean>>;
   isOpen?: boolean;
   light?: boolean;
+  className?: string;
 };
 
-function Button({ children, action, light, setIsOpen, isOpen }: ButtonProps) {
+function Button({
+  children,
+  action,
+  light,
+  setIsOpen,
+  isOpen,
+  className,
+}: ButtonProps) {
   const handleClick: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
     if (action) action();
@@ -17,12 +25,13 @@ function Button({ children, action, light, setIsOpen, isOpen }: ButtonProps) {
   return (
     <button
       onClick={handleClick}
-      className={
-        light
-          ? 'text-primary-dark underline'
-          : 'bg-primary-dark text-bright' +
-            ' relative flex items-center justify-center overflow-hidden rounded-md px-4 py-3'
-      }
+      className={`${className}
+        ${
+          light
+            ? 'text-primary-dark underline underline-offset-2 dark:text-primary-dark'
+            : ' bg-primary text-bright dark:bg-primary-dark'
+        }
+            relative flex items-center justify-center overflow-hidden rounded-md px-4 py-3`}
     >
       {children}
     </button>
