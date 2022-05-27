@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 dotenv.config({ path: '../../.env' });
 dotenv.config({ path: '../../contract.env' });
 
-const withTM = require('next-transpile-modules')(['ui', '@lib/contract']);
+const withTM = require('next-transpile-modules')(['@lib/ui', '@lib/contract']);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
