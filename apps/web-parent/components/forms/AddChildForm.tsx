@@ -5,7 +5,7 @@ import { useAuth } from '@lib/nest-auth/next';
 import { UserParent } from '@lib/types/interfaces';
 import { useMutation, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
-import { FormErrorMessage } from '@lib/ui';
+import { FormInputText } from '@lib/ui';
 
 type AddChildFormProps = {
   setIsOpen: () => void;
@@ -75,63 +75,45 @@ function AddChildForm({ setIsOpen }: AddChildFormProps) {
       className="flex w-72 flex-col gap-4"
     >
       <div className="flex gap-4">
-        <div className="flex flex-col">
-          <input
-            className="border p-2"
-            placeholder="Firstname"
-            {...register('firstName', {
-              required: 'This field is required',
-            })}
-            type="text"
-          />
-          {errors.firstName && (
-            <FormErrorMessage message={errors.firstName.message} />
-          )}
-        </div>
-        <div className="flex flex-col">
-          <input
-            className="border p-2"
-            placeholder="Lastname"
-            {...register('lastName', {
-              required: 'This field is required',
-            })}
-            type="text"
-          />
-          {errors.lastName && (
-            <FormErrorMessage message={errors.lastName.message} />
-          )}
-        </div>
-      </div>
-
-      <div className="flex flex-col">
-        <input
-          className="border p-2"
-          placeholder="john@doe.com"
-          {...register('email', {
+        <FormInputText
+          type="text"
+          placeHolder="Firstname"
+          registerValues={register('firstName', {
             required: 'This field is required',
-            pattern: {
-              value: /\S+@\S+\.\S+/,
-              message: 'Entered value does not match email format',
-            },
           })}
-          type="email"
+          error={errors.firstName}
         />
-        {errors.email && <FormErrorMessage message={errors.email.message} />}
-      </div>
-
-      <div className="flex flex-col">
-        <input
-          className="border p-2"
-          placeholder="Public Key"
-          {...register('publicKey', {
+        <FormInputText
+          placeHolder="Lastname"
+          registerValues={register('lastName', {
             required: 'This field is required',
           })}
           type="text"
+          error={errors.lastName}
         />
-        {errors.publicKey && (
-          <FormErrorMessage message={errors.publicKey.message} />
-        )}
       </div>
+
+      <FormInputText
+        placeHolder="john@doe.com"
+        registerValues={register('email', {
+          required: 'This field is required',
+          pattern: {
+            value: /\S+@\S+\.\S+/,
+            message: 'Entered value does not match email format',
+          },
+        })}
+        type="email"
+        error={errors.email}
+      />
+
+      <FormInputText
+        placeHolder="Public Key"
+        registerValues={register('publicKey', {
+          required: 'This field is required',
+        })}
+        type="text"
+        error={errors.publicKey}
+      />
 
       <input
         type="submit"
