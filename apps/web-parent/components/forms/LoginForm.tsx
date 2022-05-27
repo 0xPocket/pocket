@@ -1,4 +1,5 @@
 import { useAuth } from '@lib/nest-auth/next';
+import { FormErrorMessage } from '@lib/ui';
 import { useForm } from 'react-hook-form';
 
 type LoginFormProps = {};
@@ -38,11 +39,7 @@ function LoginForm({}: LoginFormProps) {
           })}
           type="email"
         />
-        {errors.email && (
-          <span className="mt-2 text-sm text-danger">
-            {errors.email.message}
-          </span>
-        )}
+        {errors.email && <FormErrorMessage message={errors.email.message} />}
       </div>
 
       {/* (?=.*\d)          // should contain at least one digit
@@ -64,9 +61,7 @@ function LoginForm({}: LoginFormProps) {
           type="password"
         />
         {errors.password && (
-          <span className="mt-2 text-sm text-danger">
-            {errors.password.message}
-          </span>
+          <FormErrorMessage message={errors.password.message} />
         )}
       </div>
 

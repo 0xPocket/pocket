@@ -1,4 +1,5 @@
 import { UserChild } from '@lib/types/interfaces';
+import { FormErrorMessage } from '@lib/ui';
 import { useForm } from 'react-hook-form';
 
 type ChildSettingsFormProps = {
@@ -42,9 +43,7 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
             },
           })}
         />
-        {errors.topup && (
-          <span className="text-sm text-danger">{errors.topup.message}</span>
-        )}
+        {errors.topup && <FormErrorMessage message={errors.topup.message} />}
       </div>
 
       <div className="flex flex-col">
@@ -63,7 +62,7 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
           type="number"
         />
         {errors.ceiling && (
-          <span className="text-sm text-danger">{errors.ceiling.message}</span>
+          <FormErrorMessage message={errors.ceiling.message} />
         )}
       </div>
 

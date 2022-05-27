@@ -5,6 +5,7 @@ import { useAuth } from '@lib/nest-auth/next';
 import { UserParent } from '@lib/types/interfaces';
 import { useMutation, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
+import { FormErrorMessage } from '@lib/ui';
 
 type AddChildFormProps = {
   setIsOpen: () => void;
@@ -84,9 +85,7 @@ function AddChildForm({ setIsOpen }: AddChildFormProps) {
             type="text"
           />
           {errors.firstName && (
-            <span className="text-sm text-danger">
-              {errors.firstName.message}
-            </span>
+            <FormErrorMessage message={errors.firstName.message} />
           )}
         </div>
         <div className="flex flex-col">
@@ -99,9 +98,7 @@ function AddChildForm({ setIsOpen }: AddChildFormProps) {
             type="text"
           />
           {errors.lastName && (
-            <span className="text-sm text-danger">
-              {errors.lastName.message}
-            </span>
+            <FormErrorMessage message={errors.lastName.message} />
           )}
         </div>
       </div>
@@ -119,9 +116,7 @@ function AddChildForm({ setIsOpen }: AddChildFormProps) {
           })}
           type="email"
         />
-        {errors.email && (
-          <span className="text-sm text-danger">{errors.email.message}</span>
-        )}
+        {errors.email && <FormErrorMessage message={errors.email.message} />}
       </div>
 
       <div className="flex flex-col">
@@ -134,9 +129,7 @@ function AddChildForm({ setIsOpen }: AddChildFormProps) {
           type="text"
         />
         {errors.publicKey && (
-          <span className="text-sm text-danger">
-            {errors.publicKey.message}
-          </span>
+          <FormErrorMessage message={errors.publicKey.message} />
         )}
       </div>
 

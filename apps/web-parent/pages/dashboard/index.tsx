@@ -1,7 +1,7 @@
 import { useAuth } from '@lib/nest-auth/next';
 import { UserParent } from '@lib/types/interfaces';
 import { useEffect } from 'react';
-import SectionContainer from '../../components/containers/SectionContainer';
+import { SectionContainer } from '@lib/ui';
 import ChildrenAccountPanel from '../../components/panels/ChildrenAccountPanel';
 import MainWrapper from '../../components/wrappers/MainWrapper';
 import { useSmartContract } from '../../contexts/contract';

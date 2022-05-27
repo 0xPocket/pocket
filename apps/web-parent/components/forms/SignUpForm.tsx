@@ -1,3 +1,4 @@
+import { FormErrorMessage } from '@lib/ui';
 import { useForm } from 'react-hook-form';
 
 type SignUpFormProps = {};
@@ -33,9 +34,7 @@ function SignUpForm({}: SignUpFormProps) {
           })}
           type="email"
         />
-        {errors.email && (
-          <span className="text-sm text-danger">{errors.email.message}</span>
-        )}
+        {errors.email && <FormErrorMessage message={errors.email.message} />}
       </div>
 
       {/* (?=.*\d)          // should contain at least one digit
@@ -57,7 +56,7 @@ function SignUpForm({}: SignUpFormProps) {
           type="password"
         />
         {errors.password && (
-          <span className="text-sm text-danger">{errors.password.message}</span>
+          <FormErrorMessage message={errors.password.message} />
         )}
       </div>
 
