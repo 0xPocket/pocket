@@ -8,7 +8,7 @@ import { useSmartContract } from '../../contexts/contract';
 import { roundBigNumbertoString } from '../../utils/reactQuery';
 import SettingsTabPanel from './SettingsTabPanel';
 import MainTabPanel from './MainTabPanel';
-import WalletAnimation from '../animations/WalletAnimation';
+import { WalletAnimation } from '@lib/ui';
 
 type WalletContentProps = {};
 

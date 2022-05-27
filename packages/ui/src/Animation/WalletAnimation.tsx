@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
-import { animated, useSpring } from 'react-spring';
+import { useEffect } from "react";
+import { animated, useSpring } from "react-spring";
 
 type WalletAnimationProps = {
   children: React.ReactNode;
 };
 
-function WalletAnimation({ children }: WalletAnimationProps) {
+export function WalletAnimation({ children }: WalletAnimationProps) {
   const [spring, api] = useSpring(() => ({}));
 
   useEffect(() => {
@@ -23,5 +23,3 @@ function WalletAnimation({ children }: WalletAnimationProps) {
 
   return <animated.div style={spring}>{children}</animated.div>;
 }
-
-export default WalletAnimation;

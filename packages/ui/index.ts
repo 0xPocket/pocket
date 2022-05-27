@@ -5,6 +5,7 @@ export { ThemeProvider } from "./src/Theme/ThemeContext";
 export { ThemeToggler } from "./src/Theme/ThemeToggler";
 export { SectionContainer } from "./src/Containers/SectionContainer";
 export * from "./src/Form";
+export * from "./src/Animation";
 export {
   DialogFullWrapper,
   DialogPopupWrapper,

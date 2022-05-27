@@ -19,12 +19,12 @@ export function NavLink({ href, exact = false, title }: NavLinkProps) {
   );
 }
 
-type TitleProps = { title: string };
+type TitleProps = { children: React.ReactNode };
 
-function Title({ title }: TitleProps) {
+function Title({ children }: TitleProps) {
   return (
     <Link href="/" passHref>
-      <div className="cursor-pointer text-4xl font-bold">{title}</div>
+      <div className="cursor-pointer text-4xl font-bold">{children}</div>
     </Link>
   );
 }

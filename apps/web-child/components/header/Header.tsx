@@ -9,7 +9,7 @@ function GlobalHeader({}: GlobalHeaderProps) {
   return (
     <Header>
       <Header.BlockLeft>
-        <Header.Title title="Cassiope" />
+        <Header.Title>Cassiope</Header.Title>
         <Header.Nav show={status === 'authenticated'}>
           <Header.NavLink title="Dashboard" href="/dashboard" />
           <Header.NavLink title="Blog" href="#" />

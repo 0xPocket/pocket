@@ -1,4 +1,6 @@
 import { Dispatch, MouseEventHandler, SetStateAction } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFilePen } from "@fortawesome/free-solid-svg-icons";
 
 type ButtonProps = {
   children: React.ReactNode;
@@ -7,6 +9,7 @@ type ButtonProps = {
   isOpen?: boolean;
   light?: boolean;
   className?: string;
+  web3action?: boolean;
 };
 
 export function Button({
@@ -16,6 +19,7 @@ export function Button({
   setIsOpen,
   isOpen,
   className,
+  web3action,
 }: ButtonProps) {
   const handleClick: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
@@ -31,9 +35,10 @@ export function Button({
             ? "text-primary-dark underline underline-offset-2 dark:text-primary-dark"
             : " bg-primary text-bright dark:bg-primary-dark"
         }
-            bg- relative flex items-center justify-center overflow-hidden rounded-md px-4 py-3`}
+             relative flex items-center justify-center overflow-hidden rounded-md px-4 py-3`}
     >
       {children}
+      {web3action && <FontAwesomeIcon className="ml-2" icon={faFilePen} />}
     </button>
   );
 }
