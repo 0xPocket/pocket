@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 type IThemeContext = {
   dark: boolean;
@@ -12,29 +12,29 @@ export function createCtx<A extends {} | null>() {
 
 const [ThemeContext, ThemeContextProvider] = createCtx<IThemeContext>();
 
-const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [dark, setDark] = useState(false);
 
   useEffect(() => {
-    const lsDark = localStorage.getItem('dark');
+    const lsDark = localStorage.getItem("dark");
 
     if (
-      lsDark === 'true' ||
-      (!lsDark && window.matchMedia('(prefers-color-scheme: dark)').matches)
+      lsDark === "true" ||
+      (!lsDark && window.matchMedia("(prefers-color-scheme: dark)").matches)
     ) {
       setDark(true);
-      document.documentElement.classList.add('dark');
+      document.documentElement.classList.add("dark");
     }
   }, []);
 
   const toggleDark = () => {
     const d = document.documentElement;
-    const themes = ['light', 'dark'];
+    const themes = ["light", "dark"];
 
     d.classList.remove(...themes);
-    d.classList.add(dark ? 'light' : 'dark');
+    d.classList.add(dark ? "light" : "dark");
 
-    localStorage.setItem('dark', JSON.stringify(!dark));
+    localStorage.setItem("dark", JSON.stringify(!dark));
     setDark(!dark);
   };
 
@@ -48,13 +48,11 @@ const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
       {children}
     </ThemeContextProvider>
   );
-};
-export default ThemeContext;
-export { ThemeProvider };
+}
 
 export function useTheme() {
   const c = useContext<IThemeContext | undefined>(ThemeContext);
   if (c === undefined)
-    throw new Error('useCtx must be inside a Provider with a value');
+    throw new Error("useCtx must be inside a Provider with a value");
   return c;
 }

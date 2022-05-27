@@ -1,5 +1,4 @@
-import { Button, Header } from '@lib/ui';
-import DarkModeToggle from './DarkModeToggle';
+import { Button, Header, ThemeToggler } from '@lib/ui';
 import { useWeb3Auth } from '../../contexts/web3hook';
 
 type GlobalHeaderProps = {};
@@ -27,7 +26,7 @@ function GlobalHeader({}: GlobalHeaderProps) {
           <Button action={() => toggleModal()}>Connect Wallet</Button>
         )}
 
-        <DarkModeToggle />
+        <ThemeToggler />
       </Header.BlockRight>
     </Header>
   );

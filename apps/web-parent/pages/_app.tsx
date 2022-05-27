@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { ThemeProvider } from '../contexts/themeContext';
+import { ThemeProvider } from '@lib/ui';
 
 function App({ Component, pageProps: { ...pageProps } }: AppProps) {
   const [queryClient] = useState(() => new QueryClient());

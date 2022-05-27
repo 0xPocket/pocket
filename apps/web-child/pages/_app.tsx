@@ -1,6 +1,6 @@
 import type { AppProps } from 'next/app';
 import { SmartContractProvider } from '../contexts/contract';
-import { ThemeProvider } from '../contexts/themeContext';
+import { ThemeProvider } from '@lib/ui';
 import { Web3AuthProvider } from '../contexts/web3hook';
 import '../styles/globals.css';
 
