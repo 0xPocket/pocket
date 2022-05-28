@@ -1,4 +1,4 @@
-import { animated, useSpring, useTransition } from "react-spring";
+import { animated, useTransition } from "react-spring";
 
 type IndexCardAnimationProps = {
   children: React.ReactNode[];
