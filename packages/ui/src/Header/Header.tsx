@@ -3,18 +3,18 @@ import { useRouter } from "next/router";
 import React from "react";
 
 type NavLinkProps = {
+  children: string;
   href: string;
-  title: string;
   exact?: boolean;
 };
 
-export function NavLink({ href, exact = false, title }: NavLinkProps) {
+export function NavLink({ children, href, exact = false }: NavLinkProps) {
   const { pathname } = useRouter();
   const isActive = exact ? pathname === href : pathname.startsWith(href);
 
   return (
     <Link href={href}>
-      <a className={`${isActive ? "active" : "pasactive"} `}>{title}</a>
+      <a className={`${isActive ? "active" : "pasactive"} `}>{children}</a>
     </Link>
   );
 }
@@ -51,7 +51,7 @@ type HeaderProps = {
 
 export function Header({ children }: HeaderProps) {
   return (
-    <header className="flex border-b border-dark border-opacity-10 bg-bright px-8 dark:border-bright dark:border-opacity-10 dark:bg-dark">
+    <header className="flex border-b border-dark border-opacity-10 bg-bright dark:border-bright dark:border-opacity-10 dark:bg-dark">
       <div className="container mx-auto flex h-28 w-full items-center justify-between">
         {children}
       </div>

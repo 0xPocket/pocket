@@ -35,7 +35,7 @@ export function Button({
             ? "text-primary-dark underline underline-offset-2 dark:text-primary-dark"
             : " bg-primary text-bright dark:bg-primary-dark"
         }
-             relative flex items-center justify-center overflow-hidden rounded-md px-4 py-3`}
+             relative flex items-center justify-center overflow-hidden whitespace-nowrap rounded-md px-4 py-3`}
     >
       {children}
       {web3action && <FontAwesomeIcon className="ml-2" icon={faFilePen} />}

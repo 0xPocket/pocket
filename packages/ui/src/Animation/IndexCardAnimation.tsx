@@ -26,8 +26,6 @@ export function IndexCardAnimation({
   });
 
   return transitions((style, item) => (
-    <animated.div style={style} className="">
-      {item}
-    </animated.div>
+    <animated.div style={style}>{item}</animated.div>
   ));
 }

@@ -3,6 +3,8 @@ import { FormErrorMessage } from "./FormErrorMessage";
 
 type FormInputTextProps = {
   type: "password" | "email" | "text";
+  label?: string;
+  id?: string;
   placeHolder: string;
   registerValues: UseFormRegisterReturn;
   error?: FieldError | undefined;
@@ -16,9 +18,14 @@ export function FormInputText({
   placeHolder,
   registerValues,
   error,
+  label,
+  id,
 }: FormInputTextProps) {
   return (
     <div className="flex flex-col">
+      <label htmlFor={id ? id : type} className="sr-only">
+        {label ? label : type}
+      </label>
       <input
         className="w-full rounded-md border border-gray-light px-5 py-3 placeholder-gray focus:border-primary-dark focus:ring-primary-dark dark:text-gray sm:max-w-xs"
         placeholder={placeHolder}

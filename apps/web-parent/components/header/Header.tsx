@@ -30,9 +30,9 @@ function GlobalHeader({}: GlobalHeaderProps) {
       <Header.BlockLeft>
         <Header.Title>Cassiope</Header.Title>
         <Header.Nav show={status === 'authenticated'}>
-          <Header.NavLink title="Dashboard" href="/dashboard" />
-          <Header.NavLink title="Blog" href="#" />
-          <Header.NavLink title="Dashboard" href="/dashboard" />
+          <Header.NavLink href="/dashboard">Dashboard</Header.NavLink>
+          <Header.NavLink href="#">Blog</Header.NavLink>
+          <Header.NavLink href="#">FAQ</Header.NavLink>
         </Header.Nav>
       </Header.BlockLeft>
       <Header.BlockRight>

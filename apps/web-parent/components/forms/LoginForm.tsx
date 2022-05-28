@@ -27,7 +27,7 @@ function LoginForm({}: LoginFormProps) {
       className="flex w-72 flex-col gap-4"
     >
       <FormInputText
-        placeHolder="john@doe.com"
+        placeHolder="Email"
         registerValues={register('email', {
           required: 'This field is required',
           pattern: {
@@ -44,7 +44,7 @@ function LoginForm({}: LoginFormProps) {
 			(?=.*[A-Z])       // should contain at least one upper case
 			[a-zA-Z0-9]{8,}   // should contain at least 8 from the mentioned characters */}
       <FormInputText
-        placeHolder="password"
+        placeHolder="Password"
         registerValues={register('password', {
           required: 'This field is required',
           // pattern: {
