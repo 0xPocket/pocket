@@ -1,27 +1,36 @@
-import { UserParent } from '@lib/types/interfaces';
+import { useRouter } from 'next/router';
 import { Dispatch, SetStateAction } from 'react';
 import { UseQueryResult } from 'react-query';
 import { toast } from 'react-toastify';
+import { useWallet } from '../../contexts/wallet';
 import { Button } from '@lib/ui';
 
 type MainTabPanelProps = {
-  user: UserParent | undefined;
   balanceQuery: UseQueryResult<string | undefined, unknown>;
   setSelectedIndex: Dispatch<SetStateAction<number>>;
 };
 
-function MainTabPanel({
-  user,
-  balanceQuery,
-  setSelectedIndex,
-}: MainTabPanelProps) {
+function MainTabPanel({ balanceQuery, setSelectedIndex }: MainTabPanelProps) {
+  const router = useRouter();
+  const { wallet } = useWallet();
+
+  if (!wallet) {
+    return (
+      <div className="flex flex-col gap-4">
+        <Button action={() => router.push('/create-wallet')}>
+          CREATE YOUR WALLET
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between border-b pb-4">
         <h2 className="">My Wallet</h2>
         <Button
           action={() => {
-            navigator.clipboard.writeText(user?.wallet.publicKey!);
+            navigator.clipboard.writeText(wallet.publicKey!);
             toast.success('Address copied to clipboard !');
           }}
         >

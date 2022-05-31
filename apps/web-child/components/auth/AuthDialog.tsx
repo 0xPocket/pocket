@@ -43,12 +43,11 @@ function AuthDialog({ status, setStatus, connectProvider }: AuthDialogProps) {
         >
           <div className="fixed inset-0 flex items-center justify-center bg-dark/30 p-4">
             <Dialog.Panel className="mx-auto rounded-lg bg-[#273138] p-4 text-bright">
-              <div>Authenticate !</div>
               {status === 'choose_provider' ||
               status === 'connecting_wallet' ? (
                 <AuthDialogProviders onClick={onProviderClick} />
               ) : (
-                <AuthDialogStepper status={status} setStatus={setStatus} />
+                <AuthDialogStepper status={status} />
               )}
             </Dialog.Panel>
           </div>

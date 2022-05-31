@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { WalletProvider } from '../contexts/wallet';
 import { ThemeProvider } from '@lib/ui';
 
 function App({ Component, pageProps: { ...pageProps } }: AppProps) {
@@ -19,11 +20,13 @@ function App({ Component, pageProps: { ...pageProps } }: AppProps) {
     <QueryClientProvider client={queryClient}>
       <AuthProvider config={config}>
         <ThemeProvider>
-          <SmartContractProvider>
-            <Provider store={store}>
-              <Component {...pageProps} />
-            </Provider>
-          </SmartContractProvider>
+          <WalletProvider>
+            <SmartContractProvider>
+              <Provider store={store}>
+                <Component {...pageProps} />
+              </Provider>
+            </SmartContractProvider>
+          </WalletProvider>
         </ThemeProvider>
       </AuthProvider>
       <ToastContainer position="bottom-right" autoClose={3000} />

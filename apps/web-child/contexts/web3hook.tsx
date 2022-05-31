@@ -55,6 +55,7 @@ const [Web3AuthContext, Web3AuthContextProvider] =
 
 export type AuthStatus =
   | 'hidden'
+  | 'not_exist'
   | 'choose_provider'
   | 'connecting_wallet'
   | 'verifying_account';
@@ -148,7 +149,7 @@ export const Web3AuthProvider = ({ children }: Web3AuthProviderProps) => {
       setAccessToken(accessToken);
       localStorage.setItem('logged_in', 'true');
     } catch (e) {
-      setStatus('hidden');
+      // setStatus('hidden');
     }
   }, [address, registerToken, web3provider]);
 
@@ -158,7 +159,7 @@ export const Web3AuthProvider = ({ children }: Web3AuthProviderProps) => {
     } catch (e) {
       console.log(e);
     }
-  }, [web3Modal]);
+  }, []);
 
   const disconnect = useCallback(async () => {
     web3Modal?.clearCachedProvider();

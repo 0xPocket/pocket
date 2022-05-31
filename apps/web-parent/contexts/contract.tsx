@@ -1,8 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { providers, Wallet } from 'ethers';
-import { ParentContract } from '@lib/contract';
-import { useAuth } from '@lib/nest-auth/next';
-import { UserParent } from '@lib/types/interfaces';
+import { providers } from 'ethers';
 
 interface SmartContractProviderProps {
   children: React.ReactNode;
@@ -11,7 +8,6 @@ interface SmartContractProviderProps {
 interface ISmartContractContext {
   active: boolean;
   provider: providers.JsonRpcProvider | undefined;
-  parentContract: ParentContract | undefined;
 }
 
 export function createCtx<A extends {} | null>() {
@@ -26,45 +22,17 @@ export const SmartContractProvider = ({
   children,
 }: SmartContractProviderProps) => {
   const [provider, setProvider] = useState<providers.JsonRpcProvider>();
-  const [parentContract, setParentContract] = useState<ParentContract>();
-  const { user } = useAuth<UserParent>();
 
   useEffect(() => {
     const provider = new providers.JsonRpcProvider('http://localhost:8545');
     setProvider(provider);
   }, []);
 
-  // console.log(abi);
-  useEffect(() => {
-    if (!user || !user.wallet.privateKey) {
-      console.error('SmartContractProvider: user infos missing');
-      return;
-    }
-
-    if (!process.env.NEXT_PUBLIC_CONTRACT_ADDRESS) {
-      console.error(
-        "SmartContractProvider: cannot found smartcontract's address",
-      );
-      return;
-    }
-
-    const signer = new Wallet(user.wallet.privateKey, provider);
-
-    const parentContract = new ParentContract(
-      process.env.NEXT_PUBLIC_CONTRACT_ADDRESS,
-      signer,
-    );
-    setParentContract(parentContract);
-
-    console.log('new contract set');
-  }, [provider, user]);
-
   return (
     <SmartContractContextProvider
       value={{
         active: true,
         provider,
-        parentContract,
       }}
     >
       {children}

@@ -65,6 +65,7 @@ export class MetamaskService {
     const web3Account = await this.getWeb3Account(data.walletAddress);
 
     if (!web3Account) throw new NotFoundException("This user doesn't exists");
+
     return {
       nonce: this.getMessageFromNonce(web3Account.nonce),
     };
@@ -114,6 +115,7 @@ export class MetamaskService {
     await this.regenerateNonce(accountToVerify.id);
 
     this.sessionService.setUserSession(session, accountToVerify.user.id, false);
+
     return {
       access_token: this.jwtAuthService.generateAuthenticationToken(
         accountToVerify.user.id,

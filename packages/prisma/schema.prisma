@@ -30,6 +30,7 @@ model UserChild {
   username     String?      @unique
   email        String       @unique
   web3Account  Web3Account?
+  validated    Boolean      @default(false)
   userParent   UserParent   @relation(fields: [userParentId], references: [id])
   userParentId String
 }

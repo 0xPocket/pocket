@@ -59,7 +59,7 @@ function HeroSection({}: HeroSectionProps) {
           </div>
         </div>
       </div>
-      <div className="absolute bottom-[-100px] right-0 h-[800px] w-[1800px] bg-light-radial-herosection dark:opacity-10"></div>
+      <div className="absolute bottom-[-100px] right-0 -z-50 h-[800px] w-[1800px] bg-light-radial-herosection dark:opacity-10"></div>
     </section>
   );
 }

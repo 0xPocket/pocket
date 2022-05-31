@@ -1,13 +1,16 @@
-import { UserParent } from '@lib/types/interfaces';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
+import { useWallet } from '../../contexts/wallet';
+import Web3Button from './Web3Button';
 import { Button } from '@lib/ui';
 
 type SettingsTabPanelProps = {
-  user: UserParent | undefined;
   setSelectedIndex: Dispatch<SetStateAction<number>>;
 };
 
-function SettingsTabPanel({ user, setSelectedIndex }: SettingsTabPanelProps) {
+function SettingsTabPanel({ setSelectedIndex }: SettingsTabPanelProps) {
+  const { wallet } = useWallet();
+  const [privateKey, setPrivateKey] = useState<string>();
+
   return (
     <>
       <div className="flex items-center gap-4 border-b pb-4">
@@ -17,13 +20,17 @@ function SettingsTabPanel({ user, setSelectedIndex }: SettingsTabPanelProps) {
       <div className="flex flex-col gap-2 pb-4">
         <h3>My address</h3>
         <div className="rounded-md bg-dark p-2 text-bright">
-          <p className="break-words">{user?.wallet.publicKey}</p>
+          <p className="break-words">{wallet?.publicKey}</p>
         </div>
         <h3>My private key</h3>
         <div className="relative overflow-hidden rounded-md bg-dark p-2 text-bright">
-          <p className="select-none break-words blur-sm">
-            {user?.wallet.privateKey}
-          </p>
+          {!privateKey && (
+            <Web3Button
+              callback={(signer) => setPrivateKey(signer.privateKey)}
+              name={'Show Private Key'}
+            />
+          )}
+          {privateKey && <div>{privateKey}</div>}
         </div>
       </div>
       <div className="flex flex-col gap-2 pb-4"></div>

@@ -11,6 +11,7 @@
     "build": "turbo run build",
     "predev": "dotenv-checker --schema .env.example --env .env",
     "dev": "turbo run dev --parallel",
+    "dx": "turbo run dx --parallel",
     "start": "turbo run start",
     "lint": "turbo run lint",
     "test": "turbo run test",
@@ -18,7 +19,7 @@
   },
   "dependencies": {
     "dotenv": "^16.0.1",
-    "turbo": "1.2.2"
+    "turbo": "1.2.9"
   },
   "devDependencies": {
     "commitizen": "^4.2.4",

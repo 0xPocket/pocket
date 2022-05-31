@@ -2,7 +2,6 @@ import { AuthStatus } from '../../contexts/web3hook';
 
 type AuthDialogStepperProps = {
   status: AuthStatus;
-  setStatus: (status: AuthStatus) => void;
 };
 
 function Spinner() {
@@ -26,7 +25,7 @@ function Spinner() {
   );
 }
 
-function AuthDialogStepper({ status, setStatus }: AuthDialogStepperProps) {
+function AuthDialogStepper({ status }: AuthDialogStepperProps) {
   return (
     <div className="flex w-96 flex-col items-start justify-between gap-2 font-mono">
       <button className="flex w-full flex-col items-center justify-between gap-4 rounded-lg p-4 hover:bg-dark/40">
@@ -39,7 +38,11 @@ function AuthDialogStepper({ status, setStatus }: AuthDialogStepperProps) {
       </button>
       <button className="flex w-full flex-col items-center justify-between gap-4 rounded-lg p-4 hover:bg-dark/40">
         <span className="text-gray-200">2. VERIFY ACCOUNT</span>
-        <Spinner />
+        {status !== 'not_exist' ? (
+          <Spinner />
+        ) : (
+          <div className="text-red-500 text-5xl leading-6">X</div>
+        )}
       </button>
     </div>
   );

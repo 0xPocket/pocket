@@ -8,6 +8,9 @@ import { ChildrenModule } from './users/children/children.module';
 import { AuthModule } from './auth/auth.module';
 import { EmailModule } from './email/email.module';
 import { WalletModule } from './wallet/wallet.module';
+import { NotifyModule } from './notify/notify.module';
+import { PasswordService } from './password/password.service';
+import { PasswordModule } from './password/password.module';
 
 @Module({
   imports: [
@@ -21,8 +24,10 @@ import { WalletModule } from './wallet/wallet.module';
     ChildrenModule,
     EmailModule,
     WalletModule,
+    NotifyModule,
+    PasswordModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, PasswordService],
 })
 export class AppModule {}

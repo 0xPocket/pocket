@@ -6,7 +6,6 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { compare, hash } from 'bcrypt';
 import { JwtAuthService } from 'src/auth/jwt/jwt-auth.service';
 import { LocalSigninDto } from 'src/auth/local/dto/local-signin.dto';
 import { EmailService } from 'src/email/email.service';
@@ -15,6 +14,7 @@ import { CreateChildrenDto } from './dto/create-children.dto';
 import { ParentSignupDto } from './dto/parent-signup.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { WalletService } from 'src/wallet/wallet.service';
+import { PasswordService } from 'src/password/password.service';
 
 @Injectable()
 export class ParentsService {
@@ -24,6 +24,7 @@ export class ParentsService {
     private jwtAuthService: JwtAuthService,
     private configService: ConfigService,
     private walletService: WalletService,
+    private passwordService: PasswordService,
   ) {}
 
   getParent(userId: string) {
@@ -32,7 +33,11 @@ export class ParentsService {
         id: userId,
       },
       include: {
-        wallet: true,
+        account: {
+          select: {
+            type: true,
+          },
+        },
       },
     });
   }
@@ -73,7 +78,12 @@ export class ParentsService {
       );
     }
 
-    if (!(await compare(data.password, user.account.password))) {
+    if (
+      !this.passwordService.comparePassword(
+        data.password,
+        user.account.password,
+      )
+    ) {
       throw new ForbiddenException('Invalid password');
     }
 
@@ -130,7 +140,7 @@ export class ParentsService {
           create: {
             type: 'credentials',
             provider: 'local',
-            password: await hash(data.password, 10),
+            password: this.passwordService.encryptPassword(data.password),
           },
         },
         wallet: {
@@ -182,9 +192,9 @@ export class ParentsService {
             providerAccountId: data.id,
           },
         },
-        wallet: {
-          create: this.walletService.generateWallet(),
-        },
+        // wallet: {
+        //   create: this.walletService.generateWallet(),
+        // },
       },
       update: {},
     });
@@ -194,6 +204,9 @@ export class ParentsService {
     return this.prisma.userChild.findMany({
       where: {
         userParentId: userId,
+      },
+      include: {
+        web3Account: true,
       },
     });
   }

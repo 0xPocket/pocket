@@ -16,7 +16,6 @@ export class MetamaskController {
 
   @Post('nonce')
   nonceAuth(@Body() dto: MetamaskNonceDto) {
-    console.log('test');
     return this.metamaskService.generateNonce(dto);
   }
 

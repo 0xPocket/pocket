@@ -15,7 +15,7 @@ async function main() {
           type: "credentials",
           provider: "local",
           password:
-            "$2a$10$RBiyQ3DOgSBdvnP7KOMFSeszgtwdKtSvG5fW3jIGgqNX65o61npl2", // elonmusk
+            "58cc83f5b80cb53ce5385af956458fa9eaed89825aff76a8249103c10dee867e", // elonmusk
         },
       },
       wallet: {

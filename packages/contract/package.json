@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "clean": "rm -rf node_modules types PocketFaucet.json",
-    "deploy:node": "yarn hardhat node --fork https://polygon-mainnet.g.alchemy.com/v2/qLBCKN0pvsl20MhmJ2DdyQr1RhmQ_eSK",
+    "deploy:node": "yarn hardhat node --fork https://polygon-mainnet.g.alchemy.com/v2/3yzPlXcA41Y49wI2INbE3q8kLi19ME2U",
     "build:types": "typechain --target ethers-v5 --out-dir=types ./PocketFaucet.json",
     "predev": "cp ../blockchain-side-pocket/out/PocketFaucet.sol/PocketFaucet.json ./PocketFaucet.json && yarn build:types",
     "dev": "yarn deploy:node",

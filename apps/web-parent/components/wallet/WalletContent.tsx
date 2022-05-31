@@ -1,6 +1,4 @@
 import { Tab } from '@headlessui/react';
-import { useAuth } from '@lib/nest-auth/next';
-import { UserParent } from '@lib/types/interfaces';
 import { BigNumber } from 'ethers';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
@@ -8,16 +6,17 @@ import { useSmartContract } from '../../contexts/contract';
 import { roundBigNumbertoString } from '../../utils/reactQuery';
 import SettingsTabPanel from './SettingsTabPanel';
 import MainTabPanel from './MainTabPanel';
+import { useWallet } from '../../contexts/wallet';
 import { WalletAnimation } from '@lib/ui';
 
 type WalletContentProps = {};
 
 function WalletContent({}: WalletContentProps) {
-  const { user } = useAuth<UserParent>();
   const { provider } = useSmartContract();
+  const { wallet } = useWallet();
   const balanceQuery = useQuery(
     'balance',
-    async () => await provider?.getBalance(user?.wallet.publicKey!),
+    async () => await provider?.getBalance(wallet?.publicKey!),
     {
       select: (data: BigNumber | undefined) => roundBigNumbertoString(data, 2),
     },
@@ -36,16 +35,12 @@ function WalletContent({}: WalletContentProps) {
           <Tab.Panels>
             <Tab.Panel>
               <MainTabPanel
-                user={user}
                 balanceQuery={balanceQuery}
                 setSelectedIndex={setSelectedIndex}
               />
             </Tab.Panel>
             <Tab.Panel>
-              <SettingsTabPanel
-                setSelectedIndex={setSelectedIndex}
-                user={user}
-              />
+              <SettingsTabPanel setSelectedIndex={setSelectedIndex} />
             </Tab.Panel>
           </Tab.Panels>
         </Tab.Group>
