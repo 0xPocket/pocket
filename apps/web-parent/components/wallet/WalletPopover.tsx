@@ -4,7 +4,6 @@ import { usePopper } from 'react-popper';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWallet } from '@fortawesome/free-solid-svg-icons';
 import WalletContent from './WalletContent';
-import DecryptWalletModal from './DecryptWalletModal';
 
 type WalletPopoverProps = {};
 
@@ -34,7 +33,6 @@ function WalletPopover({}: WalletPopoverProps) {
           >
             {open && <WalletContent />}
           </Popover.Panel>
-          <DecryptWalletModal />
         </>
       )}
     </Popover>

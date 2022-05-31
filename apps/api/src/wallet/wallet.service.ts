@@ -3,7 +3,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { AES } from 'crypto-js';
+import { AES, enc } from 'crypto-js';
 import { Wallet } from 'ethers';
 import { PasswordService } from 'src/password/password.service';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -29,7 +29,7 @@ export class WalletService {
   }
 
   decryptPK(encryptedPK: string, passwordHash: string) {
-    return AES.decrypt(encryptedPK, passwordHash).toString();
+    return AES.decrypt(encryptedPK, passwordHash).toString(enc.Utf8);
   }
 
   getWallet(userId: string) {

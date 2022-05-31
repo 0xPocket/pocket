@@ -14,6 +14,7 @@ function WalletGuard({ children }: WalletGuardProps) {
   useEffect(() => {
     if (!wallet?.publicKey) {
       router.push('/create-wallet');
+      setLoading(false);
     } else {
       setLoading(false);
     }

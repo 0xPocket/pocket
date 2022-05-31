@@ -11,7 +11,7 @@ function CreateWallet({}: loginProps) {
   const router = useRouter();
 
   useEffect(() => {
-    if (wallet) {
+    if (wallet?.publicKey) {
       router.push('/dashboard');
     }
   }, [wallet, router]);
