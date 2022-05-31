@@ -4,12 +4,14 @@ import { UserParent } from '@lib/types/interfaces';
 import { Button, Header, ThemeToggler } from '@lib/ui';
 import { useAuth } from '@lib/nest-auth/next';
 import WalletPopover from '../wallet/WalletPopover';
+import { useQueryClient } from 'react-query';
 
 type GlobalHeaderProps = {};
 
 function GlobalHeader({}: GlobalHeaderProps) {
   const router = useRouter();
   const { user, status, signOut } = useAuth<UserParent>();
+  const queryClient = useQueryClient();
 
   const handleLogIn = () => {
     console.log('Log');
@@ -22,7 +24,9 @@ function GlobalHeader({}: GlobalHeaderProps) {
   };
 
   const handleLogout = () => {
-    signOut();
+    signOut().then(() => {
+      queryClient.removeQueries('wallet');
+    });
   };
 
   return (
