@@ -26,7 +26,7 @@ function ArgumentContainer({
       }`}
     >
       <Waypoint onEnter={() => setShow(true)} />
-      <h2 className="z-10 mb-4 bg-gradient-blue-text bg-clip-text pb-4 text-5xl text-transparent">
+      <h2 className="z-10 mb-4 inline-block bg-gradient-blue-text bg-clip-text pb-4 text-5xl text-transparent">
         {title}
       </h2>
       {show && (
