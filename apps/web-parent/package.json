@@ -18,8 +18,10 @@
     "@headlessui/react": "^1.6.1",
     "@lib/contract": "*",
     "@lib/nest-auth": "*",
+    "@lib/ui": "*",
     "@popperjs/core": "^2.11.5",
     "@reduxjs/toolkit": "^1.8.1",
+    "@types/react-scroll": "^1.8.3",
     "axios": "^0.27.2",
     "crypto-js": "^4.1.1",
     "ethers": "^5.6.5",
@@ -31,10 +33,10 @@
     "react-popper": "^2.3.0",
     "react-query": "^3.39.0",
     "react-redux": "^8.0.1",
+    "react-scroll": "^1.8.7",
     "react-spring": "^9.4.5",
     "react-toastify": "^9.0.1",
-    "react-waypoint": "^10.1.0",
-    "ui": "*"
+    "react-waypoint": "^10.1.0"
   },
   "devDependencies": {
     "@lib/types": "*",

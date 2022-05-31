@@ -1,6 +1,6 @@
 import { useAuth } from '@lib/nest-auth/next';
 import Image from 'next/image';
-import Button from '../common/Button';
+import { Button } from '@lib/ui';
 
 type SocialAuthProps = {};
 

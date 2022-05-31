@@ -5,10 +5,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import SocialAuth from '../components/auth/SocialAuth';
 
-type loginProps = {};
-type formProps = {};
-
-function Login({}: loginProps) {
+function Login() {
   const router = useRouter();
   const { status } = useAuth();
 
@@ -22,7 +19,7 @@ function Login({}: loginProps) {
   return (
     <MainWrapper noHeader>
       <section className="relative grid min-h-screen grid-cols-2">
-        <div className="absolute right-[-200px] bottom-[-200px] h-[1080px] w-[1920px] bg-gradient-radial-pastel"></div>
+        <div className="bg-gradient-radial-pastel absolute right-[-200px] bottom-[-200px] h-[1080px] w-[1920px]"></div>
         <div className="flex flex-col items-center justify-center gap-8">
           <LoginForm />
           <div className="flex w-72 items-center">

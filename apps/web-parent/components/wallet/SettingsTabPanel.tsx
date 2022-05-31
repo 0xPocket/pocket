@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import { useWallet } from '../../contexts/wallet';
-import Button from '../common/Button';
 import Web3Button from './Web3Button';
+import { Button } from '@lib/ui';
 
 type SettingsTabPanelProps = {
   setSelectedIndex: Dispatch<SetStateAction<number>>;

@@ -1,6 +1,6 @@
 import { UserChild } from '@lib/types/interfaces';
+import { FormErrorMessage } from '@lib/ui';
 import { useForm } from 'react-hook-form';
-import { useSmartContract } from '../../contexts/contract';
 
 type ChildSettingsFormProps = {
   child: UserChild;
@@ -18,15 +18,7 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
     formState: { errors },
   } = useForm<FormValues>();
 
-  const { parentContract } = useSmartContract();
-
-  const onSubmit = (data: FormValues) => {
-    parentContract
-      ?.addFunds(data.topup, child.web3Account.address)
-      .then((res) => {
-        console.log(res);
-      });
-  };
+  const onSubmit = (data: FormValues) => console.log(data);
 
   return (
     <form
@@ -51,9 +43,7 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
             },
           })}
         />
-        {errors.topup && (
-          <span className="text-sm text-danger">{errors.topup.message}</span>
-        )}
+        {errors.topup && <FormErrorMessage message={errors.topup.message} />}
       </div>
 
       <div className="flex flex-col">
@@ -72,7 +62,7 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
           type="number"
         />
         {errors.ceiling && (
-          <span className="text-sm text-danger">{errors.ceiling.message}</span>
+          <FormErrorMessage message={errors.ceiling.message} />
         )}
       </div>
 

@@ -6,8 +6,8 @@ import { useSmartContract } from '../../contexts/contract';
 import { roundBigNumbertoString } from '../../utils/reactQuery';
 import SettingsTabPanel from './SettingsTabPanel';
 import MainTabPanel from './MainTabPanel';
-import WalletAnimation from '../animations/WalletAnimation';
 import { useWallet } from '../../contexts/wallet';
+import { WalletAnimation } from '@lib/ui';
 
 type WalletContentProps = {};
 
@@ -16,7 +16,7 @@ function WalletContent({}: WalletContentProps) {
   const { wallet } = useWallet();
   const balanceQuery = useQuery(
     'balance',
-    async () => await provider?.getBalance(wallet.publicKey!),
+    async () => await provider?.getBalance(wallet?.publicKey!),
     {
       select: (data: BigNumber | undefined) => roundBigNumbertoString(data, 2),
     },

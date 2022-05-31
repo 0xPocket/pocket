@@ -1,6 +1,6 @@
 import { formatEther } from 'ethers/lib/utils';
 import { useEffect, useState } from 'react';
-import Button from '../components/common/Button';
+import { Button } from '@lib/ui';
 import MainWrapper from '../components/wrappers/MainWrapper';
 import { useWeb3Auth } from '../contexts/web3hook';
 
@@ -22,7 +22,7 @@ function ChildrenSignup({}: ChildrenSignupProps) {
 
   return (
     <MainWrapper>
-      <section className=" bg-primary">
+      <section className="">
         {status === 'authenticated' ? (
           <Button>CLAIM</Button>
         ) : (

@@ -1,46 +1,65 @@
+import { FormInputText } from '@lib/ui';
+import { useForm } from 'react-hook-form';
+
 type HeroSectionProps = {};
+type GetStartedDataForm = {
+  email: string;
+};
 
 function HeroSection({}: HeroSectionProps) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<GetStartedDataForm>();
+
+  const onSubmit = (data: GetStartedDataForm) => {
+    console.log(data);
+  };
+
   return (
-    <section className="relative z-0 flex min-h-screen items-center overflow-hidden">
-      <div className="container relative mx-auto grid h-full grid-cols-2">
+    <section className="relative z-0 flex min-h-[85vh] items-center ">
+      <div className="container relative mx-auto grid h-full grid-cols-1 md:grid-cols-2">
         <div className="z-10 mt-[-200px]">
-          <span className="text-4xl">The best place for your kid</span>
-          <div className="max-w-fit bg-gradient-blue-text bg-clip-text text-[100px] font-bold leading-[120px] text-transparent">
+          <span className="text-2xl lg:text-4xl">
+            The best place for your kid
+          </span>
+          <div className="max-w-fit bg-gradient-blue-text bg-clip-text text-[50px] font-bold  leading-[75px] text-transparent lg:text-[100px] lg:leading-[120px]">
             <span className="">to start his</span>
             <span className="mt-[-20px] block">Web3 journey</span>
           </div>
           <div className="mt-16 flex flex-col gap-4 pl-16">
             <span className="max-w-sm text-lg">
-              Stay connected to your child while you keep an eye over his
-              discovery of the web3
+              Help us by answering a few questions and be selected for our beta
+              and more
             </span>
-            <form className=" sm:flex">
-              <label htmlFor="email-address" className="sr-only">
-                Email address
-              </label>
-              <input
-                id="email-address"
-                name="email"
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="flex items-start gap-4"
+            >
+              <FormInputText
+                placeHolder="Enter your email"
+                label="email"
                 type="email"
-                autoComplete="email"
-                required
-                className="w-full rounded-md border border-gray-light px-5 py-3 placeholder-gray focus:border-primary-dark focus:ring-primary-dark sm:max-w-xs"
-                placeholder="Enter your email"
+                registerValues={register('email', {
+                  required: 'This field is required',
+                  pattern: {
+                    value: /\S+@\S+\.\S+/,
+                    message: 'Entered value does not match email format',
+                  },
+                })}
+                error={errors.email}
               />
-              <div className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3 sm:flex-shrink-0">
-                <button
-                  type="submit"
-                  className="flex w-full items-center justify-center rounded-md border border-transparent bg-primary px-5 py-3 text-base font-medium text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                >
-                  Send
-                </button>
-              </div>
+              <input
+                type="submit"
+                value="Get started"
+                className="relative flex items-center justify-center overflow-hidden whitespace-nowrap rounded-md bg-primary px-4 py-3 text-bright dark:bg-primary-dark"
+              />
             </form>
           </div>
         </div>
       </div>
-      <div className="absolute bottom-[-100px] right-0 h-[800px] w-[1800px] bg-light-radial-herosection dark:opacity-10"></div>
+      <div className="absolute bottom-[-100px] right-0 -z-50 h-[800px] w-[1800px] bg-light-radial-herosection dark:opacity-10"></div>
     </section>
   );
 }

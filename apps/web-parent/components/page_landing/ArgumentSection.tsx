@@ -1,24 +1,42 @@
+import { IndexArgumentsAnimation } from '@lib/ui';
+import { Element } from 'react-scroll';
+import ArgumentContainer from './ArgumentContainer';
 type ArgumentSectionProps = {};
 
 function ArgumentSection({}: ArgumentSectionProps) {
   return (
-    <>
-      <section id="decentralised-pocket-money" className="min-h-screen">
-        <h2 className="z-10 mb-4 bg-gradient-blue-text bg-clip-text pb-4 text-5xl text-transparent">
-          Decentralised pocket money
-        </h2>
-      </section>
-      <section id="activity-monitoring" className="min-h-screen">
-        <h2 className="z-10 mb-4 bg-gradient-blue-text bg-clip-text pb-4 text-5xl text-transparent">
-          Activity monitoring
-        </h2>
-      </section>
-      <section id="a-place-to-learn" className="min-h-screen">
-        <h2 className="z-10 mb-4 bg-gradient-blue-text bg-clip-text pb-4 text-5xl text-transparent">
-          A place to learn
-        </h2>
-      </section>
-    </>
+    <div className="container mx-auto mt-20">
+      <ArgumentContainer
+        title="Decentralised pocket money"
+        direction="left"
+        name="decentralised-pocket-money"
+      >
+        <h3>Salut</h3>
+        <h3>Salut</h3>
+        <h3>Salut</h3>
+        <h3>Salut</h3>
+      </ArgumentContainer>
+      <ArgumentContainer
+        title="Activity monitoring"
+        direction="right"
+        name="activity-monitoring"
+      >
+        <h3>Salut</h3>
+        <h3>Salut</h3>
+        <h3>Salut</h3>
+        <h3>Salut</h3>
+      </ArgumentContainer>
+      <ArgumentContainer
+        title="A place to learn"
+        direction="left"
+        name="a-place-to-learn"
+      >
+        <h3>Salut</h3>
+        <h3>Salut</h3>
+        <h3>Salut</h3>
+        <h3>Salut</h3>
+      </ArgumentContainer>
+    </div>
   );
 }
 

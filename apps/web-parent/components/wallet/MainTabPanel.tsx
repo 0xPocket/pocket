@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction } from 'react';
 import { UseQueryResult } from 'react-query';
 import { toast } from 'react-toastify';
 import { useWallet } from '../../contexts/wallet';
-import Button from '../common/Button';
+import { Button } from '@lib/ui';
 
 type MainTabPanelProps = {
   balanceQuery: UseQueryResult<string | undefined, unknown>;

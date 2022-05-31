@@ -1,37 +1,35 @@
-import Button from '../common/Button';
-import Link from 'next/link';
-import Nav from './Nav';
+import { Button, Header, ThemeToggler } from '@lib/ui';
 import { useWeb3Auth } from '../../contexts/web3hook';
 
-type HeaderProps = {};
+type GlobalHeaderProps = {};
 
-function Header({}: HeaderProps) {
+function GlobalHeader({}: GlobalHeaderProps) {
   const { user, address, status, toggleModal, disconnect } = useWeb3Auth();
 
   return (
-    <header className="flex h-20 w-full items-center justify-between border-b border-opacity-40 bg-primary px-8">
-      <div className="flex">
-        <Link href="/" passHref>
-          <div className="cursor-pointer text-3xl font-bold">Child.</div>
-        </Link>
-        <Nav />
-      </div>
-      <div className="flex items-center justify-between gap-8">
-        {status === 'authenticated' && (
-          <div>
-            {user?.firstName} ({address?.substring(0, 4)}...)
-          </div>
-        )}
-        <div>
-          {status === 'unauthenticated' ? (
-            <Button action={() => toggleModal()}>Connect Wallet</Button>
-          ) : (
+    <Header>
+      <Header.BlockLeft>
+        <Header.Title>Child</Header.Title>
+        <Header.Nav show={status === 'authenticated'}>
+          <Header.NavLink href="/dashboard">Dashboard</Header.NavLink>
+          <Header.NavLink href="#">Blog</Header.NavLink>
+          <Header.NavLink href="#">FAQ</Header.NavLink>
+        </Header.Nav>
+      </Header.BlockLeft>
+      <Header.BlockRight>
+        {status === 'authenticated' ? (
+          <>
+            {user?.firstName} ({address?.substring(0, 4)}...){' '}
             <Button action={() => disconnect()}>Disconnect Wallet</Button>
-          )}
-        </div>
-      </div>
-    </header>
+          </>
+        ) : (
+          <Button action={() => toggleModal()}>Connect Wallet</Button>
+        )}
+
+        <ThemeToggler />
+      </Header.BlockRight>
+    </Header>
   );
 }
 
-export default Header;
+export default GlobalHeader;
