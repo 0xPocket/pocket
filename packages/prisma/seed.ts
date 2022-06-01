@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-
+import { AES, SHA256 } from "crypto-js";
 const prisma = new PrismaClient();
 
 async function main() {
@@ -14,15 +14,16 @@ async function main() {
         create: {
           type: "credentials",
           provider: "local",
-          password:
-            "58cc83f5b80cb53ce5385af956458fa9eaed89825aff76a8249103c10dee867e", // elonmusk
+          password: SHA256("elonmusk").toString(), // elonmusk
         },
       },
       wallet: {
         create: {
           publicKey: "0x70997970c51812dc3a010c7d01b50e0d17dc79c8", // Account #1 from Anvil
-          privateKey:
+          encryptedPrivateKey: AES.encrypt(
             "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d", // Account #1 from Anvil
+            SHA256("elonmusk").toString()
+          ).toString(),
         },
       },
     },

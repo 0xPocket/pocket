@@ -40,7 +40,7 @@ function Web3Button({
   const onSubmit = (data: FormValues) => {
     try {
       const encryptedPassword = SHA256(data.password).toString();
-      const signer = getSigner(wallet?.privateKey!, encryptedPassword);
+      const signer = getSigner(wallet?.encryptedPrivateKey!, encryptedPassword);
 
       if (callback) {
         callback(signer);

@@ -81,7 +81,10 @@ export class WalletService {
     await this.prisma.userParentWallet.create({
       data: {
         publicKey: wallet.publicKey,
-        privateKey: this.encryptPK(wallet.privateKey, user.account.password),
+        encryptedPrivateKey: this.encryptPK(
+          wallet.privateKey,
+          user.account.password,
+        ),
         userParent: {
           connect: {
             id: user.id,
