@@ -6,6 +6,7 @@ import { UserParent } from '@lib/types/interfaces';
 import { useMutation, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { FormInputText } from '@lib/ui';
+import Web3Button from '../wallet/Web3Button';
 
 type AddChildFormProps = {
   setIsOpen: () => void;
@@ -67,6 +68,7 @@ function AddChildForm({ setIsOpen }: AddChildFormProps) {
     //     toast.error(`Call to contract failed...`);
     //   })
     //   .finally(() => setIsOpen());
+    setIsOpen();
   };
 
   return (

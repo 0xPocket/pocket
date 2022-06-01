@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { Button, DialogPopupWrapper } from '@lib/ui';
 import AddChildForm from '../forms/AddChildForm';
 
-type AddChildCardProps = {};
+type AddChildButtonProps = {};
 
-function AddChildCard({}: AddChildCardProps) {
+function AddChildButton({}: AddChildButtonProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
@@ -19,4 +19,4 @@ function AddChildCard({}: AddChildCardProps) {
   );
 }
 
-export default AddChildCard;
+export default AddChildButton;

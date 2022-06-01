@@ -1,7 +1,7 @@
 import { UserChild } from '@lib/types/interfaces';
 import { useQuery } from 'react-query';
 import { useAxios } from '../../hooks/axios.hook';
-import AddChildCard from '../cards/AddChildCard';
+import AddChildButton from './AddChildButton';
 import ChildCard from '../cards/ChildCard';
 
 type ChildrenAccountPanelProps = {};
@@ -22,7 +22,7 @@ function ChildrenAccountPanel({}: ChildrenAccountPanelProps) {
     <div>
       <div className="mb-4 flex items-center justify-between">
         <h2 className="">My accounts</h2>
-        <AddChildCard />
+        <AddChildButton />
       </div>
       <div className="grid grid-cols-2 gap-4">
         {isLoading ? (
