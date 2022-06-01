@@ -44,8 +44,13 @@ class ParentContract {
   // getClaimable()
 
   // Parent functions
-  addChild = (config: PocketFaucet.ConfigStruct, childAddr: string) => {
-    return this.contract.addChild(config, childAddr);
+  addChild = (
+    ceiling: BigNumberish,
+    periodicity: BigNumberish,
+    childAddr: string
+  ) => {
+    return this.contract.addChild(ceiling, periodicity, childAddr);
+    // return this.contract.addChild(config, childAddr);
   };
 
   removeChild = (childAddr: string) => {
@@ -53,7 +58,7 @@ class ParentContract {
   };
 
   activateSwitch = (active: boolean, childAddr: string) => {
-    return this.contract.activateSwitch(active, childAddr);
+    return this.contract.setActive(active, childAddr);
   };
 
   changeConfig = (

@@ -25,7 +25,7 @@ function AddChildForm({ setIsOpen }: AddChildFormProps) {
     formState: { errors },
   } = useForm<FormValues>();
 
-  const { parentContract } = useSmartContract();
+  // const { parentContract } = useSmartContract();
   const { user } = useAuth<UserParent>();
 
   const axios = useAxios();
@@ -46,27 +46,27 @@ function AddChildForm({ setIsOpen }: AddChildFormProps) {
   );
 
   const onSubmit = (data: FormValues) => {
-    parentContract
-      ?.addChild(
-        {
-          active: true,
-          parent: user?.wallet.publicKey!,
-          ceiling: 20,
-          lastClaim: 20,
-          balance: 0,
-          periodicity: 0,
-        },
-        data.publicKey,
-      )
-      .then(() => {
-        mutation.mutate(data);
-        console.log('Contrat (addNewChild): success !');
-      })
-      .catch((e) => {
-        console.error('Contrat (addNewChild): error :', e.body);
-        toast.error(`Call to contract failed...`);
-      })
-      .finally(() => setIsOpen());
+    // parentContract
+    //   ?.addChild(
+    //     {
+    //       active: true,
+    //       parent: user?.wallet.publicKey!,
+    //       ceiling: 20,
+    //       lastClaim: 20,
+    //       balance: 0,
+    //       periodicity: 0,
+    //     },
+    //     data.publicKey,
+    //   )
+    //   .then(() => {
+    //     mutation.mutate(data);
+    //     console.log('Contrat (addNewChild): success !');
+    //   })
+    //   .catch((e) => {
+    //     console.error('Contrat (addNewChild): error :', e.body);
+    //     toast.error(`Call to contract failed...`);
+    //   })
+    //   .finally(() => setIsOpen());
   };
 
   return (
