@@ -1,5 +1,5 @@
-import { Dialog } from '@headlessui/react';
 import { ParentContract } from '@lib/contract';
+import { FormInputText } from '@lib/ui';
 import { AES, enc, SHA256 } from 'crypto-js';
 import { Wallet } from 'ethers';
 import { useState } from 'react';
@@ -7,7 +7,6 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useSmartContract } from '../../contexts/contract';
 import { useWallet } from '../../contexts/wallet';
-import Button from '../common/Button';
 
 type Web3ButtonProps = {
   name: string;
@@ -22,7 +21,11 @@ interface FormValues {
 function Web3Button({ name, callback, contract }: Web3ButtonProps) {
   const { wallet } = useWallet();
   const { provider } = useSmartContract();
-  const { register, handleSubmit } = useForm<FormValues>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>();
   const [showModal, setShowModal] = useState(false);
 
   const onClick = () => {
@@ -69,14 +72,15 @@ function Web3Button({ name, callback, contract }: Web3ButtonProps) {
                 className="flex flex-col gap-4"
                 onSubmit={handleSubmit(onSubmit)}
               >
-                <input
-                  className="border p-2 text-dark"
+                <FormInputText
                   type="password"
-                  placeholder="Password"
-                  {...register('password', {
+                  placeHolder="Password"
+                  registerValues={register('password', {
                     required: 'This field is required',
                   })}
+                  error={errors.password}
                 />
+
                 <input
                   type="submit"
                   value="Decrypt Wallet"
