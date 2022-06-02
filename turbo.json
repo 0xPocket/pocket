@@ -1,5 +1,9 @@
 {
-  "globalDependencies": [".env", "packages/prisma/.env"],
+  "globalDependencies": [
+    ".env",
+    "packages/prisma/.env",
+    "packages/pocket-contract/.env"
+  ],
   "pipeline": {
     "@lib/prisma#build": {
       "dependsOn": ["$DATABASE_URL"]
@@ -20,31 +24,37 @@
     "@lib/prisma#dev": {
       "cache": false
     },
-    "@lib/contract#healthcheck": {
+    "pocket-contract#dev": {
       "cache": false
     },
-    "@lib/contract#seed": {
-      "cache": false,
-      "dependsOn": ["pocket-contract#dev"]
+    "pocket-contract#build:types": {
+      "cache": false
     },
-    "pocket-contract#dev": {
-      "dependsOn": ["@lib/contract#healthcheck"],
+    "pocket-contract#healthcheck": {
+      "cache": false
+    },
+    "pocket-contract#deploy": {
+      "dependsOn": ["pocket-contract#healthcheck"],
+      "cache": false
+    },
+    "pocket-contract#seed": {
+      "dependsOn": ["pocket-contract#deploy"],
       "cache": false
     },
     "web-parent#dev": {
       "cache": false,
-      "dependsOn": ["pocket-contract#dev"]
+      "dependsOn": ["pocket-contract#deploy"]
     },
     "web-child#dev": {
       "cache": false,
-      "dependsOn": ["pocket-contract#dev"]
+      "dependsOn": ["pocket-contract#deploy"]
     },
     "api#dev": {
       "cache": false,
       "dependsOn": [
-        "pocket-contract#dev",
         "@lib/prisma#dev",
-        "@lib/contract#seed"
+        "pocket-contract#deploy",
+        "pocket-contract#seed"
       ]
     },
     "api#dx": {

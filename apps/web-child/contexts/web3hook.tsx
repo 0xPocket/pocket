@@ -1,5 +1,5 @@
 import { Web3Provider } from '@ethersproject/providers';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3Modal from 'web3modal';
 import {
@@ -11,9 +11,9 @@ import {
 } from 'react';
 import { ethers } from 'ethers';
 import AuthDialog from '../components/auth/AuthDialog';
-import { useRouter } from 'next/router';
 import { useAxios } from '../hooks/axios.hook';
 import { UserChild } from '@lib/types/interfaces';
+import jwt_decode from 'jwt-decode';
 
 declare global {
   interface Window {
@@ -41,7 +41,11 @@ interface IWeb3AuthContext {
   provider: Web3Provider | undefined;
   web3Modal: Web3Modal | undefined;
   connectProvider: (providerId: string) => Promise<void>;
+  registerAccount: (
+    registerToken: string,
+  ) => Promise<AxiosResponse<{ nonce: string }>> | undefined;
   toggleModal: () => void;
+  login: () => void;
   disconnect: () => void;
 }
 
@@ -53,23 +57,18 @@ export function createCtx<A extends {} | null>() {
 const [Web3AuthContext, Web3AuthContextProvider] =
   createCtx<IWeb3AuthContext>();
 
-export type AuthStatus =
-  | 'hidden'
-  | 'not_exist'
-  | 'choose_provider'
-  | 'connecting_wallet'
-  | 'verifying_account';
+export type AuthStatus = 'hidden' | 'choose_provider' | 'connecting_wallet';
+
+const REGISTER_MESSAGE = `Welcome to Pocket !\n\nPlease sign this message to register your account.\n\n\User ID : \\userId\\`;
 
 export const Web3AuthProvider = ({ children }: Web3AuthProviderProps) => {
   const [web3Modal, setWeb3Modal] = useState<Web3Modal>();
   const [accessToken, setAccessToken] = useState<string>();
-  const [registerToken, setRegisterToken] = useState<string>();
   const [address, setAddress] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
   const [user, setUser] = useState<UserChild>();
   const [provider, setProvider] = useState<any>();
   const [web3provider, setWeb3Provider] = useState<Web3Provider>();
-  const router = useRouter();
   const [status, setStatus] = useState<AuthStatus>('hidden');
   const myAxios = useAxios();
 
@@ -96,12 +95,6 @@ export const Web3AuthProvider = ({ children }: Web3AuthProviderProps) => {
     }
   }, [myAxios, accessToken]);
 
-  useEffect(() => {
-    if (router.query.token) {
-      setRegisterToken(router.query.token as string);
-    }
-  }, [router]);
-
   const connectProvider = useCallback(
     async (providerId: string) => {
       const instance = await web3Modal?.connectTo(providerId);
@@ -115,17 +108,38 @@ export const Web3AuthProvider = ({ children }: Web3AuthProviderProps) => {
     [web3Modal],
   );
 
-  const verifyAccount = useCallback(async () => {
-    if (!address || !web3provider) return;
+  const registerAccount = useCallback(
+    async (registerToken: string) => {
+      if (!address || !web3provider) return;
 
-    if (registerToken) {
-      await axios
-        .post<{ nonce: string }>('/api/metamask/register', {
-          token: registerToken,
-          walletAddress: address,
-        })
-        .then((res) => res.data);
-    }
+      const decodedToken = jwt_decode<{ userId: string }>(registerToken);
+
+      if (!decodedToken.userId) {
+        console.error('Token is malformed');
+        return;
+      }
+
+      const message = REGISTER_MESSAGE.replace(
+        '\\userId\\',
+        decodedToken.userId,
+      );
+
+      const signature = await web3provider?.send('personal_sign', [
+        message,
+        address,
+      ]);
+
+      await axios.post<{ nonce: string }>('/api/metamask/register', {
+        token: registerToken,
+        signature: signature,
+        walletAddress: address,
+      });
+    },
+    [address, web3provider],
+  );
+
+  const login = useCallback(async () => {
+    if (!address || !web3provider) return;
 
     try {
       const nonce = await axios
@@ -149,9 +163,9 @@ export const Web3AuthProvider = ({ children }: Web3AuthProviderProps) => {
       setAccessToken(accessToken);
       localStorage.setItem('logged_in', 'true');
     } catch (e) {
-      // setStatus('hidden');
+      // setStatus('not_exist');
     }
-  }, [address, registerToken, web3provider]);
+  }, [address, web3provider]);
 
   const toggleModal = useCallback(() => {
     try {
@@ -173,20 +187,12 @@ export const Web3AuthProvider = ({ children }: Web3AuthProviderProps) => {
   }, [web3Modal, myAxios]);
 
   useEffect(() => {
-    if (address && status === 'verifying_account') {
-      verifyAccount();
-    }
-  }, [address, status, verifyAccount]);
-
-  useEffect(() => {
     if (provider?.on) {
-      console.log('bind');
       provider?.on('accountsChanged', disconnect);
     }
 
     return () => {
       if (provider?.removeListener) {
-        console.log('unbind');
         provider?.removeListener('accountsChanged', disconnect);
       }
     };
@@ -212,6 +218,8 @@ export const Web3AuthProvider = ({ children }: Web3AuthProviderProps) => {
         provider: web3provider,
         toggleModal: toggleModal,
         connectProvider: connectProvider,
+        registerAccount: registerAccount,
+        login,
         disconnect,
       }}
     >

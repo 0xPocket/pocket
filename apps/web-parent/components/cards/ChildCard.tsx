@@ -17,6 +17,8 @@ function ChildCard({ child }: ChildCardProps) {
         >
           <div>
             <h2 className="">{child?.firstName}</h2>
+            {!child.web3Account && <div>Pending...</div>}
+            <p>Validated : {child.validated ? 'true' : 'false'}</p>
             <p>Available funds : {'placeholder'}</p>
           </div>
         </div>

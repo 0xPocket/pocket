@@ -8,4 +8,7 @@ export class MetamaskTokenDto {
   @IsString()
   @Transform((params: TransformFnParams) => params.value.toLowerCase())
   walletAddress: string;
+
+  @IsString()
+  signature: string;
 }

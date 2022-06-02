@@ -17,6 +17,7 @@ import { SessionService } from '../session/session.service';
 @Injectable()
 export class MetamaskService {
   private message = `Welcome to Pocket !\n\nPlease sign this message to authenticate on the app.\n\nNonce : \\nonce\\`;
+  private registerMessage = `Welcome to Pocket !\n\nPlease sign this message to register your account.\n\n\User ID : \\userId\\`;
 
   constructor(
     private jwtAuthService: JwtAuthService,
@@ -29,11 +30,20 @@ export class MetamaskService {
       const payload = this.jwtAuthService.verifyChildSignupToken(data.token);
 
       if (payload) {
-        return this.prisma.web3Account.upsert({
-          where: {
-            address: data.walletAddress.toLowerCase(),
-          },
-          create: {
+        const message = this.getMessageFromUserId(payload.userId);
+
+        const validMessage = this.verifyMessage(
+          message,
+          data.signature,
+          data.walletAddress,
+        );
+
+        if (!validMessage) {
+          throw new ForbiddenException('Invalid signature');
+        }
+
+        return this.prisma.web3Account.create({
+          data: {
             address: data.walletAddress.toLowerCase(),
             nonce: uuidv4(),
             user: {
@@ -42,7 +52,6 @@ export class MetamaskService {
               },
             },
           },
-          update: {},
         });
       }
     } catch (e) {
@@ -93,8 +102,25 @@ export class MetamaskService {
     });
   }
 
+  getMessageFromUserId(userId: string) {
+    return this.registerMessage.replace('\\userId\\', userId);
+  }
+
   getMessageFromNonce(nonce: string) {
     return this.message.replace('\\nonce\\', nonce);
+  }
+
+  verifyMessage(message: string, signature: string, address: string) {
+    const verifiedWalletAddress = ethers.utils.verifyMessage(
+      message,
+      signature,
+    );
+
+    if (verifiedWalletAddress.toLowerCase() !== address.toLowerCase()) {
+      return false;
+    }
+
+    return true;
   }
 
   async verifySignature(data: MetamaskSignatureDto, session: UserSession) {
@@ -103,12 +129,13 @@ export class MetamaskService {
     );
     const message = this.getMessageFromNonce(accountToVerify.nonce);
 
-    const verifiedWalletAddress = ethers.utils.verifyMessage(
+    const validMessage = this.verifyMessage(
       message,
       data.signature,
+      accountToVerify.address,
     );
 
-    if (verifiedWalletAddress.toLowerCase() !== accountToVerify.address) {
+    if (!validMessage) {
       throw new ForbiddenException('Invalid signature');
     }
 

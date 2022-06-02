@@ -12,7 +12,6 @@ import { EmailService } from 'src/email/email.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateChildrenDto } from './dto/create-children.dto';
 import { ParentSignupDto } from './dto/parent-signup.dto';
-import { v4 as uuidv4 } from 'uuid';
 import { WalletService } from 'src/wallet/wallet.service';
 import { PasswordService } from 'src/password/password.service';
 
@@ -225,37 +224,6 @@ export class ParentsService {
     verification = true,
   ) {
     try {
-      if (data.publicKey) {
-        await this.prisma.userParent.findUnique({
-          where: {
-            id: parentId,
-          },
-        });
-        const child = await this.prisma.userChild.create({
-          data: {
-            firstName: data.firstName,
-            lastName: data.lastName,
-            email: data.email,
-            userParent: {
-              connect: {
-                id: parentId,
-              },
-            },
-            web3Account: {
-              create: {
-                address: data.publicKey.toLowerCase(),
-                nonce: uuidv4(),
-              },
-            },
-          },
-        });
-        return child;
-      }
-    } catch (e) {
-      throw new BadRequestException("Could't create child");
-    }
-
-    try {
       const [parent, child] = await Promise.all([
         this.prisma.userParent.findUnique({
           where: {
@@ -287,8 +255,8 @@ export class ParentsService {
       child.id,
     );
     const url = `${this.configService.get(
-      'NEXT_PUBLIC_URL',
-    )}/children-signup?token=${confirmationToken}`;
+      'NEXT_PUBLIC_CHILDREN_URL',
+    )}/onboarding?token=${confirmationToken}`;
     return this.emailService.sendChildSignupEmail(parent, child, url);
   }
 }

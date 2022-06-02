@@ -1,4 +1,7 @@
 import { useForm } from 'react-hook-form';
+import { useAxios } from '../../hooks/axios.hook';
+import { useMutation, useQueryClient } from 'react-query';
+import { toast } from 'react-toastify';
 import { FormInputText } from '@lib/ui';
 
 type AddChildFormProps = {};
@@ -7,7 +10,6 @@ type FormValues = {
   firstName: string;
   lastName: string;
   email: string;
-  publicKey: string;
 };
 
 function AddChildForm({}: AddChildFormProps) {
@@ -17,11 +19,30 @@ function AddChildForm({}: AddChildFormProps) {
     formState: { errors },
   } = useForm<FormValues>();
 
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
+  const axios = useAxios();
+  const queryClient = useQueryClient();
+  const mutation = useMutation(
+    (data: FormValues) =>
+      axios.put('http://localhost:5000/users/parents/children', data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('children');
+        queryClient.invalidateQueries('balance');
+        toast.success(`Account created !`);
+      },
+      onError: () => {
+        toast.error(`DB call went wrong !`);
+      },
+    },
+  );
 
-    //push partial child to db
-    //db side: push email to child
+  const onSubmit = (data: FormValues) => {
+    try {
+      mutation.mutate(data);
+      console.log('Contrat (addNewChild): success !');
+    } catch (e) {
+      console.error('Contrat (addNewChild): error :', e);
+    }
   };
 
   return (
@@ -57,15 +78,6 @@ function AddChildForm({}: AddChildFormProps) {
         type="email"
         error={errors.email}
       />
-
-      {/* <FormInputText
-        placeHolder="Public Key"
-        registerValues={register('publicKey', {
-          required: 'This field is required',
-        })}
-        type="text"
-        error={errors.publicKey}
-      /> */}
 
       <input
         type="submit"

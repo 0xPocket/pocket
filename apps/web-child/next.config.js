@@ -1,9 +1,12 @@
 const dotenv = require('dotenv');
 
 dotenv.config({ path: '../../.env' });
-dotenv.config({ path: '../../contract.env' });
+dotenv.config({ path: '../../packages/pocket-contract/.env' });
 
-const withTM = require('next-transpile-modules')(['@lib/ui', '@lib/contract']);
+const withTM = require('next-transpile-modules')([
+  '@lib/ui',
+  'pocket-contract',
+]);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
