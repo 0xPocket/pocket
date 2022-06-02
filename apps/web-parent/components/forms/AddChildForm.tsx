@@ -18,6 +18,8 @@ function AddChildForm({}: AddChildFormProps) {
   } = useForm<FormValues>();
 
   const onSubmit = (data: FormValues) => {
+    console.log(data);
+
     //push partial child to db
     //db side: push email to child
   };
