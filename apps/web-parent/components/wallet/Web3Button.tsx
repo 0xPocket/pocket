@@ -1,4 +1,4 @@
-import { ParentContract } from '@lib/contract';
+import { ParentContract } from 'pocket-contract/ts';
 import { FormInputText } from '@lib/ui';
 import { SHA256 } from 'crypto-js';
 import { Wallet } from 'ethers';

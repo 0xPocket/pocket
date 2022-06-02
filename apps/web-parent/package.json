@@ -16,7 +16,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/react-fontawesome": "^0.1.18",
     "@headlessui/react": "^1.6.4",
-    "@lib/contract": "*",
+    "pocket-contract": "*",
     "@lib/nest-auth": "*",
     "@lib/ui": "*",
     "@popperjs/core": "^2.11.5",
