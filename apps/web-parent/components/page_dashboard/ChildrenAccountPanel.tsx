@@ -1,13 +1,15 @@
 import { UserChild } from '@lib/types/interfaces';
 import { useQuery } from 'react-query';
 import { useAxios } from '../../hooks/axios.hook';
-import AddChildCard from '../cards/AddChildCard';
 import ChildCard from '../cards/ChildCard';
+import { useRouter } from 'next/router';
+import { Button } from '@lib/ui';
 
 type ChildrenAccountPanelProps = {};
 
 function ChildrenAccountPanel({}: ChildrenAccountPanelProps) {
   const axios = useAxios();
+  const router = useRouter();
 
   const { isLoading, data } = useQuery(
     'children',
@@ -22,7 +24,9 @@ function ChildrenAccountPanel({}: ChildrenAccountPanelProps) {
     <div>
       <div className="mb-4 flex items-center justify-between">
         <h2 className="">My accounts</h2>
-        <AddChildCard />
+        <Button action={() => router.push('/dashboard/add-account/')}>
+          Add Account
+        </Button>
       </div>
       <div className="grid grid-cols-2 gap-4">
         {isLoading ? (

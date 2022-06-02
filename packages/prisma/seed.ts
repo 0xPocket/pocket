@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-
+import { AES, SHA256 } from "crypto-js";
 const prisma = new PrismaClient();
 
 async function main() {
@@ -14,15 +14,16 @@ async function main() {
         create: {
           type: "credentials",
           provider: "local",
-          password:
-            "58cc83f5b80cb53ce5385af956458fa9eaed89825aff76a8249103c10dee867e", // elonmusk
+          password: SHA256("elonmusk").toString(), // elonmusk
         },
       },
       wallet: {
         create: {
-          publicKey: "0x71be63f3384f5fb98995898a86b02fb2426c5788", // Account #11 from Hardhat
-          privateKey:
-            "0x701b615bbdfb9de65240bc28bd21bbc0d996645a3dd57e7b12bc2bdf6f192c82", // Account #11 from Hardhat
+          publicKey: "0x70997970c51812dc3a010c7d01b50e0d17dc79c8", // Account #1 from Anvil
+          encryptedPrivateKey: AES.encrypt(
+            "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d", // Account #1 from Anvil
+            SHA256("elonmusk").toString()
+          ).toString(),
         },
       },
     },
@@ -41,7 +42,7 @@ async function main() {
       },
       web3Account: {
         create: {
-          address: "0x2546bcd3c84621e976d8185a91a922ae77ecec30", // Account #16 from Hardhat
+          address: "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc", // Account #2 from Anvil
           nonce: "adgadghahasfah",
         },
       },

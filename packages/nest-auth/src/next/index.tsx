@@ -20,8 +20,8 @@ const emitter = new EventEmitter();
 interface IAuthContext<T = NestAuthUser> {
   user: T | undefined;
   status: "loading" | "authenticated" | "unauthenticated";
-  signIn: (id: string, formData?: object) => void;
-  signOut: () => void;
+  signIn: (id: string, formData?: object) => Promise<void>;
+  signOut: () => Promise<void>;
 }
 
 const [AuthContext, AuthContextProvider] = createCtx<IAuthContext<any>>();
@@ -218,7 +218,7 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
     () => ({
       user: user,
       status: loading ? "loading" : user ? "authenticated" : "unauthenticated",
-      signIn: (providerId: string, formData = undefined) => {
+      signIn: async (providerId: string, formData = undefined) => {
         const provider = getProvider(providerId, strategies);
         if (!provider)
           throw new Error(
@@ -226,19 +226,24 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
           );
         setLoading(true);
         if (provider.type === "oauth") {
-          oAuthSignIn(provider, !!config.popup, !!config.session);
+          return oAuthSignIn(provider, !!config.popup, !!config.session);
         } else if (provider.type === "credentials") {
           if (!formData) {
             throw new Error("Missing data for credentials signin");
           }
-          credentialsSignIn(provider, formData, !!config.session);
+          return credentialsSignIn(
+            provider,
+            formData,
+            !!config.session
+          ).finally(() => setLoading(false));
         }
       },
-      signOut: () => {
+      signOut: async () => {
         if (config.session) {
           localStorage.removeItem("logged_in");
-          axios.post(config.session.logout).then(() => {
+          return axios.post(config.session.logout).then(() => {
             setUser(undefined);
+            return;
           });
         } else {
           localStorage.removeItem("access_token");

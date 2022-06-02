@@ -1,6 +1,5 @@
 import Header from '../header/Header';
 import AuthGuard from './AuthGuard';
-import WalletGuard from './WalletGuard';
 
 type MainWrapperProps = {
   children: React.ReactNode;
@@ -24,12 +23,10 @@ function MainWrapper({
 
   return (
     <AuthGuard>
-      <WalletGuard>
-        <div className="max-w-screen min-h-screen overflow-hidden">
-          {!noHeader && <Header />}
-          {children}
-        </div>
-      </WalletGuard>
+      <div className="max-w-screen min-h-screen overflow-hidden">
+        {!noHeader && <Header />}
+        {children}
+      </div>
     </AuthGuard>
   );
 }

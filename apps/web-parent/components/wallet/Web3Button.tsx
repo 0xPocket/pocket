@@ -1,28 +1,35 @@
-import { Dialog } from '@headlessui/react';
 import { ParentContract } from '@lib/contract';
-import { AES, enc, SHA256 } from 'crypto-js';
+import { FormInputText } from '@lib/ui';
 import { Wallet } from 'ethers';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { useSmartContract } from '../../contexts/contract';
 import { useWallet } from '../../contexts/wallet';
-import Button from '../common/Button';
+import { getSigner } from '../../utils/web3';
 
 type Web3ButtonProps = {
-  name: string;
+  children: React.ReactNode;
   callback?: (signer: Wallet) => void;
   contract?: (contract: ParentContract) => void;
+  type?: 'button' | 'submit' | 'reset' | undefined;
 };
 
 interface FormValues {
   password: string;
 }
 
-function Web3Button({ name, callback, contract }: Web3ButtonProps) {
+function Web3Button({
+  children,
+  callback,
+  contract,
+  type = 'button',
+}: Web3ButtonProps) {
   const { wallet } = useWallet();
-  const { provider } = useSmartContract();
-  const { register, handleSubmit } = useForm<FormValues>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>();
   const [showModal, setShowModal] = useState(false);
 
   const onClick = () => {
@@ -30,15 +37,8 @@ function Web3Button({ name, callback, contract }: Web3ButtonProps) {
   };
 
   const onSubmit = (data: FormValues) => {
-    const encryptedPassword = SHA256(data.password).toString();
-
     try {
-      const decryptedPK = AES.decrypt(
-        wallet?.privateKey!,
-        encryptedPassword,
-      ).toString(enc.Utf8);
-      const signer = new Wallet(decryptedPK, provider);
-      setShowModal(false);
+      const signer = getSigner(wallet?.encryptedPrivateKey!, data.password);
 
       if (callback) {
         callback(signer);
@@ -53,33 +53,37 @@ function Web3Button({ name, callback, contract }: Web3ButtonProps) {
     } catch (e) {
       toast.error('Invalid password');
     }
+    setShowModal(false);
   };
 
   return (
     <>
-      <button onClick={onClick}>{name}</button>
+      <button onClick={onClick} type={type}>
+        {children}
+      </button>
       {showModal && (
         <div className="absolute inset-0 flow-root">
-          <div className="fixed inset-0 flex items-center justify-center bg-dark/30 p-4">
-            <div className="mx-auto rounded-lg bg-[#273138] p-4 text-bright">
-              <div className="flex items-center gap-4 border-b pb-4">
+          <div className="fixed inset-0 flex items-center justify-center p-4">
+            <div className="mx-auto rounded-md bg-dark p-4">
+              <div className="flex items-center gap-4 pb-4 ">
                 <h2 className="">Unlock Wallet</h2>
               </div>
               <form
                 className="flex flex-col gap-4"
                 onSubmit={handleSubmit(onSubmit)}
               >
-                <input
-                  className="border p-2 text-dark"
+                <FormInputText
                   type="password"
-                  placeholder="Password"
-                  {...register('password', {
+                  placeHolder="Password"
+                  registerValues={register('password', {
                     required: 'This field is required',
                   })}
+                  error={errors.password}
                 />
+
                 <input
                   type="submit"
-                  value="Decrypt Wallet"
+                  value="Submit"
                   className="rounded-md bg-dark  px-4 py-3 text-bright"
                 />
               </form>

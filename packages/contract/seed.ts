@@ -6,7 +6,7 @@ require("dotenv").config({ path: "../../contract.env" });
 async function main() {
   const provider = new providers.JsonRpcProvider("http://localhost:8545");
   const parentWallet = new Wallet(
-    "0x701b615bbdfb9de65240bc28bd21bbc0d996645a3dd57e7b12bc2bdf6f192c82",
+    "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d", // Elon Musk's Wallet
     provider
   );
   const parent = new ParentContract(
@@ -14,17 +14,7 @@ async function main() {
     parentWallet
   );
 
-  await parent.addChild(
-    {
-      active: true,
-      balance: 0,
-      ceiling: 20,
-      parent: "0x71be63f3384f5fb98995898a86b02fb2426c5788",
-      lastClaim: 0,
-      periodicity: 0,
-    },
-    "0x2546bcd3c84621e976d8185a91a922ae77ecec30"
-  );
+  await parent.addChild(20, 0, "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc"); // Damian Musk's Wallet
 }
 
 main().catch((e) => console.error(e));

@@ -38,11 +38,11 @@ model UserChild {
 // Wallet
 
 model UserParentWallet {
-  id           String     @id @default(cuid())
-  publicKey    String
-  privateKey   String?
-  userParent   UserParent @relation(fields: [userParentId], references: [id])
-  userParentId String     @unique
+  id                  String     @id @default(cuid())
+  publicKey           String
+  encryptedPrivateKey String?
+  userParent          UserParent @relation(fields: [userParentId], references: [id])
+  userParentId        String     @unique
 }
 
 // Authentication Account

@@ -25,24 +25,24 @@
     },
     "@lib/contract#seed": {
       "cache": false,
-      "dependsOn": ["blockchain-side-pocket#dev"]
+      "dependsOn": ["pocket-contract#dev"]
     },
-    "blockchain-side-pocket#dev": {
+    "pocket-contract#dev": {
       "dependsOn": ["@lib/contract#healthcheck"],
       "cache": false
     },
     "web-parent#dev": {
       "cache": false,
-      "dependsOn": ["blockchain-side-pocket#dev"]
+      "dependsOn": ["pocket-contract#dev"]
     },
     "web-child#dev": {
       "cache": false,
-      "dependsOn": ["blockchain-side-pocket#dev"]
+      "dependsOn": ["pocket-contract#dev"]
     },
     "api#dev": {
       "cache": false,
       "dependsOn": [
-        "blockchain-side-pocket#dev",
+        "pocket-contract#dev",
         "@lib/prisma#dev",
         "@lib/contract#seed"
       ]

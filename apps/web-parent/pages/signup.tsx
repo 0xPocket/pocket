@@ -18,8 +18,8 @@ function SignUp() {
 
   return (
     <MainWrapper noHeader>
-      <section className="grid min-h-screen grid-cols-2">
-        <div className="flex flex-col items-center justify-center gap-8 border-r bg-primary">
+      <section className="relative grid min-h-screen grid-cols-2">
+        <div className="flex flex-col items-center justify-center gap-8">
           <SignUpForm />
           <div className="flex w-72 items-center">
             <div className="w-full border-b"></div>
