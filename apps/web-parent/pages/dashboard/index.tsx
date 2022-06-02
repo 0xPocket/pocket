@@ -1,5 +1,5 @@
 import { SectionContainer } from '@lib/ui';
-import ChildrenAccountPanel from '../../components/panels/ChildrenAccountPanel';
+import ChildrenAccountPanel from '../../components/page_dashboard/ChildrenAccountPanel';
 import MainWrapper from '../../components/wrappers/MainWrapper';
 
 type IndexProps = {};

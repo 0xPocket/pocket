@@ -4,9 +4,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { FormInputText } from '@lib/ui';
 
-type AddChildFormProps = {
-  setIsOpen: () => void;
-};
+type AddChildFormProps = {};
 
 type FormValues = {
   firstName: string;
@@ -14,7 +12,7 @@ type FormValues = {
   email: string;
 };
 
-function AddChildForm({ setIsOpen }: AddChildFormProps) {
+function AddChildForm({}: AddChildFormProps) {
   const {
     register,
     handleSubmit,
@@ -45,14 +43,10 @@ function AddChildForm({ setIsOpen }: AddChildFormProps) {
     } catch (e) {
       console.error('Contrat (addNewChild): error :', e);
     }
-    setIsOpen();
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="flex w-72 flex-col gap-4"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
       <div className="flex gap-4">
         <FormInputText
           type="text"

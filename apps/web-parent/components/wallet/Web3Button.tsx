@@ -1,6 +1,5 @@
 import { ParentContract } from 'pocket-contract/ts';
 import { FormInputText } from '@lib/ui';
-import { SHA256 } from 'crypto-js';
 import { Wallet } from 'ethers';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -39,8 +38,7 @@ function Web3Button({
 
   const onSubmit = (data: FormValues) => {
     try {
-      const encryptedPassword = SHA256(data.password).toString();
-      const signer = getSigner(wallet?.encryptedPrivateKey!, encryptedPassword);
+      const signer = getSigner(wallet?.encryptedPrivateKey!, data.password);
 
       if (callback) {
         callback(signer);
