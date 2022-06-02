@@ -35,6 +35,7 @@ async function main() {
       firstName: "Damian",
       lastName: "Musk",
       email: "damianmusk@gmail.com",
+      validated: true,
       userParent: {
         connect: {
           id: "elonmusk",

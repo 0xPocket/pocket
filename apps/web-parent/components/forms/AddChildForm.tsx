@@ -1,12 +1,8 @@
 import { useForm } from 'react-hook-form';
-import { useSmartContract } from '../../contexts/contract';
 import { useAxios } from '../../hooks/axios.hook';
-import { useAuth } from '@lib/nest-auth/next';
-import { UserParent } from '@lib/types/interfaces';
 import { useMutation, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { FormInputText } from '@lib/ui';
-import Web3Button from '../wallet/Web3Button';
 
 type AddChildFormProps = {
   setIsOpen: () => void;
@@ -16,7 +12,6 @@ type FormValues = {
   firstName: string;
   lastName: string;
   email: string;
-  publicKey: string;
 };
 
 function AddChildForm({ setIsOpen }: AddChildFormProps) {
@@ -25,9 +20,6 @@ function AddChildForm({ setIsOpen }: AddChildFormProps) {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
-
-  // const { parentContract } = useSmartContract();
-  const { user } = useAuth<UserParent>();
 
   const axios = useAxios();
   const queryClient = useQueryClient();
@@ -47,27 +39,12 @@ function AddChildForm({ setIsOpen }: AddChildFormProps) {
   );
 
   const onSubmit = (data: FormValues) => {
-    // parentContract
-    //   ?.addChild(
-    //     {
-    //       active: true,
-    //       parent: user?.wallet.publicKey!,
-    //       ceiling: 20,
-    //       lastClaim: 20,
-    //       balance: 0,
-    //       periodicity: 0,
-    //     },
-    //     data.publicKey,
-    //   )
-    //   .then(() => {
-    //     mutation.mutate(data);
-    //     console.log('Contrat (addNewChild): success !');
-    //   })
-    //   .catch((e) => {
-    //     console.error('Contrat (addNewChild): error :', e.body);
-    //     toast.error(`Call to contract failed...`);
-    //   })
-    //   .finally(() => setIsOpen());
+    try {
+      mutation.mutate(data);
+      console.log('Contrat (addNewChild): success !');
+    } catch (e) {
+      console.error('Contrat (addNewChild): error :', e);
+    }
     setIsOpen();
   };
 
@@ -106,15 +83,6 @@ function AddChildForm({ setIsOpen }: AddChildFormProps) {
         })}
         type="email"
         error={errors.email}
-      />
-
-      <FormInputText
-        placeHolder="Public Key"
-        registerValues={register('publicKey', {
-          required: 'This field is required',
-        })}
-        type="text"
-        error={errors.publicKey}
       />
 
       <input
