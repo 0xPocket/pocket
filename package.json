@@ -1,14 +1,28 @@
 {
-  "name": "blockchain-side-pocket",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "clean": "rm -rf node_modules",
-    "dev": "echo -n NEXT_PUBLIC_CONTRACT_ADDRESS= > ../../contract.env && yarn forge:deploy | grep Deployed | cut -c14- >> ../../contract.env",
-    "postinstall": "yarn forge:install && yarn forge:build",
-    "forge:install": "forge install",
-    "forge:build": "forge build",
-    "forge:deploy": "forge create src/PocketFaucet.sol:PocketFaucet --private-key 0x47c99abed3324a2707c28affff1267e45918ec8c3f20b8aa892e8b065d2942dd --constructor-args 0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c --rpc-url http://127.0.0.1:8545"
-  }
+	"name": "blockchain-side-pocket",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"clean": "rm -rf node_modules ts/types && forge clean",
+		"dev": "echo -n NEXT_PUBLIC_CONTRACT_ADDRESS= > ./contract.env && yarn forge:deploy | grep Deployed | cut -c14- >> ./contract.env",
+		"postinstall": "yarn forge:build",
+		"forge:install": "forge install",
+		"forge:build": "forge build",
+		"forge:deploy": "forge create foundry/src/PocketFaucet.sol:PocketFaucet --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --constructor-args 0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c --rpc-url http://127.0.0.1:8545",
+		"deploy:node": "anvil -f https://polygon-mainnet.g.alchemy.com/v2/3yzPlXcA41Y49wI2INbE3q8kLi19ME2U",
+		"build:types": "typechain --target ethers-v5 --out-dir=ts/types ./foudry/out/PocketFaucet.sol/PocketFaucet.json",
+		"healthcheck": "curl -m 10 --retry 5 --retry-connrefused --retry-delay 3 http://127.0.0.1:8545/",
+		"seed": "ts-node ./seed.ts"
+	},
+	"dependencies": {
+		"dotenv": "^16.0.1",
+		"ethers": "^5.6.5"
+	},
+	"devDependencies": {
+		"@typechain/ethers-v5": "^10.0.0",
+		"ts-node": "^10.7.0",
+		"typechain": "^8.0.0",
+		"typescript": "^4.6.4"
+	}
 }
