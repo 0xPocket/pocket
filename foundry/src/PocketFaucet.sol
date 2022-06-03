@@ -3,6 +3,8 @@ pragma solidity ^0.8.13;
 
 // TO DO : take off
 import "forge-std/console2.sol";
+import "forge-std/console.sol";
+import "forge-std/Test.sol";
 //
 import "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol";
@@ -13,7 +15,7 @@ import "openzeppelin-contracts/contracts/access/AccessControl.sol";
 // TO DO : secure all func with roles
 // TO DO : test roles
 // TO DO : check require (areRelated)
-contract PocketFaucet is AccessControl {
+contract PocketFaucet is AccessControl, Test {
     using SafeERC20 for IERC20;
 
     bytes32 public constant WITHDRAW_ROLE = keccak256("WITHDRAW_ROLE");
@@ -77,10 +79,14 @@ contract PocketFaucet is AccessControl {
         address child
     ) external {
         require(child != address(0), "Address is null");
+        console2.log("lol");
+        console.log("lol");
         require(
             childToConfig[child].parent == address(0),
             "Child address already taken"
         );
+        console2.log("ici");
+        console.log("ici");
         config memory conf;
         conf.balance = 0;
         conf.lastClaim = block.timestamp - periodicity;

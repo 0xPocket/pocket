@@ -9,7 +9,8 @@
     "forge:install": "forge install --root foundry",
     "forge:build": "forge build",
     "forge:deploy": "forge create foundry/src/PocketFaucet.sol:PocketFaucet --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --constructor-args 0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c --rpc-url http://127.0.0.1:8545",
-    "forge:node": "anvil -f https://polygon-mainnet.g.alchemy.com/v2/3yzPlXcA41Y49wI2INbE3q8kLi19ME2U",
+    "forge:node:anvil": "anvil -v -f https://polygon-mainnet.g.alchemy.com/v2/3yzPlXcA41Y49wI2INbE3q8kLi19ME2U",
+    "forge:node": "hardhat node --fork https://polygon-mainnet.g.alchemy.com/v2/3yzPlXcA41Y49wI2INbE3q8kLi19ME2U",
     "healthcheck": "curl -m 10 --retry 10 --retry-connrefused --retry-delay 1 http://127.0.0.1:8545/",
     "build:types": "typechain --target ethers-v5 --out-dir=ts/types ./foundry/out/PocketFaucet.sol/PocketFaucet.json",
     "dev": "yarn forge:node",
@@ -22,8 +23,9 @@
   },
   "devDependencies": {
     "@typechain/ethers-v5": "^10.0.0",
-    "ts-node": "^10.7.0",
+    "hardhat": "^2.9.7",
+    "ts-node": "^10.8.1",
     "typechain": "^8.0.0",
-    "typescript": "^4.6.4"
+    "typescript": "^4.7.3"
   }
 }
