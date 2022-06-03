@@ -1,5 +1,5 @@
 node_modules
 cache/
 out/
-web/types/**
 *.env
+ts/types
