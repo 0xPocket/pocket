@@ -1,0 +1,6 @@
+pocket-contract:build: cache hit, replaying output [2m307a7d4a11091b29[0m
+[33mpocket-contract:build: [0mwarning package.json: No license field
+[33mpocket-contract:build: [0m$ yarn forge:build
+[33mpocket-contract:build: [0mwarning package.json: No license field
+[33mpocket-contract:build: [0m$ forge build
+[33mpocket-contract:build: [0mNo files changed, compilation skipped

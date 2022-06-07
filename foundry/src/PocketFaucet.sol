@@ -79,14 +79,10 @@ contract PocketFaucet is AccessControl, Test {
         address child
     ) external {
         require(child != address(0), "Address is null");
-        console2.log("lol");
-        console.log("lol");
         require(
             childToConfig[child].parent == address(0),
             "Child address already taken"
         );
-        console2.log("ici");
-        console.log("ici");
         config memory conf;
         conf.balance = 0;
         conf.lastClaim = block.timestamp - periodicity;

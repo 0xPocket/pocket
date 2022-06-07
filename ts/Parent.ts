@@ -56,6 +56,7 @@ class ParentContract {
       periodicity,
       childAddr
     );
+
     const populatedTransaction = await this.signer.populateTransaction(tx);
     return this.signer.signTransaction(populatedTransaction);
   };

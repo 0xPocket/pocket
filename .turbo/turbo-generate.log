@@ -1,0 +1,6 @@
+pocket-contract:generate: cache hit, replaying output [2m73e46f3a60cf9224[0m
+[33mpocket-contract:generate: [0mwarning package.json: No license field
+[33mpocket-contract:generate: [0m$ yarn build:types
+[33mpocket-contract:generate: [0mwarning package.json: No license field
+[33mpocket-contract:generate: [0m$ typechain --target ethers-v5 --out-dir=ts/types ./foundry/out/PocketFaucet.sol/PocketFaucet.json
+[33mpocket-contract:generate: [0mSuccessfully generated 5 typings!
