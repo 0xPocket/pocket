@@ -32,7 +32,8 @@ function Web3Button({
   } = useForm<FormValues>();
   const [showModal, setShowModal] = useState(false);
 
-  const onClick = () => {
+  const onClick = (e) => {
+    e.preventDefault();
     setShowModal(true);
   };
 
