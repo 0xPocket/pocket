@@ -1,6 +1,6 @@
 import { Wallet } from "ethers";
-import { PocketFaucet__factory } from "./types";
-import { PocketFaucet } from "types/PocketFaucet";
+import { PocketFaucet__factory } from "../typechain";
+import { PocketFaucet } from "../typechain/PocketFaucet";
 
 class ChildContract {
   // library: any;

@@ -1,32 +1,32 @@
 import { Wallet } from "ethers";
-import { PocketFaucet__factory } from "types";
-import { PocketFaucet } from "types/PocketFaucet";
+import { PocketFaucet__factory } from "../typechain";
+import { PocketFaucet } from "../typechain/PocketFaucet";
 
 class AdminContract {
-	library: any;
-	abi: any;
-	address: any;
-	signer: any;
-	contract: PocketFaucet;
+  library: any;
+  abi: any;
+  address: any;
+  signer: any;
+  contract: PocketFaucet;
 
-	constructor(address: string, signer: Wallet) {
-		this.contract = PocketFaucet__factory.connect(address, signer);
-	};
+  constructor(address: string, signer: Wallet) {
+    this.contract = PocketFaucet__factory.connect(address, signer);
+  }
 
-	// Helper functions
+  // Helper functions
 
-	// Admin functions
-	changeParentAddr = (oldAddr: string, newAddr: string) => {
-		return this.contract.changeParentAddr(oldAddr, newAddr);
-	};
+  // Admin functions
+  changeParentAddr = (oldAddr: string, newAddr: string) => {
+    return this.contract.changeParentAddr(oldAddr, newAddr);
+  };
 
-	withdrawToken = (token: string, amount: string) => {
-		return this.contract.withdrawToken(token, amount);
-	};
+  withdrawToken = (token: string, amount: string) => {
+    return this.contract.withdrawToken(token, amount);
+  };
 
-	withdrawCoin = (amount: string) => {
-		return this.contract.withdrawCoin(amount);
-	};
+  withdrawCoin = (amount: string) => {
+    return this.contract.withdrawCoin(amount);
+  };
 }
 
 export { AdminContract };
