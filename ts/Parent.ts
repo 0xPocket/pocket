@@ -1,4 +1,4 @@
-import { BigNumberish, Wallet } from "ethers";
+import { BigNumber, BigNumberish, Signer, Wallet } from "ethers";
 import { PocketFaucet__factory } from "./types";
 import { PocketFaucet } from "./types/PocketFaucet";
 
@@ -7,12 +7,14 @@ class ParentContract {
   // library: any;
   // abi: any;
   address: string;
+  signer: Signer;
   // signer: any;
   contract: PocketFaucet;
 
   constructor(address: string, signer: Wallet) {
     this.contract = PocketFaucet__factory.connect(address, signer);
     this.address = signer.address;
+    this.signer = signer;
   }
 
   // Helper functions
@@ -44,13 +46,19 @@ class ParentContract {
   // getClaimable()
 
   // Parent functions
-  addChild = (
+  addChild = async (
     ceiling: BigNumberish,
     periodicity: BigNumberish,
     childAddr: string
   ) => {
-    return this.contract.addChild(ceiling, periodicity, childAddr);
-    // return this.contract.addChild(config, childAddr);
+    const tx = await this.contract.populateTransaction.addChild(
+      ceiling,
+      periodicity,
+      childAddr
+    );
+
+    const populatedTransaction = await this.signer.populateTransaction(tx);
+    return this.signer.signTransaction(populatedTransaction);
   };
 
   removeChild = (childAddr: string) => {
