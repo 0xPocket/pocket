@@ -12,9 +12,14 @@ function WalletGuard({ children }: WalletGuardProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!wallet?.publicKey) {
-      router.push('/create-wallet');
+    if (router.route === '/create-wallet' && loading) {
       setLoading(false);
+    }
+  }, [router, loading]);
+
+  useEffect(() => {
+    if (!wallet) {
+      router.push('/create-wallet');
     } else {
       setLoading(false);
     }

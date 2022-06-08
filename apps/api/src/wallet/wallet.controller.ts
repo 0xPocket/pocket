@@ -13,7 +13,7 @@ export class WalletController {
   @Get()
   @UserType('parent')
   @UseGuards(AuthGuard)
-  getWallet(@GetParent() user: UserSessionPayload) {
+  async getWallet(@GetParent() user: UserSessionPayload) {
     return this.walletService.getWallet(user.userId);
   }
 

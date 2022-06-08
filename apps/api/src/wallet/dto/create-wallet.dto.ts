@@ -2,8 +2,8 @@ import { IsString } from 'class-validator';
 
 export class CreateWalletDto {
   @IsString()
-  password: string;
+  publicKey: string;
 
   @IsString()
-  privateKey: string;
+  encryptedPrivateKey: string;
 }

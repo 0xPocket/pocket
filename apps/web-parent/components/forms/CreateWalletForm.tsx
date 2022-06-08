@@ -1,13 +1,14 @@
+import { UserParentWallet } from '.prisma/client';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
-import { useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
+import { EncryptedWallet, generateWallet } from '../../utils/web3';
 
 type CreateWalletFormProps = {};
 
 type FormValues = {
-  privateKey: string;
   password: string;
 };
 
@@ -20,18 +21,25 @@ function CreateWalletForm({}: CreateWalletFormProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
+  const mutation = useMutation(
+    (data: EncryptedWallet) =>
+      axios.post<UserParentWallet>('/api/wallet/create', data),
+    {
+      onSuccess: (res) => {
+        queryClient.setQueryData<UserParentWallet>('wallet', () => res.data);
+        router.push('/dashboard');
+        toast.success(`Wallet created !`);
+      },
+      onError: () => {
+        toast.error(`DB call went wrong !`);
+      },
+    },
+  );
+
   const onSubmit = (data: FormValues) => {
-    axios
-      .post('/api/wallet/create', {
-        password: data.password,
-        privateKey: 'agaadga',
-      })
-      .catch(() => toast.error('Invalid password'))
-      .then(async () => {
-        queryClient
-          .invalidateQueries('wallet')
-          .then(() => router.push('/dashboard'));
-      });
+    const wallet = generateWallet(data.password);
+
+    mutation.mutate(wallet);
   };
 
   return (
