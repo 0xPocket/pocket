@@ -27,6 +27,11 @@ const config: HardhatUserConfig = {
 
   networks: {
     hardhat: {
+      forking: {
+        url:
+          "https://polygon-mainnet.g.alchemy.com/v2/" +
+          process.env.KEY_ALCHEMY_POLYGON,
+      },
       chainId: 137,
     },
     local: {
