@@ -14,16 +14,15 @@ export class EthereumController {
   async broadcastTransaction(@Body() body: SendTransactionDto) {
     const test = await this.ethereumService.sendTransaction(body);
 
-    test
-      .wait()
-      .then((res) => {
+    try {
+      await test.wait().then(() => {
         console.log('response');
-      })
-      .catch((e) => {
-        console.log('error');
+        console.log(body.childAddress + ' added !');
       });
+    } catch (e) {
+      console.log(e);
+    }
 
-    console.log('sent !');
     return 'OK';
   }
 }

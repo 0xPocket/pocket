@@ -1,21 +1,17 @@
-import { IsEnum, IsObject, IsString } from 'class-validator';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
 
 enum Type {
   ADD_CHILD,
-}
-
-class TransactionTypeDto {
-  @IsEnum(Type)
-  type: Type;
-
-  @IsString()
-  childAddress: string;
 }
 
 export class SendTransactionDto {
   @IsString()
   hash: string;
 
-  @IsObject()
-  type?: TransactionTypeDto;
+  @IsEnum(Type)
+  type: Type;
+
+  @IsOptional()
+  @IsString()
+  childAddress: string;
 }

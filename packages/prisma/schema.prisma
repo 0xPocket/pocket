@@ -29,8 +29,8 @@ model UserChild {
   lastName     String
   username     String?      @unique
   email        String       @unique
+  status       ChildStatus  @default(INVITED)
   web3Account  Web3Account?
-  validated    Boolean      @default(false)
   userParent   UserParent   @relation(fields: [userParentId], references: [id])
   userParentId String
 }
@@ -75,6 +75,14 @@ model Session {
   sid       String   @unique
   data      String
   expiresAt DateTime
+}
+
+enum ChildStatus {
+  INVITED
+  LINKED
+  PENDING
+  ACTIVE
+  LOCKED
 }
 
 // Auth Enums

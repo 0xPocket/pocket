@@ -17,6 +17,8 @@ function ChildCard({ child }: ChildCardProps) {
     contract.addChild(0, 0, child.web3Account.address).then(async (res) => {
       const response = await axios.post('/api/ethereum/broadcast', {
         hash: res,
+        type: 'ADD_CHILD',
+        childAddress: child.web3Account.address,
       });
       console.log(response);
     });
