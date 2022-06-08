@@ -1,5 +1,6 @@
 node_modules
 cache/
 out/
+.turbo
 *.env
 ts/types
