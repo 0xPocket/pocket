@@ -2,5 +2,5 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { PocketFaucet } from "./PocketFaucet";
-export * as factories from "./factories";
+
 export { PocketFaucet__factory } from "./factories/PocketFaucet__factory";

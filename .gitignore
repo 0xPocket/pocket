@@ -3,3 +3,6 @@ cache/
 out/
 web/types/**
 *.env
+artifacts
+.openzeppelin
+typechain

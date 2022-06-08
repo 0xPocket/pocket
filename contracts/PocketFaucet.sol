@@ -1,20 +1,18 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.13;
+pragma solidity ^0.8.9;
 
-// TO DO : take off
-import "forge-std/console2.sol";
-//
-import "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
-import "openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol";
-import "openzeppelin-contracts/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 
 // TO DO : check multisig
 // TO DO : gouvernor should be -> TimelockController
 // TO DO : secure all func with roles
 // TO DO : test roles
 // TO DO : check require (areRelated)
-contract PocketFaucet is AccessControl {
-    using SafeERC20 for IERC20;
+
+contract PocketFaucet is AccessControlUpgradeable {
+    using SafeERC20Upgradeable for IERC20Upgradeable;
 
     bytes32 public constant WITHDRAW_ROLE = keccak256("WITHDRAW_ROLE");
     bytes32 public constant PARENT_ROLE = keccak256("PARENT_ROLE");
@@ -30,14 +28,18 @@ contract PocketFaucet is AccessControl {
     event configChanged(bool active, uint256 ceiling, address indexed child);
     event parentChanged(address indexed oldAddr, address newAddr);
 
-    address immutable baseToken;
+    address baseToken;
 
     mapping(address => address[]) public parentToChildren;
     mapping(address => config) public childToConfig;
 
-    constructor(address token) {
+    // constructor(address token) {
+    //     baseToken = token;
+    //     _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    // }
+
+    function initialize(address token) public initializer {
         baseToken = token;
-        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
     struct config {
@@ -111,11 +113,10 @@ contract PocketFaucet is AccessControl {
             }
         }
 
-        IERC20(baseToken).safeTransfer(
+        IERC20Upgradeable(baseToken).safeTransfer(
             msg.sender,
             childToConfig[child].balance
         );
-
 
         delete childToConfig[child];
         // revoke child role ??
@@ -181,11 +182,18 @@ contract PocketFaucet is AccessControl {
         public
         _areRelated(msg.sender, child)
     {
-        uint256 balanceBefore = IERC20(baseToken).balanceOf(address(this));
-        IERC20(baseToken).safeTransferFrom(msg.sender, address(this), amount);
+        uint256 balanceBefore = IERC20Upgradeable(baseToken).balanceOf(
+            address(this)
+        );
+        IERC20Upgradeable(baseToken).safeTransferFrom(
+            msg.sender,
+            address(this),
+            amount
+        );
 
         require(
-            balanceBefore + amount == IERC20(baseToken).balanceOf(address(this))
+            balanceBefore + amount ==
+                IERC20Upgradeable(baseToken).balanceOf(address(this))
         );
         childToConfig[child].balance += amount;
 
@@ -198,11 +206,13 @@ contract PocketFaucet is AccessControl {
     {
         config storage conf = childToConfig[child];
         uint256 childBalance = conf.balance;
-        require(amount <= childBalance, "!withdrawFundsFromChild: amount > childBalance");
-        if (amount == 0)
-            amount = childBalance;
+        require(
+            amount <= childBalance,
+            "!withdrawFundsFromChild: amount > childBalance"
+        );
+        if (amount == 0) amount = childBalance;
         conf.balance -= amount;
-        IERC20(baseToken).safeTransfer(msg.sender, amount);
+        IERC20Upgradeable(baseToken).safeTransfer(msg.sender, amount);
         emit fundsWithdrawn(msg.sender, amount, child);
     }
 
@@ -236,7 +246,7 @@ contract PocketFaucet is AccessControl {
         uint256 claimable = _calculateClaimable(conf);
         conf.balance -= claimable;
 
-        IERC20(baseToken).safeTransfer(msg.sender, claimable);
+        IERC20Upgradeable(baseToken).safeTransfer(msg.sender, claimable);
         emit moneyClaimed(msg.sender, claimable);
     }
 
@@ -262,7 +272,7 @@ contract PocketFaucet is AccessControl {
         public
         onlyRole(WITHDRAW_ROLE)
     {
-        IERC20(token).safeTransfer(msg.sender, amount);
+        IERC20Upgradeable(token).safeTransfer(msg.sender, amount);
         emit tokenWithdrawed(token, amount);
     }
 
