@@ -14,7 +14,12 @@ async function main() {
     parentWallet
   );
 
-  await parent.addChild(20, 0, "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc"); // Damian Musk's Wallet
+  const tx = await parent.addChild(
+    20,
+    0,
+    "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc"
+  ); // Damian Musk's Wallet
+  const res = await provider.sendTransaction(tx);
   console.log("Contract seeding complete !");
 }
 

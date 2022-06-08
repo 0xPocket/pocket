@@ -1,8 +1,9 @@
 node_modules
 cache/
 out/
-web/types/**
-*.env
 artifacts
 .openzeppelin
 typechain
+.turbo
+*.env
+ts/types
