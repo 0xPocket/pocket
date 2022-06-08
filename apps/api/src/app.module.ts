@@ -9,8 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { EmailModule } from './email/email.module';
 import { WalletModule } from './wallet/wallet.module';
 import { NotifyModule } from './notify/notify.module';
-import { PasswordService } from './password/password.service';
-import { PasswordModule } from './password/password.module';
+import { EthereumModule } from './ethereum/ethereum.module';
 
 @Module({
   imports: [
@@ -25,9 +24,9 @@ import { PasswordModule } from './password/password.module';
     EmailModule,
     WalletModule,
     NotifyModule,
-    PasswordModule,
+    EthereumModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PasswordService],
+  providers: [AppService],
 })
 export class AppModule {}

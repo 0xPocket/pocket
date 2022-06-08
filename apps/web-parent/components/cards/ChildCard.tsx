@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Web3Button from '../wallet/Web3Button';
 import { ParentContract } from 'pocket-contract/ts';
-import { useSmartContract } from '../../contexts/contract';
+import { useAxios } from '../../hooks/axios.hook';
 
 type ChildCardProps = {
   child: UserChild;
@@ -11,20 +11,14 @@ type ChildCardProps = {
 
 function ChildCard({ child }: ChildCardProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const { provider } = useSmartContract();
+  const axios = useAxios();
 
   const addToContract = (contract: ParentContract) => {
     contract.addChild(0, 0, child.web3Account.address).then(async (res) => {
-      console.log(await provider?.getGasPrice());
-      const response = await provider?.sendTransaction(res);
-      console.log('tx sent');
-      try {
-        const confirmation = await response?.wait();
-        console.log(confirmation);
-        console.log(response);
-      } catch (e) {
-        console.log(e);
-      }
+      const response = await axios.post('/api/ethereum/broadcast', {
+        hash: res,
+      });
+      console.log(response);
     });
   };
 

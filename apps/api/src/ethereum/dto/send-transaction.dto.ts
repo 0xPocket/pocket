@@ -1,6 +1,6 @@
 import { IsString } from 'class-validator';
 
-export class ConfirmEmailDto {
+export class SendTransactionDto {
   @IsString()
-  token: string;
+  hash: string;
 }

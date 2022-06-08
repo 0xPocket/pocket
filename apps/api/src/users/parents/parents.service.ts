@@ -1,19 +1,11 @@
 import { NestAuthUser } from '@lib/nest-auth';
 import { UserChild, UserParent } from '@lib/prisma';
-import {
-  BadRequestException,
-  ForbiddenException,
-  Injectable,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtAuthService } from 'src/auth/jwt/jwt-auth.service';
-import { LocalSigninDto } from 'src/auth/local/dto/local-signin.dto';
 import { EmailService } from 'src/email/email.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateChildrenDto } from './dto/create-children.dto';
-import { ParentSignupDto } from './dto/parent-signup.dto';
-import { WalletService } from 'src/wallet/wallet.service';
-import { PasswordService } from 'src/password/password.service';
 
 @Injectable()
 export class ParentsService {
@@ -22,8 +14,6 @@ export class ParentsService {
     private emailService: EmailService,
     private jwtAuthService: JwtAuthService,
     private configService: ConfigService,
-    private walletService: WalletService,
-    private passwordService: PasswordService,
   ) {}
 
   getParent(userId: string) {
@@ -36,114 +26,6 @@ export class ParentsService {
           select: {
             type: true,
           },
-        },
-      },
-    });
-  }
-
-  // LOCAL SIGNUP/SIGNIN
-
-  async localSignup(data: ParentSignupDto, verification = true) {
-    const user = await this.create(data, verification);
-    if (verification) {
-      await this.sendParentConfirmationEmail(user);
-    }
-    return user;
-  }
-
-  async localSignin(data: LocalSigninDto, providerId: string) {
-    const user = await this.prisma.userParent.findUnique({
-      where: {
-        email: data.email,
-      },
-      include: {
-        account: true,
-      },
-    });
-
-    if (!user) {
-      throw new BadRequestException("This user doesn't exists");
-    }
-
-    if (!user.emailVerified) {
-      throw new BadRequestException(
-        'You must verify your email before logging in',
-      );
-    }
-
-    if (user.account && user.account.provider !== providerId) {
-      throw new BadRequestException(
-        `You must connect with the provider associated with your account`,
-      );
-    }
-
-    if (
-      !this.passwordService.comparePassword(
-        data.password,
-        user.account.password,
-      )
-    ) {
-      throw new ForbiddenException('Invalid password');
-    }
-
-    return user;
-  }
-
-  async sendParentConfirmationEmail(user: UserParent) {
-    const confirmationToken =
-      this.jwtAuthService.generateEmailConfirmationToken(user.email);
-    const url = `${this.configService.get(
-      'NEXT_PUBLIC_URL',
-    )}/?token=${confirmationToken}`;
-    return this.emailService.sendConfirmationEmail(user, url);
-  }
-
-  async confirmEmail(token: string) {
-    try {
-      const payload = this.jwtAuthService.verifyEmailConfirmationToken(token);
-
-      return this.prisma.userParent
-        .update({
-          where: {
-            email: payload.email,
-          },
-          data: {
-            emailVerified: new Date(),
-          },
-        })
-        .catch(() => {
-          throw new BadRequestException('Invalid token');
-        });
-    } catch (e) {
-      throw new BadRequestException('Verification link is invalid or expired');
-    }
-  }
-
-  /**
-   * Method used to create the user for the parents (local)
-   * It will also send a confirmation email
-   * ! we need a token here to make sure it's only for the correct user
-   * ! separate service for wallet creation
-   * @param data - Object with the parent's infos
-   * @returns
-   */
-
-  async create(data: ParentSignupDto, verification = true) {
-    return this.prisma.userParent.create({
-      data: {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-        emailVerified: verification ? null : new Date(),
-        account: {
-          create: {
-            type: 'credentials',
-            provider: 'local',
-            password: this.passwordService.encryptPassword(data.password),
-          },
-        },
-        wallet: {
-          create: this.walletService.generateWallet(),
         },
       },
     });

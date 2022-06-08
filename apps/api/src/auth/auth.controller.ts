@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   Get,
   Post,
@@ -11,7 +10,6 @@ import { GetChild, GetParent } from './decorators/get-user.decorator';
 import { NestAuthData } from '@lib/nest-auth/nest/types';
 import { FacebookProfile, GoogleProfile } from '@lib/nest-auth/providers';
 import { AuthService } from './auth.service';
-import { LocalSigninDto } from './local/dto/local-signin.dto';
 import { AuthGuard } from './auth.guard';
 import { UserSessionPayload } from './session/dto/user-session.dto';
 import { UserSession } from './session/user-session.interface';
@@ -86,10 +84,5 @@ export class AuthController {
       data.provider,
       session,
     );
-  }
-
-  @Post('local')
-  local(@Body() body: LocalSigninDto, @GetSession() session: UserSession) {
-    return this.authService.authenticateParentLocal(body, 'local', session);
   }
 }
