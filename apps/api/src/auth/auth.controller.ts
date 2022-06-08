@@ -4,6 +4,7 @@ import {
   Post,
   UseGuards,
   Session as GetSession,
+  Body,
 } from '@nestjs/common';
 import { GetNestAuth, NestAuth } from '@lib/nest-auth/nest';
 import { GetChild, GetParent } from './decorators/get-user.decorator';
@@ -14,6 +15,7 @@ import { AuthGuard } from './auth.guard';
 import { UserSessionPayload } from './session/dto/user-session.dto';
 import { UserSession } from './session/user-session.interface';
 import { UserType } from './decorators/user-type.decorator';
+import { LocalSigninDto } from './local/dto/local-signin.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -84,5 +86,10 @@ export class AuthController {
       data.provider,
       session,
     );
+  }
+
+  @Post('local')
+  local(@Body() body: LocalSigninDto, @GetSession() session: UserSession) {
+    return this.authService.authenticateParentLocal(body, 'local', session);
   }
 }

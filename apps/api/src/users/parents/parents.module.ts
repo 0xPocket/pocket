@@ -5,9 +5,10 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 import { ParentExistsRule } from './validators/ParentExists.validator';
 import { EmailModule } from 'src/email/email.module';
 import { JwtAuthModule } from 'src/auth/jwt/jwt-auth.module';
+import { PasswordModule } from 'src/password/password.module';
 
 @Module({
-  imports: [PrismaModule, EmailModule, JwtAuthModule],
+  imports: [PrismaModule, EmailModule, JwtAuthModule, PasswordModule],
   controllers: [ParentsController],
   providers: [ParentsService, ParentExistsRule],
   exports: [ParentsService],

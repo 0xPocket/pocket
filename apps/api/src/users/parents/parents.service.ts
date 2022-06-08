@@ -1,9 +1,15 @@
 import { NestAuthUser } from '@lib/nest-auth';
 import { UserChild, UserParent } from '@lib/prisma';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtAuthService } from 'src/auth/jwt/jwt-auth.service';
+import { LocalSigninDto } from 'src/auth/local/dto/local-signin.dto';
 import { EmailService } from 'src/email/email.service';
+import { PasswordService } from 'src/password/password.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateChildrenDto } from './dto/create-children.dto';
 
@@ -14,6 +20,7 @@ export class ParentsService {
     private emailService: EmailService,
     private jwtAuthService: JwtAuthService,
     private configService: ConfigService,
+    private passwordService: PasswordService,
   ) {}
 
   getParent(userId: string) {
@@ -29,6 +36,44 @@ export class ParentsService {
         },
       },
     });
+  }
+
+  async localSignin(data: LocalSigninDto, providerId: string) {
+    const user = await this.prisma.userParent.findUnique({
+      where: {
+        email: data.email,
+      },
+      include: {
+        account: true,
+      },
+    });
+
+    if (!user) {
+      throw new BadRequestException("This user doesn't exists");
+    }
+
+    if (!user.emailVerified) {
+      throw new BadRequestException(
+        'You must verify your email before logging in',
+      );
+    }
+
+    if (user.account && user.account.provider !== providerId) {
+      throw new BadRequestException(
+        `You must connect with the provider associated with your account`,
+      );
+    }
+
+    if (
+      !this.passwordService.comparePassword(
+        data.password,
+        user.account.password,
+      )
+    ) {
+      throw new ForbiddenException('Invalid password');
+    }
+
+    return user;
   }
 
   /**

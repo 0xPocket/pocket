@@ -6,6 +6,7 @@ import { ChildrenService } from 'src/users/children/children.service';
 import { UserSession } from './session/user-session.interface';
 import { SessionService } from './session/session.service';
 import { UserSessionPayload } from './session/dto/user-session.dto';
+import { LocalSigninDto } from './local/dto/local-signin.dto';
 
 @Injectable()
 export class AuthService {
@@ -34,6 +35,18 @@ export class AuthService {
     session: UserSession = null,
   ) {
     const user = await this.parentsService.createOrGetOAuth(data, providerId);
+    if (session) this.sessionService.setUserSession(session, user.id);
+    return {
+      access_token: this.jwtService.generateAuthenticationToken(user.id),
+    };
+  }
+
+  async authenticateParentLocal(
+    data: LocalSigninDto,
+    providerId: string,
+    session: UserSession = null,
+  ) {
+    const user = await this.parentsService.localSignin(data, providerId);
     if (session) this.sessionService.setUserSession(session, user.id);
     return {
       access_token: this.jwtService.generateAuthenticationToken(user.id),
