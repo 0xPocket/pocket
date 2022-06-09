@@ -1,7 +1,7 @@
 import { ParentContract } from 'pocket-contract/ts';
 import { FormInputText } from '@lib/ui';
 import { Wallet } from 'ethers';
-import { useState } from 'react';
+import { MouseEvent, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useWallet } from '../../contexts/wallet';
@@ -32,7 +32,7 @@ function Web3Button({
   } = useForm<FormValues>();
   const [showModal, setShowModal] = useState(false);
 
-  const onClick = (e) => {
+  const onClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setShowModal(true);
   };
@@ -59,12 +59,16 @@ function Web3Button({
 
   return (
     <>
-      <button onClick={onClick} type={type}>
+      <button
+        onClick={onClick}
+        type={type}
+        className="relative flex items-center justify-center overflow-hidden whitespace-nowrap rounded-md bg-primary px-4 py-3 text-bright dark:bg-primary-dark"
+      >
         {children}
       </button>
       {showModal && (
         <div className="absolute inset-0 flow-root">
-          <div className="fixed inset-0 flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-10 flex items-center justify-center p-4">
             <div className="mx-auto rounded-md bg-dark p-4">
               <div className="flex items-center gap-4 pb-4 ">
                 <h2 className="">Unlock Wallet</h2>

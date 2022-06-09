@@ -1,7 +1,7 @@
 import { UserChild } from '@lib/types/interfaces';
 import { useQuery } from 'react-query';
 import { useAxios } from '../../hooks/axios.hook';
-import ChildCard from '../cards/ChildCard';
+import ChildCard from '../cards/childcard/ChildCard';
 import { useRouter } from 'next/router';
 import { Button } from '@lib/ui';
 
@@ -28,7 +28,7 @@ function ChildrenAccountPanel({}: ChildrenAccountPanelProps) {
           Add Account
         </Button>
       </div>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-4 gap-4">
         {isLoading ? (
           <div>Loading...</div>
         ) : (

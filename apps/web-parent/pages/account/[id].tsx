@@ -21,7 +21,7 @@ function Account({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const axios = useAxios();
 
-  const { isLoading, data } = useQuery<UserChild>(
+  const { isLoading, data: child } = useQuery<UserChild>(
     'child',
     () =>
       axios
@@ -35,9 +35,13 @@ function Account({
       <SectionContainer>
         {isLoading ? (
           <>Loading</>
-        ) : data ? (
+        ) : child ? (
           <div>
-            <h1 className="mb-8"> {data?.firstName} </h1>
+            <div className="mb-8">
+              <h1>{child?.firstName}</h1>
+              <h3>{child.email}</h3>
+              <p>Status: </p>
+            </div>
             <Tab.Group>
               <Tab.List className="mb-8 flex gap-4">
                 <Tab className="border p-4">Overview</Tab>

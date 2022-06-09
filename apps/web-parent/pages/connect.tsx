@@ -3,7 +3,7 @@ import MainWrapper from '../components/wrappers/MainWrapper';
 import SocialAuth from '../components/auth/SocialAuth';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import SignUpForm from '../components/forms/SignUpForm';
+import SignUpForm from '../components/forms/ConnectForm';
 
 function SignUp() {
   const router = useRouter();

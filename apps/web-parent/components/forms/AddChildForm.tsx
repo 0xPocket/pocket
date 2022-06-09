@@ -3,6 +3,9 @@ import { useAxios } from '../../hooks/axios.hook';
 import { useMutation, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { FormInputText } from '@lib/ui';
+import { useRouter } from 'next/router';
+import { AxiosError } from 'axios';
+import { BackResError } from '@lib/types/interfaces';
 
 type AddChildFormProps = {};
 
@@ -13,14 +16,16 @@ type FormValues = {
 };
 
 function AddChildForm({}: AddChildFormProps) {
+  const router = useRouter();
+  const axios = useAxios();
+  const queryClient = useQueryClient();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
 
-  const axios = useAxios();
-  const queryClient = useQueryClient();
   const mutation = useMutation(
     (data: FormValues) =>
       axios.put('http://localhost:5000/users/parents/children', data),
@@ -28,21 +33,17 @@ function AddChildForm({}: AddChildFormProps) {
       onSuccess: () => {
         queryClient.invalidateQueries('children');
         queryClient.invalidateQueries('balance');
+        router.push('/dashboard');
         toast.success(`Account created !`);
       },
-      onError: () => {
-        toast.error(`DB call went wrong !`);
+      onError: (e: AxiosError<BackResError>) => {
+        toast.error(e.response?.data.message);
       },
     },
   );
 
   const onSubmit = (data: FormValues) => {
-    try {
-      mutation.mutate(data);
-      console.log('Contrat (addNewChild): success !');
-    } catch (e) {
-      console.error('Contrat (addNewChild): error :', e);
-    }
+    mutation.mutate(data);
   };
 
   return (

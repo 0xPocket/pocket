@@ -6,6 +6,7 @@ import {
 } from "@lib/prisma";
 import { UserChild as Child } from "@lib/prisma";
 export * from "./Test.interface";
+export * from "./BackResError.interface";
 
 export interface UserParent extends Parent {
   children: UserChild[];
