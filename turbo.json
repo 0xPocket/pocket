@@ -19,16 +19,11 @@
       "cache": false
     },
     "pocket-contract#build": {
-      "outputs": ["foundry/out/**"],
-      "inputs": ["foundry/src/*.sol"]
-    },
-    "pocket-contract#generate": {
-      "dependsOn": ["build"],
-      "inputs": ["foundry/src/*.sol"],
-      "outputs": ["ts/types/**"]
+      "outputs": ["artifacts/**/*", "typechain-types/**/*"],
+      "inputs": ["contracts/**/*.sol"]
     },
     "pocket-contract#deploy": {
-      "dependsOn": ["generate", "healthcheck"],
+      "dependsOn": ["pocket-contract#build", "healthcheck"],
       "cache": false
     },
     "pocket-contract#seed": {
@@ -56,7 +51,12 @@
     },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**", "foundry/out/**", "ts/types/**"]
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        "artifacts/**/*",
+        "typechain-types/**/*"
+      ]
     },
     "dev": {
       "cache": false
