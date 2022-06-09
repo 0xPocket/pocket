@@ -12,17 +12,6 @@ export class EthereumController {
   @UserType('parent')
   @UseGuards(AuthGuard)
   async broadcastTransaction(@Body() body: SendTransactionDto) {
-    const test = await this.ethereumService.sendTransaction(body);
-
-    try {
-      await test.wait().then(() => {
-        console.log('response');
-        console.log(body.childAddress + ' added !');
-      });
-    } catch (e) {
-      console.log(e);
-    }
-
-    return 'OK';
+    return this.ethereumService.sendTransaction(body);
   }
 }

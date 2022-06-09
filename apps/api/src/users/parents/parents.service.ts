@@ -118,9 +118,6 @@ export class ParentsService {
             providerAccountId: data.id,
           },
         },
-        // wallet: {
-        //   create: this.walletService.generateWallet(),
-        // },
       },
       update: {},
     });
@@ -139,7 +136,8 @@ export class ParentsService {
 
   /**
    * ! What to do if a child with the same email is pending ?
-   *
+   * ! Different error message for unique email and fail mail sending
+   * ! Delete child if mail fails
    * @param parentId id of the parent
    * @param data object containing data to create the child
    * @returns
@@ -170,11 +168,32 @@ export class ParentsService {
           },
         }),
       ]);
+
       if (verification) await this.sendChildSignupEmail(child, parent);
+
       return child;
     } catch (e) {
       throw new BadRequestException("Could't create child");
     }
+  }
+
+  async validateChildren(childAddress: string) {
+    const child = await this.prisma.userChild.findFirst({
+      where: {
+        web3Account: {
+          address: childAddress,
+        },
+      },
+    });
+
+    return this.prisma.userChild.update({
+      where: {
+        id: child.id,
+      },
+      data: {
+        status: 'ACTIVE',
+      },
+    });
   }
 
   async sendChildSignupEmail(child: UserChild, parent: UserParent) {

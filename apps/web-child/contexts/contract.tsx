@@ -1,5 +1,4 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import PocketFaucet from 'pocket-contract/foundry/out/PocketFaucet.sol/PocketFaucet.json';
 import { Contract } from 'ethers';
 import { useWeb3Auth } from './web3hook';
 
@@ -28,12 +27,12 @@ export const SmartContractProvider = ({
 
   // console.log(abi);
   useEffect(() => {
-    const newContract = new Contract(
-      '0x62a4b53a1de480be4bdb9c10d0f7de69aeb30abd',
-      PocketFaucet.abi,
-    );
-    setContract(newContract);
-    console.log('new contract set');
+    // const newContract = new Contract(
+    //   '0x62a4b53a1de480be4bdb9c10d0f7de69aeb30abd',
+    //   PocketFaucet.abi,
+    // );
+    // setContract(newContract);
+    // console.log('new contract set');
   }, [provider]);
 
   return (

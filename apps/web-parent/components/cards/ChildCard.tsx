@@ -24,43 +24,24 @@ function ChildCard({ child }: ChildCardProps) {
     });
   };
 
-  if (!child.validated)
-    return (
-      <>
-        <div
-          className="relative flex aspect-square items-end overflow-hidden rounded-lg border border-dark border-opacity-5 bg-white p-4 shadow-lg dark:border-white-darker dark:bg-dark-light"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          <div>
-            <h2 className="">{child?.firstName}</h2>
-            {!child.web3Account && <div>Pending...</div>}
-            {!child.validated && (
-              <Web3Button contract={addToContract}>Validate</Web3Button>
-            )}
-            <p>Available funds : {'placeholder'}</p>
-          </div>
-        </div>
-      </>
-    );
-
   return (
     <>
-      <Link href={`/account/${child.id}`}>
-        <div
-          className="relative flex aspect-square items-end overflow-hidden rounded-lg border border-dark border-opacity-5 bg-white p-4 shadow-lg dark:border-white-darker dark:bg-dark-light"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          <div>
-            <h2 className="">{child?.firstName}</h2>
-            {!child.web3Account && <div>Pending...</div>}
-            <p>Validated : {child.validated ? 'true' : 'false'}</p>
-            {!child.validated && (
-              <Web3Button contract={addToContract}>Validate</Web3Button>
-            )}
-            <p>Available funds : {'placeholder'}</p>
-          </div>
+      {/* <Link href={`/account/${child.id}`}> */}
+      <div
+        className="relative flex aspect-square items-end overflow-hidden rounded-lg border border-dark border-opacity-5 bg-white p-4 shadow-lg dark:border-white-darker dark:bg-dark-light"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <div>
+          <h2 className="">{child?.firstName}</h2>
+          {!child.web3Account && <div>Pending...</div>}
+          <p>Validated : {child.status === 'ACTIVE' ? 'true' : 'false'}</p>
+          {child.status === 'LINKED' && (
+            <Web3Button contract={addToContract}>Validate</Web3Button>
+          )}
+          <p>Available funds : {'placeholder'}</p>
         </div>
-      </Link>
+      </div>
+      {/* </Link> */}
     </>
   );
 }

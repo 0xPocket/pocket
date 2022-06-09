@@ -7,7 +7,6 @@ export class CreateChildrenDto {
   @IsString()
   lastName: string;
 
-  @IsString()
   @IsEmail()
   email: string;
 }
