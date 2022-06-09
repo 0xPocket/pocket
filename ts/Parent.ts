@@ -1,6 +1,5 @@
-import { BigNumber, BigNumberish, Signer, Wallet } from "ethers";
-import { PocketFaucet__factory } from "../typechain";
-import { PocketFaucet } from "../typechain/PocketFaucet";
+import { BigNumber, BigNumberish, Signer, Wallet } from 'ethers';
+import { PocketFaucet__factory, PocketFaucet } from '../typechain-types';
 
 // import
 class ParentContract {

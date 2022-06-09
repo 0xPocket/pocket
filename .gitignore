@@ -3,7 +3,7 @@ cache/
 out/
 artifacts
 .openzeppelin
-typechain
+typechain-types
 .turbo
 *.env
 ts/types

@@ -1,6 +1,5 @@
-import { Wallet } from "ethers";
-import { PocketFaucet__factory } from "../typechain";
-import { PocketFaucet } from "../typechain/PocketFaucet";
+import { Wallet } from 'ethers';
+import { PocketFaucet__factory, PocketFaucet } from '../typechain-types';
 
 class AdminContract {
   library: any;
