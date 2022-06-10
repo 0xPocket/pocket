@@ -38,7 +38,7 @@ export class ParentsService {
     });
   }
 
-  async localSignin(data: LocalSigninDto, providerId: string) {
+  async localSignin(data: LocalSigninDto) {
     const user = await this.prisma.userParent.findUnique({
       where: {
         email: data.email,
@@ -48,29 +48,14 @@ export class ParentsService {
       },
     });
 
-    if (!user) {
-      throw new BadRequestException("This user doesn't exists");
-    }
-
-    if (!user.emailVerified) {
-      throw new BadRequestException(
-        'You must verify your email before logging in',
-      );
-    }
-
-    if (user.account && user.account.provider !== providerId) {
-      throw new BadRequestException(
-        `You must connect with the provider associated with your account`,
-      );
-    }
-
     if (
+      !user ||
       !this.passwordService.comparePassword(
         data.password,
         user.account.password,
       )
     ) {
-      throw new ForbiddenException('Invalid password');
+      throw new ForbiddenException('Invalid credentials');
     }
 
     return user;
@@ -123,10 +108,10 @@ export class ParentsService {
     });
   }
 
-  async getParentChildren(userId: string) {
+  async getParentChildren(parentId: string) {
     return this.prisma.userChild.findMany({
       where: {
-        userParentId: userId,
+        userParentId: parentId,
       },
       include: {
         web3Account: true,

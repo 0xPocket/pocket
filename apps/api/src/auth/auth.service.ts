@@ -43,10 +43,9 @@ export class AuthService {
 
   async authenticateParentLocal(
     data: LocalSigninDto,
-    providerId: string,
     session: UserSession = null,
   ) {
-    const user = await this.parentsService.localSignin(data, providerId);
+    const user = await this.parentsService.localSignin(data);
     if (session) this.sessionService.setUserSession(session, user.id);
     return {
       access_token: this.jwtService.generateAuthenticationToken(user.id),

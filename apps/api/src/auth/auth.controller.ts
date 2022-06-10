@@ -90,6 +90,6 @@ export class AuthController {
 
   @Post('local')
   local(@Body() body: LocalSigninDto, @GetSession() session: UserSession) {
-    return this.authService.authenticateParentLocal(body, 'local', session);
+    return this.authService.authenticateParentLocal(body, session);
   }
 }
