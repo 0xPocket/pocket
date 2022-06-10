@@ -28,7 +28,7 @@ contract PocketFaucet is AccessControlUpgradeable {
     event configChanged(bool active, uint256 ceiling, address indexed child);
     event parentChanged(address indexed oldAddr, address newAddr);
 
-    address baseToken;
+    address public baseToken;
 
     mapping(address => address[]) public parentToChildren;
     mapping(address => config) public childToConfig;

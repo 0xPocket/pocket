@@ -1,19 +1,13 @@
-import { ethers } from 'hardhat';
+import { ethers, upgrades } from 'hardhat';
 import { expect } from 'chai';
+import { PocketFaucet__factory, PocketFaucet } from "../typechain-types";
 
-describe('Greeter', function () {
-  it("Should return the new greeting once it's changed", async function () {
-    const Greeter = await ethers.getContractFactory('Greeter');
-    const greeter = await Greeter.deploy('Hello, world!');
-    await greeter.deployed();
+describe('Deploy', function () {
+	it("Should have set baseToken", async function () {
+		const PocketFaucet: PocketFaucet__factory = await ethers.getContractFactory('PocketFaucet');
+		const pocketFaucet = await upgrades.deployProxy(PocketFaucet, ["0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c"]) as PocketFaucet;
+		await pocketFaucet.deployed();
 
-    expect(await greeter.greet()).to.equal('Hello, world!');
-
-    const setGreetingTx = await greeter.setGreeting('Hola, mundo!');
-
-    // wait until the transaction is mined
-    await setGreetingTx.wait();
-
-    expect(await greeter.greet()).to.equal('Hola, mundo!');
-  });
+		expect(await pocketFaucet.baseToken()).to.equal('0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c');
+	});
 });

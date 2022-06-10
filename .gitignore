@@ -6,4 +6,3 @@ artifacts
 typechain-types
 .turbo
 *.env
-ts/types
