@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import PocketFaucet from 'pocket-contract/foundry/out/PocketFaucet.sol/PocketFaucet.json';
+// import PocketFaucet from 'pocket-contract/foundry/out/PocketFaucet.sol/PocketFaucet.json';
 import { Contract } from 'ethers';
 import { useWeb3Auth } from './web3hook';
 
