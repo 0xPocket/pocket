@@ -3,6 +3,7 @@ import { useQuery } from 'react-query';
 import axios from 'axios';
 import { UserParentWallet } from '.prisma/client';
 import { useAuth } from '@lib/nest-auth/next';
+import { UserParent } from '@lib/types/interfaces';
 
 interface WalletProviderProps {
   children: React.ReactNode;
@@ -20,7 +21,7 @@ export function createCtx<A extends {} | null>() {
 const [WalletContext, WalletContextProvider] = createCtx<IWalletContext>();
 
 export const WalletProvider = ({ children }: WalletProviderProps) => {
-  const { user } = useAuth();
+  const { user } = useAuth<UserParent>();
   const { data: wallet, refetch } = useQuery<UserParentWallet>(
     'wallet',
     async () => {
@@ -30,12 +31,14 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
     {
       enabled: false,
       retry: false,
-      staleTime: 60 * 5 * 1000,
+      staleTime: 60 * 1000,
     },
   );
 
   useEffect(() => {
-    if (user) refetch();
+    if (user) {
+      refetch();
+    }
   }, [user, refetch]);
 
   return (

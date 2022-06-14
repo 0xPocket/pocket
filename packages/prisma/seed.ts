@@ -35,7 +35,7 @@ async function main() {
       firstName: "Damian",
       lastName: "Musk",
       email: "damianmusk@gmail.com",
-      validated: true,
+      status: "ACTIVE",
       userParent: {
         connect: {
           id: "elonmusk",
@@ -44,6 +44,27 @@ async function main() {
       web3Account: {
         create: {
           address: "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc", // Account #2 from Anvil
+          nonce: "adgadghahasfah",
+        },
+      },
+    },
+  });
+
+  await prisma.userChild.create({
+    data: {
+      id: "xaviermusk",
+      firstName: "Xavier",
+      lastName: "Musk",
+      email: "xaviermusk@gmail.com",
+      status: "LINKED",
+      userParent: {
+        connect: {
+          id: "elonmusk",
+        },
+      },
+      web3Account: {
+        create: {
+          address: "0x90F79bf6EB2c4f870365E785982E1f101E93b906", // Account #2 from Anvil
           nonce: "adgadghahasfah",
         },
       },

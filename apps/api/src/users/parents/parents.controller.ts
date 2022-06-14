@@ -1,12 +1,10 @@
-import { Body, Controller, Get, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Put, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { GetParent } from 'src/auth/decorators/get-user.decorator';
 import { UserType } from 'src/auth/decorators/user-type.decorator';
 import { UserSessionPayload } from 'src/auth/session/dto/user-session.dto';
-import { ConfirmEmailDto } from './dto/confirm-email.dto';
 import { CreateChildrenDto } from './dto/create-children.dto';
-import { ParentSignupDto } from './dto/parent-signup.dto';
 import { ParentsService } from './parents.service';
 
 @Controller('users/parents')
@@ -14,28 +12,6 @@ import { ParentsService } from './parents.service';
 @UserType('parent')
 export class ParentsController {
   constructor(private readonly parentsService: ParentsService) {}
-
-  /**
-   * Route to locally signup for parents
-   * @param body
-   * @returns
-   */
-
-  @Put()
-  signup(@Body() body: ParentSignupDto) {
-    return this.parentsService.localSignup(body);
-  }
-
-  /**
-   * Route to confirm email
-   * @param body
-   * @returns
-   */
-
-  @Post('confirm-email')
-  confirmEmail(@Body() body: ConfirmEmailDto) {
-    return this.parentsService.confirmEmail(body.token);
-  }
 
   /**
    * Route to GET all parent's children

@@ -1,9 +1,9 @@
-import { IsString } from 'class-validator';
+import { IsEthereumAddress, IsString } from 'class-validator';
 
 export class CreateWalletDto {
-  @IsString()
-  password: string;
+  @IsEthereumAddress()
+  publicKey: string;
 
   @IsString()
-  privateKey: string;
+  encryptedPrivateKey: string;
 }

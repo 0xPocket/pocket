@@ -25,7 +25,7 @@
     "commitizen": "^4.2.4",
     "cz-conventional-changelog": "^3.3.0",
     "dotenv-checker": "^1.1.5",
-    "prettier": "^2.6.2"
+    "prettier": "^2.7.0"
   },
   "config": {
     "commitizen": {

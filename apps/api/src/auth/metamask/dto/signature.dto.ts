@@ -1,11 +1,11 @@
 import { Transform, TransformFnParams } from 'class-transformer';
-import { IsString } from 'class-validator';
+import { IsEthereumAddress, IsString } from 'class-validator';
 
 export class MetamaskSignatureDto {
   @IsString()
   signature: string;
 
-  @IsString()
+  @IsEthereumAddress()
   @Transform((params: TransformFnParams) => params.value.toLowerCase())
   walletAddress: string;
 }

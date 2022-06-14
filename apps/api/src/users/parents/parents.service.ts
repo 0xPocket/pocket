@@ -9,11 +9,9 @@ import { ConfigService } from '@nestjs/config';
 import { JwtAuthService } from 'src/auth/jwt/jwt-auth.service';
 import { LocalSigninDto } from 'src/auth/local/dto/local-signin.dto';
 import { EmailService } from 'src/email/email.service';
+import { PasswordService } from 'src/password/password.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateChildrenDto } from './dto/create-children.dto';
-import { ParentSignupDto } from './dto/parent-signup.dto';
-import { WalletService } from 'src/wallet/wallet.service';
-import { PasswordService } from 'src/password/password.service';
 
 @Injectable()
 export class ParentsService {
@@ -22,7 +20,6 @@ export class ParentsService {
     private emailService: EmailService,
     private jwtAuthService: JwtAuthService,
     private configService: ConfigService,
-    private walletService: WalletService,
     private passwordService: PasswordService,
   ) {}
 
@@ -41,17 +38,7 @@ export class ParentsService {
     });
   }
 
-  // LOCAL SIGNUP/SIGNIN
-
-  async localSignup(data: ParentSignupDto, verification = true) {
-    const user = await this.create(data, verification);
-    if (verification) {
-      await this.sendParentConfirmationEmail(user);
-    }
-    return user;
-  }
-
-  async localSignin(data: LocalSigninDto, providerId: string) {
+  async localSignin(data: LocalSigninDto) {
     const user = await this.prisma.userParent.findUnique({
       where: {
         email: data.email,
@@ -61,92 +48,17 @@ export class ParentsService {
       },
     });
 
-    if (!user) {
-      throw new BadRequestException("This user doesn't exists");
-    }
-
-    if (!user.emailVerified) {
-      throw new BadRequestException(
-        'You must verify your email before logging in',
-      );
-    }
-
-    if (user.account && user.account.provider !== providerId) {
-      throw new BadRequestException(
-        `You must connect with the provider associated with your account`,
-      );
-    }
-
     if (
+      !user ||
       !this.passwordService.comparePassword(
         data.password,
         user.account.password,
       )
     ) {
-      throw new ForbiddenException('Invalid password');
+      throw new ForbiddenException('Invalid credentials');
     }
 
     return user;
-  }
-
-  async sendParentConfirmationEmail(user: UserParent) {
-    const confirmationToken =
-      this.jwtAuthService.generateEmailConfirmationToken(user.email);
-    const url = `${this.configService.get(
-      'NEXT_PUBLIC_URL',
-    )}/?token=${confirmationToken}`;
-    return this.emailService.sendConfirmationEmail(user, url);
-  }
-
-  async confirmEmail(token: string) {
-    try {
-      const payload = this.jwtAuthService.verifyEmailConfirmationToken(token);
-
-      return this.prisma.userParent
-        .update({
-          where: {
-            email: payload.email,
-          },
-          data: {
-            emailVerified: new Date(),
-          },
-        })
-        .catch(() => {
-          throw new BadRequestException('Invalid token');
-        });
-    } catch (e) {
-      throw new BadRequestException('Verification link is invalid or expired');
-    }
-  }
-
-  /**
-   * Method used to create the user for the parents (local)
-   * It will also send a confirmation email
-   * ! we need a token here to make sure it's only for the correct user
-   * ! separate service for wallet creation
-   * @param data - Object with the parent's infos
-   * @returns
-   */
-
-  async create(data: ParentSignupDto, verification = true) {
-    return this.prisma.userParent.create({
-      data: {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-        emailVerified: verification ? null : new Date(),
-        account: {
-          create: {
-            type: 'credentials',
-            provider: 'local',
-            password: this.passwordService.encryptPassword(data.password),
-          },
-        },
-        wallet: {
-          create: this.walletService.generateWallet(),
-        },
-      },
-    });
   }
 
   /**
@@ -167,12 +79,10 @@ export class ParentsService {
       },
     });
 
-    if (user) {
-      if (user.account.provider !== providerId) {
-        throw new BadRequestException(
-          `You must connect your account with ${user.account.provider}`,
-        );
-      }
+    if (user && user.account.provider !== providerId) {
+      throw new BadRequestException(
+        `You must connect your account with ${user.account.provider}`,
+      );
     }
 
     return this.prisma.userParent.upsert({
@@ -191,18 +101,15 @@ export class ParentsService {
             providerAccountId: data.id,
           },
         },
-        // wallet: {
-        //   create: this.walletService.generateWallet(),
-        // },
       },
       update: {},
     });
   }
 
-  async getParentChildren(userId: string) {
+  async getParentChildren(parentId: string) {
     return this.prisma.userChild.findMany({
       where: {
-        userParentId: userId,
+        userParentId: parentId,
       },
       include: {
         web3Account: true,
@@ -212,7 +119,8 @@ export class ParentsService {
 
   /**
    * ! What to do if a child with the same email is pending ?
-   *
+   * ! Different error message for unique email and fail mail sending
+   * ! Delete child if mail fails
    * @param parentId id of the parent
    * @param data object containing data to create the child
    * @returns
@@ -223,31 +131,70 @@ export class ParentsService {
     data: CreateChildrenDto,
     verification = true,
   ) {
+    const parent = await this.prisma.userParent.findUnique({
+      where: {
+        id: parentId,
+      },
+    });
+
+    let child: UserChild;
+
     try {
-      const [parent, child] = await Promise.all([
-        this.prisma.userParent.findUnique({
-          where: {
-            id: parentId,
-          },
-        }),
-        this.prisma.userChild.create({
-          data: {
-            firstName: data.firstName,
-            lastName: data.lastName,
-            email: data.email,
-            userParent: {
-              connect: {
-                id: parentId,
-              },
+      child = await this.prisma.userChild.create({
+        data: {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          userParent: {
+            connect: {
+              id: parentId,
             },
           },
-        }),
-      ]);
-      if (verification) await this.sendChildSignupEmail(child, parent);
-      return child;
+        },
+      });
     } catch (e) {
-      throw new BadRequestException("Could't create child");
+      throw new BadRequestException(
+        'A child with the same email already exists',
+      );
     }
+
+    try {
+      if (verification) await this.sendChildSignupEmail(child, parent);
+    } catch (e) {
+      await this.prisma.userChild.delete({
+        where: {
+          id: child.id,
+        },
+      });
+    }
+
+    return child;
+  }
+
+  async validateChildren(childAddress: string) {
+    const child = await this.prisma.userChild.findFirst({
+      where: {
+        web3Account: {
+          address: {
+            equals: childAddress,
+            mode: 'insensitive',
+          },
+        },
+      },
+    });
+
+    if (!child) {
+      throw new BadRequestException("Child doesn't exists");
+    }
+
+    return this.prisma.userChild.update({
+      where: {
+        id: child.id,
+      },
+      data: {
+        status: 'ACTIVE',
+      },
+    });
   }
 
   async sendChildSignupEmail(child: UserChild, parent: UserParent) {
