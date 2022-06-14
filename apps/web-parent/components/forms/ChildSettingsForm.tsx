@@ -7,7 +7,6 @@ type ChildSettingsFormProps = {
 };
 
 type FormValues = {
-  topup: number;
   ceiling: number;
   periodicity: number;
 };
@@ -27,26 +26,6 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
       className="flex items-center justify-between gap-4 rounded-lg bg-dark-light p-4"
     >
       <h2>Settings</h2>
-      <div className="flex flex-col">
-        <label htmlFor="topup">Add funds to {child.firstName} account</label>
-        <input
-          className="border p-2"
-          min="0"
-          placeholder="5 $USDC"
-          type="number"
-          {...register('topup', {
-            min: {
-              value: 0,
-              message: 'Topup cannot be negative',
-            },
-            max: {
-              value: 20,
-              message: 'Insufisant funds',
-            },
-          })}
-        />
-        {errors.topup && <FormErrorMessage message={errors.topup.message} />}
-      </div>
 
       <div className="flex flex-col">
         <label htmlFor="topup">Weekly ceiling</label>

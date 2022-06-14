@@ -5,6 +5,7 @@ import MainWrapper from '../../components/wrappers/MainWrapper';
 import { SectionContainer } from '@lib/ui';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import ChildSettingsForm from '../../components/forms/ChildSettingsForm';
+import AddfundsForm from '../../components/forms/AddfundsForm';
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.query.id;
@@ -41,17 +42,21 @@ function Account({
               <div>
                 <h1 className="mb-4">{child?.firstName}</h1>
                 <h3>{child.email}</h3>
-                <h3>{child.web3Account?.address}</h3>
-
-                <p>Status: </p>
+                <p>Status: {child.status}</p>
               </div>
-              <div className="flex flex-col items-end">
-                <p>Available funds</p>
+              <div className="flex max-w-md flex-col items-end rounded-md bg-dark-light p-4">
+                <span className="max-w-xs rounded-md bg-bright px-2 text-sm text-dark-light">
+                  {child.web3Account?.address}
+                </span>
+                <p>Balance</p>
                 <span className=" text-4xl">50</span>
                 <span>usdc</span>
               </div>
             </div>
-            <ChildSettingsForm child={child} />
+            <div className="flex justify-center gap-4">
+              <AddfundsForm child={child} />
+              <ChildSettingsForm child={child} />
+            </div>
             <div>
               <h2 className="mt-16  p-4">Overview</h2>
               <div className="grid  grid-cols-2 gap-8">
