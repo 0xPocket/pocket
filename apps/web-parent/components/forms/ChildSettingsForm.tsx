@@ -9,6 +9,7 @@ type ChildSettingsFormProps = {
 type FormValues = {
   topup: number;
   ceiling: number;
+  periodicity: number;
 };
 
 function ChildSettingsForm({ child }: ChildSettingsFormProps) {
@@ -23,14 +24,14 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex w-72 flex-col gap-4"
+      className="flex items-center justify-between gap-4 rounded-lg bg-dark-light p-4"
     >
       <div className="flex flex-col">
         <label htmlFor="topup">Add funds to {child.firstName} account</label>
         <input
           className="border p-2"
           min="0"
-          placeholder="5 $JEUR"
+          placeholder="5 $USDC"
           type="number"
           {...register('topup', {
             min: {
@@ -47,11 +48,11 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
       </div>
 
       <div className="flex flex-col">
-        <label htmlFor="topup">Change {child.firstName} weekly ceiling</label>
+        <label htmlFor="topup">Weekly ceiling</label>
 
         <input
           className="border p-2"
-          placeholder="5$JEUR"
+          placeholder="5$USDC"
           min="0"
           {...register('ceiling', {
             min: {
@@ -63,6 +64,26 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
         />
         {errors.ceiling && (
           <FormErrorMessage message={errors.ceiling.message} />
+        )}
+      </div>
+
+      <div className="flex flex-col">
+        <label htmlFor="topup">Periodicity</label>
+
+        <input
+          className="border p-2"
+          placeholder="Days"
+          min="0"
+          {...register('periodicity', {
+            min: {
+              value: 0,
+              message: 'Periodicity cannot be negative',
+            },
+          })}
+          type="number"
+        />
+        {errors.periodicity && (
+          <FormErrorMessage message={errors.periodicity.message} />
         )}
       </div>
 

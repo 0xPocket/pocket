@@ -3,8 +3,8 @@ import { useQuery } from 'react-query';
 import { useAxios } from '../../hooks/axios.hook';
 import MainWrapper from '../../components/wrappers/MainWrapper';
 import { SectionContainer } from '@lib/ui';
-import { Tab } from '@headlessui/react';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import ChildSettingsForm from '../../components/forms/ChildSettingsForm';
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.query.id;
@@ -37,33 +37,32 @@ function Account({
           <>Loading</>
         ) : child ? (
           <div>
-            <div className="mb-8">
-              <h1>{child?.firstName}</h1>
-              <h3>{child.email}</h3>
-              <p>Status: </p>
+            <div className="mb-8 flex justify-between">
+              <div>
+                <h1>{child?.firstName}</h1>
+                <h3>{child.email}</h3>
+                <h3>{child.web3Account?.address}</h3>
+                <p>Status: </p>
+              </div>
+              <div className="flex flex-col items-end">
+                <p>Available funds</p>
+                <span className=" text-4xl">50</span>
+                <span>usdc</span>
+              </div>
             </div>
-            <Tab.Group>
-              <Tab.List className="mb-8 flex gap-4">
-                <Tab className="border p-4">Overview</Tab>
-                <Tab className="border p-4">Settings</Tab>
-              </Tab.List>
-              <Tab.Panels>
-                <Tab.Panel>
-                  <div className="grid  grid-cols-2 gap-8">
-                    <div className="h-60 bg-dark p-4 text-bright">
-                      Wallet Content
-                    </div>
-                    <div className="h-60 bg-dark p-4 text-bright">History</div>
-                  </div>
-                </Tab.Panel>
-                <Tab.Panel>
-                  {/* <ChildSettingsForm child={child} /> */}
-                </Tab.Panel>
-              </Tab.Panels>
-            </Tab.Group>
+            <ChildSettingsForm child={child} />
+            <div>
+              <h2 className="mt-16 border p-4">Overview</h2>
+              <div className="grid  grid-cols-2 gap-8">
+                <div className="h-60 bg-dark p-4 text-bright">
+                  Wallet Content
+                </div>
+                <div className="h-60 bg-dark p-4 text-bright">History</div>
+              </div>
+            </div>
           </div>
         ) : (
-          <>User not found</>
+          <div>User not found</div>
         )}
       </SectionContainer>
     </MainWrapper>
