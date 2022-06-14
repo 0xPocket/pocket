@@ -38,6 +38,7 @@ function ChildCard({ child }: ChildCardProps) {
           {child.status === 'LINKED' && (
             <Web3Button contract={addToContract}>Validate</Web3Button>
           )}
+          {child.web3Account.address && <p>{child.web3Account.address}</p>}
           <p>Available funds : {'placeholder'}</p>
         </div>
       </div>

@@ -79,12 +79,10 @@ export class ParentsService {
       },
     });
 
-    if (user) {
-      if (user.account.provider !== providerId) {
-        throw new BadRequestException(
-          `You must connect your account with ${user.account.provider}`,
-        );
-      }
+    if (user && user.account.provider !== providerId) {
+      throw new BadRequestException(
+        `You must connect your account with ${user.account.provider}`,
+      );
     }
 
     return this.prisma.userParent.upsert({
@@ -133,43 +131,61 @@ export class ParentsService {
     data: CreateChildrenDto,
     verification = true,
   ) {
+    const parent = await this.prisma.userParent.findUnique({
+      where: {
+        id: parentId,
+      },
+    });
+
+    let child: UserChild;
+
     try {
-      const [parent, child] = await Promise.all([
-        this.prisma.userParent.findUnique({
-          where: {
-            id: parentId,
-          },
-        }),
-        this.prisma.userChild.create({
-          data: {
-            firstName: data.firstName,
-            lastName: data.lastName,
-            email: data.email,
-            userParent: {
-              connect: {
-                id: parentId,
-              },
+      child = await this.prisma.userChild.create({
+        data: {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          userParent: {
+            connect: {
+              id: parentId,
             },
           },
-        }),
-      ]);
-
-      if (verification) await this.sendChildSignupEmail(child, parent);
-
-      return child;
+        },
+      });
     } catch (e) {
-      throw new BadRequestException("Could't create child");
+      throw new BadRequestException(
+        'A child with the same email already exists',
+      );
     }
+
+    try {
+      if (verification) await this.sendChildSignupEmail(child, parent);
+    } catch (e) {
+      await this.prisma.userChild.delete({
+        where: {
+          id: child.id,
+        },
+      });
+    }
+
+    return child;
   }
 
   async validateChildren(childAddress: string) {
     const child = await this.prisma.userChild.findFirst({
       where: {
         web3Account: {
-          address: childAddress,
+          address: {
+            equals: childAddress,
+            mode: 'insensitive',
+          },
         },
       },
     });
+
+    if (!child) {
+      throw new BadRequestException("Child doesn't exists");
+    }
 
     return this.prisma.userChild.update({
       where: {
