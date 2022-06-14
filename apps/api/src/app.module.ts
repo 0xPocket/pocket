@@ -14,7 +14,7 @@ import { EthereumModule } from './ethereum/ethereum.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: ['../../.env', '../../contract.env'],
+      envFilePath: ['../../.env', '../../packages/pocket-contract/.env'],
       isGlobal: true,
     }),
     AuthModule,

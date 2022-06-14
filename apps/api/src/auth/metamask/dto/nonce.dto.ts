@@ -1,8 +1,8 @@
 import { Transform, TransformFnParams } from 'class-transformer';
-import { IsString } from 'class-validator';
+import { IsEthereumAddress } from 'class-validator';
 
 export class MetamaskNonceDto {
-  @IsString()
+  @IsEthereumAddress()
   @Transform((params: TransformFnParams) => params.value.toLowerCase())
   walletAddress: string;
 }
