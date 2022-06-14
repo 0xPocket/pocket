@@ -11,34 +11,28 @@
     "@lib/prisma#db:deploy": {
       "dependsOn": ["$DATABASE_URL"]
     },
-    "@lib/prisma#db:reset": {
-      "cache": false
-    },
-    "@lib/prisma#db:down": {
-      "cache": false
-    },
     "@lib/prisma#db:seed": {
       "cache": false,
-      "dependsOn": ["@lib/prisma#db:deploy"]
-    },
-    "@lib/prisma#dev": {
-      "cache": false
-    },
-    "pocket-contract#dev": {
-      "cache": false
-    },
-    "pocket-contract#build:types": {
-      "cache": false
+      "dependsOn": ["deploy"]
     },
     "pocket-contract#healthcheck": {
       "cache": false
     },
+    "pocket-contract#build": {
+      "outputs": ["foundry/out/**"],
+      "inputs": ["foundry/src/*.sol"]
+    },
+    "pocket-contract#generate": {
+      "dependsOn": ["build"],
+      "inputs": ["foundry/src/*.sol"],
+      "outputs": ["ts/types/**"]
+    },
     "pocket-contract#deploy": {
-      "dependsOn": ["pocket-contract#healthcheck"],
+      "dependsOn": ["generate", "healthcheck"],
       "cache": false
     },
     "pocket-contract#seed": {
-      "dependsOn": ["pocket-contract#deploy"],
+      "dependsOn": ["deploy"],
       "cache": false
     },
     "web-parent#dev": {
@@ -51,23 +45,18 @@
     },
     "api#dev": {
       "cache": false,
-      "dependsOn": [
-        "@lib/prisma#dev",
-        "pocket-contract#deploy",
-        "pocket-contract#seed"
-      ]
+      "dependsOn": ["pocket-contract#seed"]
     },
     "api#dx": {
       "cache": false,
       "dependsOn": ["@lib/prisma#dev"]
     },
     "clean": {
-      "dependsOn": ["@lib/prisma#db:down"],
       "cache": false
     },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**"]
+      "outputs": ["dist/**", ".next/**", "foundry/out/**", "ts/types/**"]
     },
     "dev": {
       "cache": false

@@ -7,7 +7,7 @@
   "scripts": {
     "postinstall": "yarn build",
     "build": "prisma generate",
-    "clean": "rm -rf .turbo && rm -rf node_modules",
+    "clean": "yarn db:down && rm -rf .turbo && rm -rf node_modules",
     "db:deploy": "prisma migrate deploy",
     "db:migrate": "prisma migrate dev",
     "db:up": "docker-compose up -d --build",
@@ -15,18 +15,18 @@
     "db:drop": "prisma migrate reset --force",
     "db:reset": "run-s db:drop",
     "db:setup": "run-s db:up db:deploy db:seed",
-    "db:seed": "run-s db:drop",
+    "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
     "predev": "dotenv-checker --schema .env.example --env .env",
     "dev": "yarn db:setup"
   },
   "devDependencies": {
+    "crypto-js": "^4.1.1",
     "dotenv-checker": "^1.1.5",
     "npm-run-all": "^4.1.5",
     "prettier-plugin-prisma": "^3.14.0",
     "prisma": "^3.14.0",
-    "ts-node": "^10.8.0",
-    "crypto-js": "^4.1.1"
+    "ts-node": "^10.8.1"
   },
   "dependencies": {
     "@prisma/client": "^3.14.0"

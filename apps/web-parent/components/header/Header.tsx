@@ -13,14 +13,8 @@ function GlobalHeader({}: GlobalHeaderProps) {
   const { user, status, signOut } = useAuth<UserParent>();
   const queryClient = useQueryClient();
 
-  const handleLogIn = () => {
-    console.log('Log');
-    router.push('/login');
-  };
-
-  const handleSignIn = () => {
-    console.log('Sign');
-    router.push('/signup');
+  const handleConnect = () => {
+    router.push('/connect');
   };
 
   const handleLogout = () => {
@@ -51,10 +45,7 @@ function GlobalHeader({}: GlobalHeaderProps) {
           </>
         ) : (
           <>
-            <Button action={handleLogIn} light={true}>
-              Log In
-            </Button>
-            <Button action={handleSignIn}>Sign Up</Button>
+            <Button action={handleConnect}>Connect</Button>
           </>
         )}
         <ThemeToggler />

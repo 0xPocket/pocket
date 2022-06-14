@@ -23,7 +23,7 @@ function GlobalHeader({}: GlobalHeaderProps) {
             <Button action={() => disconnect()}>Disconnect Wallet</Button>
           </>
         ) : (
-          <Button action={() => toggleModal()}>Connect Wallet</Button>
+          <Button action={() => toggleModal('login')}>Connect Wallet</Button>
         )}
 
         <ThemeToggler />

@@ -44,7 +44,7 @@ interface IWeb3AuthContext {
   registerAccount: (
     registerToken: string,
   ) => Promise<AxiosResponse<{ nonce: string }>> | undefined;
-  toggleModal: () => void;
+  toggleModal: (type?: AuthType) => void;
   login: () => void;
   disconnect: () => void;
 }
@@ -58,6 +58,7 @@ const [Web3AuthContext, Web3AuthContextProvider] =
   createCtx<IWeb3AuthContext>();
 
 export type AuthStatus = 'hidden' | 'choose_provider' | 'connecting_wallet';
+export type AuthType = 'provider' | 'login';
 
 const REGISTER_MESSAGE = `Welcome to Pocket !\n\nPlease sign this message to register your account.\n\n\User ID : \\userId\\`;
 
@@ -70,6 +71,7 @@ export const Web3AuthProvider = ({ children }: Web3AuthProviderProps) => {
   const [provider, setProvider] = useState<any>();
   const [web3provider, setWeb3Provider] = useState<Web3Provider>();
   const [status, setStatus] = useState<AuthStatus>('hidden');
+  const [type, setType] = useState<AuthType>('provider');
   const myAxios = useAxios();
 
   useEffect(() => {
@@ -142,6 +144,7 @@ export const Web3AuthProvider = ({ children }: Web3AuthProviderProps) => {
     if (!address || !web3provider) return;
 
     try {
+      setStatus('hidden');
       const nonce = await axios
         .post<{ nonce: string }>('/api/metamask/nonce', {
           walletAddress: address,
@@ -160,16 +163,19 @@ export const Web3AuthProvider = ({ children }: Web3AuthProviderProps) => {
           return res.data.access_token;
         });
       setStatus('hidden');
+      setType('provider');
       setAccessToken(accessToken);
       localStorage.setItem('logged_in', 'true');
     } catch (e) {
+      setType('provider');
       // setStatus('not_exist');
     }
   }, [address, web3provider]);
 
-  const toggleModal = useCallback(() => {
+  const toggleModal = useCallback((type: AuthType = 'login') => {
     try {
       setStatus('choose_provider');
+      setType(type);
     } catch (e) {
       console.log(e);
     }
@@ -185,6 +191,12 @@ export const Web3AuthProvider = ({ children }: Web3AuthProviderProps) => {
     // setProvider(undefined);
     // setWeb3Provider(undefined);
   }, [web3Modal, myAxios]);
+
+  useEffect(() => {
+    if (address && type === 'login') {
+      login();
+    }
+  }, [address, login, type]);
 
   useEffect(() => {
     if (provider?.on) {
