@@ -19,8 +19,7 @@
       "cache": false
     },
     "pocket-contract#build": {
-      "outputs": ["artifacts/**/*", "typechain-types/**/*"],
-      "inputs": ["contracts/**/*.sol"]
+      "cache": false
     },
     "pocket-contract#deploy": {
       "dependsOn": ["pocket-contract#build", "healthcheck"],
@@ -51,12 +50,7 @@
     },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [
-        "dist/**",
-        ".next/**",
-        "artifacts/**/*",
-        "typechain-types/**/*"
-      ]
+      "outputs": ["dist/**", ".next/**"]
     },
     "dev": {
       "cache": false

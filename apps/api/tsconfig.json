@@ -2,7 +2,8 @@
   "extends": "tsconfig/nestjs.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "baseUrl": "."
+    "baseUrl": ".",
+    "resolveJsonModule": true
   },
   "include": ["../../packages/types/**/*.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["dist", "node_modules"]
