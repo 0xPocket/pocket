@@ -10,6 +10,7 @@ export class ChildrenService {
       where: {
         id: userId,
       },
+      include: { web3Account: true },
     });
   }
 }

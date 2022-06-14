@@ -7,7 +7,7 @@
   "scripts": {
     "postinstall": "yarn build",
     "build": "prisma generate",
-    "clean": "yarn db:down && rm -rf .turbo && rm -rf node_modules",
+    "clean": "rm -rf .turbo && rm -rf node_modules",
     "docker:up": "docker-compose up -d --build",
     "docker:down": "docker-compose down",
     "db:deploy": "prisma migrate deploy",

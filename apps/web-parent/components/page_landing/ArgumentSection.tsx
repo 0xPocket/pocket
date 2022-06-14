@@ -1,6 +1,5 @@
-import { IndexArgumentsAnimation } from '@lib/ui';
-import { Element } from 'react-scroll';
 import ArgumentContainer from './ArgumentContainer';
+
 type ArgumentSectionProps = {};
 
 function ArgumentSection({}: ArgumentSectionProps) {

@@ -27,7 +27,10 @@ function SettingsTabPanel({ setSelectedIndex }: SettingsTabPanelProps) {
           {privateKey ? (
             <div>{privateKey}</div>
           ) : (
-            <Web3Button callback={(signer) => setPrivateKey(signer.privateKey)}>
+            <Web3Button
+              callback={(signer) => setPrivateKey(signer.privateKey)}
+              asDiv
+            >
               Show Private Key
             </Web3Button>
           )}
