@@ -26,6 +26,7 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
       onSubmit={handleSubmit(onSubmit)}
       className="flex items-center justify-between gap-4 rounded-lg bg-dark-light p-4"
     >
+      <h2>Settings</h2>
       <div className="flex flex-col">
         <label htmlFor="topup">Add funds to {child.firstName} account</label>
         <input

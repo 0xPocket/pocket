@@ -2,7 +2,6 @@ import { ParentContract } from 'pocket-contract/ts';
 import { Button, DialogPopupWrapper } from '@lib/ui';
 import { Wallet } from 'ethers';
 import { MouseEvent, useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useWallet } from '../../contexts/wallet';
 import { getSigner } from '../../utils/web3';
@@ -14,10 +13,6 @@ type Web3ButtonProps = {
   type?: 'button' | 'submit' | 'reset' | undefined;
   asDiv?: boolean;
 };
-
-interface FormValues {
-  password: string;
-}
 
 function Web3Button({
   children,

@@ -39,9 +39,10 @@ function Account({
           <div>
             <div className="mb-8 flex justify-between">
               <div>
-                <h1>{child?.firstName}</h1>
+                <h1 className="mb-4">{child?.firstName}</h1>
                 <h3>{child.email}</h3>
                 <h3>{child.web3Account?.address}</h3>
+
                 <p>Status: </p>
               </div>
               <div className="flex flex-col items-end">
@@ -52,7 +53,7 @@ function Account({
             </div>
             <ChildSettingsForm child={child} />
             <div>
-              <h2 className="mt-16 border p-4">Overview</h2>
+              <h2 className="mt-16  p-4">Overview</h2>
               <div className="grid  grid-cols-2 gap-8">
                 <div className="h-60 bg-dark p-4 text-bright">
                   Wallet Content
