@@ -25,7 +25,7 @@ function Account({
     'child',
     () =>
       axios
-        .get<UserChild>('http://localhost:5000/users/children/' + id)
+        .get<UserChild>('http://localhost:3000/api/users/children/' + id)
         .then((res) => res.data),
     { staleTime: 60 * 1000, retry: false },
   );
