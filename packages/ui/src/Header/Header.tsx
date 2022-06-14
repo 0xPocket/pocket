@@ -33,7 +33,13 @@ function BlockLeft({ children }: { children: React.ReactNode }) {
   return <div className="flex">{children}</div>;
 }
 
-function Nav({ show, children }: { show: boolean; children: React.ReactNode }) {
+function Nav({
+  show = true,
+  children,
+}: {
+  show?: boolean;
+  children: React.ReactNode;
+}) {
   return (
     <>{show && <div className="ml-16 flex items-end gap-16">{children}</div>}</>
   );
