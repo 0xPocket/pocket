@@ -39,19 +39,19 @@ export class EthereumService {
         // console.log('child to validate :', childAddress.toLowerCase());
       },
     );
+
+    contract.on(
+      contract.filters['fundsAdded(address,uint256,address)'](),
+      (parentAddress, amount, childAddress) => {
+        // this.parentsService.validateChildren(childAddress.toLowerCase());
+        console.log('FUNDS ADDED EVENT');
+        // console.log('child to validate :', childAddress.toLowerCase());
+      },
+    );
   }
 
   async sendTransaction(data: SendTransactionDto) {
-    const tx = await this.provider.sendTransaction(data.hash);
-
-    await tx.wait().then(() => {
-      this.dispatch(data);
-    });
-
-    return {
-      hash: tx.hash,
-      blockHash: tx.blockHash,
-    };
+    return this.provider.sendTransaction(data.hash);
   }
 
   async dispatch(data: SendTransactionDto) {

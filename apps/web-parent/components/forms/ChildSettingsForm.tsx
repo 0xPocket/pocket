@@ -1,6 +1,13 @@
 import { UserChild } from '@lib/types/interfaces';
 import { FormErrorMessage } from '@lib/ui';
+import { ParentContract } from 'pocket-contract/ts';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useQuery } from 'react-query';
+import { useSmartContract } from '../../contexts/contract';
+import { useWallet } from '../../contexts/wallet';
+import { useAxios } from '../../hooks/axios.hook';
+import Web3Modal from '../wallet/Web3Modal';
 
 type ChildSettingsFormProps = {
   child: UserChild;
@@ -15,10 +22,50 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<FormValues>();
+  const [showModal, setShowModal] = useState(false);
+  const { provider, contract } = useSmartContract();
+  const { data, refetch } = useQuery(
+    'config',
+    async () => await contract?.childToConfig(child.web3Account.address),
+    {
+      enabled: false,
+    },
+  );
 
-  const onSubmit = (data: FormValues) => console.log(data);
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
+  const formValues = watch();
+
+  const axios = useAxios();
+
+  const changeConfig = (contract: ParentContract) => {
+    console.log('changeConfig', formValues);
+    contract
+      .changeConfig(
+        formValues.ceiling,
+        formValues.periodicity,
+        child.web3Account.address,
+      )
+      .then(async (res) => {
+        const response = await axios.post('/api/ethereum/broadcast', {
+          hash: res,
+          type: 'CHANGE_CONFIG',
+          childAddress: child.web3Account.address,
+        });
+        await provider?.waitForTransaction(response.data.hash);
+        refetch();
+      });
+  };
+
+  const onSubmit = (data: FormValues) => {
+    console.log(data);
+    setShowModal(true);
+  };
 
   return (
     <form
@@ -31,8 +78,8 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
         <label htmlFor="topup">Weekly ceiling</label>
 
         <input
-          className="border p-2"
-          placeholder="5$USDC"
+          className="border p-2 text-dark"
+          placeholder={data?.[2]?.toString() + '$'}
           min="0"
           {...register('ceiling', {
             min: {
@@ -51,8 +98,8 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
         <label htmlFor="topup">Periodicity</label>
 
         <input
-          className="border p-2"
-          placeholder="Days"
+          className="border p-2 text-dark"
+          placeholder={data?.[4]?.toString() + ' days'}
           min="0"
           {...register('periodicity', {
             min: {
@@ -66,6 +113,12 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
           <FormErrorMessage message={errors.periodicity.message} />
         )}
       </div>
+
+      <Web3Modal
+        contract={changeConfig}
+        isOpen={showModal}
+        setIsOpen={setShowModal}
+      />
 
       <input
         type="submit"
