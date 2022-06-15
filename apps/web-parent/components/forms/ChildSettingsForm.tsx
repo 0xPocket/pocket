@@ -3,14 +3,14 @@ import { FormErrorMessage } from '@lib/ui';
 import { ParentContract } from 'pocket-contract/ts';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { useSmartContract } from '../../contexts/contract';
-import { useWallet } from '../../contexts/wallet';
 import { useAxios } from '../../hooks/axios.hook';
 import Web3Modal from '../wallet/Web3Modal';
 
 type ChildSettingsFormProps = {
   child: UserChild;
+  config: any;
 };
 
 type FormValues = {
@@ -18,7 +18,7 @@ type FormValues = {
   periodicity: number;
 };
 
-function ChildSettingsForm({ child }: ChildSettingsFormProps) {
+function ChildSettingsForm({ child, config }: ChildSettingsFormProps) {
   const {
     register,
     handleSubmit,
@@ -26,22 +26,10 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
     formState: { errors },
   } = useForm<FormValues>();
   const [showModal, setShowModal] = useState(false);
-  const { provider, contract } = useSmartContract();
-  const { data, refetch } = useQuery(
-    'config',
-    async () => await contract?.childToConfig(child.web3Account.address),
-    {
-      enabled: false,
-    },
-  );
-
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
-
+  const { provider } = useSmartContract();
   const formValues = watch();
-
   const axios = useAxios();
+  const queryClient = useQueryClient();
 
   const changeConfig = (contract: ParentContract) => {
     console.log('changeConfig', formValues);
@@ -58,7 +46,7 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
           childAddress: child.web3Account.address,
         });
         await provider?.waitForTransaction(response.data.hash);
-        refetch();
+        queryClient.invalidateQueries('config');
       });
   };
 
@@ -79,7 +67,7 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
 
         <input
           className="border p-2 text-dark"
-          placeholder={data?.[2]?.toString() + '$'}
+          placeholder={config?.[2]?.toString() + '$'}
           min="0"
           {...register('ceiling', {
             min: {
@@ -99,7 +87,7 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
 
         <input
           className="border p-2 text-dark"
-          placeholder={data?.[4]?.toString() + ' days'}
+          placeholder={config?.[4]?.toString() + ' days'}
           min="0"
           {...register('periodicity', {
             min: {
