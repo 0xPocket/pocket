@@ -20,8 +20,8 @@
     "jwt-decode": "^3.1.2",
     "next": "12.1.6",
     "pocket-contract": "*",
-    "react": "18.1.0",
-    "react-dom": "18.1.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "react-hook-form": "^7.32.1",
     "ui": "*",
     "web3modal": "1.9.8"
@@ -30,12 +30,12 @@
     "@lib/types": "*",
     "@lib/ui": "*",
     "@types/node": "^17.0.42",
-    "@types/react": "18.0.12",
+    "@types/react": "18.0.13",
     "autoprefixer": "^10.4.7",
     "config": "*",
     "next-transpile-modules": "9.0.0",
     "postcss": "^8.4.14",
-    "tailwindcss": "^3.1.2",
+    "tailwindcss": "^3.1.3",
     "tsconfig": "*",
     "typescript": "^4.7.3"
   }
