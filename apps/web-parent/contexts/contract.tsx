@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { Contract, providers } from 'ethers';
+import { providers } from 'ethers';
 import {
+  IERC20Upgradeable,
+  IERC20Upgradeable__factory,
   PocketFaucet,
   PocketFaucet__factory,
 } from 'pocket-contract/typechain-types';
@@ -13,6 +15,7 @@ interface ISmartContractContext {
   active: boolean;
   provider: providers.JsonRpcProvider | undefined;
   contract: PocketFaucet | undefined;
+  USDTContract: IERC20Upgradeable | undefined;
 }
 
 export function createCtx<A extends {} | null>() {
@@ -28,6 +31,7 @@ export const SmartContractProvider = ({
 }: SmartContractProviderProps) => {
   const [provider, setProvider] = useState<providers.JsonRpcProvider>();
   const [contract, setContract] = useState<PocketFaucet>();
+  const [USDTContract, setUSDTContract] = useState<IERC20Upgradeable>();
 
   useEffect(() => {
     const provider = new providers.JsonRpcProvider('http://localhost:8545');
@@ -42,6 +46,13 @@ export const SmartContractProvider = ({
       );
 
       setContract(contract);
+
+      const usdtContract = IERC20Upgradeable__factory.connect(
+        '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
+        provider,
+      );
+
+      setUSDTContract(usdtContract);
     }
   }, [provider]);
 
@@ -51,6 +62,7 @@ export const SmartContractProvider = ({
         active: true,
         provider,
         contract,
+        USDTContract,
       }}
     >
       {children}

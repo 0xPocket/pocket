@@ -1,6 +1,10 @@
 import { UserChild } from '@lib/types/interfaces';
 import { FormErrorMessage } from '@lib/ui';
+import { BigNumber, constants, Contract, Wallet } from 'ethers';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useSmartContract } from '../../contexts/contract';
+import Web3Modal from '../wallet/Web3Modal';
 
 type AddfundsFormProps = {
   child: UserChild;
@@ -14,10 +18,51 @@ function AddfundsForm({ child }: AddfundsFormProps) {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<FormValues>();
+  const [showModal, setShowModal] = useState(false);
+  const {
+    provider,
+    USDTContract,
+    contract: pocketContract,
+  } = useSmartContract();
 
-  const onSubmit = (data: FormValues) => console.log(data);
+  const formValues = watch();
+
+  const increaseAllowance = async (signer: Wallet) => {
+    const contract = USDTContract?.connect(signer);
+
+    const allowance = await contract?.allowance(
+      signer.address,
+      process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+    );
+
+    console.log('allowance :', allowance?.toString());
+
+    if (allowance?.lt(formValues.topup)) {
+      console.log('approve allowance infinite');
+      await contract?.approve(
+        process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+        constants.MaxUint256,
+      );
+    }
+    console.log('sending funds ...');
+    console.log((await contract?.balanceOf(signer.address))?.toString());
+    console.log(BigNumber.from(formValues.topup).mul(1000000).toString());
+    const tx = await pocketContract
+      ?.connect(signer)
+      .addFunds(
+        BigNumber.from(formValues.topup).mul(1000000),
+        child.web3Account.address,
+      );
+    console.log(tx);
+  };
+
+  const onSubmit = (data: FormValues) => {
+    console.log(data);
+    setShowModal(true);
+  };
 
   return (
     <form
@@ -49,6 +94,11 @@ function AddfundsForm({ child }: AddfundsFormProps) {
         type="submit"
         value="Apply"
         className="rounded-md bg-dark  px-4 py-3 text-bright"
+      />
+      <Web3Modal
+        callback={increaseAllowance}
+        isOpen={showModal}
+        setIsOpen={setShowModal}
       />
     </form>
   );

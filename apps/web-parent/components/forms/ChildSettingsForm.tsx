@@ -29,7 +29,11 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
   const { provider, contract } = useSmartContract();
   const { data, refetch } = useQuery(
     'config',
-    async () => await contract?.childToConfig(child.web3Account.address),
+    async () => {
+      const ret = await contract?.childToConfig(child.web3Account.address);
+      console.log(ret);
+      return ret;
+    },
     {
       enabled: false,
     },
@@ -38,6 +42,8 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
   useEffect(() => {
     refetch();
   }, [refetch]);
+
+  // console.log(data);
 
   const formValues = watch();
 
