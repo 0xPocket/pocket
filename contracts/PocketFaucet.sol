@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
+import "hardhat/console.sol";
 
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
@@ -39,6 +40,9 @@ contract PocketFaucet is AccessControlUpgradeable {
 
     function initialize(address token) public initializer {
         baseToken = token;
+				__AccessControl_init_unchained();
+        // _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+				console.log(hasRole(DEFAULT_ADMIN_ROLE, msg.sender));
     }
 
     struct Config {
