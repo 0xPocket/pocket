@@ -22,7 +22,7 @@
       "cache": false
     },
     "pocket-contract#deploy": {
-      "dependsOn": ["pocket-contract#build", "healthcheck"],
+      "dependsOn": ["build", "healthcheck"],
       "cache": false
     },
     "pocket-contract#seed": {

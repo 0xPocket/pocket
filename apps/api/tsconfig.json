@@ -3,8 +3,12 @@
   "compilerOptions": {
     "outDir": "./dist",
     "baseUrl": ".",
+    "paths": {
+      "@pocket-contract/*": ["../../packages/pocket-contract/*"],
+      "@lib/types/*": ["../../packages/types/*"]
+    },
     "resolveJsonModule": true
   },
-  "include": ["../../packages/types/**/*.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["../../packages/pocket-contract/**/*.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["dist", "node_modules"]
 }
