@@ -1,4 +1,6 @@
-import { BigNumber, BigNumberish, Signer, Wallet } from 'ethers';
+
+import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
+import { BigNumberish, Signer, Wallet } from 'ethers';
 import { PocketFaucet__factory, PocketFaucet } from '../typechain-types';
 
 // import
@@ -18,7 +20,7 @@ class ParentContract {
 
   // Helper functions
   getChildren = async () => {
-    let childrenAddresses: string[] = [];
+    const childrenAddresses: string[] = [];
     const length: number = await this.getNumberOfChildren();
     for (let i = 0; i < length; i++) {
       childrenAddresses.push(
@@ -64,7 +66,7 @@ class ParentContract {
     return this.contract.removeChild(childAddr);
   };
 
-  activateSwitch = (active: boolean, childAddr: string) => {
+  setActive = (active: boolean, childAddr: string) => {
     return this.contract.setActive(active, childAddr);
   };
 
