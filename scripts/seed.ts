@@ -1,6 +1,6 @@
 import { Wallet, providers } from 'ethers';
 import { ParentContract } from '../ts/Parent';
-import { transferERC20 } from '../utils/transfer';
+import { setErc20Balance } from '../utils/transfer';
 import * as constants from "../utils/constants"
 
 require('dotenv').config();
@@ -32,7 +32,7 @@ async function main() {
 	const res = await provider.sendTransaction(tx);
 
 	// Transfer some USDT to Elon Musk
-	await transferERC20(constants.TOKEN_POLY.USDC, constants.WHALES_POLY.USDC, ELON_MUSK.publicKey, '3000');
+	await setErc20Balance(constants.TOKEN_POLY.USDC, parentWallet, '3000', constants.WHALES_POLY.USDC);
 
 	console.log('Contract seeding complete !');
 }
