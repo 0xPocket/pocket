@@ -1,6 +1,6 @@
 import { Wallet, providers } from 'ethers';
 import { ParentContract } from '../ts/Parent';
-import { setErc20Balance } from '../utils/transfer';
+import { setErc20Balance } from '../utils/ERC20';
 import * as constants from "../utils/constants"
 
 require('dotenv').config();
