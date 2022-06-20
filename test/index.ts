@@ -1,19 +1,33 @@
-import { ethers } from 'hardhat';
+import { ethers, upgrades } from 'hardhat';
 import { expect } from 'chai';
+import { PocketFaucet__factory, PocketFaucet } from "../typechain-types";
+import * as constants from "../utils/constants"
+import { Contract } from 'ethers';
+import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 
-describe('Greeter', function () {
-  it("Should return the new greeting once it's changed", async function () {
-    const Greeter = await ethers.getContractFactory('Greeter');
-    const greeter = await Greeter.deploy('Hello, world!');
-    await greeter.deployed();
+describe('Deploy', function () {
+	let PocketFaucet_factory: PocketFaucet__factory, pocketFaucet: PocketFaucet;
+	let admin: SignerWithAddress;
+	let proxyAdmin: Contract;
 
-    expect(await greeter.greet()).to.equal('Hello, world!');
+	before(async function () {
+		[admin] = await ethers.getSigners();
+		PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
+		pocketFaucet = await upgrades.deployProxy(PocketFaucet_factory, [constants.usdc_poly]) as PocketFaucet;
+		await pocketFaucet.deployed();
 
-    const setGreetingTx = await greeter.setGreeting('Hola, mundo!');
+		proxyAdmin = await upgrades.admin.getInstance();
+	});
 
-    // wait until the transaction is mined
-    await setGreetingTx.wait();
+	it("Should have set baseToken", async function () {
+		expect(await pocketFaucet.baseToken()).to.equal(constants.usdc_poly);
+	});
 
-    expect(await greeter.greet()).to.equal('Hola, mundo!');
-  });
+	it("Should have set good admin", async function () {
+		console.log(admin.address, " admin address")
+		console.log(pocketFaucet.address, " pocketFaucet(proxy) address")
+		console.log(await upgrades.erc1967.getImplementationAddress(pocketFaucet.address), " getImplementationAddress")
+		console.log(await upgrades.erc1967.getAdminAddress(pocketFaucet.address), " getAdminAddress")
+	});
+
 });
