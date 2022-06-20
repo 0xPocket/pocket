@@ -1679,19 +1679,19 @@
   resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.6.0.tgz#c91cf64bc27f573836dba4122758b4743418c1b3"
   integrity sha512-8vi4d50NNya/bQqCmaVzvHNmwHvS0OBKb7HNtuNwEE3scXWrP31fKQoGxNMT+KbzmrNZzatE3QK5p2gFONI/hg==
 
-"@openzeppelin/hardhat-upgrades@^1.18.1":
-  version "1.18.1"
-  resolved "https://registry.yarnpkg.com/@openzeppelin/hardhat-upgrades/-/hardhat-upgrades-1.18.1.tgz#5faf56fc0cd16a39909104ce670d7b0830cd3004"
-  integrity sha512-x0KzKmGWk4o5/o40MXKISS2P9ru5EePXedX0E4N4yuE/ZVdOvM8txaAdcdNniFoL4RY8Se6RdcWemZ3JTlRAEQ==
+"@openzeppelin/hardhat-upgrades@^1.19.0":
+  version "1.19.0"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/hardhat-upgrades/-/hardhat-upgrades-1.19.0.tgz#8f17210b924eb04c3ea4aa9795c1bb01d8a7dc3f"
+  integrity sha512-351QqDO3nZ96g0BO/bQnaTflix4Nw4ELWC/hZ8PwicsuVxRmxN/GZhxPrs62AOdiQdZ+xweawrVXa5knliRd4A==
   dependencies:
-    "@openzeppelin/upgrades-core" "^1.15.0"
+    "@openzeppelin/upgrades-core" "^1.16.0"
     chalk "^4.1.0"
     proper-lockfile "^4.1.1"
 
-"@openzeppelin/upgrades-core@^1.15.0":
-  version "1.15.0"
-  resolved "https://registry.yarnpkg.com/@openzeppelin/upgrades-core/-/upgrades-core-1.15.0.tgz#58e3137915f6dbf025107be6072be02ab443b4ea"
-  integrity sha512-dzyRzvr2E8YWGtmU5+MiAxsFfd5cyGYNBn164NHys5bfDkVSUaE0Vt0DYDsM4kNz3kVU6SXdUAcWez2OsoNkIA==
+"@openzeppelin/upgrades-core@^1.16.0":
+  version "1.16.1"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/upgrades-core/-/upgrades-core-1.16.1.tgz#a4c383fc628cc9d37d5a276def99a093c951644b"
+  integrity sha512-+hejbeAfsZWIQL5Ih13gkdm2KO6kbERc1ektzcyb25/OtUwaRjIIHxW++LdC/3Hg5uzThVOzJBfiLdAbgwD+OA==
   dependencies:
     bn.js "^5.1.2"
     cbor "^8.0.0"
@@ -2112,10 +2112,10 @@
   dependencies:
     ethers "^5.0.2"
 
-"@typechain/hardhat@^6.0.0":
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/@typechain/hardhat/-/hardhat-6.1.0.tgz#248e6512e9ef192499729dd90071ca0d77ea714a"
-  integrity sha512-JoqQTLlVuAWdnIjyw5CVQ6hmZjtvckDtwCyx01suCcPPTYHKDgUYToVmsPnhoCX50oBe+yDmFyzJcKRUagUwvg==
+"@typechain/hardhat@^6.1.1":
+  version "6.1.2"
+  resolved "https://registry.yarnpkg.com/@typechain/hardhat/-/hardhat-6.1.2.tgz#d3beccc6937d93f9b437616b741f839a8b953693"
+  integrity sha512-k4Ea3pVITKB2DH8p1a5U38cyy7KZPD04Spo4q5b4wO+n2mT+uAz5dxckPtbczn/Kk5wiFq+ZkuOtw5ZKFhL/+w==
   dependencies:
     fs-extra "^9.1.0"
     lodash "^4.17.15"
@@ -2417,6 +2417,11 @@
   version "12.20.55"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.20.55.tgz#c329cbd434c42164f846b909bd6f85b5537f6240"
   integrity sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==
+
+"@types/node@^17.0.41":
+  version "17.0.45"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.45.tgz#2c0fafd78705e7a18b7906b5201a522719dc5190"
+  integrity sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==
 
 "@types/node@^8.0.0":
   version "8.10.66"
@@ -12633,7 +12638,7 @@ prettier@^1.14.3:
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.19.1.tgz#f7d7f5ff8a9cd872a7be4ca142095956a60797cb"
   integrity sha512-s7PoyDv/II1ObgQunCbB9PdLmUcBZcnWOcxDh7O0N/UwDEsHyqkW+Qh28jW+mVuCdx7gLB0BotYI1Y6uI9iyew==
 
-prettier@^2.1.2, prettier@^2.3.1, prettier@^2.7.0:
+prettier@^2.1.2, prettier@^2.3.1:
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.7.0.tgz#a4fdae07e5596c51c9857ea676cd41a0163879d6"
   integrity sha512-nwoX4GMFgxoPC6diHvSwmK/4yU8FFH3V8XWtLQrbj4IBsK2pkYhG4kf/ljF/haaZ/aii+wNJqISrCDPgxGWDVQ==

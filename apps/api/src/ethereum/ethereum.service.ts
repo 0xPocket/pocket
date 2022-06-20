@@ -24,7 +24,7 @@ export class EthereumService {
     );
 
     this.contract.on(
-      this.contract.filters['childAdded(address,address)'](),
+      this.contract.filters['ChildAdded(address,address)'](),
       (parentAddress, childAddress) => {
         this.parentsService.validateChildren(childAddress.toLowerCase());
         // console.log(parentAddress);
@@ -33,7 +33,7 @@ export class EthereumService {
     );
 
     this.contract.on(
-      this.contract.filters['fundsAdded(address,uint256,address)'](),
+      this.contract.filters['FundsAdded(address,uint256,address)'](),
       (parentAddress, amount, childAddress) => {
         // this.parentsService.validateChildren(childAddress.toLowerCase());
         console.log('FUNDS ADDED EVENT');
