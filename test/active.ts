@@ -15,14 +15,14 @@ describe('Testing active param change', function () {
 
   before(async function () {
     const provider = new providers.JsonRpcProvider("http://localhost:8545");
-    child1 = new Wallet(constants.child1, provider);
-    child2 = new Wallet(constants.child2, provider);
+    child1 = new Wallet(constants.FAMILY_ACCOUNT.child1, provider);
+    child2 = new Wallet(constants.FAMILY_ACCOUNT.child2, provider);
 
     PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
-    pocketFaucet = await upgrades.deployProxy(PocketFaucet_factory, [constants.jeur_poly]) as PocketFaucet;
+    pocketFaucet = await upgrades.deployProxy(PocketFaucet_factory, [constants.TOKEN_POLY.JEUR]) as PocketFaucet;
     await pocketFaucet.deployed();
-    parent1 = new ParentTester(pocketFaucet.address, new Wallet(constants.parent1, provider));
-    parent2 = new ParentTester(pocketFaucet.address, new Wallet(constants.parent2, provider));
+    parent1 = new ParentTester(pocketFaucet.address, new Wallet(constants.FAMILY_ACCOUNT.parent1, provider));
+    parent2 = new ParentTester(pocketFaucet.address, new Wallet(constants.FAMILY_ACCOUNT.parent2, provider));
     
     await provider.sendTransaction(await parent1.addChild(20, 7, child1.address));
     await provider.sendTransaction(await parent2.addChild(20, 7, child2.address));
@@ -37,9 +37,18 @@ describe('Testing active param change', function () {
 
   it('Should revert because not related', async function () {
     await expect(
-      await parent1.setActive(false, child2.address)
+      parent1.setActive(false, child2.address)
     ).to.be.revertedWith("!_areRelated : child doesn't match");
+  });
 
+  it('Should change child2 active variable value 2 times', async function () {
+    const activeBefore = await parent2.getActive(child2.address);
+    await parent2.setActive(false, child2.address);
+    const activeAfter = await parent2.getActive(child2.address);
+    assert(activeAfter !== activeBefore, "Active value did not change");
+    await parent2.setActive(true, child2.address);
+    const activeBack = await parent2.getActive(child2.address);
+    assert(activeBack === activeBefore, "Active value did not go back to original value")
   });
   
   
