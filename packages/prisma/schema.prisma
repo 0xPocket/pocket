@@ -85,6 +85,16 @@ enum ChildStatus {
   LOCKED
 }
 
+// Survey ?
+
+model Survey {
+  id              String   @id @default(cuid())
+  cryptoKnowledge Boolean
+  childKnowledge  String?
+  email           String
+  createdAt       DateTime @default(now())
+}
+
 // Auth Enums
 
 enum AuthType {
