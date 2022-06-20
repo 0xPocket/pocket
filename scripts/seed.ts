@@ -1,5 +1,5 @@
 import { Wallet, providers } from 'ethers';
-import { ParentContract } from './Parent';
+import { ParentContract } from '../ts/Parent';
 import { transferERC20 } from '../utils/transfer';
 import * as constants from "../utils/constants"
 
@@ -32,7 +32,7 @@ async function main() {
 	const res = await provider.sendTransaction(tx);
 
 	// Transfer some USDT to Elon Musk
-	await transferERC20(constants.token_poly.usdc, constants.whales_poly.usdc, ELON_MUSK.publicKey, '3000');
+	await transferERC20(constants.TOKEN_POLY.USDC, constants.WHALES_POLY.USDC, ELON_MUSK.publicKey, '3000');
 
 	console.log('Contract seeding complete !');
 }

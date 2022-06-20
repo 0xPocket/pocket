@@ -13,14 +13,14 @@ describe('Deploy', function () {
 	before(async function () {
 		[admin] = await ethers.getSigners();
 		PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
-		pocketFaucet = await upgrades.deployProxy(PocketFaucet_factory, [constants.token_poly.usdc]) as PocketFaucet;
+		pocketFaucet = await upgrades.deployProxy(PocketFaucet_factory, [constants.TOKEN_POLY.USDC]) as PocketFaucet;
 		await pocketFaucet.deployed();
 
 		proxyAdmin = await upgrades.admin.getInstance();
 	});
 
 	it("Should have set baseToken", async function () {
-		expect(await pocketFaucet.baseToken()).to.equal(constants.token_poly.usdc);
+		expect(await pocketFaucet.baseToken()).to.equal(constants.TOKEN_POLY.USDC);
 	});
 
 	it("Should have set good admin", async function () {

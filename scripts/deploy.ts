@@ -7,7 +7,7 @@ import { stringify } from 'envfile';
 async function main() {
 	const PocketFaucet = await ethers.getContractFactory("PocketFaucet");
 	const pocketFaucet = await upgrades.deployProxy(PocketFaucet, [
-		constants.token_poly.usdc,
+		constants.TOKEN_POLY.USDC,
 	]);
 	await pocketFaucet.deployed();
 
