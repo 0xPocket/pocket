@@ -29,15 +29,19 @@ describe('Testing active param change', function () {
   });
 
   it('Should change child1 active variable value', async function () {
-    await parent1.contract.callStatic.childToConfig(child1.address);
-
     const activeBefore = await parent1.getActive(child1.address);
-    console.log(await parent1.getChildren(), child1.address);
-    // await parent1.setActive(false, child1.address);
-    // const activeAfter = await parent1.getActive(child1.address);
-    // assert(activeAfter != activeBefore, "Active value did not change");
+    await parent1.setActive(false, child1.address);
+    const activeAfter = await parent1.getActive(child1.address);
+    assert(activeAfter != activeBefore, "Active value did not change");
   });
 
+  it('Should revert because not related', async function () {
+    await expect(
+      await parent1.setActive(false, child2.address)
+    ).to.be.revertedWith("!_areRelated : child doesn't match");
+
+  });
+  
   
 });
 
