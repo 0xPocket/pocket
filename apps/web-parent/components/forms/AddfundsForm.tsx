@@ -1,11 +1,9 @@
 import { UserChild } from '@lib/types/interfaces';
 import { FormErrorMessage } from '@lib/ui';
-import { ParentContract } from 'pocket-contract/ts';
+import { BigNumber, constants, Wallet } from 'ethers';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useQueryClient } from 'react-query';
 import { useSmartContract } from '../../contexts/contract';
-import { useAxios } from '../../hooks/axios.hook';
 import Web3Modal from '../wallet/Web3Modal';
 
 type AddfundsFormProps = {
@@ -23,24 +21,42 @@ function AddfundsForm({ child }: AddfundsFormProps) {
     watch,
     formState: { errors },
   } = useForm<FormValues>();
-  const formValues = watch();
-  const axios = useAxios();
-  const { provider } = useSmartContract();
-  const queryClient = useQueryClient();
   const [showModal, setShowModal] = useState(false);
+  const {
+    provider,
+    USDTContract,
+    contract: pocketContract,
+  } = useSmartContract();
 
-  const addFunds = (contract: ParentContract) => {
-    contract
-      .addFunds(formValues.topup, child.web3Account.address)
-      .then(async (res) => {
-        const response = await axios.post('/api/ethereum/broadcast', {
-          hash: res,
-          type: 'ADD_FUNDS',
-          childAddress: child.web3Account.address,
-        });
-        await provider?.waitForTransaction(response.data.hash);
-        queryClient.invalidateQueries('config');
-      });
+  const formValues = watch();
+
+  const increaseAllowance = async (signer: Wallet) => {
+    const contract = USDTContract?.connect(signer);
+
+    const allowance = await contract?.allowance(
+      signer.address,
+      process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+    );
+
+    console.log('allowance :', allowance?.toString());
+
+    if (allowance?.lt(formValues.topup)) {
+      console.log('approve allowance infinite');
+      await contract?.approve(
+        process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+        constants.MaxUint256,
+      );
+    }
+    console.log('sending funds ...');
+    console.log((await contract?.balanceOf(signer.address))?.toString());
+    console.log(BigNumber.from(formValues.topup).mul(1000000).toString());
+    const tx = await pocketContract
+      ?.connect(signer)
+      .addFunds(
+        BigNumber.from(formValues.topup).mul(1000000),
+        child.web3Account.address,
+      );
+    console.log(tx);
   };
 
   const onSubmit = (data: FormValues) => {
@@ -85,6 +101,11 @@ function AddfundsForm({ child }: AddfundsFormProps) {
         type="submit"
         value="Apply"
         className="rounded-md bg-dark  px-4 py-3 text-bright"
+      />
+      <Web3Modal
+        callback={increaseAllowance}
+        isOpen={showModal}
+        setIsOpen={setShowModal}
       />
     </form>
   );

@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  padding-right: 0px !important;
+}
+@layer base {
+  body {
+    @apply font-raleway;
+  }
+  h1 {
+    @apply font-raleway text-4xl font-bold;
+  }
+  h2 {
+    @apply font-raleway text-3xl font-bold;
+  }
+
+  p {
+    @apply font-bitter;
+  }
+}

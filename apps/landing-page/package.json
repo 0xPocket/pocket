@@ -1,10 +1,10 @@
 {
-  "name": "web-child",
+  "name": "landing-page",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "clean": "rm -rf .next && rm -rf node_modules && rm -rf .turbo",
-    "dev": "next dev -p 4000",
+    "dev": "next dev -p 4500",
     "dx": "yarn dev",
     "build": "next build",
     "start": "next start",
@@ -13,18 +13,17 @@
   "dependencies": {
     "@ethersproject/providers": "^5.6.8",
     "@headlessui/react": "^1.6.4",
+    "@hookform/resolvers": "^2.9.1",
+    "@lib/prisma": "*",
     "@walletconnect/web3-provider": "^1.7.8",
     "axios": "^0.27.2",
-    "ethers": "^5.6.8",
     "framer-motion": "^6.3.11",
-    "jwt-decode": "^3.1.2",
     "next": "12.1.6",
-    "pocket-contract": "*",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.32.1",
     "ui": "*",
-    "web3modal": "1.9.8"
+    "zod": "^3.17.3"
   },
   "devDependencies": {
     "@lib/types": "*",

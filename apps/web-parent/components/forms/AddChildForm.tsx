@@ -28,7 +28,7 @@ function AddChildForm({}: AddChildFormProps) {
 
   const mutation = useMutation(
     (data: FormValues) =>
-      axios.put('http://localhost:5000/users/parents/children', data),
+      axios.put('http://localhost:3000/api/users/parents/children', data),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('children');
