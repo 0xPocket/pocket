@@ -2,8 +2,9 @@ node_modules
 cache/
 out/
 artifacts
-.openzeppelin
 typechain-types
 .turbo
 *.env
-ts/types
+
+# OpenZeppelin version control for proxies
+.openzeppelin/unknown-*.json

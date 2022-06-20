@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
+import "hardhat/console.sol";
 
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
@@ -9,7 +10,6 @@ import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol"
 // TO DO : gouvernor should be -> TimelockController
 // TO DO : secure all func with roles
 // TO DO : test roles
-// TO DO : check require (areRelated)
 
 contract PocketFaucet is AccessControlUpgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
@@ -18,20 +18,20 @@ contract PocketFaucet is AccessControlUpgradeable {
     bytes32 public constant PARENT_ROLE = keccak256("PARENT_ROLE");
     bytes32 public constant CHILD_ROLE = keccak256("CHILD_ROLE");
 
-    event childAdded(address indexed parent, address indexed child);
-    event childRemoved(address indexed parent, address indexed child);
-    event fundsAdded(address indexed parent, uint256 amount, address child);
-    event fundsWithdrawn(address indexed parent, uint256 amount, address child);
-    event moneyClaimed(address indexed child, uint256 amount);
-    event tokenWithdrawed(address indexed token, uint256 amount);
-    event coinWithdrawed(uint256 amount);
-    event configChanged(bool active, uint256 ceiling, address indexed child);
-    event parentChanged(address indexed oldAddr, address newAddr);
+    event ChildAdded(address indexed parent, address indexed child);
+    event ChildRemoved(address indexed parent, address indexed child);
+    event FundsAdded(address indexed parent, uint256 amount, address child);
+    event FundsWithdrawn(address indexed parent, uint256 amount, address child);
+    event MoneyClaimed(address indexed child, uint256 amount);
+    event TokenWithdrawed(address indexed token, uint256 amount);
+    event CoinWithdrawed(uint256 amount);
+    event ConfigChanged(bool active, uint256 ceiling, address indexed child);
+    event ParentChanged(address indexed oldAddr, address newAddr);
 
-    address baseToken;
+    address public baseToken;
 
     mapping(address => address[]) public parentToChildren;
-    mapping(address => config) public childToConfig;
+    mapping(address => Config) public childToConfig;
 
     // constructor(address token) {
     //     baseToken = token;
@@ -40,9 +40,12 @@ contract PocketFaucet is AccessControlUpgradeable {
 
     function initialize(address token) public initializer {
         baseToken = token;
+				__AccessControl_init_unchained();
+        // _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+				console.log(hasRole(DEFAULT_ADMIN_ROLE, msg.sender));
     }
 
-    struct config {
+    struct Config {
         bool active;
         uint256 balance;
         uint256 ceiling;
@@ -83,7 +86,7 @@ contract PocketFaucet is AccessControlUpgradeable {
             childToConfig[child].parent == address(0),
             "Child address already taken"
         );
-        config memory conf;
+        Config memory conf;
         conf.balance = 0;
         conf.lastClaim = block.timestamp - periodicity;
         conf.ceiling = ceiling;
@@ -93,14 +96,14 @@ contract PocketFaucet is AccessControlUpgradeable {
         childToConfig[child] = conf;
         parentToChildren[msg.sender].push(child);
 
-        emit childAdded(msg.sender, child);
+        emit ChildAdded(msg.sender, child);
     }
 
     function removeChild(address child)
         external
         _areRelated(msg.sender, child)
     {
-        config memory childConfig = childToConfig[child];
+        Config memory childConfig = childToConfig[child];
 
         uint256 length = parentToChildren[childConfig.parent].length;
         for (uint256 i = 0; i < length; i++) {
@@ -120,7 +123,7 @@ contract PocketFaucet is AccessControlUpgradeable {
 
         delete childToConfig[child];
         // revoke child role ??
-        emit childRemoved(childConfig.parent, child);
+        emit ChildRemoved(childConfig.parent, child);
     }
 
     // TO DO : test
@@ -129,7 +132,7 @@ contract PocketFaucet is AccessControlUpgradeable {
         _areRelated(msg.sender, child)
     {
         require(child != address(0), "!activateSwitch : null child address");
-        config storage conf = childToConfig[child];
+        Config storage conf = childToConfig[child];
         require(conf.parent != address(0), "!activateSwitch: child not set");
         conf.active = active;
         if (conf.active == true)
@@ -142,19 +145,19 @@ contract PocketFaucet is AccessControlUpgradeable {
         uint256 periodicity,
         address child
     ) public _areRelated(msg.sender, child) {
-        config storage conf = childToConfig[child];
+        Config storage conf = childToConfig[child];
         require(conf.parent != address(0), "!changeConfig: child not set");
         conf.ceiling = ceiling;
         conf.periodicity = periodicity;
 
-        emit configChanged(conf.active, conf.ceiling, child);
-    }
+        emit ConfigChanged(conf.active, conf.ceiling, child);
+		}
 
     function changeChildAddress(address oldAddr, address newAddr)
         public
         _areRelated(msg.sender, oldAddr)
     {
-        config memory conf = childToConfig[oldAddr];
+        Config memory conf = childToConfig[oldAddr];
         require(
             conf.parent != address(0),
             "!changeAddr : child does not exist"
@@ -197,14 +200,14 @@ contract PocketFaucet is AccessControlUpgradeable {
         );
         childToConfig[child].balance += amount;
 
-        emit fundsAdded(msg.sender, amount, child);
+        emit FundsAdded(msg.sender, amount, child);
     }
 
     function withdrawFundsFromChild(uint256 amount, address child)
         public
         _areRelated(msg.sender, child)
     {
-        config storage conf = childToConfig[child];
+        Config storage conf = childToConfig[child];
         uint256 childBalance = conf.balance;
         require(
             amount <= childBalance,
@@ -213,10 +216,10 @@ contract PocketFaucet is AccessControlUpgradeable {
         if (amount == 0) amount = childBalance;
         conf.balance -= amount;
         IERC20Upgradeable(baseToken).safeTransfer(msg.sender, amount);
-        emit fundsWithdrawn(msg.sender, amount, child);
+        emit FundsWithdrawn(msg.sender, amount, child);
     }
 
-    function _calculateClaimable(config storage conf)
+    function _calculateClaimable(Config storage conf)
         internal
         returns (uint256)
     {
@@ -235,7 +238,7 @@ contract PocketFaucet is AccessControlUpgradeable {
     }
 
     function claim() public {
-        config storage conf = childToConfig[msg.sender];
+        Config storage conf = childToConfig[msg.sender];
         require(conf.active, "!claim: not active");
         require(conf.balance > 0, "!claim: null balance");
         require(
@@ -247,7 +250,7 @@ contract PocketFaucet is AccessControlUpgradeable {
         conf.balance -= claimable;
 
         IERC20Upgradeable(baseToken).safeTransfer(msg.sender, claimable);
-        emit moneyClaimed(msg.sender, claimable);
+        emit MoneyClaimed(msg.sender, claimable);
     }
 
     // TO DO : test
@@ -265,7 +268,7 @@ contract PocketFaucet is AccessControlUpgradeable {
             childToConfig[children[i]].parent = newAddr;
         }
 
-        emit parentChanged(oldAddr, newAddr);
+        emit ParentChanged(oldAddr, newAddr);
     }
 
     function withdrawToken(address token, uint256 amount)
@@ -273,13 +276,13 @@ contract PocketFaucet is AccessControlUpgradeable {
         onlyRole(WITHDRAW_ROLE)
     {
         IERC20Upgradeable(token).safeTransfer(msg.sender, amount);
-        emit tokenWithdrawed(token, amount);
+        emit TokenWithdrawed(token, amount);
     }
 
     function withdrawCoin(uint256 amount) public {
         if (amount == 0) amount = address(this).balance;
         payable(msg.sender).transfer(amount);
-        emit coinWithdrawed(amount);
+        emit CoinWithdrawed(amount);
     }
 
     receive() external payable {}
