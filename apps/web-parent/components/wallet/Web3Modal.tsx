@@ -1,13 +1,7 @@
 import { ParentContract } from 'pocket-contract/ts';
 import { Button, DialogPopupWrapper } from '@lib/ui';
 import { Wallet } from 'ethers';
-import {
-  Dispatch,
-  MouseEvent,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useWallet } from '../../contexts/wallet';
 import { getSigner } from '../../utils/web3';
@@ -24,22 +18,29 @@ function Web3Modal({ callback, contract, isOpen, setIsOpen }: Web3ModalProps) {
   const [password, setPassword] = useState('');
 
   const onSubmit = () => {
-    try {
-      const signer = getSigner(wallet?.encryptedPrivateKey!, password);
+    let signer;
 
-      if (callback) {
-        callback(signer);
-      }
-      if (contract) {
-        const parentContract = new ParentContract(
-          process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
-          signer,
-        );
-        contract(parentContract);
-      }
+    try {
+      signer = getSigner(wallet?.encryptedPrivateKey!, password);
     } catch (e) {
       toast.error('Invalid password');
     }
+
+    if (signer)
+      try {
+        if (callback) {
+          callback(signer);
+        }
+        if (contract) {
+          const parentContract = new ParentContract(
+            process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+            signer,
+          );
+          contract(parentContract);
+        }
+      } catch (e) {
+        toast.error('Call to contract failed');
+      }
     setIsOpen(false);
   };
 
