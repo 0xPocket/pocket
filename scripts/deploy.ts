@@ -1,12 +1,13 @@
-import { ethers, upgrades } from "hardhat";
-import * as dotenv from "dotenv";
-import { readFileSync, writeFileSync } from "fs";
-import { stringify } from "envfile";
+import { ethers, upgrades } from 'hardhat';
+import * as dotenv from 'dotenv';
+import * as constants from "../utils/constants"
+import { readFileSync, writeFileSync } from 'fs';
+import { stringify } from 'envfile';
 
 async function main() {
 	const PocketFaucet = await ethers.getContractFactory("PocketFaucet");
 	const pocketFaucet = await upgrades.deployProxy(PocketFaucet, [
-		"0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c",
+		constants.TOKEN_POLY.USDC,
 	]);
 	await pocketFaucet.deployed();
 

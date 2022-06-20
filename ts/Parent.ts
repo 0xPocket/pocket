@@ -70,12 +70,19 @@ class ParentContract {
     return this.contract.setActive(active, childAddr);
   };
 
-  changeConfig = (
+  changeConfig = async (
     ceiling: BigNumberish,
     periodicity: BigNumberish,
     childAddr: string
   ) => {
-    return this.contract.changeConfig(ceiling, periodicity, childAddr);
+    const tx = await this.contract.populateTransaction.changeConfig(
+      ceiling,
+      periodicity,
+      childAddr
+    );
+
+    const populatedTransaction = await this.signer.populateTransaction(tx);
+    return this.signer.signTransaction(populatedTransaction);
   };
 
   changeChildAddress = (oldAddr: string, newAddr: string) => {

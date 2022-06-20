@@ -6,13 +6,13 @@
   "scripts": {
     "clean": "yarn hardhat clean && rm -rf node_modules ts/types .turbo",
     "hh:build": "yarn hardhat compile",
-    "hh:deploy": "yarn hardhat run scripts/deploy.ts --network local",
+    "hh:deploy": "yarn hardhat run scripts/deploy.ts --network localhost",
     "hh:node": "yarn hardhat node",
-    "healthcheck": "curl -m 10 --retry 10 --retry-connrefused --retry-delay 1 http://127.0.0.1:8545/",
+    "healthcheck": "curl -m 10 --retry 20 --retry-connrefused --retry-delay 1 http://127.0.0.1:8545/",
     "build": "yarn hh:build",
     "dev": "yarn hh:node",
     "deploy": "yarn hh:deploy",
-    "seed": "ts-node ./ts/seed.ts"
+    "seed": "yarn hardhat run ./scripts/seed.ts --network localhost"
   },
   "dependencies": {
     "dotenv": "^16.0.1",
