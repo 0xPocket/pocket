@@ -1,5 +1,9 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { providers } from 'ethers';
+import { Contract, providers } from 'ethers';
+import {
+  PocketFaucet,
+  PocketFaucet__factory,
+} from 'pocket-contract/typechain-types';
 
 interface SmartContractProviderProps {
   children: React.ReactNode;
@@ -8,6 +12,7 @@ interface SmartContractProviderProps {
 interface ISmartContractContext {
   active: boolean;
   provider: providers.JsonRpcProvider | undefined;
+  contract: PocketFaucet | undefined;
 }
 
 export function createCtx<A extends {} | null>() {
@@ -22,17 +27,30 @@ export const SmartContractProvider = ({
   children,
 }: SmartContractProviderProps) => {
   const [provider, setProvider] = useState<providers.JsonRpcProvider>();
+  const [contract, setContract] = useState<PocketFaucet>();
 
   useEffect(() => {
     const provider = new providers.JsonRpcProvider('http://localhost:8545');
     setProvider(provider);
   }, []);
 
+  useEffect(() => {
+    if (provider) {
+      const contract = PocketFaucet__factory.connect(
+        process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+        provider,
+      );
+
+      setContract(contract);
+    }
+  }, [provider]);
+
   return (
     <SmartContractContextProvider
       value={{
         active: true,
         provider,
+        contract,
       }}
     >
       {children}

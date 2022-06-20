@@ -1,48 +1,41 @@
 import { UserChild } from '@lib/types/interfaces';
 import { FormErrorMessage } from '@lib/ui';
 import { ParentContract } from 'pocket-contract/ts';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQueryClient } from 'react-query';
 import { useSmartContract } from '../../contexts/contract';
 import { useAxios } from '../../hooks/axios.hook';
 import Web3Modal from '../wallet/Web3Modal';
 
-type ChildSettingsFormProps = {
+type AddfundsFormProps = {
   child: UserChild;
-  config: any;
 };
 
 type FormValues = {
-  ceiling: number;
-  periodicity: number;
+  topup: number;
 };
 
-function ChildSettingsForm({ child, config }: ChildSettingsFormProps) {
+function AddfundsForm({ child }: AddfundsFormProps) {
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm<FormValues>();
-  const [showModal, setShowModal] = useState(false);
-  const { provider } = useSmartContract();
   const formValues = watch();
   const axios = useAxios();
+  const { provider } = useSmartContract();
   const queryClient = useQueryClient();
+  const [showModal, setShowModal] = useState(false);
 
-  const changeConfig = (contract: ParentContract) => {
-    console.log('changeConfig', formValues);
+  const addFunds = (contract: ParentContract) => {
     contract
-      .changeConfig(
-        formValues.ceiling,
-        formValues.periodicity,
-        child.web3Account.address,
-      )
+      .addFunds(formValues.topup, child.web3Account.address)
       .then(async (res) => {
         const response = await axios.post('/api/ethereum/broadcast', {
           hash: res,
-          type: 'CHANGE_CONFIG',
+          type: 'ADD_FUNDS',
           childAddress: child.web3Account.address,
         });
         await provider?.waitForTransaction(response.data.hash);
@@ -60,50 +53,30 @@ function ChildSettingsForm({ child, config }: ChildSettingsFormProps) {
       onSubmit={handleSubmit(onSubmit)}
       className="flex items-center justify-between gap-4 rounded-lg bg-dark-light p-4"
     >
-      <h2>Settings</h2>
-
+      <h2>Add funds</h2>
       <div className="flex flex-col">
-        <label htmlFor="topup">Weekly ceiling</label>
-
+        <label htmlFor="topup">Add funds to {child.firstName} account</label>
         <input
-          className="border p-2 text-dark"
-          placeholder={config?.[2]?.toString() + '$'}
+          className="border p-2"
           min="0"
-          {...register('ceiling', {
+          placeholder="5 $USDC"
+          type="number"
+          {...register('topup', {
             min: {
               value: 0,
-              message: 'Ceiling cannot be negative',
+              message: 'Topup cannot be negative',
+            },
+            max: {
+              value: 20,
+              message: 'Insufisant funds',
             },
           })}
-          type="number"
         />
-        {errors.ceiling && (
-          <FormErrorMessage message={errors.ceiling.message} />
-        )}
-      </div>
-
-      <div className="flex flex-col">
-        <label htmlFor="topup">Periodicity</label>
-
-        <input
-          className="border p-2 text-dark"
-          placeholder={config?.[4]?.toString() + ' days'}
-          min="0"
-          {...register('periodicity', {
-            min: {
-              value: 0,
-              message: 'Periodicity cannot be negative',
-            },
-          })}
-          type="number"
-        />
-        {errors.periodicity && (
-          <FormErrorMessage message={errors.periodicity.message} />
-        )}
+        {errors.topup && <FormErrorMessage message={errors.topup.message} />}
       </div>
 
       <Web3Modal
-        contract={changeConfig}
+        contract={addFunds}
         isOpen={showModal}
         setIsOpen={setShowModal}
       />
@@ -117,4 +90,4 @@ function ChildSettingsForm({ child, config }: ChildSettingsFormProps) {
   );
 }
 
-export default ChildSettingsForm;
+export default AddfundsForm;
