@@ -36,12 +36,9 @@ function HeroSection({}: HeroSectionProps) {
   };
 
   return (
-    <section className="relative z-0 flex min-h-[85vh] items-center ">
+    <section className="relative flex min-h-[100vh] items-center ">
       <div className="container relative mx-auto grid h-full grid-cols-1 md:grid-cols-10">
-        <div className="z-10 col-span-4 flex flex-col gap-4 ">
-          {/* <span className="text-2xl lg:text-4xl">
-            The best place for your kid
-          </span> */}
+        <div className="col-span-4 flex flex-col gap-4 ">
           <div className=" max-w-fit bg-gradient-blue-text bg-clip-text text-[40px] font-bold leading-[50px] text-transparent lg:text-[70px] lg:leading-[80px]">
             <span className="">
               Accompagnez vos enfants vers le web de demain.

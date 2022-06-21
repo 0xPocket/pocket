@@ -17,13 +17,13 @@
     "@lib/prisma": "*",
     "@walletconnect/web3-provider": "^1.7.8",
     "axios": "^0.27.2",
-    "framer-motion": "^6.3.11",
     "next": "12.1.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.32.1",
     "ui": "*",
-    "zod": "^3.17.3"
+    "zod": "^3.17.3",
+    "react-spring": "^9.4.5"
   },
   "devDependencies": {
     "@lib/types": "*",

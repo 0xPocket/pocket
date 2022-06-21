@@ -6,6 +6,8 @@ import Question from '../components/form/Question';
 import Introduction from '../components/form/Introduction';
 import Conclusion from '../components/form/Conclusion';
 import { GetServerSidePropsContext } from 'next';
+import AnimationLayer from '../components/form/AnimationLayer';
+import Header from '../components/Header';
 
 type IndexProps = {
   email?: string;
@@ -51,24 +53,6 @@ function Index({ email }: IndexProps) {
     });
   };
 
-  const steps = useMemo(() => {
-    return [
-      <Introduction onClick={() => setStep((step) => step + 1)} />,
-      <Question
-        register={register('cryptoKnowledge')}
-        header="Possédez vous des cryptomonnaies ou des NFTs ?"
-      />,
-      <Question
-        register={register('childKnowledge')}
-        header=" Vos enfants vous ont-ils déjà parlé de NFT, cryptomonnaies ou encore
-        play to earn ?"
-      />,
-      <Conclusion />,
-    ];
-  }, [register]);
-
-  const currentStep = steps[step];
-
   useEffect(() => {
     const subscription = watch((value, { name, type }) =>
       setStep((val) => val + 1),
@@ -76,17 +60,66 @@ function Index({ email }: IndexProps) {
     return () => subscription.unsubscribe();
   }, [watch]);
 
-  return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="flex h-screen flex-col items-center justify-center gap-2"
-    >
-      {currentStep}
+  const questions = useMemo(
+    () => [
+      <Question
+        register={register('cryptoKnowledge')}
+        header="Possédez vous des cryptomonnaies ou des NFTs ?"
+        options={['Oui', 'Non']}
+      />,
+      <Question
+        register={register('childKnowledge')}
+        header=" Vos enfants vous ont-ils déjà parlé de NFT, cryptomonnaies ou encore
+play to earn ?"
+        options={['Oui', 'Non', "Je n'ai pas d'enfants"]}
+      />,
+    ],
+    [register],
+  );
 
-      {/* <button type="submit" className="flex">
-        Submit
-      </button> */}
-    </form>
+  return (
+    <>
+      <Header />
+
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="relative h-screen w-screen overflow-hidden"
+      >
+        <AnimationLayer show={step === 0} questionsLength={questions.length}>
+          <Introduction onClick={() => setStep((step) => step + 1)} />
+        </AnimationLayer>
+
+        {questions.map((question, index) => (
+          <AnimationLayer
+            show={step === index + 1}
+            step={index + 1}
+            questionsLength={questions.length}
+            key={index}
+          >
+            {question}
+          </AnimationLayer>
+        ))}
+        {/* <AnimationLayer show={step === 1} step={1}>
+          <Question
+            register={register('cryptoKnowledge')}
+            header="Possédez vous des cryptomonnaies ou des NFTs ?"
+            options={['Oui', 'Non']}
+          />
+        </AnimationLayer>
+        <AnimationLayer show={step === 2} step={2}>
+          <Question
+            register={register('childKnowledge')}
+            header=" Vos enfants vous ont-ils déjà parlé de NFT, cryptomonnaies ou encore
+					play to earn ?"
+            options={['Oui', 'Non', "Je n'ai pas d'enfants"]}
+          />
+        </AnimationLayer> */}
+
+        <AnimationLayer show={step === 3} questionsLength={questions.length}>
+          <Conclusion />
+        </AnimationLayer>
+      </form>
+    </>
   );
 }
 
