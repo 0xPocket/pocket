@@ -169,7 +169,6 @@ contract PocketFaucet is AccessControlUpgradeable {
         );
 
         childToConfig[newAddr] = conf;
-        console.log(conf.parent);
         uint256 length = parentToChildren[conf.parent].length;
         for (uint256 i = 0; i < length; i++) {
             if (parentToChildren[conf.parent][i] == oldAddr) {
