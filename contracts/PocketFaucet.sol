@@ -169,7 +169,7 @@ contract PocketFaucet is AccessControlUpgradeable {
         );
 
         childToConfig[newAddr] = conf;
-
+        console.log(conf.parent);
         uint256 length = parentToChildren[conf.parent].length;
         for (uint256 i = 0; i < length; i++) {
             if (parentToChildren[conf.parent][i] == oldAddr) {
@@ -228,13 +228,11 @@ contract PocketFaucet is AccessControlUpgradeable {
             conf.lastClaim + conf.periodicity <= block.timestamp,
             "!calculateClaimable: period is not finished"
         );
-
         uint256 claimable;
         while (conf.lastClaim + conf.periodicity <= block.timestamp) {
             claimable += conf.ceiling;
             conf.lastClaim += conf.periodicity;
         }
-
         return (claimable > conf.balance ? conf.balance : claimable);
     }
 

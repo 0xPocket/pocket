@@ -11,8 +11,8 @@ export async function impersonate(address: string) {
 	return (await ethers.getSigner(address));
 }
 
-export function stopImpersonate(address: string) {
-	return hre.network.provider.request({
+export async function stopImpersonate(address: string) {
+	return await hre.network.provider.request({
 		method: "hardhat_stopImpersonatingAccount",
 		params: [address],
 	});

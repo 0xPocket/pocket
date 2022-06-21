@@ -2,13 +2,14 @@ import { ParentContract } from '../ts/Parent';
 
 class ParentTester extends ParentContract {
   checkChildIsInit = async (childAddress: string) => {
+    let ret = false;
     const childConfig = await this.getChildConfig(childAddress);
-    if (childConfig.parent !== this.address) return false;
+    if (childConfig.parent !== this.address) return ret;
     const children = await this.getChildren();
     children.forEach((child) => {
-      if (child === childAddress) return true;
+      if (child === childAddress) ret = true;
     });
-    return false;
+    return ret;
   };
 
   compareConfig = async (first: string, second: string) => {

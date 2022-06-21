@@ -1,6 +1,6 @@
 export const HH_ACCOUNT = {
-	account : "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
-	account1 : "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d",
+  account : "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
+ account1 : "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d",
  account2 : "0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a",
  account3 : "0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6",
  account4 : "0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a",
@@ -38,5 +38,6 @@ export const TOKEN_POLY = {
 
 export const WHALES_POLY = {
 	USDC: "0xf977814e90da44bfa03b6295a0616a897441acec",
-	USDT: "0xe7804c37c13166ff0b37f5ae0bb07a3aebb6e245"
+	USDT: "0xe7804c37c13166ff0b37f5ae0bb07a3aebb6e245",
+	JEUR: "0xc4fcbb58e36e8f5c3b0e904cb20c3947af246891"
 }
