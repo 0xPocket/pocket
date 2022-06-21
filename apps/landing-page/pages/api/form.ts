@@ -1,7 +1,7 @@
 import { PrismaClient } from '@lib/prisma';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { z } from 'zod';
-import { formSchema } from '..';
+import { formSchema } from '../survey';
 
 type Data = z.infer<typeof formSchema>;
 
