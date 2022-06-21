@@ -1,15 +1,16 @@
 /* eslint-disable no-unused-vars */
 import { assert, expect } from 'chai';
 import { ethers, upgrades } from 'hardhat';
-import { Contract, providers, Signer, Wallet } from 'ethers';
+import { providers, Wallet } from 'ethers';
 import ParentTester from '../helpers/ParentTester';
 import * as constants from "../utils/constants"
 import { PocketFaucet__factory, PocketFaucet } from "../typechain-types";
 
 describe('Testing active param change', function () {
-  let master, child1: Wallet, child2: Wallet;
+  let child1: Wallet, child2: Wallet;
   let parent1: ParentTester, parent2: ParentTester;
   let PocketFaucet_factory: PocketFaucet__factory, pocketFaucet: PocketFaucet;
+  const tokenAddr = constants.TOKEN_POLY.JEUR;
 
   before(async function () {
     const provider = new providers.JsonRpcProvider("http://localhost:8545");
@@ -17,13 +18,12 @@ describe('Testing active param change', function () {
     child2 = new Wallet(constants.FAMILY_ACCOUNT.child2, provider);
 
     PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
-    pocketFaucet = await upgrades.deployProxy(PocketFaucet_factory, [constants.TOKEN_POLY.JEUR]) as PocketFaucet;
+    pocketFaucet = await upgrades.deployProxy(PocketFaucet_factory, [tokenAddr]) as PocketFaucet;
     await pocketFaucet.deployed();
     parent1 = new ParentTester(pocketFaucet.address, new Wallet(constants.FAMILY_ACCOUNT.parent1, provider));
     parent2 = new ParentTester(pocketFaucet.address, new Wallet(constants.FAMILY_ACCOUNT.parent2, provider));
-    
-    await provider.sendTransaction(await parent1.addChild(20, 7, child1.address));
-    await provider.sendTransaction(await parent2.addChild(20, 7, child2.address));
+    await parent1.addStdChildAndSend(child1.address, tokenAddr);
+    await parent2.addStdChildAndSend(child2.address, tokenAddr);
   });
 
   it('Should change child1 active variable value', async function () {

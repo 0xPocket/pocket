@@ -16,6 +16,8 @@ describe('Testing withdraw', function () {
   let parent1Wallet: Wallet;
   let adminWallet: Wallet;
   let adminContract: AdminContract;
+  const tokenAddr = constants.TOKEN_POLY.JEUR;
+
 
   before(async function () {
     provider = new providers.JsonRpcProvider("http://localhost:8545");
@@ -23,24 +25,24 @@ describe('Testing withdraw', function () {
     child2 = new Wallet(constants.FAMILY_ACCOUNT.child2, provider);
     adminWallet = new Wallet(constants.HH_ACCOUNT.account0, provider)
     PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
-    pocketFaucet = await upgrades.deployProxy(PocketFaucet_factory, [constants.TOKEN_POLY.JEUR]) as PocketFaucet;
+    pocketFaucet = await upgrades.deployProxy(PocketFaucet_factory, [tokenAddr]) as PocketFaucet;
     await pocketFaucet.deployed();
     parent1Wallet = new Wallet(constants.FAMILY_ACCOUNT.parent1, provider);
     parent1 = new ParentTester(pocketFaucet.address, parent1Wallet);
-    await parent1.addStdChildAndSend(child1.address, constants.TOKEN_POLY.JEUR);
+    await parent1.addStdChildAndSend(child1.address, tokenAddr);
     adminContract = new AdminContract(pocketFaucet.address, adminWallet);
   });
 
   it('should revert because there are no token', async function () {
     await expect(
-      adminContract.withdrawToken(constants.TOKEN_POLY.JEUR, "1000000")
+      adminContract.withdrawToken(tokenAddr, "1000000")
     ).to.be.revertedWith("ERC20: transfer amount exceeds balance"); 
   });
 
 
   it('should revert because not granted withdraw role', async function () {
     await expect(
-      parent1.contract.withdrawToken(constants.TOKEN_POLY.JEUR, "1000000")
+      parent1.contract.withdrawToken(tokenAddr, "1000000")
     ).to.be.revertedWith("AccessControl: account 0xbcd4042de499d14e55001ccbb24a551f3b954096 \
 is missing role 0x5d8e12c39142ff96d79d04d15d1ba1269e4fe57bb9d26f43523628b34ba108ec"); 
   });
@@ -52,10 +54,10 @@ is missing role 0x5d8e12c39142ff96d79d04d15d1ba1269e4fe57bb9d26f43523628b34ba108
   });
 
   it('should withdraw 1000000 token', async function () {
-    await sendErc20(constants.TOKEN_POLY.JEUR, adminWallet, pocketFaucet.address, "100", constants.WHALES_POLY.JEUR);
-    const balanceBefore = await getBalance(constants.TOKEN_POLY.JEUR, adminWallet.address, provider);
-    await adminContract.withdrawToken(constants.TOKEN_POLY.JEUR, "1000000")
-    const balanceAfter = await getBalance(constants.TOKEN_POLY.JEUR, adminWallet.address, provider);
+    await sendErc20(tokenAddr, adminWallet, pocketFaucet.address, "100", constants.WHALES_POLY.JEUR);
+    const balanceBefore = await getBalance(tokenAddr, adminWallet.address, provider);
+    await adminContract.withdrawToken(tokenAddr, "1000000")
+    const balanceAfter = await getBalance(tokenAddr, adminWallet.address, provider);
     assert(balanceAfter.gt(balanceBefore) , "Amount of token did not increase");
   });
 
