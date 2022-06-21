@@ -2,17 +2,15 @@
 pragma solidity ^0.8.9;
 // TO DO : take me off
 import "hardhat/console.sol";
+import "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable.sol";
 
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 
-// TO DO : check multisig
-// TO DO : gouvernor should be -> TimelockController
-// TO DO : secure all func with roles
-// TO DO : test roles
 
-contract PocketFaucet is AccessControlUpgradeable {
+contract PocketFaucetV2 is AccessControlUpgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     bytes32 public constant WITHDRAW_ROLE = keccak256("WITHDRAW_ROLE");
@@ -33,17 +31,13 @@ contract PocketFaucet is AccessControlUpgradeable {
 
     mapping(address => address[]) public parentToChildren;
     mapping(address => Config) public childToConfig;
-
-    // constructor(address token) {
-    //     baseToken = token;
-    //     _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
-    // }
+		uint256 public newVar;
 
     function initialize(address token) public initializer {
         baseToken = token;
 				__AccessControl_init_unchained();
         // _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
-		// console.log(hasRole(DEFAULT_ADMIN_ROLE, msg.sender));
+				newVar = 5;
     }
 
     struct Config {
@@ -169,6 +163,7 @@ contract PocketFaucet is AccessControlUpgradeable {
         );
 
         childToConfig[newAddr] = conf;
+
         uint256 length = parentToChildren[conf.parent].length;
         for (uint256 i = 0; i < length; i++) {
             if (parentToChildren[conf.parent][i] == oldAddr) {
@@ -227,11 +222,13 @@ contract PocketFaucet is AccessControlUpgradeable {
             conf.lastClaim + conf.periodicity <= block.timestamp,
             "!calculateClaimable: period is not finished"
         );
+
         uint256 claimable;
         while (conf.lastClaim + conf.periodicity <= block.timestamp) {
             claimable += conf.ceiling;
             conf.lastClaim += conf.periodicity;
         }
+
         return (claimable > conf.balance ? conf.balance : claimable);
     }
 
