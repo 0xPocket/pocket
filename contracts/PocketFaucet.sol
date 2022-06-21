@@ -16,8 +16,8 @@ contract PocketFaucet is AccessControlUpgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     bytes32 public constant WITHDRAW_ROLE = keccak256("WITHDRAW_ROLE");
-    bytes32 public constant PARENT_ROLE = keccak256("PARENT_ROLE");
-    bytes32 public constant CHILD_ROLE = keccak256("CHILD_ROLE");
+    // bytes32 public constant PARENT_ROLE = keccak256("PARENT_ROLE");
+    // bytes32 public constant CHILD_ROLE = keccak256("CHILD_ROLE");
 
     event ChildAdded(address indexed parent, address indexed child);
     event ChildRemoved(address indexed parent, address indexed child);
@@ -42,7 +42,8 @@ contract PocketFaucet is AccessControlUpgradeable {
     function initialize(address token) public initializer {
         baseToken = token;
 				__AccessControl_init_unchained();
-        // _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _setupRole(WITHDRAW_ROLE, msg.sender);
 		// console.log(hasRole(DEFAULT_ADMIN_ROLE, msg.sender));
     }
 
