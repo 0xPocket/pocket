@@ -4,9 +4,8 @@ import { ethers, upgrades } from 'hardhat';
 import { providers, Wallet } from 'ethers';
 import ParentTester from '../helpers/ParentTester';
 import * as constants from "../utils/constants";
-import { PocketFaucet__factory, PocketFaucet, IERC20MetadataUpgradeable } from "../typechain-types";
-import goForwardNDays from '../utils/goForward';
-import { getBalance, getDecimals, setAllowance, setErc20Balance, stringToDecimalsVersion } from '../utils/ERC20';
+import { PocketFaucet__factory, PocketFaucet } from "../typechain-types";
+import { getBalance } from '../utils/ERC20';
 
 describe('Testing to withdraw funds from child account as parent', function () {
   let child1: Wallet, child2: Wallet;
@@ -28,7 +27,6 @@ describe('Testing to withdraw funds from child account as parent', function () {
     await pocketFaucet.deployed();
     parent1Wallet = new Wallet(constants.FAMILY_ACCOUNT.parent1, provider);
     parent2Wallet = new Wallet(constants.FAMILY_ACCOUNT.parent2, provider);
-
     parent1 = new ParentTester(pocketFaucet.address, parent1Wallet);
     parent2 = new ParentTester(pocketFaucet.address, parent2Wallet);
     await parent1.addStdChildAndSend(child1.address, tokenAddr);
@@ -68,7 +66,6 @@ describe('Testing to withdraw funds from child account as parent', function () {
     await expect(
       parent1.contract.withdrawFundsFromChild(tryingToSteal, child1.address)
     ).to.be.revertedWith("!withdrawFundsFromChild: amount > childBalance"); 
-    
   });
 });
 

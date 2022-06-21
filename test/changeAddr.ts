@@ -1,11 +1,10 @@
 /* eslint-disable no-unused-vars */
-import { expect } from 'chai';
+import { assert, expect } from 'chai';
 import { ethers, upgrades } from 'hardhat';
 import { providers, Wallet } from 'ethers';
 import ParentTester from '../helpers/ParentTester';
 import * as constants from "../utils/constants"
-import { PocketFaucet__factory, PocketFaucet, IERC20MetadataUpgradeable } from "../typechain-types";
-import { assert } from 'console';
+import { PocketFaucet__factory, PocketFaucet } from "../typechain-types";
 import goForwardNDays from '../utils/goForward';
 import { getBalance, getDecimals, setAllowance, setErc20Balance } from '../utils/ERC20';
 
@@ -15,6 +14,7 @@ describe('Testing addr changement', function () {
   let PocketFaucet_factory: PocketFaucet__factory, pocketFaucet: PocketFaucet;
   let provider : providers.JsonRpcProvider;
   let parent1Wallet: Wallet;
+  const tokenAddr = constants.TOKEN_POLY.JEUR;
   
   before(async function () {
     provider = new providers.JsonRpcProvider("http://localhost:8545");
@@ -22,11 +22,11 @@ describe('Testing addr changement', function () {
     child2 = new Wallet(constants.FAMILY_ACCOUNT.child2, provider);
 
     PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
-    pocketFaucet = await upgrades.deployProxy(PocketFaucet_factory, [constants.TOKEN_POLY.JEUR]) as PocketFaucet;
+    pocketFaucet = await upgrades.deployProxy(PocketFaucet_factory, [tokenAddr]) as PocketFaucet;
     await pocketFaucet.deployed();
     parent1Wallet = new Wallet(constants.FAMILY_ACCOUNT.parent1, provider);
     parent1 = new ParentTester(pocketFaucet.address, parent1Wallet);
-    await parent1.addStdChildAndSend(child1.address, constants.TOKEN_POLY.JEUR);
+    await parent1.addStdChildAndSend(child1.address, tokenAddr);
   });
 
   it('Should reverse because child2 is not parent1 child', async function () {
@@ -43,14 +43,14 @@ describe('Testing addr changement', function () {
   });
 
   it('Should test that new child2 can withdraw', async function () {
-    const toSend = ethers.utils.parseUnits("100",  await getDecimals(constants.TOKEN_POLY.JEUR, provider));
-    const tokenBefore = await getBalance(constants.TOKEN_POLY.JEUR, child2.address, provider);
+    const toSend = ethers.utils.parseUnits("100",  await getDecimals(tokenAddr, provider));
+    const tokenBefore = await getBalance(tokenAddr, child2.address, provider);
     await goForwardNDays("http://localhost:8545", 21);
-    await setErc20Balance(constants.TOKEN_POLY.JEUR, parent1Wallet, "100", constants.WHALES_POLY.JEUR);
-    await setAllowance(constants.TOKEN_POLY.JEUR, parent1Wallet, pocketFaucet.address, toSend.toString());
+    await setErc20Balance(tokenAddr, parent1Wallet, "100", constants.WHALES_POLY.JEUR);
+    await setAllowance(tokenAddr, parent1Wallet, pocketFaucet.address, toSend.toString());
     await parent1.addFunds(toSend, child2.address);
     await pocketFaucet.connect(child2).claim();
-    assert(tokenBefore.lt(await getBalance(constants.TOKEN_POLY.JEUR, child2.address, provider)), "Child2 number of token did not increased");
+    assert(tokenBefore.lt(await getBalance(tokenAddr, child2.address, provider)), "Child2 number of token did not increased");
   });
 });
 

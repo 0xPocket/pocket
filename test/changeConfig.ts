@@ -1,13 +1,10 @@
 /* eslint-disable no-unused-vars */
 import { assert, expect } from 'chai';
 import { ethers, upgrades } from 'hardhat';
-import { BigNumber, providers, Wallet } from 'ethers';
+import { providers, Wallet } from 'ethers';
 import ParentTester from '../helpers/ParentTester';
 import * as constants from "../utils/constants"
-import { PocketFaucet__factory, PocketFaucet, IERC20MetadataUpgradeable } from "../typechain-types";
-// import { assert } from 'console';
-import goForwardNDays from '../utils/goForward';
-import { getBalance, getDecimals, setAllowance, setErc20Balance } from '../utils/ERC20';
+import { PocketFaucet__factory, PocketFaucet } from "../typechain-types";
 
 describe('Testing conf changement', function () {
   let child1: Wallet, child2: Wallet;
@@ -15,6 +12,8 @@ describe('Testing conf changement', function () {
   let PocketFaucet_factory: PocketFaucet__factory, pocketFaucet: PocketFaucet;
   let provider : providers.JsonRpcProvider;
   let parent1Wallet: Wallet;
+  const tokenAddr = constants.TOKEN_POLY.JEUR;
+
   
   before(async function () {
     provider = new providers.JsonRpcProvider("http://localhost:8545");
@@ -22,11 +21,11 @@ describe('Testing conf changement', function () {
     child2 = new Wallet(constants.FAMILY_ACCOUNT.child2, provider);
 
     PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
-    pocketFaucet = await upgrades.deployProxy(PocketFaucet_factory, [constants.TOKEN_POLY.JEUR]) as PocketFaucet;
+    pocketFaucet = await upgrades.deployProxy(PocketFaucet_factory, [tokenAddr]) as PocketFaucet;
     await pocketFaucet.deployed();
     parent1Wallet = new Wallet(constants.FAMILY_ACCOUNT.parent1, provider);
     parent1 = new ParentTester(pocketFaucet.address, parent1Wallet);
-    await parent1.addStdChildAndSend(child1.address, constants.TOKEN_POLY.JEUR);
+    await parent1.addStdChildAndSend(child1.address, tokenAddr);
   });
 
   it('Should revert because new child addr is zero', async function () {
@@ -49,7 +48,7 @@ describe('Testing conf changement', function () {
   });
 
   it('Should change ceiling', async function () {
-    await parent1.addStdChildAndSend(child1.address, constants.TOKEN_POLY.JEUR);
+    await parent1.addStdChildAndSend(child1.address, tokenAddr);
     const ceilingBefore = await parent1.getCeiling(child1.address);
     await parent1.changeConfigAndSend(10, 0, child1.address)
     const ceilingAfter = await parent1.getCeiling(child1.address);
