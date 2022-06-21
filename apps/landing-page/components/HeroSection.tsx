@@ -1,6 +1,5 @@
 import { faAt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { FormInputText } from '@lib/ui';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 
@@ -37,7 +36,7 @@ function HeroSection({}: HeroSectionProps) {
             obcaecati aspernatur accusantium ipsa sapiente odio consequuntur,
           </div>
           <div className="flex gap-8 text-[rgb(57,179,245)]">
-            <a href="">Qu'est-ce que le web3</a>
+            <a href="">Le web3 ?</a>
             <a>Notre produit</a>
           </div>
 
@@ -47,7 +46,7 @@ function HeroSection({}: HeroSectionProps) {
           >
             <FontAwesomeIcon icon={faAt} />
             <input
-              className="h-full"
+              className="h-full outline-none"
               placeholder="Adresse email"
               type="email"
               {...register('email', {
@@ -75,35 +74,6 @@ function HeroSection({}: HeroSectionProps) {
           />
         </div>
       </div>
-      {/* <div className="mt-16 flex flex-col gap-4 pl-16">
-        <span className="max-w-sm text-lg">
-          Help us by answering a few questions and be selected for our beta and
-          more
-        </span>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex items-start gap-4"
-        >
-          <FormInputText
-            placeHolder="Enter your email"
-            label="email"
-            type="email"
-            registerValues={register('email', {
-              required: 'This field is required',
-              pattern: {
-                value: /\S+@\S+\.\S+/,
-                message: 'Entered value does not match email format',
-              },
-            })}
-            error={errors.email}
-          />
-          <input
-            type="submit"
-            value="Get started"
-            className="relative flex items-center justify-center overflow-hidden whitespace-nowrap rounded-md bg-primary px-4 py-3 text-bright dark:bg-primary-dark"
-          />
-        </form>
-      </div> */}
       <div className="absolute bottom-[-100px] right-0 -z-50 h-[800px] w-[1800px] bg-light-radial-herosection dark:opacity-10"></div>
     </section>
   );
