@@ -1,7 +1,8 @@
 import { ethers } from 'hardhat';
-import { getDecimals } from '../utils/ERC20';
+import { getDecimals, setAllowance, setErc20Balance } from '../utils/ERC20';
 import { ParentContract } from '../ts/Parent';
 import { BigNumberish } from 'ethers';
+import * as constants from "../utils/constants"
 
 class ParentTester extends ParentContract {
   checkChildIsInit = async (childAddress: string) => {
@@ -77,6 +78,12 @@ class ParentTester extends ParentContract {
     const periodicity = 604800;
     await this.contract.connect(this.signer).addChild(ceiling, periodicity, address);
   }
+
+  addFundsToChild = async (childAddress: string, amount : string, token: string, whale: string) => {
+    await setErc20Balance(token, this.signer, amount , whale);
+    await setAllowance(constants.TOKEN_POLY.JEUR, this.signer, this.contract.address, amount);
+    await this.addFunds(amount, childAddress);
+  } 
 }
 
 export default ParentTester;

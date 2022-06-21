@@ -1,11 +1,10 @@
 /* eslint-disable no-unused-vars */
-import { expect } from 'chai';
+import { assert, expect } from 'chai';
 import { ethers, upgrades } from 'hardhat';
 import { Contract, providers, Signer, Wallet } from 'ethers';
 import ParentTester from '../helpers/ParentTester';
 import * as constants from "../utils/constants"
 import { PocketFaucet__factory, PocketFaucet } from "../typechain-types";
-import { assert } from 'console';
 
 describe('Testing active param change', function () {
   let master, child1: Wallet, child2: Wallet;
