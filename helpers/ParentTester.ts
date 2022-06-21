@@ -52,6 +52,10 @@ class ParentTester extends ParentContract {
     return periodicity;
   }
 
+  getNbChildren = async () => {
+    return (await this.getChildren()).length;
+  }
+
   changeConfigAndSend = async (
     ceiling: BigNumberish,
     periodicity: BigNumberish,
