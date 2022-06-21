@@ -11,7 +11,7 @@ const Introduction: React.FC<Props> = ({ onClick }) => {
       <h3>
         Aidez nous a ameliorer le produit en repondant a quelques questions.
       </h3>
-      <button onClick={onClick} className="rounded-lg bg-primary p-4 font-bold">
+      <button onClick={onClick} className="rounded-lg bg-primary p-4 ">
         Commencer
       </button>
     </div>
