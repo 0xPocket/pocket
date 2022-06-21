@@ -5,12 +5,9 @@ import { BigNumber, providers, Wallet } from 'ethers';
 import ParentTester from '../helpers/ParentTester';
 import * as constants from "../utils/constants"
 import { PocketFaucet__factory, PocketFaucet, IERC20MetadataUpgradeable } from "../typechain-types";
-// import { assert } from 'console';
-import goForwardNDays from '../utils/goForward';
-import { getBalance, getDecimals, setAllowance, setErc20Balance } from '../utils/ERC20';
 
-describe('Testing conf changement', function () {
-  let child1: Wallet, child2: Wallet;
+describe('Testing add Child', function () {
+  let child1: Wallet;
   let parent1: ParentTester;
   let PocketFaucet_factory: PocketFaucet__factory, pocketFaucet: PocketFaucet;
   let provider : providers.JsonRpcProvider;
@@ -19,7 +16,6 @@ describe('Testing conf changement', function () {
   before(async function () {
     provider = new providers.JsonRpcProvider("http://localhost:8545");
     child1 = new Wallet(constants.FAMILY_ACCOUNT.child1, provider);
-    child2 = new Wallet(constants.FAMILY_ACCOUNT.child2, provider);
 
     PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
     pocketFaucet = await upgrades.deployProxy(PocketFaucet_factory, [constants.TOKEN_POLY.JEUR]) as PocketFaucet;
