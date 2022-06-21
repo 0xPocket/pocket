@@ -45,6 +45,33 @@ export async function setErc20Balance(
     await stopImpersonate(whaleAddr);
   }
 }
+
+export async function sendErc20(
+  tokenAddr: string,
+  gasProvider: SignerWithAddress | Wallet,
+  target: string,
+  amount: string,
+  whaleAddr: string
+) {
+  const tokenContract = new Contract(
+    tokenAddr,
+    ERC20Abi
+  ) as IERC20MetadataUpgradeable;
+  await gasProvider.sendTransaction({
+    to: whaleAddr,
+    value: ethers.utils.parseEther("1")
+  });
+  const decimals = await tokenContract.connect(gasProvider).decimals();
+  const newAmount = BigNumber.from(amount).mul(
+    BigNumber.from('10').pow(decimals)
+  );
+  const sender = await impersonate(whaleAddr);
+  await tokenContract
+    .connect(sender)
+    .transfer(target, newAmount);
+  await stopImpersonate(whaleAddr);
+  
+}
 function amountInEther(amountInEther: any) {
   throw new Error('Function not implemented.');
 }
