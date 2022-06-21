@@ -10,7 +10,7 @@ import { token } from 'typechain-types/@openzeppelin/contracts-upgradeable';
 
 export async function setErc20Balance(
   tokenAddr: string,
-  account: SignerWithAddress | Wallet,
+  account: Signer | Wallet,
   amount: string,
   whaleAddr: string
 ) {
@@ -25,7 +25,7 @@ export async function setErc20Balance(
   const decimals = await tokenContract.connect(account).decimals();
   const balance = await tokenContract
     .connect(account)
-    .balanceOf(account.address);
+    .balanceOf(await account.getAddress());
   const newAmount = BigNumber.from(amount).mul(
     BigNumber.from('10').pow(decimals)
   );
@@ -41,7 +41,7 @@ export async function setErc20Balance(
     const sender = await impersonate(whaleAddr);
     await tokenContract
       .connect(sender)
-      .transfer(account.address, newAmount.sub(balance));
+      .transfer(await account.getAddress(), newAmount.sub(balance));
     await stopImpersonate(whaleAddr);
   }
 }
@@ -85,7 +85,11 @@ export async function getDecimals(tokenAddr: string, provider: providers.JsonRpc
   return (await tokenContract.decimals());
 }
 
-export async function setAllowance(tokenAddr: string, account: Wallet, receiver: string, amount: string) {
+export async function stringToDecimalsVersion(tokenAddr: string, provider: providers.JsonRpcProvider | Signer, amount : string) {
+  return ethers.utils.parseUnits(amount, await getDecimals(tokenAddr, provider));
+}
+
+export async function setAllowance(tokenAddr: string, account: Wallet | Signer, receiver: string, amount: string) {
   const tokenContract = new Contract(
     tokenAddr,
     ERC20Abi, account

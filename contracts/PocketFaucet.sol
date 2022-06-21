@@ -42,7 +42,7 @@ contract PocketFaucet is AccessControlUpgradeable {
     function initialize(address token) public initializer {
         baseToken = token;
 				__AccessControl_init_unchained();
-        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        // _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _setupRole(WITHDRAW_ROLE, msg.sender);
 		// console.log(hasRole(DEFAULT_ADMIN_ROLE, msg.sender));
     }
