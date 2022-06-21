@@ -1,4 +1,4 @@
-import { BigNumber, BigNumberish, Contract, providers, Wallet } from 'ethers';
+import { BigNumber, BigNumberish, Contract, providers, Signer, Wallet } from 'ethers';
 import { impersonate, stopImpersonate } from './impersonate';
 // TO DO : database for abis
 import { abi as ERC20Abi } from '../artifacts/@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable.sol/IERC20MetadataUpgradeable.json';
@@ -49,7 +49,7 @@ function amountInEther(amountInEther: any) {
   throw new Error('Function not implemented.');
 }
 
-export async function getDecimals(tokenAddr: string, provider: providers.JsonRpcProvider) {
+export async function getDecimals(tokenAddr: string, provider: providers.JsonRpcProvider | Signer) {
   const tokenContract = new Contract(
     tokenAddr,
     ERC20Abi,

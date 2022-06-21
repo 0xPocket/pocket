@@ -11,7 +11,7 @@ import { getBalance, getDecimals, setAllowance, setErc20Balance } from '../utils
 
 describe('Testing addr changement', function () {
   let child1: Wallet, child2: Wallet;
-  let parent1: ParentTester, parent2: ParentTester;
+  let parent1: ParentTester;
   let PocketFaucet_factory: PocketFaucet__factory, pocketFaucet: PocketFaucet;
   let provider : providers.JsonRpcProvider;
   let parent1Wallet: Wallet;
@@ -26,9 +26,7 @@ describe('Testing addr changement', function () {
     await pocketFaucet.deployed();
     parent1Wallet = new Wallet(constants.FAMILY_ACCOUNT.parent1, provider);
     parent1 = new ParentTester(pocketFaucet.address, parent1Wallet);
-    parent2 = new ParentTester(pocketFaucet.address, new Wallet(constants.FAMILY_ACCOUNT.parent2, provider));
-    
-    await provider.sendTransaction(await parent1.addChild(ethers.utils.parseUnits("10",  await getDecimals(constants.TOKEN_POLY.JEUR, provider)), 604800, child1.address));
+    await parent1.addStdChildAndSend(child1.address, constants.TOKEN_POLY.JEUR);
   });
 
   it('Should reverse because child2 is not parent1 child', async function () {

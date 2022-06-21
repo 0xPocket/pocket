@@ -146,11 +146,13 @@ contract PocketFaucet is AccessControlUpgradeable {
         uint256 periodicity,
         address child
     ) public _areRelated(msg.sender, child) {
+
         Config storage conf = childToConfig[child];
+        console.log(conf.periodicity, periodicity);
         require(conf.parent != address(0), "!changeConfig: child not set");
         conf.ceiling = ceiling;
         conf.periodicity = periodicity;
-
+        console.log(conf.periodicity, periodicity);
         emit ConfigChanged(conf.active, conf.ceiling, child);
 		}
 
