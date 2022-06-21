@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { expect } from 'chai';
 import { ethers, upgrades } from 'hardhat';
-import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 import { Contract, providers, Signer, Wallet } from 'ethers';
 import ParentTester from '../helpers/ParentTester';
 import * as constants from "../utils/constants"
@@ -50,7 +49,5 @@ describe('Testing active param change', function () {
     const activeBack = await parent2.getActive(child2.address);
     assert(activeBack === activeBefore, "Active value did not go back to original value")
   });
-  
-  
 });
 

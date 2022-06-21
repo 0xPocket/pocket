@@ -38,5 +38,6 @@ export const TOKEN_POLY = {
 
 export const WHALES_POLY = {
 	USDC: "0xf977814e90da44bfa03b6295a0616a897441acec",
-	USDT: "0xe7804c37c13166ff0b37f5ae0bb07a3aebb6e245"
+	USDT: "0xe7804c37c13166ff0b37f5ae0bb07a3aebb6e245",
+	JEUR: "0xc4fcbb58e36e8f5c3b0e904cb20c3947af246891"
 }
