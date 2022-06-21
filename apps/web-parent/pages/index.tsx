@@ -9,7 +9,7 @@ export default function Web() {
   return (
     <MainWrapper>
       <HeroSection />
-      <IndexPageCards />
+      {/* <IndexPageCards /> */}
       <BackedBySection />
       <ArgumentSection />
       <Footer />
