@@ -1,10 +1,18 @@
 import { faAt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 type HeroSectionProps = {};
-type GetStartedDataForm = {
+
+export const getStartedFormSchema = z.object({
+  email: z.string().email(),
+});
+
+type FormValues = {
   email: string;
 };
 
@@ -13,10 +21,18 @@ function HeroSection({}: HeroSectionProps) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<GetStartedDataForm>();
+  } = useForm<FormValues>({
+    resolver: zodResolver(getStartedFormSchema),
+  });
+  const router = useRouter();
 
-  const onSubmit = (data: GetStartedDataForm) => {
-    console.log(data);
+  const onSubmit = async (data: FormValues) => {
+    const res = await fetch('/api/form', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    router.push('/survey?email=' + data.email);
   };
 
   return (
@@ -49,13 +65,7 @@ function HeroSection({}: HeroSectionProps) {
               className="h-full outline-none"
               placeholder="Adresse email"
               type="email"
-              {...register('email', {
-                required: 'This field is required',
-                pattern: {
-                  value: /\S+@\S+\.\S+/,
-                  message: 'Entered value does not match email format',
-                },
-              })}
+              {...register('email')}
             />
 
             <input

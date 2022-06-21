@@ -5,35 +5,47 @@ import { useEffect, useMemo, useState } from 'react';
 import Question from '../components/form/Question';
 import Introduction from '../components/form/Introduction';
 import Conclusion from '../components/form/Conclusion';
+import { GetServerSidePropsContext } from 'next';
 
-type IndexProps = {};
+type IndexProps = {
+  email?: string;
+};
 
 export const formSchema = z.object({
+  email: z.string().email().nullish(),
   cryptoKnowledge: z.enum(['Oui', 'Non']),
   childKnowledge: z.enum(['Oui', 'Non', "Je n'ai pas d'enfants"]).optional(),
-  email: z.string().email(),
 });
 
 type FormValues = {
+  email: string;
   cryptoKnowledge: string;
   childKnowledge: string;
-  email: string;
 };
 
-function Index({}: IndexProps) {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<FormValues>({
+export function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const { query } = ctx;
+  return {
+    props: {
+      email: query.email || null,
+    },
+  };
+}
+
+function Index({ email }: IndexProps) {
+  const { register, handleSubmit, watch } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: email,
+    },
   });
+  const watchAll = watch();
   const [step, setStep] = useState(0);
 
+  console.log(watchAll);
   const onSubmit = async (data: FormValues) => {
     const res = await fetch('/api/form', {
-      method: 'POST',
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
@@ -51,7 +63,6 @@ function Index({}: IndexProps) {
         header=" Vos enfants vous ont-ils déjà parlé de NFT, cryptomonnaies ou encore
         play to earn ?"
       />,
-      <Question register={register('email')} header="Test3?" />,
       <Conclusion />,
     ];
   }, [register]);
