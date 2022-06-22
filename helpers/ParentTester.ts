@@ -1,8 +1,10 @@
 import { ethers } from 'hardhat';
 import { getDecimals, setAllowance, setErc20Balance, stringToDecimalsVersion } from '../utils/ERC20';
 import { ParentContract } from '../ts/Parent';
-import { BigNumberish } from 'ethers';
+import { BigNumber, BigNumberish } from 'ethers';
 import * as constants from "../utils/constants"
+import { blockTimestamp } from '../utils/blockTimestamp';
+import { config } from 'dotenv';
 
 class ParentTester extends ParentContract {
   checkChildIsInit = async (childAddress: string) => {
@@ -84,6 +86,21 @@ class ParentTester extends ParentContract {
     await setAllowance(constants.TOKEN_POLY.JEUR, this.signer, this.contract.address, amountWithDeci.toString());
     await this.addFunds(amountWithDeci.toString(), childAddress);
   } 
+
+  calculateClaimable = async (childAddr: string) => {
+    let fixedConf = await this.getChildConfig(childAddr);
+    let conf = {...fixedConf};
+    let conf2 = conf;
+    const timestamp = await blockTimestamp();
+    let claimable = BigNumber.from(0);
+
+    if (conf2.lastClaim.add(conf2.periodicity).gt(timestamp)) return claimable
+    while (conf2.lastClaim.add(conf2.periodicity).lte(timestamp)) {
+      claimable = claimable.add(conf2.ceiling);
+      conf2.lastClaim = conf2.lastClaim.add(conf2.periodicity);
+    }
+    return claimable.lt(conf2.balance) ? claimable : conf2.balance;
+  }
 }
 
 export default ParentTester;
