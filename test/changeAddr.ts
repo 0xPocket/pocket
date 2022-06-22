@@ -6,7 +6,7 @@ import ParentTester from '../helpers/ParentTester';
 import * as constants from "../utils/constants"
 import { PocketFaucet__factory, PocketFaucet } from "../typechain-types";
 import goForwardNDays from '../utils/goForward';
-import { getBalance, getDecimals, setAllowance, setErc20Balance } from '../utils/ERC20';
+import { getERC20Balance, getDecimals, setAllowance, setErc20Balance } from '../utils/ERC20';
 
 describe('Testing addr changement', function () {
   let child1: Wallet, child2: Wallet;
@@ -44,13 +44,13 @@ describe('Testing addr changement', function () {
 
   it('Should test that new child2 can withdraw', async function () {
     const toSend = ethers.utils.parseUnits("100",  await getDecimals(tokenAddr, provider));
-    const tokenBefore = await getBalance(tokenAddr, child2.address, provider);
+    const tokenBefore = await getERC20Balance(tokenAddr, child2.address, provider);
     await goForwardNDays("http://localhost:8545", 21);
     await setErc20Balance(tokenAddr, parent1Wallet, "100", constants.WHALES_POLY.JEUR);
     await setAllowance(tokenAddr, parent1Wallet, pocketFaucet.address, toSend.toString());
     await parent1.addFunds(toSend, child2.address);
     await pocketFaucet.connect(child2).claim();
-    assert(tokenBefore.lt(await getBalance(tokenAddr, child2.address, provider)), "Child2 number of token did not increased");
+    assert(tokenBefore.lt(await getERC20Balance(tokenAddr, child2.address, provider)), "Child2 number of token did not increased");
   });
 });
 

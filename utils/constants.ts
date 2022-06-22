@@ -66,3 +66,12 @@ export const RDM_ADDRESS = [
 	"0xf977814e90da44bfa01b2295a0616a897441acec",
 	"0xf977814e90da44bfa01b6495a0616a897441acec"
 ]
+
+export const RPC_URL = {
+	LOCAL : "http://localhost:8545",
+}
+
+export const TIME = {
+	WEEK : 604800,
+	DAY : 86400
+}

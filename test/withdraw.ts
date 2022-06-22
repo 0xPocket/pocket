@@ -6,7 +6,7 @@ import ParentTester from '../helpers/ParentTester';
 import {AdminContract} from '../ts/Admin';
 import * as constants from "../utils/constants"
 import { PocketFaucet__factory, PocketFaucet } from "../typechain-types";
-import { getBalance, sendErc20 } from '../utils/ERC20';
+import { getERC20Balance, sendErc20 } from '../utils/ERC20';
 
 describe('Testing withdraw', function () {
   let child1: Wallet, child2: Wallet;
@@ -55,9 +55,9 @@ is missing role 0x5d8e12c39142ff96d79d04d15d1ba1269e4fe57bb9d26f43523628b34ba108
 
   it('should withdraw 1000000 token', async function () {
     await sendErc20(tokenAddr, adminWallet, pocketFaucet.address, "100", constants.WHALES_POLY.JEUR);
-    const balanceBefore = await getBalance(tokenAddr, adminWallet.address, provider);
+    const balanceBefore = await getERC20Balance(tokenAddr, adminWallet.address, provider);
     await adminContract.withdrawToken(tokenAddr, "1000000")
-    const balanceAfter = await getBalance(tokenAddr, adminWallet.address, provider);
+    const balanceAfter = await getERC20Balance(tokenAddr, adminWallet.address, provider);
     assert(balanceAfter.gt(balanceBefore) , "Amount of token did not increase");
   });
 

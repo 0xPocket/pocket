@@ -1,5 +1,5 @@
 import { ethers } from 'hardhat';
-import { getDecimals, setAllowance, setErc20Balance } from '../utils/ERC20';
+import { getDecimals, setAllowance, setErc20Balance, stringToDecimalsVersion } from '../utils/ERC20';
 import { ParentContract } from '../ts/Parent';
 import { BigNumberish } from 'ethers';
 import * as constants from "../utils/constants"
@@ -33,9 +33,8 @@ class ParentTester extends ParentContract {
     return active;
   }
 
-  getCeiling = async (address: string) => {
-    const [, , ceiling, , , ] = await this.getChildConfig(address);
-    return ceiling;
+  getChildCeiling = async (address: string) => {
+    return (await this.getChildConfig(address)).ceiling;
   }
 
   getLastClaim = async (address: string) => {
@@ -75,14 +74,15 @@ class ParentTester extends ParentContract {
 
   addStdChildAndSend = async (address: string, tokenAddr: string) => {
     const ceiling = ethers.utils.parseUnits("10",  await getDecimals(tokenAddr, this.signer));
-    const periodicity = 604800;
+    const periodicity = constants.TIME.WEEK;
     await this.contract.connect(this.signer).addChild(ceiling, periodicity, address);
   }
 
   addFundsToChild = async (childAddress: string, amount : string, token: string, whale: string) => {
+    const amountWithDeci = await stringToDecimalsVersion(token, this.signer, amount )
     await setErc20Balance(token, this.signer, amount , whale);
-    await setAllowance(constants.TOKEN_POLY.JEUR, this.signer, this.contract.address, amount);
-    await this.addFunds(amount, childAddress);
+    await setAllowance(constants.TOKEN_POLY.JEUR, this.signer, this.contract.address, amountWithDeci.toString());
+    await this.addFunds(amountWithDeci.toString(), childAddress);
   } 
 }
 

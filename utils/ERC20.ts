@@ -97,7 +97,7 @@ export async function setAllowance(tokenAddr: string, account: Wallet | Signer, 
   return (await tokenContract.connect(account).approve(receiver, amount));
 }
 
-export async function getBalance(tokenAddr: string, address: string, provider: providers.JsonRpcProvider) {
+export async function getERC20Balance(tokenAddr: string, address: string, provider: providers.JsonRpcProvider) {
   const tokenContract = new Contract(
     tokenAddr,
     ERC20Abi,

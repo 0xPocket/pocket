@@ -49,9 +49,9 @@ describe('Testing conf changement', function () {
 
   it('Should change ceiling', async function () {
     await parent1.addStdChildAndSend(child1.address, tokenAddr);
-    const ceilingBefore = await parent1.getCeiling(child1.address);
+    const ceilingBefore = await parent1.getChildCeiling(child1.address);
     await parent1.changeConfigAndSend(10, 0, child1.address)
-    const ceilingAfter = await parent1.getCeiling(child1.address);
+    const ceilingAfter = await parent1.getChildCeiling(child1.address);
     assert(!ceilingAfter.eq(ceilingBefore), "Ceiling value did not change");
   });
 
