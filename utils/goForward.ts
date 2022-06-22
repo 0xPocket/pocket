@@ -1,3 +1,4 @@
+import * as constants from "../utils/constants";
 import { ethers } from "hardhat";
 
 export default async function goForwardNDays(rpcUrl: string, nbDays: number) {
@@ -7,6 +8,6 @@ export default async function goForwardNDays(rpcUrl: string, nbDays: number) {
   for (let i = 0; i < nbDays; i++) {
     block = await netProvider.getBlock(await netProvider.getBlockNumber());
     timestampBefore = block.timestamp;
-    await netProvider.send("evm_mine", [timestampBefore + 86400]);
+    await netProvider.send("evm_mine", [timestampBefore + constants.TIME.DAY]);
   }
 }
