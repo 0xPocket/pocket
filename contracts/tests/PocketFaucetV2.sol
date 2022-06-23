@@ -37,7 +37,7 @@ contract PocketFaucetV2 is AccessControlUpgradeable {
         baseToken = token;
 				__AccessControl_init_unchained();
         // _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
-				newVar = 5;
+				newVar = 42;
     }
 
     struct Config {
