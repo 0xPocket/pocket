@@ -5,16 +5,10 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { formSchema } from '../pages/survey';
 
 type HeroSectionProps = {};
-
-export const getStartedFormSchema = z.object({
-  email: z.string().email(),
-});
-
-type FormValues = {
-  email: string;
-};
+type FormValues = z.infer<typeof formSchema>;
 
 function HeroSection({}: HeroSectionProps) {
   const {
@@ -22,7 +16,7 @@ function HeroSection({}: HeroSectionProps) {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>({
-    resolver: zodResolver(getStartedFormSchema),
+    resolver: zodResolver(formSchema),
   });
   const router = useRouter();
 
@@ -37,7 +31,7 @@ function HeroSection({}: HeroSectionProps) {
 
   return (
     <section className="relative flex min-h-[100vh] items-center ">
-      <div className="container relative mx-auto grid h-full grid-cols-1 md:grid-cols-10">
+      <div className="grid h-full grid-cols-1 md:grid-cols-10">
         <div className="col-span-4 flex flex-col gap-4 ">
           <div className=" max-w-fit bg-gradient-blue-text bg-clip-text text-[40px] font-bold leading-[50px] text-transparent lg:text-[70px] lg:leading-[80px]">
             <span className="">
@@ -53,26 +47,32 @@ function HeroSection({}: HeroSectionProps) {
             <a>Notre produit</a>
           </div>
 
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="mt-8 flex max-w-fit items-center gap-4 rounded-md bg-bright pl-4 text-white-darker"
-          >
-            <FontAwesomeIcon icon={faAt} />
-            <input
-              className="h-full outline-none"
-              placeholder="Adresse email"
-              type="email"
-              {...register('email')}
-            />
-
-            <input
-              type="submit"
-              value="Commencer"
-              className="relative flex items-center justify-center overflow-hidden whitespace-nowrap rounded-md bg-primary px-4 py-3 text-bright dark:bg-primary-dark"
-            />
-          </form>
+          <div className="flex h-28 flex-col gap-2">
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="mt-8 flex max-w-sm items-center justify-evenly rounded-md bg-bright text-white-darker"
+            >
+              <FontAwesomeIcon icon={faAt} className="px-4" />
+              <input
+                className="h-full flex-grow appearance-none outline-none"
+                placeholder="Adresse email"
+                type="email"
+                {...register('email')}
+              />
+              <input
+                type="submit"
+                value="Commencer"
+                className="flex cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap rounded-md bg-primary px-4 py-3 text-bright dark:bg-primary-dark"
+              />
+            </form>
+            {errors.email && (
+              <span className="max-w-fit text-sm text-white-darker">
+                Vous devez rentrer un email valide
+              </span>
+            )}
+          </div>
         </div>
-        <div className=" relative col-span-6 scale-150">
+        <div className=" relative col-span-6 scale-125">
           <Image
             src="/assets/hero_ilu.svg"
             alt="caca"

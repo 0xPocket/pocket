@@ -9,22 +9,19 @@ import { GetServerSidePropsContext } from 'next';
 import AnimationLayer from '../components/form/AnimationLayer';
 import Header from '../components/Header';
 import QuestionText from '../components/form/QuestionText';
+import MainContainer from '../components/containers/MainContainer';
 
 type IndexProps = {
   email?: string;
 };
 
 export const formSchema = z.object({
-  email: z.string().email().nullish(),
-  cryptoKnowledge: z.enum(['Oui', 'Non']),
+  email: z.string().email(),
+  cryptoKnowledge: z.enum(['Oui', 'Non']).optional(),
   childKnowledge: z.enum(['Oui', 'Non', "Je n'ai pas d'enfants"]).optional(),
 });
 
-type FormValues = {
-  email: string;
-  cryptoKnowledge: string;
-  childKnowledge: string;
-};
+type FormValues = z.infer<typeof formSchema>;
 
 export function getServerSideProps(ctx: GetServerSidePropsContext) {
   const { query } = ctx;
@@ -36,10 +33,15 @@ export function getServerSideProps(ctx: GetServerSidePropsContext) {
 }
 
 function Index({ email }: IndexProps) {
-  const { register, handleSubmit, watch } = useForm<FormValues>({
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: email,
+      email: email ? email : '',
     },
   });
   const [step, setStep] = useState(0);
@@ -47,7 +49,7 @@ function Index({ email }: IndexProps) {
 
   const onSubmit = async (data: FormValues) => {
     await fetch('/api/form', {
-      method: 'PUT',
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
@@ -81,11 +83,12 @@ play to earn ?"
           register={register('email')}
           header="Une adresse email pour vous tenir informé ?"
           onClick={() => setStep((val) => val + 1)}
+          error={errors.email}
         />,
       );
     }
     return questions;
-  }, [register, email]);
+  }, [register, email, errors.email]);
 
   useEffect(() => {
     if (step === questions.length + 1) {
@@ -94,12 +97,12 @@ play to earn ?"
   }, [step, questions, handleSubmit]);
 
   return (
-    <>
+    <MainContainer>
       <Header />
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="relative h-screen w-screen overflow-hidden"
+        className="relative h-screen overflow-hidden"
       >
         <AnimationLayer show={step === 0} questionsLength={questions.length}>
           <Introduction onClick={() => setStep((step) => step + 1)} />
@@ -124,7 +127,7 @@ play to earn ?"
         </AnimationLayer>
         <input type="submit" className="hidden" ref={submitRef} />
       </form>
-    </>
+    </MainContainer>
   );
 }
 
