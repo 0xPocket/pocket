@@ -40,6 +40,7 @@ const form = async (req: NextApiRequest, res: NextApiResponse) => {
       });
       return res.status(201).json({ message: 'Success !' });
     } catch (e) {
+      console.log(e);
       return res.status(400).json({ message: 'Error with the form !' });
     }
   }

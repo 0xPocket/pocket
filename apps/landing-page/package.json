@@ -21,9 +21,9 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.32.1",
+    "react-spring": "^9.4.5",
     "ui": "*",
-    "zod": "^3.17.3",
-    "react-spring": "^9.4.5"
+    "zod": "^3.17.3"
   },
   "devDependencies": {
     "@lib/types": "*",

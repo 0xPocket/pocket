@@ -1,13 +1,14 @@
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Question from '../components/form/Question';
 import Introduction from '../components/form/Introduction';
 import Conclusion from '../components/form/Conclusion';
 import { GetServerSidePropsContext } from 'next';
 import AnimationLayer from '../components/form/AnimationLayer';
 import Header from '../components/Header';
+import QuestionText from '../components/form/QuestionText';
 
 type IndexProps = {
   email?: string;
@@ -41,12 +42,11 @@ function Index({ email }: IndexProps) {
       email: email,
     },
   });
-  const watchAll = watch();
   const [step, setStep] = useState(0);
+  const submitRef = useRef<HTMLInputElement>(null);
 
-  console.log(watchAll);
   const onSubmit = async (data: FormValues) => {
-    const res = await fetch('/api/form', {
+    await fetch('/api/form', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -54,14 +54,14 @@ function Index({ email }: IndexProps) {
   };
 
   useEffect(() => {
-    const subscription = watch((value, { name, type }) =>
-      setStep((val) => val + 1),
-    );
+    const subscription = watch((data, { name }) => {
+      if (name !== 'email') setStep((val) => val + 1);
+    });
     return () => subscription.unsubscribe();
   }, [watch]);
 
-  const questions = useMemo(
-    () => [
+  const questions = useMemo(() => {
+    const questions = [
       <Question
         register={register('cryptoKnowledge')}
         header="Possédez vous des cryptomonnaies ou des NFTs ?"
@@ -73,9 +73,25 @@ function Index({ email }: IndexProps) {
 play to earn ?"
         options={['Oui', 'Non', "Je n'ai pas d'enfants"]}
       />,
-    ],
-    [register],
-  );
+    ];
+
+    if (!email) {
+      questions.unshift(
+        <QuestionText
+          register={register('email')}
+          header="Une adresse email pour vous tenir informé ?"
+          onClick={() => setStep((val) => val + 1)}
+        />,
+      );
+    }
+    return questions;
+  }, [register, email]);
+
+  useEffect(() => {
+    if (step === questions.length + 1) {
+      submitRef.current?.click();
+    }
+  }, [step, questions, handleSubmit]);
 
   return (
     <>
@@ -99,25 +115,14 @@ play to earn ?"
             {question}
           </AnimationLayer>
         ))}
-        {/* <AnimationLayer show={step === 1} step={1}>
-          <Question
-            register={register('cryptoKnowledge')}
-            header="Possédez vous des cryptomonnaies ou des NFTs ?"
-            options={['Oui', 'Non']}
-          />
-        </AnimationLayer>
-        <AnimationLayer show={step === 2} step={2}>
-          <Question
-            register={register('childKnowledge')}
-            header=" Vos enfants vous ont-ils déjà parlé de NFT, cryptomonnaies ou encore
-					play to earn ?"
-            options={['Oui', 'Non', "Je n'ai pas d'enfants"]}
-          />
-        </AnimationLayer> */}
 
-        <AnimationLayer show={step === 3} questionsLength={questions.length}>
+        <AnimationLayer
+          show={step === questions.length + 1}
+          questionsLength={questions.length}
+        >
           <Conclusion />
         </AnimationLayer>
+        <input type="submit" className="hidden" ref={submitRef} />
       </form>
     </>
   );
