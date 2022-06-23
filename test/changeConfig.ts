@@ -13,7 +13,6 @@ describe('Testing conf changement', function () {
   let provider : providers.JsonRpcProvider;
   let parent1Wallet: Wallet;
   const tokenAddr = constants.TOKEN_POLY.JEUR;
-
   
   before(async function () {
     provider = new providers.JsonRpcProvider("http://localhost:8545");
