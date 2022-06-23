@@ -57,4 +57,3 @@ describe('Testing rm child', function () {
     , "The two child were not removed");
   });
 });
-
