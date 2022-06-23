@@ -89,5 +89,9 @@ describe('Deploy and tests on proxy functions', function () {
 			await upgrades.upgradeProxy(pocketFaucet.address, PocketFaucetV2_factory);
 			expect(pocketV1Addr).to.not.be.equal(await upgrades.erc1967.getImplementationAddress(pocketFaucet.address));
 		});
+
+		// it('Should have access to new variable', async function () {
+		// 	expect(await (pocketFaucet as PocketFaucetV2).connect(admin).newVar()).to.be.equal(42)
+		// });
 	});
 });
