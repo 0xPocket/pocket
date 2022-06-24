@@ -35,12 +35,16 @@ function HeroSection({}: HeroSectionProps) {
         <div className="col-span-4 flex flex-col gap-4 ">
           <div className=" max-w-fit bg-gradient-blue-text bg-clip-text text-[40px] font-bold leading-[50px] text-transparent lg:text-[70px] lg:leading-[80px]">
             <span className="">
-              Accompagnez vos enfants vers le web de demain.
+              {"L'argent de poche du web3. Simple. Sécurisé."}
             </span>
           </div>
           <div className="text-3xl">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi sit in
-            obcaecati aspernatur accusantium ipsa sapiente odio consequuntur,
+            Pas besoin de tout comprendre aux cryptomonnaies pour en donner a
+            ses ados.
+          </div>
+          <div className="text-3xl">
+            Achetez et distribuez de l'argent de poche a vos enfants en un
+            clique.
           </div>
           <div className="flex gap-8 text-[rgb(57,179,245)]">
             <a href="">Le web3 ?</a>
