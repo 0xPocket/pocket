@@ -14,7 +14,7 @@ function IndexPageCardsParents() {
   return (
     <div className="min-h-96  z-10">
       <Waypoint onEnter={() => setShow(true)} />
-      <div className=" mb-8 bg-gradient-blue-text bg-clip-text text-6xl font-bold  text-transparent xl:hidden">
+      <div className="mb-8 bg-gradient-blue-text bg-clip-text text-center text-6xl font-bold text-transparent  sm:text-left xl:hidden">
         Parents
       </div>
       <div className="relative grid grid-cols-4 gap-8">

@@ -14,7 +14,7 @@ function IndexPageCardsChildren() {
   return (
     <div className="min-h-96 z-10">
       <Waypoint onEnter={() => setShow(true)} />
-      <div className=" mb-8 bg-gradient-pink-text bg-clip-text text-6xl font-bold  text-transparent xl:hidden">
+      <div className="mb-8 bg-gradient-pink-text bg-clip-text text-center text-6xl font-bold text-transparent  sm:text-left xl:hidden">
         Enfants
       </div>
       <div className="relative grid grid-cols-4 gap-8">
