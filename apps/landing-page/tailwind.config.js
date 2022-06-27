@@ -46,7 +46,7 @@ module.exports = {
         'gradient-blue-text':
           'linear-gradient(110.59deg, #069EFC 0%, #14F4C9 2.63%, #069EFC 96.85%)',
         'gradient-pink-text':
-          'linear-gradient(90deg, rgba(224,95,144,1) 0%, rgba(252,180,204,1) 100%)',
+          'linear-gradient(90deg, rgba(224,95,144,1) 0%, rgba(255,138,177,1) 100%)',
       },
       fontFamily: {
         raleway: ["'Raleway'", 'sans-serif'],

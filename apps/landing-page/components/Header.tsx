@@ -8,7 +8,7 @@ function Header({}: HeaderProps) {
     <header className="absolute left-0 right-0 z-10 flex ">
       <div className="flex h-28 w-full items-center justify-between">
         <Link href="/">
-          <a className="text-4xl font-bold">Pocket.</a>
+          <a className="text-5xl font-bold">Pocket.</a>
         </Link>
         <ThemeToggler />
       </div>

@@ -100,7 +100,10 @@ play to earn ?"
     <MainContainer>
       <Header />
 
-      <form onSubmit={handleSubmit(onSubmit)} className="relative h-screen">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="relative h-screen overflow-hidden"
+      >
         <AnimationLayer show={step === 0} questionsLength={questions.length}>
           <Introduction onClick={() => setStep((step) => step + 1)} />
         </AnimationLayer>
