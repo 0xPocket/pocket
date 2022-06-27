@@ -1,10 +1,11 @@
 import Image from 'next/image';
 import React from 'react';
+import CallToAction from './CallToAction';
 
 const SimpleSection: React.FC = () => {
   return (
-    <section className="relative mx-auto flex max-w-6xl  gap-16">
-      <div className="relative col-span-3 row-span-full aspect-square h-[500px]">
+    <section className="relative mx-auto flex max-w-6xl flex-col gap-16 lg:flex-row">
+      <div className="relative aspect-square h-[500px]">
         <Image
           src="/assets/mockup_macbookpro.png"
           objectFit="contain"
@@ -23,6 +24,9 @@ const SimpleSection: React.FC = () => {
           {
             "Pocket sera disponible très rapidement. Faites partie des premiers inscrits et profitez d'avantages exclusifs."
           }
+        </div>
+        <div className="self-center lg:self-auto">
+          <CallToAction />
         </div>
       </div>
     </section>

@@ -19,11 +19,11 @@ function IndexCard({
       <h2
         className={`z-10 mb-4  ${
           varitaion ? 'bg-gradient-pink-text' : 'bg-gradient-blue-text'
-        } bg-clip-text pb-4 text-4xl text-transparent`}
+        } bg-clip-text pb-4 text-center text-4xl text-transparent`}
       >
         {title}
       </h2>
-      <span className="z-10 text-xl tracking-wide">{content}</span>
+      <div className="z-10 text-center text-xl tracking-wide">{content}</div>
       <FontAwesomeIcon
         icon={icon}
         className="absolute bottom-0 -right-8 -z-10 h-40 w-40 -rotate-12 opacity-10"
