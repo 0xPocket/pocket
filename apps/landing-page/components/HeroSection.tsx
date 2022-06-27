@@ -30,31 +30,37 @@ function HeroSection({}: HeroSectionProps) {
   };
 
   return (
-    <section className="relative flex min-h-[100vh] items-center ">
+    <section className="relative flex min-h-[100vh] items-center">
       <div className="grid h-full grid-cols-1 md:grid-cols-10">
-        <div className="col-span-4 flex flex-col gap-4 ">
-          <div className=" max-w-fit bg-gradient-blue-text bg-clip-text text-[40px] font-bold leading-[50px] text-transparent lg:text-[70px] lg:leading-[80px]">
-            <span className="">
-              {"L'argent de poche du web3. Simple. Sécurisé."}
+        <div className="col-span-4 flex flex-col gap-4">
+          <div className=" max-w-fit  text-[40px] font-bold leading-[50px] text-transparent lg:text-[70px] lg:leading-[80px]">
+            <span className="block bg-gradient-blue-text bg-clip-text">
+              {"L'argent de poche du web3."}
+            </span>
+            <span className="block bg-gradient-pink-text bg-clip-text ">
+              {'Simple. Sécurisé.'}
             </span>
           </div>
-          <div className="text-3xl">
-            Pas besoin de tout comprendre aux cryptomonnaies pour en donner a
-            ses ados.
-          </div>
-          <div className="text-3xl">
-            Achetez et distribuez de l'argent de poche a vos enfants en un
-            clique.
+          <div className=" ">
+            <div className="text-3xl leading-relaxed">
+              Pas besoin de tout comprendre aux cryptomonnaies pour en donner a
+              ses ados.
+            </div>
+            <div className="text-3xl leading-normal">
+              {
+                "Achetez et distribuez de l'argent de poche a vos enfants en un clique."
+              }
+            </div>
           </div>
           <div className="flex gap-8 text-[rgb(57,179,245)]">
             <a href="">Le web3 ?</a>
             <a>Notre produit</a>
           </div>
 
-          <div className="flex h-28 flex-col gap-2">
+          <div className="flex h-32 flex-col gap-2">
             <form
               onSubmit={handleSubmit(onSubmit)}
-              className="mt-8 flex max-w-sm items-center justify-evenly rounded-md bg-bright text-white-darker"
+              className="mt-8 flex h-14 max-w-md items-center justify-evenly rounded-lg bg-bright text-white-darker"
             >
               <FontAwesomeIcon icon={faAt} className="px-4" />
               <input
@@ -66,7 +72,7 @@ function HeroSection({}: HeroSectionProps) {
               <input
                 type="submit"
                 value="Commencer"
-                className="flex cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap rounded-md bg-primary px-4 py-3 text-bright dark:bg-primary-dark"
+                className="flex h-full cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap rounded-lg  bg-gradient-blue-text px-4 py-3 text-bright dark:bg-primary-dark"
               />
             </form>
             {errors.email && (
