@@ -46,7 +46,7 @@ function App({ Component, pageProps: { ...pageProps } }: AppProps) {
         </WagmiConfig>
       </AuthProvider>
       <ToastContainer position="bottom-right" autoClose={3000} />
-      <ReactQueryDevtools />
+      {/* <ReactQueryDevtools /> */}
     </QueryClientProvider>
   );
 }
