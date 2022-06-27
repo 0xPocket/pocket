@@ -1,5 +1,9 @@
 import { faBitcoin } from '@fortawesome/free-brands-svg-icons';
-import { faGear, faMessage } from '@fortawesome/free-solid-svg-icons';
+import {
+  faEuroSign,
+  faGear,
+  faMessage,
+} from '@fortawesome/free-solid-svg-icons';
 import { IndexCardAnimation } from '@lib/ui';
 import { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
@@ -19,7 +23,7 @@ function IndexPageCardsParents() {
           <IndexCardAnimation>
             <IndexCard
               title="Simplicité"
-              content="Créer un compte, ajustez la fréquence et le montant d’argent de poche en quelques cliques"
+              content="Créez un compte, ajustez la fréquence et le montant d’argent de poche en quelques cliques"
               icon={faGear}
             />
             <IndexCard
@@ -30,7 +34,7 @@ function IndexPageCardsParents() {
             <IndexCard
               title="Stabilité"
               content="Vos fonds ne sont pas soumis aux aléas du marché grace a une cryptomonnaie indéxé sur l'euro"
-              icon={faBitcoin}
+              icon={faEuroSign}
             />
           </IndexCardAnimation>
         )}

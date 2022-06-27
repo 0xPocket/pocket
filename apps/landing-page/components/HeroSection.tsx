@@ -1,39 +1,14 @@
-import { faAt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { formSchema } from '../pages/survey';
+import CallToAction from './CallToAction';
 
 type HeroSectionProps = {};
-type FormValues = z.infer<typeof formSchema>;
 
 function HeroSection({}: HeroSectionProps) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-  });
-  const router = useRouter();
-
-  const onSubmit = async (data: FormValues) => {
-    await fetch('/api/form', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    router.push('/survey?email=' + data.email);
-  };
-
   return (
     <section className="relative flex min-h-[100vh] items-center">
       <div className="grid h-full grid-cols-1 md:grid-cols-10">
         <div className="col-span-4 flex flex-col gap-4">
-          <div className=" max-w-fit  text-[40px] font-bold leading-[50px] text-transparent lg:text-[70px] lg:leading-[80px]">
+          <div className=" max-w-fit  text-[38px] font-bold leading-[50px] text-transparent lg:text-[65px] lg:leading-[80px]">
             <span className="block bg-gradient-blue-text bg-clip-text">
               {"L'argent de poche du web3."}
             </span>
@@ -42,47 +17,24 @@ function HeroSection({}: HeroSectionProps) {
             </span>
           </div>
           <div className=" ">
-            <div className="text-3xl leading-relaxed">
+            <div className="text-2xl leading-relaxed">
               Pas besoin de tout comprendre aux cryptomonnaies pour en donner a
               ses ados.
             </div>
-            <div className="text-3xl leading-normal">
+            <div className="text-2xl leading-normal">
               {
                 "Achetez et distribuez de l'argent de poche a vos enfants en un clique."
               }
             </div>
           </div>
-          <div className="flex gap-8 text-[rgb(57,179,245)]">
+          {/* <div className="flex gap-8 text-[rgb(57,179,245)]">
             <a href="">Le web3 ?</a>
             <a>Notre produit</a>
-          </div>
+          </div> */}
 
-          <div className="flex h-32 flex-col gap-2">
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="mt-8 flex h-14 max-w-md items-center justify-evenly rounded-lg bg-bright text-white-darker"
-            >
-              <FontAwesomeIcon icon={faAt} className="px-4" />
-              <input
-                className="h-full flex-grow appearance-none outline-none"
-                placeholder="Adresse email"
-                type="email"
-                {...register('email')}
-              />
-              <input
-                type="submit"
-                value="Commencer"
-                className="flex h-full cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap rounded-lg  bg-gradient-blue-text px-4 py-3 text-bright dark:bg-primary-dark"
-              />
-            </form>
-            {errors.email && (
-              <span className="max-w-fit text-sm text-white-darker">
-                Vous devez rentrer un email valide
-              </span>
-            )}
-          </div>
+          <CallToAction />
         </div>
-        <div className=" relative col-span-6 scale-125">
+        <div className=" relative -z-10 col-span-6 scale-[1.6]">
           <Image
             src="/assets/hero_image2.png"
             alt="caca"
