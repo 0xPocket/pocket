@@ -78,7 +78,7 @@ function HeroSection({}: HeroSectionProps) {
         </div>
         <div className=" relative col-span-6 scale-125">
           <Image
-            src="/assets/hero_ilu.svg"
+            src="/assets/hero_image.png"
             alt="caca"
             layout="fill"
             objectFit="contain"
