@@ -26,6 +26,11 @@ export function IndexCardAnimation({
   });
 
   return transitions((style, item) => (
-    <animated.div style={style}>{item}</animated.div>
+    <animated.div
+      style={style}
+      className="col-span-4 sm:col-span-2 xl:col-span-1"
+    >
+      {item}
+    </animated.div>
   ));
 }

@@ -5,10 +5,10 @@ type HeroSectionProps = {};
 
 function HeroSection({}: HeroSectionProps) {
   return (
-    <section className="relative flex min-h-[100vh] items-center">
-      <div className="grid h-full grid-cols-1 md:grid-cols-10">
-        <div className="col-span-4 flex flex-col gap-4">
-          <div className=" max-w-fit  text-[38px] font-bold leading-[50px] text-transparent lg:text-[65px] lg:leading-[80px]">
+    <section className="relative flex min-h-[100vh] items-center pt-28 2xl:pt-0 ">
+      <div className="grid grid-cols-10">
+        <div className="col-span-10 flex flex-col justify-center gap-4 xl:col-span-4">
+          <div className="max-w-fit text-[38px] font-bold leading-[50px] text-transparent lg:text-[65px] lg:leading-[80px]">
             <span className="block bg-gradient-blue-text bg-clip-text">
               {"L'argent de poche du web3."}
             </span>
@@ -34,10 +34,10 @@ function HeroSection({}: HeroSectionProps) {
 
           <CallToAction />
         </div>
-        <div className=" relative -z-10 col-span-6 scale-[1.6]">
+        <div className="relative -z-10 col-span-10 aspect-[1/1] w-full xl:col-span-6">
           <Image
             src="/assets/hero_image2.png"
-            alt="caca"
+            alt=""
             layout="fill"
             objectFit="contain"
           />

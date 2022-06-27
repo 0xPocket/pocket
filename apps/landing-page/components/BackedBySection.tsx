@@ -1,14 +1,12 @@
-import Image from 'next/image';
-import Link from 'next/link';
 import LogoPartenaire from './LogoPartenaire';
 
 type BackedBySectionProps = {};
 
 function BackedBySection({}: BackedBySectionProps) {
   return (
-    <div className=" bg-opacity-20 py-16 dark:bg-opacity-5">
+    <div className=" bg-opacity-20 dark:bg-opacity-5">
       <div className="container mx-auto">
-        <div className="flex items-center justify-center gap-24">
+        <div className="flex flex-col items-center justify-center gap-24 md:flex-row">
           <h2 className="">Nos patenaires</h2>
           <LogoPartenaire
             url="https://www.lecryptofellowship.com/"

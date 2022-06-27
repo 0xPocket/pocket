@@ -4,8 +4,8 @@ import CallToAction from './CallToAction';
 
 const SimpleSection: React.FC = () => {
   return (
-    <section className="relative mx-auto flex max-w-6xl flex-col gap-16 lg:flex-row">
-      <div className="relative aspect-square h-[500px]">
+    <section className="relative mx-auto grid max-w-7xl grid-cols-2 gap-16">
+      <div className="relative col-span-2 aspect-[1/0.58] w-full lg:col-span-1 ">
         <Image
           src="/assets/mockup_macbookpro.png"
           objectFit="contain"
@@ -13,7 +13,7 @@ const SimpleSection: React.FC = () => {
           alt="pocket website"
         />
       </div>
-      <div className="flex flex-col justify-center font-bold text-transparent">
+      <div className="col-span-2 flex flex-col justify-center font-bold text-transparent lg:col-span-1">
         <h1 className="bg-gradient-blue-text  bg-clip-text text-6xl leading-[75px]">
           Rejoignez Pocket
         </h1>

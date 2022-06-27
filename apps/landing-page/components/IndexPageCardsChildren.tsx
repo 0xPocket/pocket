@@ -1,7 +1,6 @@
 import {
   faEarthEurope,
   faGraduationCap,
-  faPencil,
   faRocket,
 } from '@fortawesome/free-solid-svg-icons';
 import { IndexCardAnimation } from '@lib/ui';
@@ -13,9 +12,12 @@ function IndexPageCardsChildren() {
   const [show, setShow] = useState(false);
 
   return (
-    <div className="z-10 h-96">
+    <div className="min-h-96 z-10">
       <Waypoint onEnter={() => setShow(true)} />
-      <div className="relative flex items-center justify-between">
+      <div className=" mb-8 bg-gradient-pink-text bg-clip-text text-6xl font-bold  text-transparent xl:hidden">
+        Enfants
+      </div>
+      <div className="relative grid grid-cols-4 gap-8">
         {show && (
           <IndexCardAnimation>
             <IndexCard
@@ -38,7 +40,7 @@ function IndexPageCardsChildren() {
             />
           </IndexCardAnimation>
         )}
-        <div className="bg-gradient-pink-text bg-clip-text text-6xl font-bold text-transparent">
+        <div className="col-span-1 hidden items-center justify-center bg-gradient-pink-text bg-clip-text text-6xl  font-bold text-transparent xl:col-span-1 xl:flex xl:aspect-square 2xl:aspect-[2/1.5]">
           Enfants
         </div>
       </div>

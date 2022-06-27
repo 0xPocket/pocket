@@ -1,4 +1,3 @@
-import { faBitcoin } from '@fortawesome/free-brands-svg-icons';
 import {
   faEuroSign,
   faGear,
@@ -13,10 +12,13 @@ function IndexPageCardsParents() {
   const [show, setShow] = useState(false);
 
   return (
-    <div className="z-10  h-96">
+    <div className="min-h-96  z-10">
       <Waypoint onEnter={() => setShow(true)} />
-      <div className="relative flex items-center justify-between">
-        <div className="bg-gradient-blue-text bg-clip-text text-6xl font-bold text-transparent">
+      <div className=" mb-8 bg-gradient-blue-text bg-clip-text text-6xl font-bold  text-transparent xl:hidden">
+        Parents
+      </div>
+      <div className="relative grid grid-cols-4 gap-8">
+        <div className=" hidden items-center justify-center bg-gradient-blue-text bg-clip-text  text-6xl font-bold text-transparent xl:col-span-1 xl:flex">
           Parents
         </div>
         {show && (

@@ -13,7 +13,7 @@ function Index({}: IndexProps) {
     <>
       <MainContainer>
         <HeroSection />
-        <div className="mt-2 flex flex-col gap-24">
+        <div className="mt-2 flex flex-col gap-40">
           <IndexPageCardsParents />
           <IndexPageCardsChildren />
           <SimpleSection />
