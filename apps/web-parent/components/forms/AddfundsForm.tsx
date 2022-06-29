@@ -91,11 +91,11 @@ function AddfundsForm({ child }: AddfundsFormProps) {
         {errors.topup && <FormErrorMessage message={errors.topup.message} />}
       </div>
 
-      <Web3Modal
+      {/* <Web3Modal
         contract={addFunds}
         isOpen={showModal}
         setIsOpen={setShowModal}
-      />
+      /> */}
 
       <input
         type="submit"

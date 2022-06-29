@@ -1,74 +1,47 @@
-import { faAt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
-import { useForm } from 'react-hook-form';
+import CallToAction from './CallToAction';
 
 type HeroSectionProps = {};
-type GetStartedDataForm = {
-  email: string;
-};
 
 function HeroSection({}: HeroSectionProps) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<GetStartedDataForm>();
-
-  const onSubmit = (data: GetStartedDataForm) => {
-    console.log(data);
-  };
-
   return (
-    <section className="relative z-0 flex min-h-[85vh] items-center ">
-      <div className="container relative mx-auto grid h-full grid-cols-1 md:grid-cols-10">
-        <div className="z-10 col-span-4 flex flex-col gap-4 ">
-          {/* <span className="text-2xl lg:text-4xl">
-            The best place for your kid
-          </span> */}
-          <div className=" max-w-fit bg-gradient-blue-text bg-clip-text text-[40px] font-bold leading-[50px] text-transparent lg:text-[70px] lg:leading-[80px]">
-            <span className="">
-              Accompagnez vos enfants vers le web de demain.
+    <section className="relative flex min-h-[100vh] items-center pt-28 2xl:pt-0 ">
+      <div className="grid grid-cols-10">
+        <div className="relative -z-10 col-span-10 block aspect-[1/1] w-full xl:col-span-6 xl:hidden">
+          <Image
+            src="/assets/hero_image2.png"
+            alt=""
+            layout="fill"
+            objectFit="contain"
+          />
+        </div>
+        <div className="col-span-10 flex flex-col justify-center gap-4 xl:col-span-4">
+          <div className="max-w-fit text-[38px] font-bold leading-[50px] text-transparent lg:text-[65px] lg:leading-[80px]">
+            <span className="block bg-gradient-blue-text bg-clip-text">
+              {"L'argent de poche du web3."}
+            </span>
+            <span className="block bg-gradient-pink-text bg-clip-text ">
+              {'Simple. Sécurisé.'}
             </span>
           </div>
-          <div className="text-3xl">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi sit in
-            obcaecati aspernatur accusantium ipsa sapiente odio consequuntur,
-          </div>
-          <div className="flex gap-8 text-[rgb(57,179,245)]">
-            <a href="">Le web3 ?</a>
-            <a>Notre produit</a>
+          <div className=" ">
+            <div className="text-2xl leading-relaxed">
+              Pas besoin de tout comprendre aux cryptomonnaies pour en donner à
+              ses ados.
+            </div>
+            <div className="text-2xl leading-normal">
+              {
+                "Achetez et distribuez de l'argent de poche à vos enfants en un clic."
+              }
+            </div>
           </div>
 
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="mt-8 flex max-w-fit items-center gap-4 rounded-md bg-bright pl-4 text-white-darker"
-          >
-            <FontAwesomeIcon icon={faAt} />
-            <input
-              className="h-full outline-none"
-              placeholder="Adresse email"
-              type="email"
-              {...register('email', {
-                required: 'This field is required',
-                pattern: {
-                  value: /\S+@\S+\.\S+/,
-                  message: 'Entered value does not match email format',
-                },
-              })}
-            />
-
-            <input
-              type="submit"
-              value="Commencer"
-              className="relative flex items-center justify-center overflow-hidden whitespace-nowrap rounded-md bg-primary px-4 py-3 text-bright dark:bg-primary-dark"
-            />
-          </form>
+          <CallToAction />
         </div>
-        <div className=" relative col-span-6 scale-150">
+        <div className="relative -z-10 col-span-10 hidden aspect-[1/1] w-full xl:col-span-6 xl:block">
           <Image
-            src="/assets/hero_ilu.svg"
-            alt="caca"
+            src="/assets/hero_image2.png"
+            alt=""
             layout="fill"
             objectFit="contain"
           />

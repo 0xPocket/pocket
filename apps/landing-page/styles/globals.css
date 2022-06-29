@@ -19,4 +19,8 @@ html {
   p {
     @apply font-bitter;
   }
+
+  input:-webkit-autofill {
+    -webkit-background-clip: text;
+  }
 }

@@ -89,9 +89,9 @@ enum ChildStatus {
 
 model Survey {
   id              String   @id @default(cuid())
-  cryptoKnowledge Boolean
+  cryptoKnowledge String?
   childKnowledge  String?
-  email           String
+  email           String   @unique
   createdAt       DateTime @default(now())
 }
 
