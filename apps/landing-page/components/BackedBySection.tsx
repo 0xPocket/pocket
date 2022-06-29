@@ -9,21 +9,18 @@ function BackedBySection({}: BackedBySectionProps) {
         <div className="flex flex-col items-center justify-center gap-24 md:flex-row">
           <h2 className="">Nos partenaires</h2>
           <LogoPartenaire
-            url="https://www.lecryptofellowship.com/"
             imgUrl="/assets/backer_icons/cryptofellowship.svg"
             width="w-28"
             height="h-28"
             alt="Le cryptofellowship logo"
           />
           <LogoPartenaire
-            url="https://www.frst.vc"
             imgUrl="/assets/backer_icons/first.svg"
             width="w-28"
             height="h-28"
             alt="frst vc logo"
           />
           <LogoPartenaire
-            url="https://www.fabric.vc/"
             imgUrl="/assets/backer_icons/fabric.svg"
             width="w-60"
             height="h-28"

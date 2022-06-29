@@ -13,12 +13,13 @@ function Index({}: IndexProps) {
     <>
       <MainContainer>
         <HeroSection />
-        <div className="mt-2 flex flex-col gap-40">
-          <IndexPageCardsParents />
-          <IndexPageCardsChildren />
+        <div className="mt-2 flex flex-col gap-40  py-32 md:gap-60">
+          <div className=" flex flex-col gap-32">
+            <IndexPageCardsParents />
+            <IndexPageCardsChildren />
+          </div>
           <SimpleSection />
           <BackedBySection />
-          <Footer />
         </div>
       </MainContainer>
     </>
