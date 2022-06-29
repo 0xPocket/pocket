@@ -13,6 +13,8 @@ function HeroSection({}: HeroSectionProps) {
             alt=""
             layout="fill"
             objectFit="contain"
+            priority={true}
+            sizes="100vw"
           />
         </div>
         <div className="col-span-10 flex flex-col justify-center gap-4 xl:col-span-4">
@@ -44,6 +46,8 @@ function HeroSection({}: HeroSectionProps) {
             alt=""
             layout="fill"
             objectFit="contain"
+            priority={true}
+            sizes="800px"
           />
         </div>
       </div>
