@@ -26,6 +26,12 @@ function BackedBySection({}: BackedBySectionProps) {
             height="h-28"
             alt="fabric logo"
           />
+          <LogoPartenaire
+            imgUrl="/assets/backer_icons/neuillylab.svg"
+            width="h-28"
+            height="h-28"
+            alt="neuillylab logo"
+          />
         </div>
       </div>
     </div>
