@@ -27,6 +27,7 @@ function IndexCard({
       <FontAwesomeIcon
         icon={icon}
         className="absolute bottom-0 -right-8 -z-10 h-40 w-40 -rotate-12 opacity-10"
+        size="8x"
       />
       <div className="absolute right-[-200px] bottom-[-200px] -z-20 h-[600px] w-[500px] bg-light-radial-herosection opacity-5"></div>
     </div>

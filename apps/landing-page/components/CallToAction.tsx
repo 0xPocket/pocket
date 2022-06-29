@@ -32,7 +32,7 @@ const CallToAction: React.FC = () => {
     <div className="flex h-32 flex-col gap-2">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="mt-8 flex h-14 max-w-md items-center justify-evenly rounded-lg border border-bright-darkest bg-bright text-white-darker dark:border-none"
+        className="relative mt-8 flex h-14 max-w-md items-center justify-evenly rounded-lg border border-bright-darkest bg-bright text-white-darker dark:border-none"
       >
         <FontAwesomeIcon icon={faEnvelope} className="px-4 opacity-70" />
         <input
