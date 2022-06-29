@@ -4,10 +4,10 @@ type BackedBySectionProps = {};
 
 function BackedBySection({}: BackedBySectionProps) {
   return (
-    <div className=" bg-opacity-20 dark:bg-opacity-5">
+    <div className=" rounded-xl bg-dark-lightest py-12 dark:bg-transparent">
       <div className="container mx-auto">
         <div className="flex flex-col items-center justify-center gap-24 md:flex-row">
-          <h2 className="">Nos partenaires</h2>
+          <h2 className="text-bright">Nos partenaires</h2>
           <LogoPartenaire
             imgUrl="/assets/backer_icons/cryptofellowship.svg"
             width="w-28"

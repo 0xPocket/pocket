@@ -5,7 +5,7 @@ type MainContainerProps = { children: React.ReactNode };
 
 function MainContainer({ children }: MainContainerProps) {
   return (
-    <div className=" container relative mx-auto min-h-screen w-screen p-4 sm:p-0">
+    <div className=" container relative mx-auto p-4 sm:p-0 md:min-h-screen">
       <Header />
       {children}
     </div>

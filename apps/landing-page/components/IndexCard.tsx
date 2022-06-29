@@ -15,7 +15,7 @@ function IndexCard({
   varitaion = false,
 }: IndexCardProps) {
   return (
-    <div className=" relative z-0 overflow-hidden rounded-2xl border border-gray-lightest bg-white p-8 shadow-xl dark:border-opacity-20 dark:bg-dark-light sm:aspect-square lg:aspect-[2/1.25] xl:aspect-square 2xl:aspect-[2/1.5]">
+    <div className=" relative z-0 overflow-hidden rounded-2xl border border-bright-darkest bg-bright-dark p-8 shadow-xl dark:border-opacity-20 dark:bg-dark-light sm:aspect-square lg:aspect-[2/1.25] xl:aspect-square 2xl:aspect-[2/1.5]">
       <h2
         className={`z-10 mb-4  ${
           varitaion ? 'bg-gradient-pink-text' : 'bg-gradient-blue-text'

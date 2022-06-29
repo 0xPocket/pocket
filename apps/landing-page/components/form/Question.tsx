@@ -10,7 +10,7 @@ type Props = {
 const Question: React.FC<Props> = ({ register, header, options }) => {
   return (
     <div className="flex flex-col items-center justify-center gap-12">
-      <h1 className="max-w-3xl text-center text-3xl leading-normal md:text-4xl">
+      <h1 className="max-w-3xl text-center text-2xl leading-normal md:text-4xl">
         {header}
       </h1>
       <div className="flex flex-col gap-8 md:flex-row md:text-xl">
@@ -19,7 +19,9 @@ const Question: React.FC<Props> = ({ register, header, options }) => {
             className="relative min-w-[140px] rounded-lg bg-primary p-4"
             key={index}
           >
-            <label className="flex items-center justify-center">{option}</label>
+            <span className="flex items-center justify-center text-white">
+              {option}
+            </span>
             <input
               {...register}
               type="radio"

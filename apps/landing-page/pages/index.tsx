@@ -1,6 +1,5 @@
 import BackedBySection from '../components/BackedBySection';
 import MainContainer from '../components/containers/MainContainer';
-import Footer from '../components/Footer';
 import HeroSection from '../components/HeroSection';
 import IndexPageCardsChildren from '../components/IndexPageCardsChildren';
 import IndexPageCardsParents from '../components/IndexPageCardsParents';

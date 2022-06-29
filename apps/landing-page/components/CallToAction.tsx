@@ -1,4 +1,4 @@
-import { faAt, faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/router';
@@ -32,7 +32,7 @@ const CallToAction: React.FC = () => {
     <div className="flex h-32 flex-col gap-2">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="mt-8 flex h-14 max-w-md items-center justify-evenly rounded-lg bg-bright text-white-darker"
+        className="mt-8 flex h-14 max-w-md items-center justify-evenly rounded-lg border border-bright-darkest bg-bright text-white-darker dark:border-none"
       >
         <FontAwesomeIcon icon={faEnvelope} className="px-4 opacity-70" />
         <input
@@ -44,7 +44,7 @@ const CallToAction: React.FC = () => {
         <input
           type="submit"
           value="Commencer"
-          className="flex h-full cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap rounded-lg bg-primary bg-primary px-4 py-3 text-bright dark:bg-primary"
+          className="flex h-full cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap rounded-lg bg-primary px-4 py-3 text-bright dark:bg-primary"
         />
       </form>
       {errors.email && (

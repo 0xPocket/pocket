@@ -13,14 +13,14 @@ const SimpleSection: React.FC = () => {
           alt="pocket website"
         />
       </div>
-      <div className="col-span-2 flex flex-col justify-center font-bold text-transparent lg:col-span-1">
-        <h1 className="bg-gradient-blue-text  bg-clip-text text-6xl leading-[75px]">
+      <div className="col-span-2 flex flex-col justify-center text-center md:text-left lg:col-span-1">
+        <h1 className="bg-gradient-blue-text bg-clip-text  text-6xl font-bold leading-[75px] text-transparent">
           Rejoignez Pocket
         </h1>
-        <h1 className="bg-gradient-pink-text bg-clip-text text-5xl leading-[75px] text-transparent">
+        <h1 className="bg-gradient-pink-text bg-clip-text  text-3xl font-bold text-transparent md:text-5xl md:leading-[1.5]">
           Soyez le premier.
         </h1>
-        <div className="mt-4 bg-clip-text text-xl font-normal text-dark text-transparent dark:text-bright">
+        <div className="mt-4 text-xl">
           {
             "Pocket sera disponible très rapidement. Faites partie des premiers inscrits et profitez d'avantages exclusifs."
           }

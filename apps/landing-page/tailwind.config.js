@@ -21,8 +21,14 @@ module.exports = {
       dark: {
         DEFAULT: '#0f172a',
         light: '#1e293b',
+        lightest: '#334c74',
       },
-      bright: '#fff',
+      bright: {
+        bg: 'rgb(237,249,254)',
+        DEFAULT: '#fff',
+        dark: '#f9fcfe',
+        darkest: '#d1dee9',
+      },
       danger: '#FF0000',
       black: '#000',
       white: {
