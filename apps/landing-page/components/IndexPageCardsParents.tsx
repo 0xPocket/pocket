@@ -35,7 +35,7 @@ function IndexPageCardsParents() {
             />
             <IndexCard
               title="Stabilité"
-              content="Vos fonds ne sont pas soumis aux aléas du marché grâce à une cryptomonnaie indéxée sur l'euro"
+              content="Vos fonds ne sont pas soumis aux aléas du marché grâce à une cryptomonnaie indexée sur l'euro"
               icon={faEuroSign}
             />
           </IndexCardAnimation>

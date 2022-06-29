@@ -20,7 +20,7 @@ html {
     @apply font-bitter;
   }
 
-  input:-webkit-autofill {
+  /* input:-webkit-autofill {
     -webkit-background-clip: text;
-  }
+  } */
 }

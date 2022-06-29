@@ -49,7 +49,7 @@
       "cache": false
     },
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["@lib/prisma#db:deploy", "^build"],
       "outputs": ["dist/**", ".next/**"]
     },
     "dev": {
