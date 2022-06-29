@@ -8,29 +8,27 @@ type Data = z.infer<typeof formSchema>;
 const prisma = new PrismaClient();
 
 const form = async (req: NextApiRequest, res: NextApiResponse) => {
-  const data = req.body as Data;
-
   if (req.method === 'POST') {
+    const data = req.body as Data;
     try {
-      const validation = formSchema
-        .transform((val) => {
-          return {
-            ...val,
-            cryptoKnowledge: val.cryptoKnowledge === 'Oui' ? true : false,
-          };
-        })
-        .parse(data);
-      await prisma.survey.create({
-        data: {
+      console.log(data);
+      const validation = formSchema.parse(data);
+      await prisma.survey.upsert({
+        where: {
+          email: validation.email,
+        },
+        create: {
           ...validation,
         },
+        update: { ...validation },
       });
       return res.status(201).json({ message: 'Success !' });
     } catch (e) {
+      console.log(e);
       return res.status(400).json({ message: 'Error with the form !' });
     }
   }
-  return res.status(200).json({ name: 'John Doe' });
+  return res.status(400).json({ message: 'Invalid request' });
 };
 
 export default form;

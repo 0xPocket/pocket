@@ -24,7 +24,6 @@
     "axios": "^0.27.2",
     "crypto-js": "^4.1.1",
     "ethers": "^5.6.8",
-    "framer-motion": "^6.3.11",
     "next": "12.1.6",
     "pocket-contract": "*",
     "react": "18.2.0",
