@@ -2,7 +2,6 @@ import type { AppProps } from 'next/app';
 import { ThemeProvider } from '@lib/ui';
 import '../styles/globals.css';
 import '@fortawesome/fontawesome-svg-core/styles.css';
-import { config } from '@fortawesome/fontawesome-svg-core';
 
 import { NextSeo } from 'next-seo';
 import Head from 'next/head';
