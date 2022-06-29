@@ -26,12 +26,12 @@ function HeroSection({}: HeroSectionProps) {
           </div>
           <div className=" ">
             <div className="text-2xl leading-relaxed">
-              Pas besoin de tout comprendre aux cryptomonnaies pour en donner a
+              Pas besoin de tout comprendre aux cryptomonnaies pour en donner à
               ses ados.
             </div>
             <div className="text-2xl leading-normal">
               {
-                "Achetez et distribuez de l'argent de poche a vos enfants en un clique."
+                "Achetez et distribuez de l'argent de poche à vos enfants en un clic."
               }
             </div>
           </div>

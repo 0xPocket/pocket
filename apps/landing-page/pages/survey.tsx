@@ -66,7 +66,7 @@ function Index({ email }: IndexProps) {
     const questions = [
       <Question
         register={register('cryptoKnowledge')}
-        header="Possédez vous des cryptomonnaies ou des NFTs ?"
+        header="Possédez-vous des cryptomonnaies ou des NFTs ?"
         options={['Oui', 'Non']}
       />,
       <Question

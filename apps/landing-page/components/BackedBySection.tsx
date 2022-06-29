@@ -7,7 +7,7 @@ function BackedBySection({}: BackedBySectionProps) {
     <div className=" bg-opacity-20 dark:bg-opacity-5">
       <div className="container mx-auto">
         <div className="flex flex-col items-center justify-center gap-24 md:flex-row">
-          <h2 className="">Nos patenaires</h2>
+          <h2 className="">Nos partenaires</h2>
           <LogoPartenaire
             url="https://www.lecryptofellowship.com/"
             imgUrl="/assets/backer_icons/cryptofellowship.svg"

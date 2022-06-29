@@ -25,7 +25,7 @@ function IndexPageCardsParents() {
           <IndexCardAnimation>
             <IndexCard
               title="Simplicité"
-              content="Créez un compte, ajustez la fréquence et le montant d’argent de poche en quelques cliques"
+              content="Créez un compte, ajustez la fréquence et le montant d’argent de poche en quelques clics"
               icon={faGear}
             />
             <IndexCard
@@ -35,7 +35,7 @@ function IndexPageCardsParents() {
             />
             <IndexCard
               title="Stabilité"
-              content="Vos fonds ne sont pas soumis aux aléas du marché grace a une cryptomonnaie indéxé sur l'euro"
+              content="Vos fonds ne sont pas soumis aux aléas du marché grâce à une cryptomonnaie indéxée sur l'euro"
               icon={faEuroSign}
             />
           </IndexCardAnimation>
