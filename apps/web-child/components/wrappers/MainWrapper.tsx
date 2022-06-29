@@ -1,5 +1,4 @@
 import Header from '../header/Header';
-import AuthGuard from './AuthGuard';
 
 type MainWrapperProps = {
   children: React.ReactNode;
@@ -7,27 +6,12 @@ type MainWrapperProps = {
   authProtected?: boolean;
 };
 
-function MainWrapper({
-  children,
-  noHeader = false,
-  authProtected = false,
-}: MainWrapperProps) {
-  if (!authProtected) {
-    return (
-      <div className="min-h-screen">
-        {!noHeader && <Header />}
-        {children}
-      </div>
-    );
-  }
-
+function MainWrapper({ children, noHeader = false }: MainWrapperProps) {
   return (
-    <AuthGuard>
-      <div className="min-h-screen">
-        {!noHeader && <Header />}
-        {children}
-      </div>
-    </AuthGuard>
+    <div className="min-h-screen">
+      {!noHeader && <Header />}
+      {children}
+    </div>
   );
 }
 

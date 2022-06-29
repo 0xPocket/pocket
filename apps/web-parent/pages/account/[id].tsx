@@ -8,6 +8,7 @@ import ChildSettingsForm from '../../components/forms/ChildSettingsForm';
 import AddfundsForm from '../../components/forms/AddfundsForm';
 import { useSmartContract } from '../../contexts/contract';
 import { useState } from 'react';
+import { ethers } from 'ethers';
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.query.id;
@@ -47,6 +48,8 @@ function Account({
     },
   );
 
+  console.log(childConfig);
+
   return (
     <MainWrapper authProtected>
       <SectionContainer>
@@ -65,7 +68,11 @@ function Account({
                   {child.web3Account?.address}
                 </span>
                 <p>Balance</p>
-                <span className=" text-4xl">{childConfig?.[1].toString()}</span>
+                <span className=" text-4xl">
+                  {childConfig?.[1] &&
+                    ethers.utils.formatUnits(childConfig?.[1], 6).toString()}
+                  $
+                </span>
                 <span>usdc</span>
               </div>
             </div>

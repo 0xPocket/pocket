@@ -3,6 +3,7 @@ import { FormErrorMessage } from '@lib/ui';
 import { BigNumber, constants, Wallet } from 'ethers';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useQueryClient } from 'react-query';
 import { useSmartContract } from '../../contexts/contract';
 import Web3Modal from '../wallet/Web3Modal';
 
@@ -27,6 +28,7 @@ function AddfundsForm({ child }: AddfundsFormProps) {
     USDTContract,
     contract: pocketContract,
   } = useSmartContract();
+  const queryClient = useQueryClient();
 
   const formValues = watch();
 
@@ -56,6 +58,10 @@ function AddfundsForm({ child }: AddfundsFormProps) {
         BigNumber.from(formValues.topup).mul(1000000),
         child.web3Account.address,
       );
+    tx?.wait().then(() => {
+      console.log('invalidate query');
+      queryClient.invalidateQueries('config');
+    });
     console.log(tx);
   };
 
@@ -90,12 +96,12 @@ function AddfundsForm({ child }: AddfundsFormProps) {
         />
         {errors.topup && <FormErrorMessage message={errors.topup.message} />}
       </div>
-
+      {/* 
       <Web3Modal
         contract={addFunds}
         isOpen={showModal}
         setIsOpen={setShowModal}
-      />
+      /> */}
 
       <input
         type="submit"

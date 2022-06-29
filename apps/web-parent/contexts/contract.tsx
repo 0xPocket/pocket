@@ -48,7 +48,7 @@ export const SmartContractProvider = ({
       setContract(contract);
 
       const usdtContract = IERC20Upgradeable__factory.connect(
-        '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
+        '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
         provider,
       );
 
