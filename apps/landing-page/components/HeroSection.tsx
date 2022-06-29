@@ -47,7 +47,7 @@ function HeroSection({}: HeroSectionProps) {
             layout="fill"
             objectFit="contain"
             priority={true}
-            sizes="800px"
+            sizes="50vw"
           />
         </div>
       </div>
