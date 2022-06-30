@@ -29,7 +29,7 @@ function IndexPageCardsParents() {
               icon={faGear}
             />
             <IndexCard
-              title="Notifications"
+              title="Sérénité"
               content="Soyez averti en temps réel de l’activité de vos enfants ou recevez un résumé hebdomadaire"
               icon={faMessage}
             />

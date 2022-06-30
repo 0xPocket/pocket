@@ -10,14 +10,14 @@ export function IndexCardAnimation({
   const transitions = useTransition(items, {
     from: {
       opacity: 0,
-      marginTop: -100,
+      translateY: -100,
     },
     enter: (item, i) => ({
       delay: () => {
         return i * 500;
       },
       opacity: 1,
-      marginTop: 0,
+      translateY: 0,
     }),
     config: {
       tension: 280,
