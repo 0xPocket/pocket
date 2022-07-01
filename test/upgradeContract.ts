@@ -7,7 +7,6 @@ import {
 } from '../typechain-types';
 import * as constants from '../utils/constants';
 import { providers, Wallet } from 'ethers';
-import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 import ParentTester from '../helpers/ParentTester';
 
 describe('Deploy and tests on proxy functions', function () {
@@ -17,7 +16,6 @@ describe('Deploy and tests on proxy functions', function () {
   let parent1Wallet: Wallet;
   let PocketFaucet_factory: PocketFaucet__factory, pocketFaucet: PocketFaucet;
   let PocketFaucetV2_factory: PocketFaucetV2__factory;
-  let admin: SignerWithAddress;
   const tokenAddr = constants.TOKEN_POLY.USDC;
 
   before(async function () {
@@ -25,7 +23,6 @@ describe('Deploy and tests on proxy functions', function () {
     child1 = new Wallet(constants.FAMILY_ACCOUNT.child1, provider);
     parent1Wallet = new Wallet(constants.FAMILY_ACCOUNT.parent1, provider);
 
-    [admin] = await ethers.getSigners();
     PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
     pocketFaucet = (await upgrades.deployProxy(PocketFaucet_factory, [
       tokenAddr,

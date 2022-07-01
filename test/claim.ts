@@ -10,7 +10,7 @@ import { ChildContract } from '../ts/Child';
 import goForwardNDays from '../utils/goForward';
 
 describe('Testing to claim funds as child', function () {
-  let child1Wallet: Wallet, child2Wallet: Wallet;
+  let child1Wallet: Wallet;
   let child1: ChildContract;
   let parent1: ParentTester;
   let PocketFaucet_factory: PocketFaucet__factory, pocketFaucet: PocketFaucet;
@@ -27,7 +27,6 @@ describe('Testing to claim funds as child', function () {
     ])) as PocketFaucet;
     await pocketFaucet.deployed();
     child1Wallet = new Wallet(constants.FAMILY_ACCOUNT.child1, provider);
-    child2Wallet = new Wallet(constants.FAMILY_ACCOUNT.child2, provider);
     child1 = new ChildContract(pocketFaucet.address, child1Wallet);
     parent1Wallet = new Wallet(constants.FAMILY_ACCOUNT.parent1, provider);
     parent1 = new ParentTester(pocketFaucet.address, parent1Wallet);

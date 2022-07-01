@@ -13,9 +13,10 @@ import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 import { abi as proxyAbi } from '../artifacts/@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol/ProxyAdmin.json';
 
 describe('Deploy and tests on proxy functions', function () {
-  var ___log = console.log;
+  const ___log = console.log;
 
   function mute() {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     console.log = function () {};
   }
 
