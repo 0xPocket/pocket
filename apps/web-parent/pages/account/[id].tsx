@@ -48,8 +48,6 @@ function Account({
     },
   );
 
-  console.log(childConfig);
-
   return (
     <MainWrapper authProtected>
       <SectionContainer>

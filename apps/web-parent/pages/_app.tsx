@@ -7,13 +7,13 @@ import { Provider } from 'react-redux';
 import { store } from '../redux/store';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { useState } from 'react';
-import { ReactQueryDevtools } from 'react-query/devtools';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { WalletProvider } from '../contexts/wallet';
 import { ThemeProvider } from '@lib/ui';
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
+import { ReactQueryDevtools } from 'react-query/devtools/index';
 
 const alchemyId = '3yzPlXcA41Y49wI2INbE3q8kLi19ME2U';
 
@@ -46,7 +46,7 @@ function App({ Component, pageProps: { ...pageProps } }: AppProps) {
         </WagmiConfig>
       </AuthProvider>
       <ToastContainer position="bottom-right" autoClose={3000} />
-      {/* <ReactQueryDevtools /> */}
+      <ReactQueryDevtools />
     </QueryClientProvider>
   );
 }

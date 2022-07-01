@@ -79,7 +79,7 @@ function AddfundsForm({ child }: AddfundsFormProps) {
       <div className="flex flex-col">
         <label htmlFor="topup">Add funds to {child.firstName} account</label>
         <input
-          className="border p-2"
+          className="border p-2 text-dark"
           min="0"
           placeholder="5 $USDC"
           type="number"
