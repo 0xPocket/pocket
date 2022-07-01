@@ -1,7 +1,5 @@
-import Image from 'next/image';
 import CallToAction from './CallToAction';
-import HeroIllu from './illustration/Main';
-import Main from './illustration/Main';
+import HeroIllu from './illustration/HeroIllu';
 
 type HeroSectionProps = {};
 
