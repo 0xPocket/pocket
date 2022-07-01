@@ -1,8 +1,9 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { providers } from 'ethers';
 import {
+  ERC20,
+  ERC20__factory,
   IERC20Upgradeable,
-  IERC20Upgradeable__factory,
   PocketFaucet,
   PocketFaucet__factory,
 } from 'pocket-contract/typechain-types';
@@ -15,7 +16,9 @@ interface ISmartContractContext {
   active: boolean;
   provider: providers.JsonRpcProvider | undefined;
   contract: PocketFaucet | undefined;
-  USDTContract: IERC20Upgradeable | undefined;
+  USDTContract: ERC20 | undefined;
+  erc20Decimals: number | undefined;
+  erc20Symbol: string | undefined;
 }
 
 export function createCtx<A extends {} | null>() {
@@ -31,7 +34,9 @@ export const SmartContractProvider = ({
 }: SmartContractProviderProps) => {
   const [provider, setProvider] = useState<providers.JsonRpcProvider>();
   const [contract, setContract] = useState<PocketFaucet>();
-  const [USDTContract, setUSDTContract] = useState<IERC20Upgradeable>();
+  const [USDTContract, setUSDTContract] = useState<ERC20>();
+  const [erc20Decimals, setErc20Decimals] = useState<number>();
+  const [erc20Symbol, setErc20Symbol] = useState<string>();
 
   useEffect(() => {
     const provider = new providers.JsonRpcProvider('http://localhost:8545');
@@ -47,10 +52,18 @@ export const SmartContractProvider = ({
 
       setContract(contract);
 
-      const usdtContract = IERC20Upgradeable__factory.connect(
-        '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
+      const usdtContract = ERC20__factory.connect(
+        '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
         provider,
       );
+
+      usdtContract.decimals().then((res) => {
+        setErc20Decimals(res);
+      });
+
+      usdtContract.symbol().then((res) => {
+        setErc20Symbol(res);
+      });
 
       setUSDTContract(usdtContract);
     }
@@ -63,6 +76,8 @@ export const SmartContractProvider = ({
         provider,
         contract,
         USDTContract,
+        erc20Decimals,
+        erc20Symbol,
       }}
     >
       {children}

@@ -8,17 +8,21 @@ import SettingsTabPanel from './SettingsTabPanel';
 import MainTabPanel from './MainTabPanel';
 import { useWallet } from '../../contexts/wallet';
 import { WalletAnimation } from '@lib/ui';
+import { formatEther, formatUnits, parseUnits } from 'ethers/lib/utils';
 
 type WalletContentProps = {};
 
 function WalletContent({}: WalletContentProps) {
-  const { provider } = useSmartContract();
+  const { provider, USDTContract, erc20Decimals } = useSmartContract();
   const { wallet } = useWallet();
   const balanceQuery = useQuery(
     'balance',
-    async () => await provider?.getBalance(wallet?.publicKey!),
+    async () => {
+      const balance = await USDTContract!.balanceOf(wallet?.publicKey!);
+      return balance;
+    },
     {
-      select: (data: BigNumber | undefined) => roundBigNumbertoString(data, 2),
+      select: (data: BigNumber) => formatUnits(data, erc20Decimals),
     },
   );
 

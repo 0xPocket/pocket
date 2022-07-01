@@ -1,18 +1,45 @@
 import type { AppProps } from 'next/app';
-import { SmartContractProvider } from '../contexts/contract';
 import { ThemeProvider } from '@lib/ui';
-import { Web3AuthProvider } from '../contexts/web3hook';
 import '../styles/globals.css';
+import { ReactElement, ReactNode } from 'react';
+import { NextPage } from 'next';
+import { configureChains, chain, createClient, WagmiConfig } from 'wagmi';
+import { alchemyProvider } from 'wagmi/providers/alchemy';
 
-function App({ Component, pageProps: { ...pageProps } }: AppProps) {
+export type NextPageWithLayout = NextPage & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+/*
+  TODO: In env variable
+ */
+
+const alchemyId = '3yzPlXcA41Y49wI2INbE3q8kLi19ME2U';
+
+const { chains, provider, webSocketProvider } = configureChains(
+  [chain.polygon],
+  [alchemyProvider({ alchemyId })],
+);
+
+const client = createClient({
+  autoConnect: false,
+  provider,
+  webSocketProvider,
+});
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+function App({ Component, pageProps: { ...pageProps } }: AppPropsWithLayout) {
+  const getLayout = Component.getLayout ?? ((page) => page);
+
   return (
-    <Web3AuthProvider>
-      <ThemeProvider>
-        <SmartContractProvider>
-          <Component {...pageProps} />
-        </SmartContractProvider>
-      </ThemeProvider>
-    </Web3AuthProvider>
+    <ThemeProvider>
+      <WagmiConfig client={client}>
+        {getLayout(<Component {...pageProps} />)}
+      </WagmiConfig>
+    </ThemeProvider>
   );
 }
 

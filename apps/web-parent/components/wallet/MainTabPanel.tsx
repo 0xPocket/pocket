@@ -4,6 +4,7 @@ import { UseQueryResult } from 'react-query';
 import { toast } from 'react-toastify';
 import { useWallet } from '../../contexts/wallet';
 import { Button } from '@lib/ui';
+import { useSmartContract } from '../../contexts/contract';
 
 type MainTabPanelProps = {
   balanceQuery: UseQueryResult<string | undefined, unknown>;
@@ -13,6 +14,7 @@ type MainTabPanelProps = {
 function MainTabPanel({ balanceQuery, setSelectedIndex }: MainTabPanelProps) {
   const router = useRouter();
   const { wallet } = useWallet();
+  const { erc20Symbol } = useSmartContract();
 
   if (!wallet) {
     return (
@@ -45,7 +47,7 @@ function MainTabPanel({ balanceQuery, setSelectedIndex }: MainTabPanelProps) {
           ) : (
             <div className="flex items-end gap-2">
               <h2>{balanceQuery.data}</h2>
-              <span>MATIC</span>
+              <span>{erc20Symbol}</span>
             </div>
           )}
         </div>
