@@ -28,7 +28,7 @@
     "@nestjs/core": "8.4.7",
     "@nestjs/platform-express": "8.4.7",
     "@types/events": "^3.0.0",
-    "next": "12.1.6",
+    "next": "12.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rimraf": "^3.0.2",

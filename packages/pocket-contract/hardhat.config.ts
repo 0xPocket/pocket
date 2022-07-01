@@ -9,7 +9,9 @@ import '@typechain/hardhat';
 // import "solidity-coverage";
 import '@openzeppelin/hardhat-upgrades';
 
-dotenv.config();
+dotenv.config({
+  path: '../../.env',
+});
 
 const config: HardhatUserConfig = {
   solidity: {
