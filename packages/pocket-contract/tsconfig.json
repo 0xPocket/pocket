@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "strictNullChecks": true,
+    "lib": ["ES2018"],
+    "allowJs": false,
+    "strict": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "stripInternal": true,
+    "skipDefaultLibCheck": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "rootDir": ".",
+    "baseUrl": ".",
+    "outDir": "dist"
+  },
+  "include": ["./ts", "./typechain-types", "./test", "./scripts", "./utils"],
+  "files": ["./hardhat.config.ts"]
+}
