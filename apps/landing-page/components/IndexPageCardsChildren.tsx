@@ -22,19 +22,19 @@ function IndexPageCardsChildren() {
           <IndexCardAnimation>
             <IndexCard
               title="Apprentissage"
-              content="Une plateforme pédagogique pour faire ses premiers pas dans le web3"
+              content="Une plateforme pédagogique pour faire ses premiers pas dans le web3."
               icon={faGraduationCap}
               varitaion
             />
             <IndexCard
               title="Découverte"
-              content="Une sélection de jeux et d'applications adaptée aux adolescents"
+              content="Une sélection de jeux et d'applications adaptée aux adolescents."
               icon={faEarthEurope}
               varitaion
             />
             <IndexCard
               title="Liberté"
-              content="Un accompagnement vers une autonomie dans l’écosystème en toute sérénité"
+              content="Un accompagnement vers une autonomie dans l’écosystème en toute sérénité."
               icon={faRocket}
               varitaion
             />

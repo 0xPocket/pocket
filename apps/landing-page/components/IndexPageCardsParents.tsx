@@ -25,17 +25,17 @@ function IndexPageCardsParents() {
           <IndexCardAnimation>
             <IndexCard
               title="Simplicité"
-              content="Créez un compte, ajustez la fréquence et le montant d’argent de poche en quelques clics"
+              content="Créez un compte, ajustez la fréquence et le montant d’argent de poche en quelques clics."
               icon={faGear}
             />
             <IndexCard
               title="Sérénité"
-              content="Soyez averti en temps réel de l’activité de vos enfants ou recevez un résumé hebdomadaire"
+              content="Soyez avertis en temps réel de l’activité de vos enfants ou recevez un résumé hebdomadaire."
               icon={faMessage}
             />
             <IndexCard
               title="Stabilité"
-              content="Vos fonds ne sont pas soumis aux aléas du marché grâce à une cryptomonnaie indexée sur l'euro"
+              content="Vos fonds ne sont pas soumis aux aléas du marché grâce à une cryptomonnaie indexée sur l'euro."
               icon={faEuroSign}
             />
           </IndexCardAnimation>
