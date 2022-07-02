@@ -23,4 +23,67 @@ html {
   /* input:-webkit-autofill {
     -webkit-background-clip: text;
   } */
+  .cls-1 {
+    fill: #03bbc7;
+  }
+  .cls-2 {
+    fill: #00b2ad;
+  }
+  .cls-3 {
+    fill: #008184;
+  }
+  .cls-4 {
+    fill: #009696;
+  }
+  .cls-5 {
+    fill: #f4fffe;
+  }
+  .cls-6 {
+    fill: #ef9797;
+  }
+  .cls-7 {
+    fill: #fff;
+  }
+  .cls-8 {
+    fill: #fefefe;
+  }
+  .cls-9 {
+    fill: #ffbdba;
+  }
+  .cls-10 {
+    fill: #e75e98;
+  }
+  .cls-11 {
+    fill: #684fe0;
+  }
+  .cls-12 {
+    fill: #a9d2ff;
+  }
+  .cls-13 {
+    fill: #cd447e;
+  }
+  .cls-14 {
+    fill: #1dd5e1;
+  }
+  .cls-15 {
+    fill: #94c2ff;
+  }
+  .cls-16 {
+    fill: #579ddd;
+  }
+  .cls-17 {
+    fill: #5f84f9;
+  }
+  .cls-18 {
+    fill: #78b3f4;
+  }
+  .cls-19 {
+    fill: #4e35c6;
+  }
+  .cls-20 {
+    fill: #2669fe;
+  }
+  .cls-21 {
+    fill: #4492cc;
+  }
 }
