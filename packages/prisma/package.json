@@ -20,7 +20,7 @@
     "crypto-js": "^4.1.1",
     "prettier-plugin-prisma": "^3.14.0",
     "prisma": "^4.0.0",
-    "ts-node": "^10.8.1"
+    "ts-node": "^10.8.2"
   },
   "dependencies": {
     "@prisma/client": "^4.0.0"
