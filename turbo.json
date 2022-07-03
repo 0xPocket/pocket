@@ -3,11 +3,11 @@
   "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
     "@lib/prisma#generate": {
-      "inputs": ["./schema.prisma"]
+      "inputs": ["./prisma/schema.prisma", ".env"]
     },
     "@lib/prisma#deploy": {
       "dependsOn": ["generate"],
-      "inputs": ["./migrations/**/*.sql"],
+      "inputs": ["./prisma/migrations/**/*.sql"],
       "cache": false,
       "outputs": []
     },
@@ -24,10 +24,10 @@
       "cache": false
     },
     "pocket-contract#seed": {
-      "dependsOn": ["deploy"],
+      "dependsOn": ["build", "deploy"],
       "cache": false
     },
-    "hardhat:start": {
+    "fork": {
       "cache": false
     },
     "clean": {
@@ -40,7 +40,6 @@
     },
     "dev": {
       "dependsOn": ["//#env-check", "@lib/prisma#seed", "pocket-contract#seed"],
-      "outputs": [],
       "cache": false
     },
     "start": {

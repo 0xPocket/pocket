@@ -3,8 +3,6 @@ import { ParentContract } from '../ts/Parent';
 import { setErc20Balance } from '../utils/ERC20';
 import * as constants from '../utils/constants';
 
-require('dotenv').config();
-
 const ELON_MUSK = {
   publicKey: '0x70997970c51812dc3a010c7d01b50e0d17dc79c8',
   privateKey:

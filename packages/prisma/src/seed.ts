@@ -3,8 +3,11 @@ import { AES, SHA256 } from "crypto-js";
 const prisma = new PrismaClient();
 
 async function main() {
-  await prisma.userParent.create({
-    data: {
+  await prisma.userParent.upsert({
+    where: {
+      id: "elonmusk",
+    },
+    create: {
       id: "elonmusk",
       firstName: "Elon",
       lastName: "Musk",
@@ -27,10 +30,14 @@ async function main() {
         },
       },
     },
+    update: {},
   });
 
-  await prisma.userChild.create({
-    data: {
+  await prisma.userChild.upsert({
+    where: {
+      id: "damianmusk",
+    },
+    create: {
       id: "damianmusk",
       firstName: "Damian",
       lastName: "Musk",
@@ -48,10 +55,14 @@ async function main() {
         },
       },
     },
+    update: {},
   });
 
-  await prisma.userChild.create({
-    data: {
+  await prisma.userChild.upsert({
+    where: {
+      id: "xaviermusk",
+    },
+    create: {
       id: "xaviermusk",
       firstName: "Xavier",
       lastName: "Musk",
@@ -69,6 +80,7 @@ async function main() {
         },
       },
     },
+    update: {},
   });
 }
 
