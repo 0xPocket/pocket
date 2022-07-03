@@ -1,9 +1,9 @@
 import { UserChild } from '@lib/types/interfaces';
 import { FormErrorMessage } from '@lib/ui';
 import { ParentContract } from 'pocket-contract/ts';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQueryClient } from 'react-query';
 import { useSmartContract } from '../../contexts/contract';
 import { useAxios } from '../../hooks/axios.hook';
 import Web3Modal from '../wallet/Web3Modal';

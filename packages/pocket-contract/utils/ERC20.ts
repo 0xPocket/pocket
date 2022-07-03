@@ -64,9 +64,6 @@ export async function sendErc20(
   await tokenContract.connect(sender).transfer(target, newAmount);
   await stopImpersonate(whaleAddr);
 }
-function amountInEther(amountInEther: any) {
-  throw new Error('Function not implemented.');
-}
 
 export async function getDecimals(
   tokenAddr: string,

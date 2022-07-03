@@ -3,37 +3,31 @@
   "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
     "@lib/prisma#generate": {
-      "outputs": [
-        "../../node_modules/@prisma/client/**",
-        "../../node_modules/@prisma/admin-client/**"
-      ],
-      "inputs": ["./schema.prisma", "./prisma/schema.prisma"]
+      "inputs": ["./schema.prisma"]
     },
-    "@lib/prisma#db:deploy": {
+    "@lib/prisma#deploy": {
       "dependsOn": ["generate"],
-      "inputs": ["./migrations/**/*.sql", "./prisma/migrations/**/*.sql"],
+      "inputs": ["./migrations/**/*.sql"],
       "cache": false,
       "outputs": []
     },
-    "@lib/prisma#db:seed": {
-      "cache": false,
-      "dependsOn": ["@lib/prisma#db:deploy"]
+    "@lib/prisma#seed": {
+      "dependsOn": ["deploy"],
+      "cache": false
     },
     "pocket-contract#build": {
+      "inputs": ["./contracts/**/*.sol"],
       "outputs": ["./artifacts/**/*", "./typechain-types/**/*", "./cache/**/*"]
     },
     "pocket-contract#deploy": {
-      "dependsOn": ["pocket-contract#build"],
+      "dependsOn": ["build"],
       "cache": false
     },
     "pocket-contract#seed": {
-      "dependsOn": ["pocket-contract#deploy"],
+      "dependsOn": ["deploy"],
       "cache": false
     },
     "hardhat:start": {
-      "cache": false
-    },
-    "hardhat:deploy": {
       "cache": false
     },
     "clean": {
@@ -45,12 +39,7 @@
       "outputs": ["dist/**", ".next/**"]
     },
     "dev": {
-      "dependsOn": [
-        "//#env-check",
-        "@lib/prisma#db:deploy",
-        "pocket-contract#build",
-        "pocket-contract#seed"
-      ],
+      "dependsOn": ["//#env-check", "@lib/prisma#seed", "pocket-contract#seed"],
       "outputs": [],
       "cache": false
     },

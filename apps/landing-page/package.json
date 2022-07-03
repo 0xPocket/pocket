@@ -29,7 +29,6 @@
     "zod": "^3.17.3"
   },
   "devDependencies": {
-    "@lib/types": "*",
     "@lib/ui": "*",
     "@types/node": "^18.0.0",
     "@types/react": "18.0.14",

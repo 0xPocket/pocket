@@ -7,16 +7,14 @@
     "packages/*"
   ],
   "scripts": {
-    "clean": "turbo run clean && rm -rf node_modules",
+    "clean": "turbo run clean && rm -rf node_modules && rm -rf .turbo",
     "dev": "turbo run dev --parallel",
     "build": "turbo run build",
     "start": "turbo run start",
     "lint": "turbo run lint",
     "test": "turbo run test",
     "test:e2e": "turbo run test:e2e",
-    "db:seed": "turbo run db:seed",
     "hardhat:start": "turbo run hardhat:start",
-    "hardhat:deploy": "turbo run hardhat:deploy",
     "env-check": "dotenv-checker --schema .env.example --env .env",
     "predev": "echo 'Checking env files'"
   },

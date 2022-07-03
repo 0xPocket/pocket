@@ -7,7 +7,6 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import ChildSettingsForm from '../../components/forms/ChildSettingsForm';
 import AddfundsForm from '../../components/forms/AddfundsForm';
 import { useSmartContract } from '../../contexts/contract';
-import { useState } from 'react';
 import { ethers } from 'ethers';
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -40,7 +39,7 @@ function Account({
     },
   );
 
-  const { isLoading: isConfLoading, data: childConfig } = useQuery(
+  const { data: childConfig } = useQuery(
     'config',
     async () => await contract?.childToConfig(child!.web3Account.address),
     {

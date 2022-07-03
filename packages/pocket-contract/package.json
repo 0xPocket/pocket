@@ -6,7 +6,6 @@
   "scripts": {
     "clean": "yarn hardhat clean && rm -rf node_modules .turbo",
     "hardhat:start": "yarn hardhat node",
-    "hardhat:deploy": "yarn deploy && yarn seed",
     "build": "hardhat compile",
     "deploy": "yarn hardhat run scripts/deploy.ts --network localhost",
     "seed": "yarn hardhat run ./scripts/seed.ts --network localhost",

@@ -1,5 +1,4 @@
 name: Lint
-
 on: push
 
 jobs:
@@ -13,26 +12,15 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 2
-          token: ${{ secrets.ACCESS_TOKEN }}
-          submodules: recursive
+      - uses: actions/checkout@v2
 
-      - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@v1.0.6
-        with:
-          version: nightly
-
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v2
+      - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
           cache: "yarn"
 
       - name: Install dependencies
-        run: yarn
+        run: yarn --frozen-lockfile --prefer-offline
 
       - name: Lint
         run: yarn lint

@@ -23,11 +23,7 @@ function AddfundsForm({ child }: AddfundsFormProps) {
     formState: { errors },
   } = useForm<FormValues>();
   const [showModal, setShowModal] = useState(false);
-  const {
-    provider,
-    USDTContract,
-    contract: pocketContract,
-  } = useSmartContract();
+  const { USDTContract, contract: pocketContract } = useSmartContract();
   const queryClient = useQueryClient();
 
   const formValues = watch();

@@ -9,7 +9,6 @@ import { ParentContract } from '../ts/Parent';
 import { BigNumber, BigNumberish } from 'ethers';
 import * as constants from '../utils/constants';
 import { blockTimestamp } from '../utils/blockTimestamp';
-import { config } from 'dotenv';
 
 class ParentTester extends ParentContract {
   checkChildIsInit = async (childAddress: string) => {

@@ -2,20 +2,19 @@
   "name": "@lib/prisma",
   "private": true,
   "version": "1.0.0",
-  "main": "index.ts",
-  "types": "index.d.ts",
+  "main": "src/index.ts",
   "scripts": {
+    "clean": "rm -rf .turbo && rm -rf node_modules",
     "build": "prisma generate",
     "generate": "prisma generate",
-    "clean": "rm -rf .turbo && rm -rf node_modules",
     "studio": "prisma studio",
+    "deploy": "prisma migrate deploy",
+    "seed": "prisma db seed",
+    "migrate": "prisma migrate dev",
+    "push": "prisma db push",
+    "drop": "prisma migrate reset --force",
     "docker:up": "docker-compose up -d --build",
-    "docker:down": "docker-compose down",
-    "db:deploy": "prisma migrate deploy",
-    "db:dev": "prisma migrate dev",
-    "db:push": "prisma db push",
-    "db:seed": "prisma db seed",
-    "db:drop": "prisma migrate reset --force"
+    "docker:down": "docker-compose down"
   },
   "devDependencies": {
     "crypto-js": "^4.1.1",
@@ -27,6 +26,6 @@
     "@prisma/client": "^4.0.0"
   },
   "prisma": {
-    "seed": "ts-node ./seed.ts"
+    "seed": "ts-node ./src/seed.ts"
   }
 }
