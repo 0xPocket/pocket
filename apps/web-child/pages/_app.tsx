@@ -4,27 +4,41 @@ import '../styles/globals.css';
 import { ReactElement, ReactNode } from 'react';
 import { NextPage } from 'next';
 import { configureChains, chain, createClient, WagmiConfig } from 'wagmi';
-import { alchemyProvider } from 'wagmi/providers/alchemy';
+import { InjectedConnector } from 'wagmi/connectors/injected';
+import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
+import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
+import { AuthProvider } from '../contexts/auth';
 
 export type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
 
-/*
-  TODO: In env variable
- */
-
-const alchemyId = '3yzPlXcA41Y49wI2INbE3q8kLi19ME2U';
-
-const { chains, provider, webSocketProvider } = configureChains(
+const { chains, provider } = configureChains(
   [chain.polygon],
-  [alchemyProvider({ alchemyId })],
+  [
+    jsonRpcProvider({
+      rpc: () => ({
+        http: `http://localhost:8545`,
+      }),
+    }),
+    // alchemyProvider({ alchemyId: process.env.NEXT_PUBLIC_KEY_ALCHEMY_POLYGON }),
+    // publicProvider(),
+  ],
 );
 
 const client = createClient({
   autoConnect: false,
   provider,
-  webSocketProvider,
+  connectors: [
+    new MetaMaskConnector({ chains }),
+    new WalletConnectConnector({
+      chains,
+      options: {
+        qrcode: true,
+      },
+    }),
+  ],
 });
 
 type AppPropsWithLayout = AppProps & {
@@ -37,7 +51,7 @@ function App({ Component, pageProps: { ...pageProps } }: AppPropsWithLayout) {
   return (
     <ThemeProvider>
       <WagmiConfig client={client}>
-        {getLayout(<Component {...pageProps} />)}
+        <AuthProvider>{getLayout(<Component {...pageProps} />)}</AuthProvider>
       </WagmiConfig>
     </ThemeProvider>
   );

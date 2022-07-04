@@ -1,35 +1,43 @@
 import Image from 'next/image';
-import { useMemo } from 'react';
-import { IProviderUserOptions } from 'web3modal';
-import { useWeb3Auth } from '../../contexts/web3hook';
+import { useConnect } from 'wagmi';
+import { Spinner } from '../common/Spinner';
 
-type AuthDialogProvidersProps = {
-  onClick: (provider: IProviderUserOptions) => void;
-};
+type AuthDialogProvidersProps = {};
 
-function AuthDialogProviders({ onClick }: AuthDialogProvidersProps) {
-  const { web3Modal } = useWeb3Auth();
-
-  const options = useMemo(() => {
-    return web3Modal?.getUserOptions();
-  }, [web3Modal]);
+function AuthDialogProviders({}: AuthDialogProvidersProps) {
+  const { connect, connectors, error, isLoading, pendingConnector } =
+    useConnect();
 
   return (
-    <div className="flex w-96 flex-col gap-2">
-      {options?.map((option) => (
-        <button
-          className="relative flex h-20 flex-row items-center gap-8 rounded-lg p-4 hover:bg-dark/25"
-          onClick={() => onClick(option)}
-          key={option.id}
-        >
-          <Image src={option.logo} alt={option.name} width={42} height={42} />
-          <div className="flex w-full flex-col items-start justify-center">
-            <span className="font-mono text-lg uppercase">{option.name}</span>
-            <span className="text-sm text-bright/50">{option.description}</span>
-          </div>
-        </button>
-      ))}
-    </div>
+    <>
+      <div className="flex w-96 gap-2">
+        {connectors.map((connector) => (
+          <button
+            className="relative flex w-48 flex-col items-center justify-center gap-4 rounded-lg border border-white-darker bg-[#161515]/25 p-4 font-sans font-bold hover:bg-[#161515]/75"
+            disabled={!connector.ready}
+            key={connector.id}
+            onClick={() => connect({ connector })}
+          >
+            <div className="relative h-8 w-8">
+              <Image
+                src={`/assets/providers/${connector.id}.svg`}
+                objectFit="contain"
+                layout="fill"
+                alt={connector.name}
+              />
+            </div>
+            {connector.name}
+            {/* {!connector.ready && ' (unsupported)'}
+                    {isLoading && connector.id === pendingConnector?.id && (
+                      <Spinner />
+                    )} */}
+          </button>
+        ))}
+      </div>
+
+      {error && <div className="text-sm text-danger">{error.message}</div>}
+      {isLoading && <Spinner />}
+    </>
   );
 }
 

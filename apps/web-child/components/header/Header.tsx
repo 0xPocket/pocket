@@ -1,16 +1,12 @@
 import { Button, Header, ThemeToggler } from '@lib/ui';
-import { useAccount, useConnect } from 'wagmi';
-import { useWeb3Auth } from '../../contexts/web3hook';
-import { InjectedConnector } from 'wagmi/connectors/injected';
+import { useAccount } from 'wagmi';
+import { useAuth } from '../../contexts/auth';
 
 type GlobalHeaderProps = {};
 
 function GlobalHeader({}: GlobalHeaderProps) {
-  // const { user, address, status, toggleModal, disconnect } = useWeb3Auth();
   const { address, isConnected } = useAccount();
-  const { connect } = useConnect({
-    connector: new InjectedConnector(),
-  });
+  const { setShowModal } = useAuth();
 
   return (
     <Header>
@@ -26,9 +22,10 @@ function GlobalHeader({}: GlobalHeaderProps) {
         {isConnected ? (
           <div>{address}</div>
         ) : (
-          <Button action={() => connect()}>Connect Wallet</Button>
+          <>
+            <Button action={() => setShowModal(true)}>Connect Wallet</Button>
+          </>
         )}
-
         <ThemeToggler />
       </Header.BlockRight>
     </Header>
