@@ -10,7 +10,7 @@ type LogoPartenaireProps = {
 function LogoPartenaire({ imgUrl, width, height, alt }: LogoPartenaireProps) {
   return (
     <div
-      className={`relative h-28 w-28 ${width} ${height} opacity-60 transition-all hover:scale-105 hover:opacity-100`}
+      className={`relative h-28 w-28 ${width} ${height} transition-all  hover:scale-105 hover:opacity-100 lg:opacity-60`}
     >
       <Image src={imgUrl} alt={alt} layout="fill" />
     </div>
