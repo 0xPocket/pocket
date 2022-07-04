@@ -10,16 +10,18 @@ It includes the following apps and packages:
 
 - `web-parent`: a [Next.js](https://nextjs.org) app for the parent portal
 - `web-child`: another [Next.js](https://nextjs.org) app for the children portal
+- `landing-page`: another [Next.js](https://nextjs.org) app for the landing page
 - `api`: a [NestJS](https://nestjs.com/) app for the api
 
 ### Packages
 
 - `nest-auth`: a library to manage authentication through `Next.js` and `NestJS`
 - `prisma`: a library used to managed our connection to our database
-- `contract`: a library used to make actions with our smart-contract
+- `pocket-contract`: a package used to develop the smart-contract with `hardhat`
 - `types`: a library used to share Typescript interfaces between apps
 - `config`: configurations used throughout the monorepo
 - `tsconfig`: Typescript configurations used throughout the monorepo
+  `ui`: a library of UI components used through the apps
 
 ## Setup
 
@@ -30,7 +32,6 @@ This repository uses many dependencies to run correctly.
 - [Node.js](https://nodejs.org/en/)
 - [yarn v1](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable)
 - [Docker](https://www.docker.com/) - Used to run the `postgres` container.
-- [Foundry](https://github.com/foundry-rs/foundry) - Used to deploy the smart-contract
 
 ### Environnement variables
 
@@ -46,17 +47,40 @@ To develop all apps and packages, run the following commands:
 # install the different dependencies
 yarn
 
+# if you don't have a postgres container already, use this to lauch it
+yarn p docker:up
+
+# fork the mainnet (must be in a different terminal since it's blocking)
+yarn fork
+
 # run the dev script on all apps/packages
-yarn dev
+yarn dev # this will also seed the db + contract
 ```
 
-The `Next.js` apps will be available on http://localhost:3000 and http://localhost:4000
+The `Next.js` apps will be available on http://localhost:3000, http://localhost:4000 and http://localhost:4500
 
 The `api` will be available on http://localhost:5000
 
 ## Useful commands
 
 There is many commands available to facilitate working with the repo:
+
+### Alias
+
+```bash
+# run a command in pocket-contract package
+yarn c run_command
+
+# run a command in prisma package
+yarn p run_command
+
+# examples
+yarn c hardhat test
+
+yarn p studio
+```
+
+You can still use the full commands shown below to run a command in any package.
 
 ### Add or remove a dependency
 

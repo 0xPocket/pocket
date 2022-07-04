@@ -3,17 +3,16 @@ import { BigNumber } from 'ethers';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { useSmartContract } from '../../contexts/contract';
-import { roundBigNumbertoString } from '../../utils/reactQuery';
 import SettingsTabPanel from './SettingsTabPanel';
 import MainTabPanel from './MainTabPanel';
 import { useWallet } from '../../contexts/wallet';
 import { WalletAnimation } from '@lib/ui';
-import { formatEther, formatUnits, parseUnits } from 'ethers/lib/utils';
+import { formatUnits } from 'ethers/lib/utils';
 
 type WalletContentProps = {};
 
 function WalletContent({}: WalletContentProps) {
-  const { provider, USDTContract, erc20Decimals } = useSmartContract();
+  const { USDTContract, erc20Decimals } = useSmartContract();
   const { wallet } = useWallet();
   const balanceQuery = useQuery(
     'balance',

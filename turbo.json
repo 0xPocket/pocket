@@ -1,61 +1,45 @@
 {
-  "globalDependencies": [
-    ".env",
-    "packages/prisma/.env",
-    "packages/pocket-contract/.env"
-  ],
+  "globalDependencies": [".env", "packages/prisma/.env"],
+  "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
-    "@lib/prisma#build": {
-      "dependsOn": ["$DATABASE_URL"]
+    "@lib/prisma#generate": {
+      "inputs": ["./prisma/schema.prisma", ".env"]
     },
-    "@lib/prisma#db:deploy": {
-      "dependsOn": ["$DATABASE_URL"]
-    },
-    "@lib/prisma#db:seed": {
+    "@lib/prisma#deploy": {
+      "dependsOn": ["generate"],
+      "inputs": ["./prisma/migrations/**/*.sql"],
       "cache": false,
-      "dependsOn": ["deploy"]
+      "outputs": []
     },
-    "pocket-contract#healthcheck": {
-      "cache": false
-    },
-    "pocket-contract#build": {
-      "cache": false
-    },
-    "pocket-contract#deploy": {
-      "dependsOn": ["build", "healthcheck"],
-      "cache": false
-    },
-    "pocket-contract#seed": {
+    "@lib/prisma#seed": {
       "dependsOn": ["deploy"],
       "cache": false
     },
-    "web-parent#dev": {
-      "cache": false,
-      "dependsOn": ["pocket-contract#deploy"]
+    "pocket-contract#build": {
+      "inputs": ["./contracts/**/*.sol"],
+      "outputs": ["./artifacts/**/*", "./typechain-types/**/*", "./cache/**/*"]
     },
-    "web-child#dev": {
-      "cache": false,
-      "dependsOn": ["pocket-contract#deploy"]
+    "pocket-contract#deploy": {
+      "dependsOn": ["build"],
+      "cache": false
     },
-    "api#dev": {
-      "cache": false,
-      "dependsOn": ["pocket-contract#seed"]
+    "pocket-contract#seed": {
+      "dependsOn": ["build", "deploy"],
+      "cache": false
     },
-    "api#dx": {
-      "cache": false,
-      "dependsOn": ["@lib/prisma#dev"]
+    "fork": {
+      "cache": false
     },
     "clean": {
+      "dependsOn": ["^clean"],
       "cache": false
     },
     "build": {
-      "dependsOn": ["@lib/prisma#db:deploy", "^build"],
+      "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"]
     },
     "dev": {
-      "cache": false
-    },
-    "dx": {
+      "dependsOn": ["//#env-check", "@lib/prisma#seed", "pocket-contract#seed"],
       "cache": false
     },
     "start": {
@@ -68,8 +52,11 @@
       "dependsOn": ["^test"]
     },
     "test:e2e": {
-      "cache": false,
-      "dependsOn": ["@lib/prisma#db:reset"]
+      "cache": false
+    },
+    "//#env-check": {
+      "inputs": ["./.env.example", "./.env"],
+      "outputs": ["./.env"]
     }
   }
 }

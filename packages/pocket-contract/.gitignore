@@ -1,0 +1,10 @@
+node_modules
+cache/
+out/
+artifacts
+typechain-types
+.turbo
+*.env
+
+# OpenZeppelin version control for proxies
+.openzeppelin/unknown-*.json
