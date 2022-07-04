@@ -19,6 +19,11 @@ export const formSchema = z.object({
   email: z.string().email(),
   cryptoKnowledge: z.enum(['Oui', 'Non']).optional(),
   childKnowledge: z.enum(['Oui', 'Non', "Je n'ai pas d'enfants"]).optional(),
+  childPlayToEarn: z.enum(['Oui', 'Non', "Je n'ai pas d'enfants"]).optional(),
+  gavePocketMoney: z
+    .enum(['Oui, via un compte bancaire', 'Oui, en éspèces', 'Non'])
+    .optional(),
+  contact: z.enum(['Oui', 'Non']).optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -66,14 +71,29 @@ function Index({ email }: IndexProps) {
     const questions = [
       <Question
         register={register('cryptoKnowledge')}
-        header="Possédez-vous des cryptomonnaies ou des NFTs ?"
+        title="Possédez-vous des crypto-monnaies ou des NFTs ?"
         options={['Oui', 'Non']}
       />,
       <Question
         register={register('childKnowledge')}
-        header=" Vos enfants vous ont-ils déjà parlé de NFT, cryptomonnaies ou encore
-play to earn ?"
+        title="En avez-vous déjà discuté avec vos enfants ?"
         options={['Oui', 'Non', "Je n'ai pas d'enfants"]}
+      />,
+      <Question
+        register={register('childPlayToEarn')}
+        title="Vos enfants vous ont-ils parlé de play-to-earn ?"
+        options={['Oui', 'Non', "Je n'ai pas d'enfants"]}
+      />,
+      <Question
+        register={register('gavePocketMoney')}
+        title="Donnez vous de l'argent de poche a vos enfants ?"
+        options={['Oui, via un compte bancaire', 'Oui, en éspèces', 'Non']}
+      />,
+      <Question
+        register={register('contact')}
+        title="Acceptez-vous d'être contacté par email par notre équipe ?"
+        subtitle="Afin de polir notre produit, nous aimerions nous entretenir avec vous !"
+        options={['Oui', 'Non']}
       />,
     ];
 
