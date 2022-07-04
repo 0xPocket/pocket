@@ -1,4 +1,4 @@
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/router';
@@ -48,9 +48,13 @@ const CallToAction: React.FC = () => {
         />
         <button
           type="submit"
-          className="flex h-full cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap rounded-lg bg-primary px-4 py-3 text-bright dark:bg-primary"
+          className="flex h-full w-28 cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap rounded-lg bg-primary px-4 py-3 text-bright dark:bg-primary"
         >
-          Commencer
+          {mutation.isLoading ? (
+            <FontAwesomeIcon icon={faSpinner} spin />
+          ) : (
+            'Commencer'
+          )}
         </button>
       </form>
       {errors.email && (
