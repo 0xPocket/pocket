@@ -10,6 +10,7 @@ import AnimationLayer from '../components/form/AnimationLayer';
 import Header from '../components/Header';
 import QuestionText from '../components/form/QuestionText';
 import MainContainer from '../components/containers/MainContainer';
+import { useMutation } from 'react-query';
 
 type IndexProps = {
   email?: string;
@@ -52,12 +53,16 @@ function Index({ email }: IndexProps) {
   const [step, setStep] = useState(0);
   const submitRef = useRef<HTMLInputElement>(null);
 
-  const onSubmit = async (data: FormValues) => {
-    await fetch('/api/form', {
+  const mutation = useMutation((data: FormValues) =>
+    fetch('/api/form', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
-    });
+    }),
+  );
+
+  const onSubmit = async (data: FormValues) => {
+    mutation.mutate(data);
   };
 
   useEffect(() => {
@@ -86,13 +91,13 @@ function Index({ email }: IndexProps) {
       />,
       <Question
         register={register('gavePocketMoney')}
-        title="Donnez vous de l'argent de poche a vos enfants ?"
-        options={['Oui, via un compte bancaire', 'Oui, en éspèces', 'Non']}
+        title="Donnez-vous de l'argent de poche à vos enfants ?"
+        options={['Oui, via un compte bancaire', 'Oui, en espèces', 'Non']}
       />,
       <Question
         register={register('contact')}
         title="Acceptez-vous d'être contacté par email par notre équipe ?"
-        subtitle="Afin de polir notre produit, nous aimerions nous entretenir avec vous !"
+        subtitle="Nous aimerions discuter avec vous !"
         options={['Oui', 'Non']}
       />,
     ];

@@ -14,7 +14,7 @@ const Introduction: React.FC<Props> = ({ onClick }) => {
         onClick={onClick}
         className="rounded-lg bg-primary p-4 text-white"
       >
-        Commencer
+        {`C'est parti !`}
       </button>
     </div>
   );
