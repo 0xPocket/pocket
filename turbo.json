@@ -1,5 +1,4 @@
 {
-  "globalDependencies": [".env", "packages/prisma/.env"],
   "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
     "@lib/prisma#generate": {

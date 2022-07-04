@@ -33,14 +33,14 @@ const config: HardhatUserConfig = {
       forking: {
         url:
           'https://polygon-mainnet.g.alchemy.com/v2/' +
-          process.env.KEY_ALCHEMY_POLYGON,
+          process.env.NEXT_PUBLIC_KEY_ALCHEMY_POLYGON,
       },
       chainId: 137,
     },
     polygon: {
       url:
         'https://polygon-mainnet.g.alchemy.com/v2/' +
-        process.env.KEY_ALCHEMY_POLYGON,
+        process.env.NEXT_PUBLIC_KEY_ALCHEMY_POLYGON,
       accounts:
         process.env.PRIVATE_KEY_POLYGON !== undefined
           ? [process.env.PRIVATE_KEY_POLYGON]
