@@ -1,4 +1,5 @@
 import BackedBySection from '../components/BackedBySection';
+import Caroussel from '../components/Caroussel';
 import MainContainer from '../components/containers/MainContainer';
 import Footer from '../components/Footer';
 import HeroSection from '../components/HeroSection';
@@ -19,6 +20,7 @@ function Index({}: IndexProps) {
             <IndexPageCardsChildren />
           </div>
           <SimpleSection />
+          <Caroussel />
           <BackedBySection />
         </div>
         <Footer />

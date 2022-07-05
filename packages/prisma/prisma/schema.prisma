@@ -91,6 +91,9 @@ model Survey {
   id              String   @id @default(cuid())
   cryptoKnowledge String?
   childKnowledge  String?
+  childPlayToEarn String?
+  gavePocketMoney String?
+  contact         String?
   email           String   @unique
   createdAt       DateTime @default(now())
 }
