@@ -21,9 +21,27 @@ const avis = [
   },
 ];
 
+function appendDotsFt(dots) {
+  return (
+    <div>
+      <ul> {dots}</ul>
+    </div>
+  );
+}
+
+function customPaging() {
+  return (
+    <span className=" text-3xl hover:text-dark-lightest dark:text-white">
+      •
+    </span>
+  );
+}
+
 function Caroussel({}: CarousselProps) {
   const settings = {
     dots: true,
+    customPaging: customPaging,
+    appendDots: appendDotsFt,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
@@ -33,11 +51,13 @@ function Caroussel({}: CarousselProps) {
     centerMode: true,
     fade: true,
     arrows: false,
+    useTransform: false,
+    pauseOnHover: true,
     centerPadding: '0',
   };
 
   return (
-    <Slider {...settings}>
+    <Slider appendDots={appendDotsFt} {...settings}>
       {avis.map((a, index) => (
         <Avis content={a.content} author={a.author} key={index} />
       ))}
