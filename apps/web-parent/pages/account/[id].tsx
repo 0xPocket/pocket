@@ -10,7 +10,7 @@ import { useSmartContract } from '../../contexts/contract';
 import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
 
-function calculateTotal(data: covalentRet) {
+function totalAmountUsd(data: covalentRet) {
   let tot = 0;
   data.items.forEach((token) => {
     if (token.contract_name.slice(-2) !== 'io') tot += token.quote;
@@ -18,7 +18,7 @@ function calculateTotal(data: covalentRet) {
   return tot;
 }
 
-function ParseRes(token) {
+function ParseData(token) {
   if (token.token.quote !== 0 && token.token.contract_name.slice(-2) !== 'io') {
     return (
       <li>
@@ -29,7 +29,7 @@ function ParseRes(token) {
   return null;
 }
 
-async function testCovalent() {
+async function queryTokenInfos() {
   const APIKEY = 'ckey_d68ffbaf2bdf47b6b58e84fada7';
   const baseURL = 'https://api.covalenthq.com/v1';
   // TODO : get chainId from mm
@@ -76,10 +76,9 @@ function Account({
   );
 
   useEffect(() => {
-    testCovalent().then(async (res) => {
+    queryTokenInfos().then(async (res) => {
       const result = await res.json();
       setData(result.data as covalentRet);
-      console.log(data);
     });
   }, []);
 
@@ -127,13 +126,13 @@ function Account({
                 <div className="h-60 bg-dark p-4 text-bright">
                   Wallet Content
                   {!data ? (
-                    <>Loading</>
+                    <> Loading</>
                   ) : (
                     <p>
                       {data!.items.map((token) => (
-                        <ParseRes token={token} />
+                        <ParseData token={token} />
                       ))}
-                      Total in USD : {calculateTotal(data!)}
+                      Total in USD : {totalAmountUsd(data!)}
                     </p>
                   )}
                 </div>
