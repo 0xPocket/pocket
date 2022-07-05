@@ -5,18 +5,11 @@ import { FormattedMessage } from 'react-intl';
 type Props = {
   register: UseFormRegisterReturn;
   title: string;
-  subtitle?: string;
   options: string[];
   values: string[];
 };
 
-const Question: React.FC<Props> = ({
-  register,
-  title,
-  subtitle,
-  options,
-  values,
-}) => {
+const Question: React.FC<Props> = ({ register, title, options, values }) => {
   return (
     <div className="flex flex-col items-center justify-center gap-12">
       <h1 className="max-w-3xl text-center text-2xl leading-normal md:text-4xl">
