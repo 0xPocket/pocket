@@ -37,8 +37,8 @@ function Caroussel({}: CarousselProps) {
 
   return (
     <Slider {...settings}>
-      {avis.map((a) => (
-        <Avis content={a.content} author={a.author} />
+      {avis.map((a, index) => (
+        <Avis content={a.content} author={a.author} key={index} />
       ))}
     </Slider>
   );
