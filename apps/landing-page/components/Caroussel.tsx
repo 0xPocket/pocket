@@ -11,7 +11,7 @@ const avis = [
   },
   {
     content:
-      "J'avais très peur de ce domaine, mais mon fils n'arrête pas de me demander de lui acheter des nft d'un youtubeur (j'ai oublié le nom) alors on a décidé avec mon mari de lui créer un compte pocket !",
+      "J'avais très peur de ce domaine, mais mon fils n'arrête pas de me demander de lui acheter des ntf d'un youtubeur (j'ai oublié le nom) alors on a décidé avec mon mari de lui créer un compte pocket !",
     author: 'Christine, maman de Jonathan (16 ans)',
   },
   {
@@ -33,6 +33,7 @@ function Caroussel({}: CarousselProps) {
     centerMode: true,
     fade: true,
     arrows: false,
+    centerPadding: '0',
   };
 
   return (
