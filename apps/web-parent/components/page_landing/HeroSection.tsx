@@ -63,14 +63,14 @@ function HeroSection({}: HeroSectionProps) {
             />
           </form>
         </div>
-        <div className=" relative col-span-6 scale-150">
+        {/* <div className=" relative col-span-6 scale-150">
           <Image
             src="/assets/hero_ilu.svg"
             alt="caca"
             layout="fill"
             objectFit="contain"
           />
-        </div>
+        </div> */}
       </div>
       {/* <div className="mt-16 flex flex-col gap-4 pl-16">
         <span className="max-w-sm text-lg">
@@ -101,7 +101,7 @@ function HeroSection({}: HeroSectionProps) {
           />
         </form>
       </div> */}
-      <div className="absolute bottom-[-100px] right-0 -z-50 h-[800px] w-[1800px] bg-light-radial-herosection dark:opacity-10"></div>
+      {/* <div className="absolute bottom-[-100px] right-0 -z-50 h-[800px] w-[1800px] bg-light-radial-herosection dark:opacity-10"></div> */}
     </section>
   );
 }
