@@ -107,7 +107,6 @@ function Index({ email }: IndexProps) {
       <Question
         register={register('contact')}
         title="question.contact.title"
-        subtitle="question.contact.subtitle"
         options={['choices.yes', 'choices.no']}
         values={['Oui', 'Non']}
       />,

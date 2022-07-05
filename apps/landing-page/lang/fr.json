@@ -60,8 +60,8 @@
 
 
 	"intro.title" : "Bonjour 👋",
-	"intro.subtitle" : "Vous souhaitez avoir accès à notre produit en avant-première ?",
-	"intro.thirdtitle": "Alors dites-nous en plus sur vous !",
+	"intro.subtitle" : "Nous aimerions en savoir un peu plus sur vous.",
+	"intro.thirdtitle": "5 questions pas plus, c'est promis !",
 	"intro.letsgo": "C'est parti !",
 
 
@@ -72,8 +72,7 @@
 	"question.childKnowledge":"En avez-vous déjà discuté avec vos enfants ?",
 	"question.childPlayToEarn": "Vos enfants vous ont-ils parlé de play-to-earn ?",
 	"question.gavePocketMoney": "Donnez-vous de l'argent de poche à vos enfants ?",
-	"question.contact.title": "Acceptez-vous d'être contacté par email par notre équipe ?",
-	"question.contact.subtitle": "Nous aimerions discuter avec vous !",
+	"question.contact.title": "Acceptez-vous d'être contacté par email pour essayer notre solution en avant première ?",
 	
 	"question.next": "Suivant",
 
@@ -85,6 +84,5 @@
 	"choice.cash": "Oui, en espèces",
 
 	"conclusion.title" : "Merci de votre intérêt pour notre produit 👍",
-	"conclusion.subtitle" : "Vous serez contacté lorsque le produit sera disponible pour le tester en avant première.",
 	"conclusion.team": "L'équipe de Pocket."
 }

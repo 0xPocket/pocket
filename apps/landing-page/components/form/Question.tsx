@@ -22,11 +22,6 @@ const Question: React.FC<Props> = ({
       <h1 className="max-w-3xl text-center text-2xl leading-normal md:text-4xl">
         <FormattedMessage id={title} />
       </h1>
-      {subtitle && (
-        <h3 className="text-center">
-          <FormattedMessage id={subtitle} />
-        </h3>
-      )}
       <div className="flex flex-col gap-8 md:flex-row md:text-xl">
         {options.map((option, index) => (
           <div

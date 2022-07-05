@@ -7,9 +7,6 @@ const Conclusion: React.FC = () => {
       <h1>
         <FormattedMessage id="conclusion.title" />
       </h1>
-      <h3>
-        <FormattedMessage id="conclusion.subtitle" />
-      </h3>
       <p>
         <FormattedMessage id="conclusion.team" />
       </p>
