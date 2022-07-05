@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { FormattedMessage } from 'react-intl';
 import { useMutation } from 'react-query';
 import { z } from 'zod';
 import { formSchema } from '../pages/survey';
@@ -19,7 +20,7 @@ const CallToAction: React.FC = () => {
     resolver: zodResolver(formSchema),
   });
   const router = useRouter();
-
+  console.log(router.locale);
   const mutation = useMutation(
     (data: FormValues) =>
       fetch('/api/form', {
@@ -28,7 +29,12 @@ const CallToAction: React.FC = () => {
         body: JSON.stringify(data),
       }),
     {
-      onMutate: (data) => router.push('/survey?email=' + data.email),
+      onMutate: (data) =>
+        router.push(
+          '/survey?email=' + data.email,
+          '/survey?email=' + data.email,
+          { locale: router.locale },
+        ),
     },
   );
 
@@ -56,13 +62,13 @@ const CallToAction: React.FC = () => {
           {mutation.isLoading ? (
             <FontAwesomeIcon icon={faSpinner} spin />
           ) : (
-            'Commencer'
+            <FormattedMessage id="calltoaction.action" />
           )}
         </button>
       </form>
       {errors.email && (
         <span className="max-w-fit text-sm text-white-darker">
-          Vous devez rentrer un email valide
+          <FormattedMessage id="calltoaction.error" />
         </span>
       )}
     </div>

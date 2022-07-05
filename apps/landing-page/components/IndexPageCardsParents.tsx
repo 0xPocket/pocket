@@ -5,6 +5,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { IndexCardAnimation } from '@lib/ui';
 import { useState } from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Waypoint } from 'react-waypoint';
 import IndexCard from './IndexCard';
 
@@ -15,27 +16,27 @@ function IndexPageCardsParents() {
     <div className="min-h-96  z-10">
       <Waypoint onEnter={() => setShow(true)} />
       <div className="mb-8 bg-gradient-blue-text bg-clip-text text-center text-6xl font-bold text-transparent  sm:text-left xl:hidden">
-        Parents
+        <FormattedMessage id="parentcard.title" />
       </div>
       <div className="relative grid grid-cols-4 gap-8">
         <div className=" hidden items-center justify-center bg-gradient-blue-text bg-clip-text  text-6xl font-bold text-transparent xl:col-span-1 xl:flex">
-          Parents
+          <FormattedMessage id="parentcard.title" />
         </div>
         {show && (
           <IndexCardAnimation>
             <IndexCard
-              title="Simplicité"
-              content="Créez un compte, ajustez la fréquence et le montant d’argent de poche en quelques clics."
+              title="parentcard.simplicity.title"
+              content="parentcard.simplicity.content"
               icon={faGear}
             />
             <IndexCard
-              title="Sérénité"
-              content="Soyez avertis en temps réel de l’activité de vos enfants ou recevez un résumé hebdomadaire."
+              title="parentcard.serenity.title"
+              content="parentcard.serenity.content"
               icon={faMessage}
             />
             <IndexCard
-              title="Stabilité"
-              content="Vos fonds ne sont pas soumis aux aléas du marché grâce à une cryptomonnaie indexée sur l'euro."
+              title="parentcard.stability.title"
+              content="parentcard.stability.content"
               icon={faEuroSign}
             />
           </IndexCardAnimation>

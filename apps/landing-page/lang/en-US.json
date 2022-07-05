@@ -1,0 +1,90 @@
+{
+	"hero.title.top": "L'argent de poche du web3.",
+	"hero.title.bottom": "Simple. Sécurisé.",
+	"hero.subtitle.top": "Pas besoin de tout comprendre aux cryptomonnaies pour en donner à ses ados.",
+	"hero.subtitle.bottom": "Achetez et distribuez de l'argent de poche à vos enfants en un clic.",
+
+
+
+	"parentcard.title" : "Parents",
+
+	"parentcard.simplicity.title" : "Simplicité",
+	"parentcard.simplicity.content": "Créez un compte, ajustez la fréquence et le montant d’argent de poche en quelques clics.",
+
+	"parentcard.serenity.title" : "Sérénité",
+	"parentcard.serenity.content": "Soyez avertis en temps réel de l’activité de vos enfants ou recevez un résumé hebdomadaire.",
+
+	"parentcard.stability.title" : "Stabilité",
+	"parentcard.stability.content": "Vos fonds ne sont pas soumis aux aléas du marché grâce à une cryptomonnaie indexée sur l'euro.",
+
+
+
+	"childcard.title": "Enfants",
+
+	"childcard.practice.title": "Apprentissage",
+	"childcard.practice.content": "Une plateforme pédagogique pour faire ses premiers pas dans le web3.",
+
+	"childcard.discovery.title": "Découverte",
+	"childcard.discovery.content": "Une sélection de jeux et d'applications adaptée aux adolescents.",
+
+	"childcard.liberty.title": "Liberté",
+	"childcard.liberty.content": "Un accompagnement vers une autonomie dans l’écosystème en toute sérénité.",
+
+
+
+	"simple.section.title": "Rejoignez Pocket",
+	"simple.section.subtitle": "Soyez le premier.",
+	"simple.section.content": "Pocket sera disponible très rapidement. Faites partie des premiers inscrits et profitez d'avantages exclusifs.",
+
+
+
+	"calltoaction.action" :"Commencer",
+	"calltoaction.error" :"Vous devez rentrer un email valide",
+
+
+	"carrousel.avis1.content": "Avant je prêtais ma carte bleue à mon fils pour qu'il achète des crypto-monnaies. Au moins avec Pocket, je vois ce qu'il fait avec. C'est un service que je recommande à tous les parents qui veulent un tant soit peu surveiller leurs enfants !",
+	"carrousel.avis1.author":"Rémi, papa d'Antoine (14 ans)",
+
+	"carrousel.avis2.content":"J'avais très peur de ce domaine, mais mon fils n'arrête pas de me demander de lui acheter des ntf d'un youtubeur (j'ai oublié le nom) alors on a décidé avec mon mari de lui créer un compte pocket !",
+	"carrousel.avis2.author":"Christine, maman de Jonathan (16 ans)",
+
+	"carrousel.avis3.content": "Ça faisait pas mal de temps que ma fille me demandait d'acheter des cryptomonnaies et je n'étais vraiment pas rassuré par l'idée. Quand il m'a parlé du service de Pocket, j'ai pensé que ce serait un bon moyen de faire ça en toute sécurité.",
+	"carrousel.avis3.author": "Jean-Christophe, papa de Lou (16 ans)",
+
+
+	"backedby.title" : "Nos partenaires",
+
+
+	"footer.copyright": "© 2022 Pocket.",
+	"footer.contact" : "Contact : hello@gopocket.fr",
+
+
+	"intro.title" : "Bonjour 👋",
+	"intro.subtitle" : "Vous souhaitez avoir accès à notre produit en avant-première ?",
+	"intro.thirdtitle": "Alors dites-nous en plus sur vous !",
+	"intro.letsgo": "C'est parti !",
+
+
+	"question.email": "Une adresse email pour vous tenir informé ?",
+	"question.email.error" :"Vous devez rentrer un email valide",
+
+	"question.cryptoKnowledge": "Possédez-vous des crypto-monnaies ou des NFTs ?",
+	"question.childKnowledge":"En avez-vous déjà discuté avec vos enfants ?",
+	"question.childPlayToEarn": "Vos enfants vous ont-ils parlé de play-to-earn ?",
+	"question.gavePocketMoney": "Donnez-vous de l'argent de poche à vos enfants ?",
+	"question.contact.title": "Acceptez-vous d'être contacté par email par notre équipe ?",
+	"question.contact.subtitle": "Nous aimerions discuter avec vous !",
+	
+	"question.next": "Suivant",
+
+
+	"choices.yes": "Oui",
+	"choices.no" : "Non",
+	"choices.nochild" : "Je n'ai pas d'enfants",
+	"choice.bankaccount": "Oui, via un compte bancaire",
+	"choice.cash": "Oui, en espèces",
+
+	"conclusion.title" : "Merci de votre intérêt pour notre produit 👍",
+	"conclusion.subtitle" : "Vous serez contacté lorsque le produit sera disponible pour le tester en avant première.",
+	"conclusion.team": "L'équipe de Pocket."
+}

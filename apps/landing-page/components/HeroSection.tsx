@@ -1,3 +1,4 @@
+import { FormattedMessage } from 'react-intl';
 import CallToAction from './CallToAction';
 import HeroIllu from './illustration/HeroIllu';
 
@@ -13,21 +14,18 @@ function HeroSection({}: HeroSectionProps) {
         <div className="col-span-10 flex flex-col justify-center gap-4 xl:col-span-4">
           <div className="max-w-fit text-[38px] font-bold leading-[50px] text-transparent lg:text-[65px] lg:leading-[80px]">
             <span className="block bg-gradient-blue-text bg-clip-text">
-              {"L'argent de poche du web3."}
+              <FormattedMessage id="hero.title.top" />
             </span>
             <span className="block bg-gradient-pink-text bg-clip-text ">
-              {'Simple. Sécurisé.'}
+              <FormattedMessage id="hero.title.bottom" />
             </span>
           </div>
           <div className=" ">
             <div className="text-2xl leading-relaxed">
-              Pas besoin de tout comprendre aux cryptomonnaies pour en donner à
-              ses ados.
+              <FormattedMessage id="hero.subtitle.top" />
             </div>
             <div className="text-2xl leading-normal">
-              {
-                "Achetez et distribuez de l'argent de poche à vos enfants en un clic."
-              }
+              <FormattedMessage id="hero.subtitle.bottom" />
             </div>
           </div>
 
