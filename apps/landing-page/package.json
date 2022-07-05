@@ -23,8 +23,9 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.33.1",
+    "react-query": "^3.39.1",
+    "react-slick": "^0.29.0",
     "react-spring": "^9.4.5",
-		"react-query": "^3.39.1",
     "react-waypoint": "^10.3.0",
     "ui": "*",
     "zod": "^3.17.3"
@@ -33,6 +34,7 @@
     "@lib/ui": "*",
     "@types/node": "^18.0.1",
     "@types/react": "18.0.14",
+    "@types/react-slick": "^0.23.10",
     "autoprefixer": "^10.4.7",
     "config": "*",
     "next-transpile-modules": "9.0.0",
