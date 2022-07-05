@@ -20,17 +20,20 @@ const CallToAction: React.FC = () => {
   });
   const router = useRouter();
 
-  const mutation = useMutation((data: FormValues) =>
-    fetch('/api/form', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    }),
+  const mutation = useMutation(
+    (data: FormValues) =>
+      fetch('/api/form', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      }),
+    {
+      onMutate: (data) => router.push('/survey?email=' + data.email),
+    },
   );
 
   const onSubmit = async (data: FormValues) => {
     mutation.mutateAsync(data);
-    router.push('/survey?email=' + data.email);
   };
 
   return (
