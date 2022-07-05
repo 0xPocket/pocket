@@ -28,7 +28,7 @@ const { chains, provider } = configureChains(
 );
 
 const client = createClient({
-  autoConnect: false,
+  autoConnect: true,
   provider,
   connectors: [
     new MetaMaskConnector({ chains }),

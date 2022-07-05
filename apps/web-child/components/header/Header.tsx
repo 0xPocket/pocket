@@ -6,7 +6,7 @@ type GlobalHeaderProps = {};
 
 function GlobalHeader({}: GlobalHeaderProps) {
   const { address, isConnected } = useAccount();
-  const { setShowModal } = useAuth();
+  const { user, setShowModal, signOut } = useAuth();
 
   return (
     <Header>
@@ -19,12 +19,15 @@ function GlobalHeader({}: GlobalHeaderProps) {
         </Header.Nav>
       </Header.BlockLeft>
       <Header.BlockRight>
-        {isConnected ? (
-          <div>{address}</div>
-        ) : (
+        {user ? (
           <>
-            <Button action={() => setShowModal(true)}>Connect Wallet</Button>
+            <div>{user.web3Account.address}</div>
+            <button className="bg-primary p-4" onClick={() => signOut()}>
+              LOGOUT
+            </button>
           </>
+        ) : (
+          <Button action={() => setShowModal(true)}>Connect Wallet</Button>
         )}
         <ThemeToggler />
       </Header.BlockRight>

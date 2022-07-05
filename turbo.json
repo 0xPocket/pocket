@@ -35,7 +35,8 @@
       "cache": false
     },
     "landing-page#build": {
-      "dependsOn": ["@lib/prisma#deploy"]
+      "dependsOn": ["@lib/prisma#deploy"],
+      "cache": false
     },
     "build": {
       "dependsOn": ["^build"],

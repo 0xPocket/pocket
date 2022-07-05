@@ -1,12 +1,13 @@
 import Image from 'next/image';
 import { useConnect } from 'wagmi';
+import { useAuth } from '../../contexts/auth';
 import { Spinner } from '../common/Spinner';
 
 type AuthDialogProvidersProps = {};
 
 function AuthDialogProviders({}: AuthDialogProvidersProps) {
-  const { connect, connectors, error, isLoading, pendingConnector } =
-    useConnect();
+  const { connectAsync, connectors, error, isLoading } = useConnect();
+  const { signIn } = useAuth();
 
   return (
     <>
@@ -16,7 +17,11 @@ function AuthDialogProviders({}: AuthDialogProvidersProps) {
             className="relative flex w-48 flex-col items-center justify-center gap-4 rounded-lg border border-white-darker bg-[#161515]/25 p-4 font-sans font-bold hover:bg-[#161515]/75"
             disabled={!connector.ready}
             key={connector.id}
-            onClick={() => connect({ connector })}
+            onClick={() =>
+              connectAsync({ connector }).then((res) =>
+                signIn(res.chain.id, res.account),
+              )
+            }
           >
             <div className="relative h-8 w-8">
               <Image
@@ -27,10 +32,6 @@ function AuthDialogProviders({}: AuthDialogProvidersProps) {
               />
             </div>
             {connector.name}
-            {/* {!connector.ready && ' (unsupported)'}
-                    {isLoading && connector.id === pendingConnector?.id && (
-                      <Spinner />
-                    )} */}
           </button>
         ))}
       </div>

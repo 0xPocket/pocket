@@ -1,3 +1,4 @@
+import { UserChild } from '@lib/types/interfaces';
 import {
   createContext,
   Dispatch,
@@ -8,7 +9,7 @@ import {
   useState,
 } from 'react';
 import { SiweMessage } from 'siwe';
-import { useAccount, useNetwork, useSignMessage } from 'wagmi';
+import { useAccount, useDisconnect, useNetwork, useSignMessage } from 'wagmi';
 import AuthDialog from '../components/auth/AuthDialog';
 
 interface AuthProviderProps {
@@ -17,8 +18,10 @@ interface AuthProviderProps {
 
 interface IAuthContext {
   loggedIn: boolean;
-  signIn: () => void;
+  signIn: (chainId: number, address: string) => void;
+  signOut: () => void;
   setShowModal: Dispatch<SetStateAction<boolean>>;
+  user: UserChild | undefined;
 }
 
 export function createCtx<A extends {} | null>() {
@@ -31,58 +34,83 @@ const [AuthContext, AuthContextProvider] = createCtx<IAuthContext>();
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [showModal, setShowModal] = useState(false);
+  const [user, setUser] = useState<UserChild>();
 
   const { address, isConnected } = useAccount();
+  const { disconnect } = useDisconnect();
   const { chain: activeChain } = useNetwork();
   const { signMessageAsync } = useSignMessage();
 
-  const signIn = useCallback(async () => {
-    console.log('sign in');
+  const signIn = useCallback(
+    async (chainId: number, address: string) => {
+      if (!address || !chainId) return;
 
-    const chainId = activeChain?.id;
+      // We get a random nonce from our server
+      const nonceRes = await fetch('/api/auth/ethereum/nonce');
 
-    if (!address || !chainId) return;
+      // Populate a message with SIWE
+      const message = new SiweMessage({
+        domain: window.location.host,
+        address,
+        statement: 'Sign in with Ethereum to the app.',
+        uri: window.location.origin,
+        version: '1',
+        chainId,
+        nonce: await nonceRes.text(),
+      });
 
-    const nonceRes = await fetch('/api/auth/ethereum/nonce');
-    const message = new SiweMessage({
-      domain: window.location.host,
-      address,
-      statement: 'Sign in with Ethereum to the app.',
-      uri: window.location.origin,
-      version: '1',
-      chainId,
-      nonce: await nonceRes.text(),
-    });
+      // Sign the message
+      const signature = await signMessageAsync({
+        message: message.prepareMessage(),
+      });
 
-    const signature = await signMessageAsync({
-      message: message.prepareMessage(),
-    });
-    const verifyRes = await fetch('/api/auth/ethereum/verify', {
+      // Send the signature to the server to verify it
+      const verifyRes = await fetch('/api/auth/ethereum/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message, signature }),
+      });
+
+      if (!verifyRes.ok) throw new Error('Error verifying message');
+
+      setLoggedIn(true);
+      setShowModal(false);
+    },
+    [signMessageAsync],
+  );
+
+  const signOut = useCallback(() => {
+    fetch('/api/auth/logout', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ message, signature }),
+    }).then(async () => {
+      setLoggedIn(false);
+      setUser(undefined);
+      disconnect();
     });
-
-    if (!verifyRes.ok) throw new Error('Error verifying message');
-
-    setLoggedIn(true);
-    setShowModal(false);
-  }, [address, signMessageAsync, activeChain]);
+  }, [disconnect]);
 
   useEffect(() => {
     if (isConnected) {
-      signIn();
+      fetch('/api/auth/children/me').then(async (res) => {
+        if (!res.ok) {
+          return;
+        }
+        const user = await res.json();
+        setUser(user);
+      });
     }
-  }, [isConnected, signIn]);
+  }, [isConnected]);
 
   return (
     <AuthContextProvider
       value={{
         loggedIn,
         signIn,
+        signOut,
         setShowModal,
+        user,
       }}
     >
       {children}

@@ -11,6 +11,7 @@ import { UserSession } from '../session/user-session.interface';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtAuthService } from '../jwt/jwt-auth.service';
 import { RegisterWithTokenDto } from './dto/register-with-token.dto';
+import { SessionService } from '../session/session.service';
 
 class LoginTimeout extends HttpException {
   constructor(message?: string) {
@@ -25,6 +26,7 @@ export class EthereumService {
   constructor(
     private jwtAuthService: JwtAuthService,
     private prisma: PrismaService,
+    private sessionService: SessionService,
   ) {}
 
   generateNonce() {
@@ -73,6 +75,8 @@ export class EthereumService {
       if (fields.nonce !== session.nonce) {
         throw new UnprocessableEntityException('Invalid nonce.');
       }
+
+      this.sessionService.setUserSession(session, 'damianmusk', false);
 
       return fields;
     } catch (e) {
