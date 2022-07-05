@@ -1,9 +1,10 @@
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useMutation } from 'react-query';
 import { z } from 'zod';
 import { formSchema } from '../pages/survey';
 
@@ -19,13 +20,20 @@ const CallToAction: React.FC = () => {
   });
   const router = useRouter();
 
+  const mutation = useMutation(
+    (data: FormValues) =>
+      fetch('/api/form', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      }),
+    {
+      onMutate: (data) => router.push('/survey?email=' + data.email),
+    },
+  );
+
   const onSubmit = async (data: FormValues) => {
-    await fetch('/api/form', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    router.push('/survey?email=' + data.email);
+    mutation.mutateAsync(data);
   };
 
   return (
@@ -41,11 +49,16 @@ const CallToAction: React.FC = () => {
           type="email"
           {...register('email')}
         />
-        <input
+        <button
           type="submit"
-          value="Commencer"
-          className="flex h-full cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap rounded-lg bg-primary px-4 py-3 text-bright dark:bg-primary"
-        />
+          className="flex h-full w-28 cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap rounded-lg bg-primary px-4 py-3 text-bright dark:bg-primary"
+        >
+          {mutation.isLoading ? (
+            <FontAwesomeIcon icon={faSpinner} spin />
+          ) : (
+            'Commencer'
+          )}
+        </button>
       </form>
       {errors.email && (
         <span className="max-w-fit text-sm text-white-darker">

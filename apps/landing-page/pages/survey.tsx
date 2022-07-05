@@ -10,6 +10,7 @@ import AnimationLayer from '../components/form/AnimationLayer';
 import Header from '../components/Header';
 import QuestionText from '../components/form/QuestionText';
 import MainContainer from '../components/containers/MainContainer';
+import { useMutation } from 'react-query';
 
 type IndexProps = {
   email?: string;
@@ -19,6 +20,11 @@ export const formSchema = z.object({
   email: z.string().email(),
   cryptoKnowledge: z.enum(['Oui', 'Non']).optional(),
   childKnowledge: z.enum(['Oui', 'Non', "Je n'ai pas d'enfants"]).optional(),
+  childPlayToEarn: z.enum(['Oui', 'Non', "Je n'ai pas d'enfants"]).optional(),
+  gavePocketMoney: z
+    .enum(['Oui, via un compte bancaire', 'Oui, en éspèces', 'Non'])
+    .optional(),
+  contact: z.enum(['Oui', 'Non']).optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -47,12 +53,16 @@ function Index({ email }: IndexProps) {
   const [step, setStep] = useState(0);
   const submitRef = useRef<HTMLInputElement>(null);
 
-  const onSubmit = async (data: FormValues) => {
-    await fetch('/api/form', {
+  const mutation = useMutation((data: FormValues) =>
+    fetch('/api/form', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
-    });
+    }),
+  );
+
+  const onSubmit = async (data: FormValues) => {
+    mutation.mutate(data);
   };
 
   useEffect(() => {
@@ -66,14 +76,29 @@ function Index({ email }: IndexProps) {
     const questions = [
       <Question
         register={register('cryptoKnowledge')}
-        header="Possédez-vous des cryptomonnaies ou des NFTs ?"
+        title="Possédez-vous des crypto-monnaies ou des NFTs ?"
         options={['Oui', 'Non']}
       />,
       <Question
         register={register('childKnowledge')}
-        header=" Vos enfants vous ont-ils déjà parlé de NFT, cryptomonnaies ou encore
-play to earn ?"
+        title="En avez-vous déjà discuté avec vos enfants ?"
         options={['Oui', 'Non', "Je n'ai pas d'enfants"]}
+      />,
+      <Question
+        register={register('childPlayToEarn')}
+        title="Vos enfants vous ont-ils parlé de play-to-earn ?"
+        options={['Oui', 'Non', "Je n'ai pas d'enfants"]}
+      />,
+      <Question
+        register={register('gavePocketMoney')}
+        title="Donnez-vous de l'argent de poche à vos enfants ?"
+        options={['Oui, via un compte bancaire', 'Oui, en espèces', 'Non']}
+      />,
+      <Question
+        register={register('contact')}
+        title="Acceptez-vous d'être contacté par email par notre équipe ?"
+        subtitle="Nous aimerions discuter avec vous !"
+        options={['Oui', 'Non']}
       />,
     ];
 

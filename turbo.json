@@ -2,7 +2,8 @@
   "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
     "@lib/prisma#generate": {
-      "inputs": ["./prisma/schema.prisma", ".env"]
+      "inputs": ["./prisma/schema.prisma", ".env"],
+      "dependsOn": ["$DATABASE_URL"]
     },
     "@lib/prisma#deploy": {
       "dependsOn": ["generate"],
@@ -32,6 +33,10 @@
     "clean": {
       "dependsOn": ["^clean"],
       "cache": false
+    },
+    "landing-page#build": {
+      "dependsOn": ["@lib/prisma#deploy"],
+			"cache": false
     },
     "build": {
       "dependsOn": ["^build"],
