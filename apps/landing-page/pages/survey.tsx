@@ -36,6 +36,7 @@ function Index() {
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
   });
+
   const [step, setStep] = useState(0);
   const submitRef = useRef<HTMLInputElement>(null);
 
@@ -62,29 +63,37 @@ function Index() {
     const questions = [
       <Question
         register={register('cryptoKnowledge')}
-        title="Possédez-vous des crypto-monnaies ou des NFTs ?"
-        options={['Oui', 'Non']}
+        title="question.cryptoKnowledge"
+        options={['choices.yes', 'choices.no']}
+        values={['Oui', 'Non']}
       />,
       <Question
         register={register('childKnowledge')}
-        title="En avez-vous déjà discuté avec vos enfants ?"
-        options={['Oui', 'Non', "Je n'ai pas d'enfants"]}
+        title="question.childKnowledge"
+        options={['choices.yes', 'choices.no', 'choices.nochild']}
+        values={['Oui', 'Non', "Je n'ai pas d'enfants"]}
       />,
       <Question
         register={register('childPlayToEarn')}
-        title="Vos enfants vous ont-ils parlé de play-to-earn ?"
-        options={['Oui', 'Non', "Je n'ai pas d'enfants"]}
+        title="question.childPlayToEarn"
+        options={['choices.yes', 'choices.no', 'choices.nochild']}
+        values={['Oui', 'Non', "Je n'ai pas d'enfants"]}
       />,
       <Question
         register={register('gavePocketMoney')}
-        title="Donnez-vous de l'argent de poche à vos enfants ?"
-        options={['Oui, via un compte bancaire', 'Oui, en espèces', 'Non']}
+        title="question.gavePocketMoney"
+        options={['choices.bankaccount', 'choices.cash', 'choices.no']}
+        values={[
+          'Oui, via un compte bancaire',
+          'Oui, en espèces',
+          "Je n'ai pas d'enfants",
+        ]}
       />,
       <Question
         register={register('contact')}
-        title="Acceptez-vous d'être contacté par email par notre équipe ?"
-        subtitle="Nous aimerions discuter avec vous !"
-        options={['Oui', 'Non']}
+        title="question.contact.title"
+        options={['choices.yes', 'choices.no']}
+        values={['Oui', 'Non']}
       />,
     ];
 
@@ -92,7 +101,7 @@ function Index() {
       questions.unshift(
         <QuestionText
           register={register('email')}
-          header="Une adresse email pour vous tenir informé ?"
+          header="question.email"
           onClick={() => setStep((val) => val + 1)}
           error={errors.email}
         />,

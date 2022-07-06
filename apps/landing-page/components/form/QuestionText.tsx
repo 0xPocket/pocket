@@ -1,5 +1,6 @@
 import React from 'react';
 import { FieldError, UseFormRegisterReturn } from 'react-hook-form';
+import { FormattedMessage } from 'react-intl';
 
 type Props = {
   register: UseFormRegisterReturn;
@@ -16,7 +17,9 @@ const QuestionText: React.FC<Props> = ({
 }) => {
   return (
     <div className="flex flex-col items-center justify-center gap-12">
-      <h1 className="max-w-3xl leading-normal">{header}</h1>
+      <h1 className="max-w-3xl leading-normal">
+        <FormattedMessage id={header} />
+      </h1>
       <div className="flex flex-col items-center gap-8 text-xl">
         <div className="flex flex-col gap-2">
           <input
@@ -26,7 +29,7 @@ const QuestionText: React.FC<Props> = ({
           />
           {error && (
             <span className=" text-sm text-white-darker">
-              Vous devez rentrer un email valide
+              <FormattedMessage id="question.email.error" />
             </span>
           )}
         </div>
@@ -37,7 +40,7 @@ const QuestionText: React.FC<Props> = ({
           className="w-32 rounded-lg bg-primary p-2 font-bold disabled:cursor-not-allowed disabled:bg-white-darker"
           disabled={!!error}
         >
-          Suivant
+          <FormattedMessage id="question.next" />
         </button>
       </div>
     </div>
