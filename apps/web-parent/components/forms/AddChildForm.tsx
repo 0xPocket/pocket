@@ -47,7 +47,10 @@ function AddChildForm({}: AddChildFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="border-opacity- relative flex flex-col justify-end overflow-hidden rounded-lg border border-dark bg-white p-4 shadow-lg dark:border-white-darker dark:bg-dark-light"
+    >
       <div className="flex gap-4">
         <FormInputText
           type="text"
@@ -83,7 +86,7 @@ function AddChildForm({}: AddChildFormProps) {
       <input
         type="submit"
         value="Submit"
-        className="rounded-md bg-dark  px-4 py-3 text-bright"
+        className="rounded-md border-dark bg-white p-4 shadow-lg dark:border-white-darker dark:bg-dark-light cursor-pointer px-4 py-3"
       />
     </form>
   );

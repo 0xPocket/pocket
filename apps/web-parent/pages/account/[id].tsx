@@ -109,8 +109,8 @@ function Account({
                 </span>
                 <p>Balance</p>
                 <span className=" text-4xl">
-                  {childConfig?.[1] &&
-                    ethers.utils.formatUnits(childConfig?.[1], 6).toString()}
+                  {childConfig?.[1] ?
+                    ethers.utils.formatUnits(childConfig?.[1], 6).toString() : 0}
                   $
                 </span>
                 <span>usdc</span>
@@ -123,20 +123,22 @@ function Account({
             <div>
               <h2 className="mt-16  p-4">Overview</h2>
               <div className="grid  grid-cols-2 gap-8">
-                <div className="h-60 bg-dark p-4 text-bright">
+              <div className="relative flex flex-col overflow-hidden rounded-lg border border-dark border-opacity- bg-white p-4 shadow-lg dark:border-white-darker dark:bg-dark-light">
+
                   Wallet Content
                   {!data ? (
-                    <> Loading</>
+                    <>Loading...</>
                   ) : (
                     <p>
                       {data!.items.map((token) => (
                         <ParseData token={token} />
                       ))}
-                      Total in USD : {totalAmountUsd(data!)}
+                      Value in USD : {totalAmountUsd(data!)}
                     </p>
                   )}
                 </div>
-                <div className="h-60 bg-dark p-4 text-bright">History</div>
+                <div className="relative flex flex-col overflow-hidden rounded-lg border border-dark border-opacity- bg-white p-4 shadow-lg dark:border-white-darker dark:bg-dark-light">
+                  History</div>
               </div>
             </div>
           </div>
