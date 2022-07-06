@@ -2,12 +2,10 @@ import type { AppProps } from 'next/app';
 import { ThemeProvider } from '@lib/ui';
 import '../styles/globals.css';
 import '@fortawesome/fontawesome-svg-core/styles.css';
-
-import { NextSeo } from 'next-seo';
 import Head from 'next/head';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { useState } from 'react';
-import { IntlProvider, useIntl } from 'react-intl';
+import { IntlProvider } from 'react-intl';
 import fr from '../lang/fr.json';
 import en from '../lang/en-US.json';
 import { useRouter } from 'next/router';

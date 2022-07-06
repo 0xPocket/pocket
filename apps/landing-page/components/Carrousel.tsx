@@ -1,7 +1,7 @@
 import Slider from 'react-slick';
 import Avis from './Avis';
 
-type CarousselProps = {};
+type CarrouselProps = {};
 
 const avis = [
   {
@@ -18,7 +18,7 @@ const avis = [
   },
 ];
 
-function Caroussel({}: CarousselProps) {
+function Carrousel({}: CarrouselProps) {
   const settings = {
     dots: true,
     infinite: true,
@@ -26,7 +26,7 @@ function Caroussel({}: CarousselProps) {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 10000,
+    autoplaySpeed: 13000,
     centerMode: true,
     fade: true,
     arrows: false,
@@ -42,4 +42,4 @@ function Caroussel({}: CarousselProps) {
   );
 }
 
-export default Caroussel;
+export default Carrousel;
