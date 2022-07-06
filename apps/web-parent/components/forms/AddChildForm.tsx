@@ -11,7 +11,6 @@ type AddChildFormProps = {};
 
 type FormValues = {
   firstName: string;
-  lastName: string;
   email: string;
 };
 
@@ -56,14 +55,6 @@ function AddChildForm({}: AddChildFormProps) {
             required: 'This field is required',
           })}
           error={errors.firstName}
-        />
-        <FormInputText
-          placeHolder="Lastname"
-          registerValues={register('lastName', {
-            required: 'This field is required',
-          })}
-          type="text"
-          error={errors.lastName}
         />
       </div>
 
