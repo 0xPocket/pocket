@@ -34,9 +34,6 @@
       "dependsOn": ["^clean"],
       "cache": false
     },
-    "landing-page#build": {
-      "cache": false
-    },
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"]

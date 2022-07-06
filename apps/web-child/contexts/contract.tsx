@@ -1,6 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import { Contract } from 'ethers';
-import { useWeb3Auth } from './web3hook';
+import { createContext, useContext } from 'react';
 
 interface SmartContractProviderProps {
   children: React.ReactNode;
@@ -21,20 +19,6 @@ const [SmartContractContext, SmartContractContextProvider] =
 export const SmartContractProvider = ({
   children,
 }: SmartContractProviderProps) => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const { address, provider } = useWeb3Auth();
-  const [contract, setContract] = useState<Contract>();
-
-  // console.log(abi);
-  useEffect(() => {
-    // const newContract = new Contract(
-    //   '0x62a4b53a1de480be4bdb9c10d0f7de69aeb30abd',
-    //   PocketFaucet.abi,
-    // );
-    // setContract(newContract);
-    // console.log('new contract set');
-  }, [provider]);
-
   return (
     <SmartContractContextProvider
       value={{
