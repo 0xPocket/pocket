@@ -25,6 +25,7 @@ module.exports = {
       },
       bright: '#fff',
       danger: '#FF0000',
+      success: '#00FF00',
       black: '#000',
       white: {
         DEFAULT: '#fff',

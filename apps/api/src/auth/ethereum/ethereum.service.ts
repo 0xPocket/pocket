@@ -1,8 +1,8 @@
 import {
   BadRequestException,
+  ForbiddenException,
   HttpException,
   Injectable,
-  InternalServerErrorException,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { providers } from 'ethers';
@@ -42,11 +42,22 @@ export class EthereumService {
       const payload = this.jwtAuthService.verifyChildSignupToken(token);
 
       if (payload) {
+        const user = await this.prisma.userChild.findUnique({
+          where: {
+            id: payload.userId,
+          },
+        });
+
+        if (user) {
+          throw new Error();
+        }
+
         const validMessage = await this.verifyMessage(
           message,
           signature,
           session,
         );
+
         return this.prisma.web3Account.create({
           data: {
             address: validMessage.address.toLowerCase(),
@@ -65,20 +76,8 @@ export class EthereumService {
   }
 
   async login({ message, signature }: VerifyMessageDto, session: UserSession) {
-    try {
-      const validMessage = await this.verifyMessage(
-        message,
-        signature,
-        session,
-      );
-      return this.prisma.web3Account.findUnique({
-        where: {
-          address: validMessage.address.toLowerCase(),
-        },
-      });
-    } catch (e) {
-      throw new BadRequestException('Problem logging in');
-    }
+    await this.verifyMessage(message, signature, session);
+    return 'OK';
   }
 
   async verifyMessage(
@@ -94,8 +93,18 @@ export class EthereumService {
         throw new UnprocessableEntityException('Invalid nonce.');
       }
 
+      const account = await this.prisma.web3Account.findUnique({
+        where: {
+          address: fields.address.toLowerCase(),
+        },
+      });
+
+      if (!account) {
+        throw new Error();
+      }
+
       if (session) {
-        this.sessionService.setUserSession(session, 'damianmusk', false);
+        this.sessionService.setUserSession(session, account.userId, false);
       }
 
       return fields;
@@ -110,7 +119,7 @@ export class EthereumService {
           throw new UnprocessableEntityException('Invalid signature.');
         }
         default: {
-          throw new InternalServerErrorException();
+          throw new ForbiddenException('You are not registered.');
         }
       }
     }

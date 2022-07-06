@@ -1,5 +1,5 @@
 import { UserChild } from '@lib/types/interfaces';
-import { useRouter } from 'next/router';
+import axios from 'axios';
 import {
   createContext,
   Dispatch,
@@ -10,7 +10,7 @@ import {
 } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { SiweMessage } from 'siwe';
-import { useAccount, useDisconnect, useSignMessage } from 'wagmi';
+import { useAccount, useDisconnect } from 'wagmi';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -18,10 +18,8 @@ interface AuthProviderProps {
 
 interface IAuthContext {
   loggedIn: boolean;
-  signIn: (chainId: number, address: string) => void;
-  register: (chainId: number, address: string) => void;
+  getMessage: (address: string, chainId: number) => Promise<SiweMessage>;
   signOut: () => void;
-  signingIn: boolean;
   showModal: boolean;
   setShowModal: Dispatch<SetStateAction<boolean>>;
   user: UserChild | undefined;
@@ -36,139 +34,47 @@ const [AuthContext, AuthContextProvider] = createCtx<IAuthContext>();
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [showModal, setShowModal] = useState(false);
-  const [signingIn, setSigningIn] = useState(false);
-  const router = useRouter();
 
   const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
-  const { signMessageAsync } = useSignMessage();
   const queryClient = useQueryClient();
 
-  const user = useQuery<UserChild>(
+  const user = useQuery(
     'user',
-    async () => {
-      const res = await fetch('/api/auth/children/me');
-
-      if (!res.ok) return;
-
-      return res.json();
-    },
-    { refetchOnWindowFocus: false },
+    () => axios.get('/api/auth/children/me').then((res) => res.data),
+    { refetchOnWindowFocus: false, retry: false },
   );
 
-  const logout = useMutation(
-    () => fetch('/api/auth/logout', { method: 'POST' }),
-    {
-      onMutate: () => {
-        disconnect();
-      },
-      onSuccess: () => {
-        queryClient.invalidateQueries('user');
-      },
+  const logout = useMutation(() => axios.post('/api/auth/logout'), {
+    onMutate: () => {
+      disconnect();
     },
-  );
-
-  const signIn = useCallback(
-    async (chainId: number, address: string) => {
-      if (!address || !chainId) return;
-      setSigningIn(true);
-      // We get a random nonce from our server
-      const nonceRes = await fetch('/api/auth/ethereum/nonce');
-
-      // Populate a message with SIWE
-      const message = new SiweMessage({
-        domain: window.location.host,
-        address,
-        statement: 'Sign this message to access Pocket.',
-        uri: window.location.origin,
-        version: '1',
-        chainId,
-        nonce: await nonceRes.text(),
-      });
-
-      // Sign the message
-
-      // Send the signature to the server to verify it
-      try {
-        const signature = await signMessageAsync({
-          message: message.prepareMessage(),
-        });
-
-        const verifyRes = await fetch('/api/auth/ethereum/verify', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ message, signature }),
-        });
-
-        if (!verifyRes.ok) throw new Error('Error verifying message');
-
-        router.reload();
-      } catch (e) {
-        setSigningIn(false);
-      }
+    onSuccess: () => {
+      queryClient.removeQueries('user');
     },
-    [signMessageAsync, router],
-  );
+  });
 
-  const register = useCallback(
-    async (chainId: number, address: string) => {
-      if (!address || !chainId) return;
+  const getMessage = useCallback(async (address: string, chainId: number) => {
+    const nonceRes = await fetch('/api/auth/ethereum/nonce');
 
-      setSigningIn(true);
-      // We get a random nonce from our server
-      const nonceRes = await fetch('/api/auth/ethereum/nonce');
-
-      // Populate a message with SIWE
-      const message = new SiweMessage({
-        domain: window.location.host,
-        address,
-        statement: 'Sign this message to link your wallet.',
-        uri: window.location.origin,
-        version: '1',
-        chainId,
-        nonce: await nonceRes.text(),
-      });
-
-      // Sign the message
-
-      // Send the signature to the server to verify it
-      try {
-        const signature = await signMessageAsync({
-          message: message.prepareMessage(),
-        });
-
-        const verifyRes = await fetch('/api/auth/ethereum/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            message,
-            signature,
-            token: router.query.token as string,
-          }),
-        });
-
-        if (!verifyRes.ok) throw new Error('Error verifying message');
-
-        router.push('/');
-      } catch (e) {
-        setSigningIn(false);
-      }
-    },
-    [signMessageAsync, router],
-  );
+    // Populate a message with SIWE
+    return new SiweMessage({
+      domain: window.location.host,
+      address,
+      statement: 'Sign this message to access Pocket.',
+      uri: window.location.origin,
+      version: '1',
+      chainId,
+      nonce: await nonceRes.text(),
+    });
+  }, []);
 
   return (
     <AuthContextProvider
       value={{
         loggedIn: !!user && !!isConnected,
-        signIn,
+        getMessage,
         signOut: () => logout.mutate(),
-        register,
-        signingIn,
         showModal,
         setShowModal,
         user: user.data,
