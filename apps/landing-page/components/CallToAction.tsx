@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useMutation } from 'react-query';
 import { z } from 'zod';
 import { formSchema } from '../pages/survey';
@@ -19,8 +19,11 @@ const CallToAction: React.FC = () => {
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
   });
+
   const router = useRouter();
-  console.log(router.locale);
+  const intl = useIntl();
+  const email_placeholder = intl.formatMessage({ id: 'calltoaction.eamil' });
+
   const mutation = useMutation(
     (data: FormValues) =>
       fetch('/api/form', {
@@ -51,7 +54,7 @@ const CallToAction: React.FC = () => {
         <FontAwesomeIcon icon={faEnvelope} className="px-4 opacity-70" />
         <input
           className="h-full flex-grow appearance-none outline-none"
-          placeholder="Adresse email"
+          placeholder={email_placeholder}
           type="email"
           {...register('email')}
         />
