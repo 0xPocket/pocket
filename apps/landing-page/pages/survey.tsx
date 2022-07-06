@@ -5,54 +5,51 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import Question from '../components/form/Question';
 import Introduction from '../components/form/Introduction';
 import Conclusion from '../components/form/Conclusion';
-import { GetServerSidePropsContext } from 'next';
 import AnimationLayer from '../components/form/AnimationLayer';
 import Header from '../components/Header';
 import QuestionText from '../components/form/QuestionText';
 import MainContainer from '../components/containers/MainContainer';
-
-type IndexProps = {
-  email?: string;
-};
+import { useMutation } from 'react-query';
+import { useRouter } from 'next/router';
 
 export const formSchema = z.object({
   email: z.string().email(),
   cryptoKnowledge: z.enum(['Oui', 'Non']).optional(),
   childKnowledge: z.enum(['Oui', 'Non', "Je n'ai pas d'enfants"]).optional(),
+  childPlayToEarn: z.enum(['Oui', 'Non', "Je n'ai pas d'enfants"]).optional(),
+  gavePocketMoney: z
+    .enum(['Oui, via un compte bancaire', 'Oui, en éspèces', 'Non'])
+    .optional(),
+  contact: z.enum(['Oui', 'Non']).optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
-export function getServerSideProps(ctx: GetServerSidePropsContext) {
-  const { query } = ctx;
-  return {
-    props: {
-      email: query.email || null,
-    },
-  };
-}
-
-function Index({ email }: IndexProps) {
+function Index() {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
+    setValue,
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: email ? email : '',
-    },
   });
+
   const [step, setStep] = useState(0);
   const submitRef = useRef<HTMLInputElement>(null);
 
-  const onSubmit = async (data: FormValues) => {
-    await fetch('/api/form', {
+  const mutation = useMutation((data: FormValues) =>
+    fetch('/api/form', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
-    });
+    }),
+  );
+
+  const onSubmit = async (data: FormValues) => {
+    mutation.mutate(data);
   };
 
   useEffect(() => {
@@ -66,32 +63,57 @@ function Index({ email }: IndexProps) {
     const questions = [
       <Question
         register={register('cryptoKnowledge')}
-        header="Possédez-vous des cryptomonnaies ou des NFTs ?"
-        options={['Oui', 'Non']}
+        title="question.cryptoKnowledge"
+        options={['choices.yes', 'choices.no']}
+        values={['Oui', 'Non']}
       />,
       <Question
         register={register('childKnowledge')}
-        header=" Vos enfants vous ont-ils déjà parlé de NFT, cryptomonnaies ou encore
-play to earn ?"
-        options={['Oui', 'Non', "Je n'ai pas d'enfants"]}
+        title="question.childKnowledge"
+        options={['choices.yes', 'choices.no', 'choices.nochild']}
+        values={['Oui', 'Non', "Je n'ai pas d'enfants"]}
+      />,
+      <Question
+        register={register('childPlayToEarn')}
+        title="question.childPlayToEarn"
+        options={['choices.yes', 'choices.no', 'choices.nochild']}
+        values={['Oui', 'Non', "Je n'ai pas d'enfants"]}
+      />,
+      <Question
+        register={register('gavePocketMoney')}
+        title="question.gavePocketMoney"
+        options={['choices.bankaccount', 'choices.cash', 'choices.no']}
+        values={[
+          'Oui, via un compte bancaire',
+          'Oui, en espèces',
+          "Je n'ai pas d'enfants",
+        ]}
+      />,
+      <Question
+        register={register('contact')}
+        title="question.contact.title"
+        options={['choices.yes', 'choices.no']}
+        values={['Oui', 'Non']}
       />,
     ];
 
-    if (!email) {
+    if (!router.query.email) {
       questions.unshift(
         <QuestionText
           register={register('email')}
-          header="Une adresse email pour vous tenir informé ?"
+          header="question.email"
           onClick={() => setStep((val) => val + 1)}
           error={errors.email}
         />,
       );
+    } else {
+      setValue('email', router.query.email as string);
     }
     return questions;
-  }, [register, email, errors.email]);
+  }, [register, router.query, setValue, errors.email]);
 
   useEffect(() => {
-    if (step === questions.length + 1) {
+    if (step >= questions.length + 1) {
       submitRef.current?.click();
     }
   }, [step, questions, handleSubmit]);

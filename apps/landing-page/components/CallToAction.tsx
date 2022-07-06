@@ -1,9 +1,11 @@
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { useMutation } from 'react-query';
 import { z } from 'zod';
 import { formSchema } from '../pages/survey';
 
@@ -17,15 +19,30 @@ const CallToAction: React.FC = () => {
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
   });
+
   const router = useRouter();
+  const intl = useIntl();
+  const email_placeholder = intl.formatMessage({ id: 'calltoaction.eamil' });
+
+  const mutation = useMutation(
+    (data: FormValues) =>
+      fetch('/api/form', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      }),
+    {
+      onMutate: (data) =>
+        router.push(
+          '/survey?email=' + data.email,
+          '/survey?email=' + data.email,
+          { locale: router.locale },
+        ),
+    },
+  );
 
   const onSubmit = async (data: FormValues) => {
-    await fetch('/api/form', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    router.push('/survey?email=' + data.email);
+    mutation.mutate(data);
   };
 
   return (
@@ -37,19 +54,24 @@ const CallToAction: React.FC = () => {
         <FontAwesomeIcon icon={faEnvelope} className="px-4 opacity-70" />
         <input
           className="h-full flex-grow appearance-none outline-none"
-          placeholder="Adresse email"
+          placeholder={email_placeholder}
           type="email"
           {...register('email')}
         />
-        <input
+        <button
           type="submit"
-          value="Commencer"
-          className="flex h-full cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap rounded-lg bg-primary px-4 py-3 text-bright dark:bg-primary"
-        />
+          className="flex h-full w-28 cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap rounded-lg bg-primary px-4 py-3 text-bright dark:bg-primary"
+        >
+          {mutation.isLoading ? (
+            <FontAwesomeIcon icon={faSpinner} spin />
+          ) : (
+            <FormattedMessage id="calltoaction.action" />
+          )}
+        </button>
       </form>
       {errors.email && (
         <span className="max-w-fit text-sm text-white-darker">
-          Vous devez rentrer un email valide
+          <FormattedMessage id="calltoaction.error" />
         </span>
       )}
     </div>
