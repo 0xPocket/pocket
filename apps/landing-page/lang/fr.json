@@ -80,8 +80,8 @@
 	"choices.yes": "Oui",
 	"choices.no" : "Non",
 	"choices.nochild" : "Je n'ai pas d'enfants",
-	"choice.bankaccount": "Oui, via un compte bancaire",
-	"choice.cash": "Oui, en espèces",
+	"choices.bankaccount": "Oui, via un compte bancaire",
+	"choices.cash": "Oui, en espèces",
 
 	"conclusion.title" : "Merci de votre intérêt pour notre produit 👍",
 	"conclusion.team": "L'équipe de Pocket."

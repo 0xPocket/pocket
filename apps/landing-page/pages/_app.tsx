@@ -9,7 +9,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { useState } from 'react';
 import { IntlProvider } from 'react-intl';
 import fr from '../lang/fr.json';
-import en from '../lang/en-Us.json';
+import en from '../lang/en-US.json';
 import { useRouter } from 'next/router';
 
 const messages = { fr, 'en-US': en };

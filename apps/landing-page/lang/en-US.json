@@ -66,8 +66,8 @@
   "choices.yes": "Yes",
   "choices.no": "No",
   "choices.nochild": "I don't have children",
-  "choice.bankaccount": "Yes, through a bank account",
-  "choice.cash": "Yes, in cash",
+  "choices.bankaccount": "Yes, through a bank account",
+  "choices.cash": "Yes, in cash",
 
   "conclusion.title": "Thank you for you interst in our product 👍",
   "conclusion.team": "Pocket team"

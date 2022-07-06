@@ -11,7 +11,6 @@ import Header from '../components/Header';
 import QuestionText from '../components/form/QuestionText';
 import MainContainer from '../components/containers/MainContainer';
 import { useMutation } from 'react-query';
-import { Router, useRouter } from 'next/router';
 
 type IndexProps = {
   email?: string;
@@ -96,8 +95,8 @@ function Index({ email }: IndexProps) {
       />,
       <Question
         register={register('gavePocketMoney')}
-        title="Donnez-vous de l'argent de poche à vos enfants ?"
-        options={['choice.bankaccount', 'choice.cash', 'choices.no']}
+        title="question.gavePocketMoney"
+        options={['choices.bankaccount', 'choices.cash', 'choices.no']}
         values={[
           'Oui, via un compte bancaire',
           'Oui, en espèces',
