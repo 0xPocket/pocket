@@ -61,10 +61,10 @@
   "question.email.error": "You must submit a valid email.",
 
   "question.cryptoKnowledge": "Do you have crypto-currencies or NFTs?",
-  "question.childKnowledge": "Did you ever discussed about it with your teenagers?",
+  "question.childKnowledge": "Have you ever talked about it with your teenagers?",
   "question.childPlayToEarn": "Has your child ever talked about play-to-earn?",
-  "question.gavePocketMoney": "To you give pocket money to your children?",
-  "question.contact.title": "Do you accept being contacted by email to try our solution in preview?",
+  "question.gavePocketMoney": "Do you give pocket money to your children?",
+  "question.contact.title": "Do you accept being contacted by email for our premiere trial?",
 
   "question.next": "Next",
 
@@ -74,6 +74,6 @@
   "choices.bankaccount": "Yes, through a bank account",
   "choices.cash": "Yes, in cash",
 
-  "conclusion.title": "Thank you for you interst in our product 👍",
+  "conclusion.title": "Thank you for your interest in our product 👍",
   "conclusion.team": "Pocket team"
 }
