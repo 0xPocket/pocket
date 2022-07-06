@@ -14,10 +14,11 @@ async function bootstrap() {
   app.use(
     session({
       secret: 'super-secret',
-      resave: false,
-      saveUninitialized: false,
+      resave: true,
+      saveUninitialized: true,
       cookie: {
         httpOnly: true,
+        secure: false,
       },
       store: new PrismaSessionStore(prisma, {
         checkPeriod: 2 * 60 * 1000, //ms

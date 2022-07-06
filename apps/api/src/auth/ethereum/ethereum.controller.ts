@@ -27,10 +27,6 @@ export class EthereumController {
     @Body() dto: VerifyMessageDto,
     @Session() session: UserSession,
   ) {
-    return this.ethereumService.verifyMessage(
-      dto.message,
-      dto.signature,
-      session,
-    );
+    return this.ethereumService.login(dto, session);
   }
 }

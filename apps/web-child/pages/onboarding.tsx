@@ -1,9 +1,7 @@
-import { Button } from '@lib/ui';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import OnBoardingStepper from '../components/onboarding/OnBoardingStepper';
 import MainWrapper from '../components/wrappers/MainWrapper';
-import { useWeb3Auth } from '../contexts/web3hook';
 
 function OnBoarding() {
   const [registerToken, setRegisterToken] = useState<string>();

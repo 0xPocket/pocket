@@ -12,6 +12,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtAuthService } from '../jwt/jwt-auth.service';
 import { RegisterWithTokenDto } from './dto/register-with-token.dto';
 import { SessionService } from '../session/session.service';
+import { VerifyMessageDto } from './dto/verify-message.dto';
 
 class LoginTimeout extends HttpException {
   constructor(message?: string) {
@@ -63,6 +64,23 @@ export class EthereumService {
     }
   }
 
+  async login({ message, signature }: VerifyMessageDto, session: UserSession) {
+    try {
+      const validMessage = await this.verifyMessage(
+        message,
+        signature,
+        session,
+      );
+      return this.prisma.web3Account.findUnique({
+        where: {
+          address: validMessage.address.toLowerCase(),
+        },
+      });
+    } catch (e) {
+      throw new BadRequestException('Problem logging in');
+    }
+  }
+
   async verifyMessage(
     message: SiweMessage,
     signature: string,
@@ -76,7 +94,9 @@ export class EthereumService {
         throw new UnprocessableEntityException('Invalid nonce.');
       }
 
-      this.sessionService.setUserSession(session, 'damianmusk', false);
+      if (session) {
+        this.sessionService.setUserSession(session, 'damianmusk', false);
+      }
 
       return fields;
     } catch (e) {

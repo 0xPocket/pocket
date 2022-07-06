@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useConnect } from 'wagmi';
+import { Connector, useConnect } from 'wagmi';
 import { useAuth } from '../../contexts/auth';
 import { Spinner } from '../common/Spinner';
 
@@ -9,6 +9,16 @@ function AuthDialogProviders({}: AuthDialogProvidersProps) {
   const { connectAsync, connectors, error, isLoading } = useConnect();
   const { signIn } = useAuth();
 
+  const providerConnect = async (connector: Connector) => {
+    try {
+      const res = await connectAsync({ connector });
+
+      signIn(res.chain.id, res.account);
+    } catch (e) {
+      console.log('test');
+    }
+  };
+
   return (
     <>
       <div className="flex w-96 gap-2">
@@ -17,11 +27,7 @@ function AuthDialogProviders({}: AuthDialogProvidersProps) {
             className="relative flex w-48 flex-col items-center justify-center gap-4 rounded-lg border border-white-darker bg-[#161515]/25 p-4 font-sans font-bold hover:bg-[#161515]/75"
             disabled={!connector.ready}
             key={connector.id}
-            onClick={() =>
-              connectAsync({ connector }).then((res) =>
-                signIn(res.chain.id, res.account),
-              )
-            }
+            onClick={() => providerConnect(connector)}
           >
             <div className="relative h-8 w-8">
               <Image
