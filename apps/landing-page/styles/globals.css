@@ -83,3 +83,66 @@ html {
     fill: #4492cc;
   }
 }
+
+.our-slick-dots {
+  bottom: -25px;
+  width: 100%;
+  margin: 0;
+  list-style: none;
+  text-align: center;
+}
+.our-slick-dots li {
+  position: relative;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin: 0 5px;
+  padding: 0;
+  cursor: pointer;
+}
+.slick-dots li button {
+  font-size: 0;
+  line-height: 0;
+  display: block;
+  width: 20px;
+  height: 20px;
+  padding: 5px;
+  cursor: pointer;
+  color: transparent;
+  border: 0;
+  outline: 0;
+  background: 0 0;
+}
+.our-slick-dots li button:focus,
+.our-slick-dots li button:hover {
+  outline: 0;
+}
+.our-slick-dots li button:focus:before,
+.our-slick-dots li button:hover:before {
+  opacity: 1;
+}
+.our-slick-dots li button:before {
+  font-size: 6px;
+  line-height: 20px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  content: '•';
+  text-align: center;
+  opacity: 0.25;
+  color: #000;
+}
+.slick-dots li {
+  opacity: 0.25 !important;
+  color: black;
+}
+
+.slick-dots li:hover {
+  opacity: 0.75 !important;
+}
+.slick-dots li.slick-active {
+  opacity: 1 !important;
+  color: #000;
+} /*# sourceMappingURL=slick-theme.min.css.map */

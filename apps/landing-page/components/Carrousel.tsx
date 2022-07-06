@@ -1,3 +1,4 @@
+import React from 'react';
 import Slider from 'react-slick';
 import Avis from './Avis';
 
@@ -22,6 +23,16 @@ function Carrousel({}: CarrouselProps) {
   const settings = {
     dots: true,
     infinite: true,
+    customPaging: () => (
+      <span className="text-3xl hover:text-dark-lightest dark:text-white">
+        •
+      </span>
+    ),
+    appendDots: (dots: React.ReactNode) => (
+      <div>
+        <ul>{dots}</ul>
+      </div>
+    ),
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,

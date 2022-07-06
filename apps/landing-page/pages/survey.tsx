@@ -5,16 +5,12 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import Question from '../components/form/Question';
 import Introduction from '../components/form/Introduction';
 import Conclusion from '../components/form/Conclusion';
-import { GetServerSidePropsContext } from 'next';
 import AnimationLayer from '../components/form/AnimationLayer';
 import Header from '../components/Header';
 import QuestionText from '../components/form/QuestionText';
 import MainContainer from '../components/containers/MainContainer';
 import { useMutation } from 'react-query';
-
-type IndexProps = {
-  email?: string;
-};
+import { useRouter } from 'next/router';
 
 export const formSchema = z.object({
   email: z.string().email(),
@@ -29,26 +25,16 @@ export const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export function getServerSideProps(ctx: GetServerSidePropsContext) {
-  const { query } = ctx;
-  return {
-    props: {
-      email: query.email || null,
-    },
-  };
-}
-
-function Index({ email }: IndexProps) {
+function Index() {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
+    setValue,
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: email ? email : '',
-    },
   });
 
   const [step, setStep] = useState(0);
@@ -111,7 +97,7 @@ function Index({ email }: IndexProps) {
       />,
     ];
 
-    if (!email) {
+    if (!router.query.email) {
       questions.unshift(
         <QuestionText
           register={register('email')}
@@ -120,12 +106,14 @@ function Index({ email }: IndexProps) {
           error={errors.email}
         />,
       );
+    } else {
+      setValue('email', router.query.email as string);
     }
     return questions;
-  }, [register, email, errors.email]);
+  }, [register, router.query, setValue, errors.email]);
 
   useEffect(() => {
-    if (step === questions.length + 1) {
+    if (step >= questions.length + 1) {
       submitRef.current?.click();
     }
   }, [step, questions, handleSubmit]);

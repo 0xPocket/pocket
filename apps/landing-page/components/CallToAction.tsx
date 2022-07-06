@@ -42,7 +42,7 @@ const CallToAction: React.FC = () => {
   );
 
   const onSubmit = async (data: FormValues) => {
-    mutation.mutateAsync(data);
+    mutation.mutate(data);
   };
 
   return (
