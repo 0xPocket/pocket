@@ -16,7 +16,7 @@ export interface CovalentItem {
   logo_url: string;
   last_transferred_at: string;
   type: string;
-  balance: string;
+  balance: number;
   balance_24h: string;
   quote_rate: number;
   quote_rate_24h: number;
