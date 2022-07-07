@@ -5,7 +5,6 @@ function covalentListToNftList(covalentlist: covalentItem[]) {
   const nftList: nft_data[] = [];
   for (const item of covalentlist) {
     if (item.type !== 'nft') continue;
-    console.log(covalentlist);
     for (const nft of item.nft_data) {
       nft.token_url =
         'https://tftw-nfts.fra1.digitaloceanspaces.com/gif/1634.gif';
