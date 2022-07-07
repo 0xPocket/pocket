@@ -9,8 +9,8 @@ import AddfundsForm from '../../components/forms/AddfundsForm';
 import { useSmartContract } from '../../contexts/contract';
 import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
-import NftContent from '../../components/cards/Nft/NftContent';
-import NftLibrary from '../../components/cards/Nft/NftLibrary';
+import NftContent from '../../components/cards/nft/NftContent';
+import NftLibrary from '../../components/cards/nft/NftLibrary';
 
 function totalAmountUsd(data: covalentRet) {
   let tot = 0;

@@ -11,8 +11,6 @@ function covalentListToNftList(covalentlist: covalentItem[]) {
         'https://tftw-nfts.fra1.digitaloceanspaces.com/gif/1634.gif';
       nft.contract_name = item.contract_name;
       nftList.push(nft);
-      // nftList.push(nft);
-      // nftList.push(nft);
     }
   }
   return nftList;

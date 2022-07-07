@@ -83,15 +83,13 @@ function NftContent({}: NftContentProps) {
   if (!content) {
     return <div>Loading..</div>;
   }
-  // console.log('test');
 
   return (
-    <div className="">
+    <div>
       <p>Nft Library</p>
       <NftLibrary covalentList={content?.items} />
     </div>
   );
-  // return <div</div>;
 }
 
 export default NftContent;
