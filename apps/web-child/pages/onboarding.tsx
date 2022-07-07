@@ -2,8 +2,9 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import OnBoardingStepper from '../components/onboarding/OnBoardingStepper';
 import MainWrapper from '../components/wrappers/MainWrapper';
+import { NextPageWithLayout } from './_app';
 
-function OnBoarding() {
+const OnBoarding: NextPageWithLayout = () => {
   const [registerToken, setRegisterToken] = useState<string>();
   const router = useRouter();
 
@@ -13,11 +14,11 @@ function OnBoarding() {
     }
   }, [router]);
 
-  return (
-    <MainWrapper noHeader>
-      <OnBoardingStepper registerToken={registerToken} />
-    </MainWrapper>
-  );
-}
+  return <OnBoardingStepper registerToken={registerToken} />;
+};
+
+OnBoarding.getLayout = (page) => {
+  return <MainWrapper noHeader>{page}</MainWrapper>;
+};
 
 export default OnBoarding;

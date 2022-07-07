@@ -1,4 +1,3 @@
-import { ReactElement } from 'react';
 import MainWrapper from '../components/wrappers/MainWrapper';
 import { NextPageWithLayout } from './_app';
 
@@ -11,7 +10,7 @@ const ChildrenSignup: NextPageWithLayout = () => {
   );
 };
 
-ChildrenSignup.getLayout = function getLayout(page: ReactElement) {
+ChildrenSignup.getLayout = (page) => {
   return <MainWrapper>{page}</MainWrapper>;
 };
 
