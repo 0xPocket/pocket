@@ -4,6 +4,7 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtAuthService } from 'src/auth/jwt/jwt-auth.service';
@@ -152,6 +153,7 @@ export class ParentsService {
           },
         },
       });
+      console.log(child);
     } catch (e) {
       throw new BadRequestException(
         'A child with the same email already exists',
@@ -166,6 +168,7 @@ export class ParentsService {
           id: child.id,
         },
       });
+      throw new InternalServerErrorException();
     }
 
     return child;
