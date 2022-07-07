@@ -19,6 +19,7 @@ const nextConfig = {
       },
     ];
   },
+  images: { domains: ['tftw-nfts.fra1.digitaloceanspaces.com'] },
 };
 
 module.exports = withTM(nextConfig);

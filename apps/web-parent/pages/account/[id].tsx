@@ -9,6 +9,8 @@ import AddfundsForm from '../../components/forms/AddfundsForm';
 import { useSmartContract } from '../../contexts/contract';
 import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
+import NftContent from '../../components/cards/Nft/NftContent';
+import NftLibrary from '../../components/cards/Nft/NftLibrary';
 
 function totalAmountUsd(data: covalentRet) {
   let tot = 0;
@@ -109,8 +111,9 @@ function Account({
                 </span>
                 <p>Balance</p>
                 <span className=" text-4xl">
-                  {childConfig?.[1] ?
-                    ethers.utils.formatUnits(childConfig?.[1], 6).toString() : 0}
+                  {childConfig?.[1]
+                    ? ethers.utils.formatUnits(childConfig?.[1], 6).toString()
+                    : 0}
                   $
                 </span>
                 <span>usdc</span>
@@ -123,8 +126,7 @@ function Account({
             <div>
               <h2 className="mt-16  p-4">Overview</h2>
               <div className="grid  grid-cols-2 gap-8">
-              <div className="relative flex flex-col overflow-hidden rounded-lg border border-dark border-opacity- bg-white p-4 shadow-lg dark:border-white-darker dark:bg-dark-light">
-
+                <div className="border-opacity- relative flex flex-col overflow-hidden rounded-lg border border-dark bg-white p-4 shadow-lg dark:border-white-darker dark:bg-dark-light">
                   Wallet Content
                   {!data ? (
                     <>Loading...</>
@@ -137,8 +139,10 @@ function Account({
                     </p>
                   )}
                 </div>
-                <div className="relative flex flex-col overflow-hidden rounded-lg border border-dark border-opacity- bg-white p-4 shadow-lg dark:border-white-darker dark:bg-dark-light">
-                  History</div>
+                <NftContent />
+                <div className="border-opacity- relative flex flex-col overflow-hidden rounded-lg border border-dark bg-white p-4 shadow-lg dark:border-white-darker dark:bg-dark-light">
+                  History
+                </div>
               </div>
             </div>
           </div>
