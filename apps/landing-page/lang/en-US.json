@@ -1,20 +1,20 @@
 {
-	"head.title": "Web3 pocket money | Pocket",
-	"head.description": "No need to be a cryptocurrency expert to give some to your teenagers. Buy and distribute pocket money to your children with one click.",
-	"head.alt":"Pocket, Web3 pocket money",
+  "head.title": "Web3 pocket money | Pocket",
+  "head.description": "No need to be an expert to hand cryptocurrency to your teenagers. Buy and give pocket money to your children with one click.",
+  "head.alt": "Pocket, Web3 pocket money",
 
   "hero.title.top": "Web3 pocket money.",
   "hero.title.bottom": "Simple. Secured.",
-  "hero.subtitle.top": "No need to be a cryptocurrency expert to give some to your teenagers.",
-  "hero.subtitle.bottom": "Buy and distribute pocket money to your children with one click.",
+  "hero.subtitle.top": "No need to be an expert to hand cryptocurrency to your teenagers.",
+  "hero.subtitle.bottom": "Buy and give pocket money to your children with one click.",
 
   "parentcard.title": "Parents",
 
   "parentcard.simplicity.title": "Simplicity",
-  "parentcard.simplicity.content": "Create an account, adjust the frequency and the pocket money amount within a few clicks.",
+  "parentcard.simplicity.content": "Create an account, adjust the frequency and the pocket money amount in a few clicks.",
 
   "parentcard.serenity.title": "Serinity",
-  "parentcard.serenity.content": "Be warned in real-time of your children's activity or receive a weekly summary.",
+  "parentcard.serenity.content": "Be notified in real-time of your children's activity or receive a weekly summary.",
 
   "parentcard.stability.title": "Stability",
   "parentcard.stability.content": "The pocket money is not subject to volatility since it is a cryptocurrency indexed on euro or dollar.",
@@ -27,8 +27,8 @@
   "childcard.discovery.title": "Discovery",
   "childcard.discovery.content": "Games and applications specially selected to meet teenagers interest.",
 
-  "childcard.liberty.title": "Liberty",
-  "childcard.liberty.content": "A guidance towards autonomy in the ecosystem, in all tranquility.",
+  "childcard.liberty.title": "Autonomy",
+  "childcard.liberty.content": "An accompaniment towards autonomy in the ecosystem.",
 
   "simple.section.title": "Join Pocket",
   "simple.section.subtitle": "Be an early adopter.",
@@ -36,7 +36,7 @@
 
   "calltoaction.action": "Start",
   "calltoaction.error": "You must submit a valid email.",
-	"calltoaction.eamil": "Email address",
+  "calltoaction.eamil": "Email address",
 
   "carrousel.avis1.content": "\" I used to let my son borrow my credit card to buy cryptocurrencies. At least with Pocket I can now see what he's doing with it. It's a service that I can recommend to all the parents who want to keep an eye on their children! \"",
   "carrousel.avis1.author": "Remi, Alex's dad (14 yo)",
