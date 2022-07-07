@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { useRouter } from 'next/router';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useMutation } from 'react-query';
 import { useAccount, useNetwork, useSignMessage } from 'wagmi';
 import { useAuth } from '../../contexts/auth';
@@ -11,7 +11,7 @@ type SignMessageProps = {
 };
 
 const SignMessage: React.FC<SignMessageProps> = ({ register = false }) => {
-  const { getMessage } = useAuth();
+  const { getMessage, triggerSign, setTriggerSign } = useAuth();
   const { chain } = useNetwork();
   const { address } = useAccount();
   const { signMessageAsync, isLoading } = useSignMessage();
@@ -30,11 +30,6 @@ const SignMessage: React.FC<SignMessageProps> = ({ register = false }) => {
   const sign = useCallback(
     async (chainId: number, address: string) => {
       if (!address || !chainId) return;
-      // We get a random nonce from our server
-
-      // Sign the message
-
-      // Send the signature to the server to verify it
       try {
         const message = await getMessage(address, chainId);
         const signature = await signMessageAsync({
@@ -61,6 +56,16 @@ const SignMessage: React.FC<SignMessageProps> = ({ register = false }) => {
     },
     [router, getMessage, verify, register, registerWithToken, signMessageAsync],
   );
+
+  useEffect(() => {
+    /*
+     ** ! Trigger message signing automatically.
+     */
+    if (triggerSign && chain?.id && address) {
+      // sign(chain.id, address);
+      // setTriggerSign(false);
+    }
+  }, [triggerSign, chain, address, sign, setTriggerSign]);
 
   return (
     <div className="flex w-96 flex-col items-center justify-center gap-2">

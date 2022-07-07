@@ -1,6 +1,7 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { Dispatch, Fragment, SetStateAction } from 'react';
+import { Dispatch, Fragment, SetStateAction, useEffect } from 'react';
 import { useAccount } from 'wagmi';
+import { useAuth } from '../../contexts/auth';
 import AuthDialogProviders from './Providers';
 import SignMessage from './SignMessage';
 

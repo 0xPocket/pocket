@@ -22,6 +22,8 @@ interface IAuthContext {
   signOut: () => void;
   showModal: boolean;
   setShowModal: Dispatch<SetStateAction<boolean>>;
+  triggerSign: boolean;
+  setTriggerSign: Dispatch<SetStateAction<boolean>>;
   user: UserChild | undefined;
 }
 
@@ -34,6 +36,7 @@ const [AuthContext, AuthContextProvider] = createCtx<IAuthContext>();
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [showModal, setShowModal] = useState(false);
+  const [triggerSign, setTriggerSign] = useState(false);
 
   const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
@@ -77,6 +80,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         signOut: () => logout.mutate(),
         showModal,
         setShowModal,
+        triggerSign,
+        setTriggerSign,
         user: user.data,
       }}
     >

@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { Connector, useAccount, useConnect } from 'wagmi';
+import { useAuth } from '../../contexts/auth';
 import { Spinner } from '../common/Spinner';
 
 type ProvidersProps = {
@@ -7,8 +8,9 @@ type ProvidersProps = {
 };
 
 function Providers({ register = false }: ProvidersProps) {
-  const { connect, connectAsync, connectors, error, isLoading } = useConnect();
+  const { connectAsync, connectors, error, isLoading } = useConnect();
   const { connector: activeConnector } = useAccount();
+  const { setTriggerSign } = useAuth();
 
   return (
     <>
@@ -22,7 +24,9 @@ function Providers({ register = false }: ProvidersProps) {
             } bg-[#161515]/25 p-4 font-sans font-bold hover:bg-[#161515]/75`}
             disabled={!connector.ready}
             key={connector.id}
-            onClick={() => connect({ connector })}
+            onClick={() =>
+              connectAsync({ connector }).then(() => setTriggerSign(true))
+            }
           >
             <div className="relative h-8 w-8">
               <Image
