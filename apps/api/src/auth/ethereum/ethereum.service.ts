@@ -1,14 +1,18 @@
 import {
+  BadRequestException,
+  ForbiddenException,
   HttpException,
   Injectable,
-  InternalServerErrorException,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { providers } from 'ethers';
-import { ParentsService } from 'src/users/parents/parents.service';
 import { ErrorTypes, generateNonce, SiweMessage } from 'siwe';
-import { VerifyMessageDto } from './dto/verify-message.dto';
 import { UserSession } from '../session/user-session.interface';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { JwtAuthService } from '../jwt/jwt-auth.service';
+import { RegisterWithTokenDto } from './dto/register-with-token.dto';
+import { SessionService } from '../session/session.service';
+import { VerifyMessageDto } from './dto/verify-message.dto';
 
 class LoginTimeout extends HttpException {
   constructor(message?: string) {
@@ -20,20 +24,111 @@ class LoginTimeout extends HttpException {
 export class EthereumService {
   provider: providers.JsonRpcProvider;
 
-  constructor(private parentsService: ParentsService) {}
+  constructor(
+    private jwtAuthService: JwtAuthService,
+    private prisma: PrismaService,
+    private sessionService: SessionService,
+  ) {}
 
   generateNonce() {
     return generateNonce();
   }
 
-  async verifyMessage(dto: VerifyMessageDto, session: UserSession) {
+  async registerWithToken(
+    { message, signature, token }: RegisterWithTokenDto,
+    session: UserSession,
+  ) {
     try {
-      const siweMessage = new SiweMessage(dto.message);
-      const fields = await siweMessage.validate(dto.signature);
+      const payload = this.jwtAuthService.verifyChildSignupToken(token);
+
+      if (payload) {
+        const user = await this.prisma.userChild.findUnique({
+          where: {
+            id: payload.userId,
+          },
+          include: {
+            web3Account: true,
+          },
+        });
+
+        if (user.web3Account) {
+          throw new BadRequestException(
+            'Token already used to create an account',
+          );
+        }
+
+        const validMessage = await this.verifyMessage(
+          message,
+          signature,
+          session,
+        );
+
+        const account = await this.prisma.web3Account.create({
+          data: {
+            address: validMessage.address.toLowerCase(),
+            nonce: generateNonce(),
+            user: {
+              connect: {
+                id: payload.userId,
+              },
+            },
+          },
+        });
+
+        await this.prisma.userChild.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            status: 'LINKED',
+          },
+        });
+
+        this.sessionService.setUserSession(session, account.userId, false);
+
+        return account;
+      }
+    } catch (e) {
+      if (e instanceof HttpException) {
+        throw e;
+      } else {
+        throw new BadRequestException('Invalid token.');
+      }
+    }
+  }
+
+  async login({ message, signature }: VerifyMessageDto, session: UserSession) {
+    const validMessage = await this.verifyMessage(message, signature, session);
+
+    const account = await this.prisma.web3Account.findUnique({
+      where: {
+        address: validMessage.address.toLowerCase(),
+      },
+    });
+
+    if (!account) {
+      throw new ForbiddenException('You are not registered.');
+    }
+
+    this.sessionService.setUserSession(session, account.userId, false);
+
+    return 'OK';
+  }
+
+  async verifyMessage(
+    message: SiweMessage,
+    signature: string,
+    session: UserSession,
+  ) {
+    try {
+      const siweMessage = new SiweMessage(message);
+      const fields = await siweMessage.validate(signature);
+
       if (fields.nonce !== session.nonce) {
         throw new UnprocessableEntityException('Invalid nonce.');
       }
-      return true;
+
+      return fields;
     } catch (e) {
       session.nonce = null;
 
@@ -45,11 +140,9 @@ export class EthereumService {
           throw new UnprocessableEntityException('Invalid signature.');
         }
         default: {
-          throw new InternalServerErrorException();
+          throw new ForbiddenException('You are not registered.');
         }
       }
-
-      return false;
     }
   }
 }

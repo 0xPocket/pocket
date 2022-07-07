@@ -24,6 +24,7 @@ module.exports = {
         lightest: '#334c74',
       },
       bright: '#fff',
+      success: '#00FF00',
       danger: '#FF0000',
       black: '#000',
       white: {

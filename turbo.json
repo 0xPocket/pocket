@@ -3,7 +3,8 @@
   "pipeline": {
     "@lib/prisma#generate": {
       "inputs": ["./prisma/schema.prisma", ".env"],
-      "dependsOn": ["$DATABASE_URL"]
+      "dependsOn": ["$DATABASE_URL"],
+      "outputs": ["./../../node_modules/@prisma/client"]
     },
     "@lib/prisma#deploy": {
       "dependsOn": ["generate"],
@@ -33,9 +34,6 @@
     "clean": {
       "dependsOn": ["^clean"],
       "cache": false
-    },
-    "landing-page#build": {
-			"cache": false
     },
     "build": {
       "dependsOn": ["^build"],

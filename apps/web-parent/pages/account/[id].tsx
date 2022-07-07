@@ -62,7 +62,7 @@ function Account({
   const [data, setData] = useState<covalentRet>();
 
   const { isLoading, data: child } = useQuery<UserChild>(
-    'child',
+    ['child', id],
     () =>
       axios
         .get<UserChild>('http://localhost:3000/api/users/children/' + id)

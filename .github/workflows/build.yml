@@ -1,11 +1,11 @@
-name: Lint
+name: Build
 
 on: push
 
 jobs:
   lint:
     timeout-minutes: 15
-    name: Lint
+    name: Build
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
@@ -26,5 +26,5 @@ jobs:
       - name: Install dependencies
         run: yarn --frozen-lockfile --prefer-offline
 
-      - name: Lint
-        run: yarn lint
+      - name: Build
+        run: yarn build

@@ -1,30 +1,45 @@
 import type { AppProps } from 'next/app';
 import { ThemeProvider } from '@lib/ui';
 import '../styles/globals.css';
-import { ReactElement, ReactNode } from 'react';
+import { ReactElement, ReactNode, useState } from 'react';
 import { NextPage } from 'next';
 import { configureChains, chain, createClient, WagmiConfig } from 'wagmi';
-import { alchemyProvider } from 'wagmi/providers/alchemy';
+import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
+import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
+import { AuthProvider } from '../contexts/auth';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
 export type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
 
-/*
-  TODO: In env variable
- */
-
-const alchemyId = '3yzPlXcA41Y49wI2INbE3q8kLi19ME2U';
-
-const { chains, provider, webSocketProvider } = configureChains(
+const { chains, provider } = configureChains(
   [chain.polygon],
-  [alchemyProvider({ alchemyId })],
+  [
+    jsonRpcProvider({
+      rpc: () => ({
+        http: `http://localhost:8545`,
+      }),
+    }),
+    // alchemyProvider({ alchemyId: process.env.NEXT_PUBLIC_KEY_ALCHEMY_POLYGON }),
+    // publicProvider(),
+  ],
 );
 
 const client = createClient({
-  autoConnect: false,
+  autoConnect: true,
   provider,
-  webSocketProvider,
+  connectors: [
+    new MetaMaskConnector({ chains }),
+    new WalletConnectConnector({
+      chains,
+      options: {
+        qrcode: true,
+      },
+    }),
+  ],
 });
 
 type AppPropsWithLayout = AppProps & {
@@ -33,11 +48,15 @@ type AppPropsWithLayout = AppProps & {
 
 function App({ Component, pageProps: { ...pageProps } }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
+  const [queryClient] = useState(() => new QueryClient());
 
   return (
     <ThemeProvider>
       <WagmiConfig client={client}>
-        {getLayout(<Component {...pageProps} />)}
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>{getLayout(<Component {...pageProps} />)}</AuthProvider>
+          <ReactQueryDevtools />
+        </QueryClientProvider>
       </WagmiConfig>
     </ThemeProvider>
   );

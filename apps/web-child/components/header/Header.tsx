@@ -1,16 +1,11 @@
 import { Button, Header, ThemeToggler } from '@lib/ui';
-import { useAccount, useConnect } from 'wagmi';
-import { useWeb3Auth } from '../../contexts/web3hook';
-import { InjectedConnector } from 'wagmi/connectors/injected';
+import { useAuth } from '../../contexts/auth';
+import AuthDialog from '../auth/AuthDialog';
 
 type GlobalHeaderProps = {};
 
 function GlobalHeader({}: GlobalHeaderProps) {
-  // const { user, address, status, toggleModal, disconnect } = useWeb3Auth();
-  const { address, isConnected } = useAccount();
-  const { connect } = useConnect({
-    connector: new InjectedConnector(),
-  });
+  const { user, showModal, setShowModal, signOut } = useAuth();
 
   return (
     <Header>
@@ -23,41 +18,23 @@ function GlobalHeader({}: GlobalHeaderProps) {
         </Header.Nav>
       </Header.BlockLeft>
       <Header.BlockRight>
-        {isConnected ? (
-          <div>{address}</div>
+        {user ? (
+          <>
+            <div>{user.web3Account.address}</div>
+            <button className="bg-primary p-4" onClick={() => signOut()}>
+              LOGOUT
+            </button>
+          </>
         ) : (
-          <Button action={() => connect()}>Connect Wallet</Button>
+          <>
+            <Button action={() => setShowModal(true)}>Connect Wallet</Button>
+            <AuthDialog show={showModal} setShow={setShowModal} />
+          </>
         )}
-
         <ThemeToggler />
       </Header.BlockRight>
     </Header>
   );
-
-  // return (
-  //   <Header>
-  //     <Header.BlockLeft>
-  //       <Header.Title>Child</Header.Title>
-  //       <Header.Nav show={status === 'authenticated'}>
-  //         <Header.NavLink href="/dashboard">Dashboard</Header.NavLink>
-  //         <Header.NavLink href="#">Blog</Header.NavLink>
-  //         <Header.NavLink href="#">FAQ</Header.NavLink>
-  //       </Header.Nav>
-  //     </Header.BlockLeft>
-  //     <Header.BlockRight>
-  //       {status === 'authenticated' ? (
-  //         <>
-  //           {user?.firstName} ({address?.substring(0, 4)}...){' '}
-  //           <Button action={() => disconnect()}>Disconnect Wallet</Button>
-  //         </>
-  //       ) : (
-  //         <Button action={() => toggleModal('login')}>Connect Wallet</Button>
-  //       )}
-
-  //       <ThemeToggler />
-  //     </Header.BlockRight>
-  //   </Header>
-  // );
 }
 
 export default GlobalHeader;

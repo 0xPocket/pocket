@@ -1,39 +1,46 @@
-import { Button } from '@lib/ui';
-import { useRouter } from 'next/router';
-import { useWeb3Auth } from '../../contexts/web3hook';
+import { useEffect, useState } from 'react';
+import { useAccount } from 'wagmi';
+import Providers from '../auth/Providers';
+import SignMessage from '../auth/SignMessage';
+import Step from './Step';
 
 type OnBoardingStepperProps = {
   registerToken: string | undefined;
 };
 
 function OnBoardingStepper({ registerToken }: OnBoardingStepperProps) {
-  const { toggleModal, address, registerAccount } = useWeb3Auth();
-  const router = useRouter();
+  const [step, setStep] = useState(0);
+  const { isConnected, address } = useAccount();
+
+  useEffect(() => {
+    if (isConnected) {
+      setStep(1);
+    } else {
+      setStep(0);
+    }
+  }, [isConnected]);
 
   if (!registerToken) {
     return <div>Loading...</div>;
   }
 
-  const linkWallet = () => {
-    registerAccount(registerToken)?.then(() => {
-      router.push('/');
-    });
-  };
-
   return (
-    <div className="flex h-screen flex-col items-center justify-center gap-4">
-      <div className="flex items-center gap-4">
-        <span className="text-lg font-bold">Step 1:</span>
-        {address ? (
-          <div>Wallet : {address}</div>
-        ) : (
-          <Button action={() => toggleModal()}>Connect your Wallet</Button>
-        )}
-      </div>
-      <div className="flex items-center gap-4">
-        <span className="text-lg font-bold">Step 2:</span>
-        <Button action={() => linkWallet()}>Link your Wallet</Button>
-      </div>
+    <div className="flex h-screen flex-col items-center justify-center gap-8">
+      <Step
+        active={step === 0}
+        title="1. Connect your wallet"
+        completed={step > 0}
+      >
+        <Providers />
+      </Step>
+      <Step
+        active={step === 1}
+        title="2. Link your account"
+        completed={step > 1}
+      >
+        {isConnected && <span>Connected with {address}</span>}
+        <SignMessage register />
+      </Step>
     </div>
   );
 }

@@ -6,8 +6,8 @@ import { ParentsModule } from 'src/users/parents/parents.module';
 import { PrismaModule } from '../prisma/prisma.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { EthereumModule } from './ethereum/ethereum.module';
 import { JwtAuthModule } from './jwt/jwt-auth.module';
-import { MetamaskModule } from './metamask/metamask.module';
 import { SessionModule } from './session/session.module';
 
 @Module({
@@ -18,8 +18,8 @@ import { SessionModule } from './session/session.module';
     NestAuthModule.forRoot(),
     ParentsModule,
     ChildrenModule,
-    MetamaskModule,
     PasswordModule,
+    EthereumModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],
