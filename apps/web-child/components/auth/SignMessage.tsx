@@ -49,7 +49,12 @@ const SignMessage: React.FC<SignMessageProps> = ({ register = false }) => {
           } as any);
         }
 
-        router.reload();
+        if (register) {
+          // router.push('/');
+          window.location.href = '/';
+        } else {
+          router.reload();
+        }
       } catch (e) {
         console.log(e);
       }
@@ -82,7 +87,7 @@ const SignMessage: React.FC<SignMessageProps> = ({ register = false }) => {
             }
             onClick={() => sign(chain?.id!, address!)}
           >
-            Sign Message
+            {register ? 'Link wallet' : 'Sign Message'}
           </button>
           {verify.isError && (
             <div className="text-sm text-danger">

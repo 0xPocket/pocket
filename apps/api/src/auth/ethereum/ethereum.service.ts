@@ -46,10 +46,15 @@ export class EthereumService {
           where: {
             id: payload.userId,
           },
+          include: {
+            web3Account: true,
+          },
         });
 
-        if (user) {
-          throw new Error();
+        if (user.web3Account) {
+          throw new BadRequestException(
+            'Token already used to create an account',
+          );
         }
 
         const validMessage = await this.verifyMessage(
@@ -58,7 +63,7 @@ export class EthereumService {
           session,
         );
 
-        return this.prisma.web3Account.create({
+        const account = await this.prisma.web3Account.create({
           data: {
             address: validMessage.address.toLowerCase(),
             nonce: generateNonce(),
@@ -69,14 +74,44 @@ export class EthereumService {
             },
           },
         });
+
+        await this.prisma.userChild.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            status: 'LINKED',
+          },
+        });
+
+        this.sessionService.setUserSession(session, account.userId, false);
+
+        return account;
       }
     } catch (e) {
-      throw new BadRequestException('Problem registering');
+      if (e instanceof HttpException) {
+        throw e;
+      } else {
+        throw new BadRequestException('Invalid token.');
+      }
     }
   }
 
   async login({ message, signature }: VerifyMessageDto, session: UserSession) {
-    await this.verifyMessage(message, signature, session);
+    const validMessage = await this.verifyMessage(message, signature, session);
+
+    const account = await this.prisma.web3Account.findUnique({
+      where: {
+        address: validMessage.address.toLowerCase(),
+      },
+    });
+
+    if (!account) {
+      throw new ForbiddenException('You are not registered.');
+    }
+
+    this.sessionService.setUserSession(session, account.userId, false);
+
     return 'OK';
   }
 
@@ -91,20 +126,6 @@ export class EthereumService {
 
       if (fields.nonce !== session.nonce) {
         throw new UnprocessableEntityException('Invalid nonce.');
-      }
-
-      const account = await this.prisma.web3Account.findUnique({
-        where: {
-          address: fields.address.toLowerCase(),
-        },
-      });
-
-      if (!account) {
-        throw new Error();
-      }
-
-      if (session) {
-        this.sessionService.setUserSession(session, account.userId, false);
       }
 
       return fields;

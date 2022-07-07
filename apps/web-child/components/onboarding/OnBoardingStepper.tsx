@@ -31,7 +31,7 @@ function OnBoardingStepper({ registerToken }: OnBoardingStepperProps) {
         title="1. Connect your wallet"
         completed={step > 0}
       >
-        <Providers register />
+        <Providers />
       </Step>
       <Step
         active={step === 1}

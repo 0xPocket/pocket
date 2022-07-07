@@ -1,13 +1,9 @@
 import Image from 'next/image';
-import { Connector, useAccount, useConnect } from 'wagmi';
+import { useAccount, useConnect } from 'wagmi';
 import { useAuth } from '../../contexts/auth';
 import { Spinner } from '../common/Spinner';
 
-type ProvidersProps = {
-  register?: boolean;
-};
-
-function Providers({ register = false }: ProvidersProps) {
+function Providers() {
   const { connectAsync, connectors, error, isLoading } = useConnect();
   const { connector: activeConnector } = useAccount();
   const { setTriggerSign } = useAuth();
