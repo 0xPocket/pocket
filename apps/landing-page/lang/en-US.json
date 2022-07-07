@@ -1,0 +1,79 @@
+{
+  "head.title": "Web3 pocket money | Pocket",
+  "head.description": "No need to be an expert to hand cryptocurrency to your teenagers. Buy and give pocket money to your children with one click.",
+  "head.alt": "Pocket, Web3 pocket money",
+
+  "hero.title.top": "Web3 pocket money.",
+  "hero.title.bottom": "Simple. Secured.",
+  "hero.subtitle.top": "No need to be an expert to hand cryptocurrency to your teenagers.",
+  "hero.subtitle.bottom": "Buy and give pocket money to your children with one click.",
+
+  "parentcard.title": "Parents",
+
+  "parentcard.simplicity.title": "Simplicity",
+  "parentcard.simplicity.content": "Create an account, adjust the frequency and the pocket money amount in a few clicks.",
+
+  "parentcard.serenity.title": "Serinity",
+  "parentcard.serenity.content": "Be notified in real-time of your children's activity or receive a weekly summary.",
+
+  "parentcard.stability.title": "Stability",
+  "parentcard.stability.content": "The pocket money is not subject to volatility since it is a cryptocurrency indexed on euro or dollar.",
+
+  "childcard.title": "Children",
+
+  "childcard.practice.title": "Learning",
+  "childcard.practice.content": "Educational platform to make his/her first steps in Web3.",
+
+  "childcard.discovery.title": "Discovery",
+  "childcard.discovery.content": "Games and applications specially selected to meet teenagers interest.",
+
+  "childcard.liberty.title": "Autonomy",
+  "childcard.liberty.content": "An accompaniment towards autonomy in the ecosystem.",
+
+  "simple.section.title": "Join Pocket",
+  "simple.section.subtitle": "Be an early adopter.",
+  "simple.section.content": "Pocket will be open to the public very soon. Be among the first subscribers and enjoy exclusive benefits.",
+
+  "calltoaction.action": "Start",
+  "calltoaction.error": "You must submit a valid email.",
+  "calltoaction.eamil": "Email address",
+
+  "carrousel.avis1.content": "\" I used to let my son borrow my credit card to buy cryptocurrencies. At least with Pocket I can now see what he's doing with it. It's a service that I can recommend to all the parents who want to keep an eye on their children! \"",
+  "carrousel.avis1.author": "Remi, Alex's dad (14 yo)",
+
+  "carrousel.avis2.content": "\" I was quite afraid of this field, but my son could not stop asking me to buy him some NFT from a YouTuber (I forgot his name). So we decided with my husband to open a Pocket account for him. \"",
+  "carrousel.avis2.author": "Christine, Jonathan's mom (16 yo)",
+
+  "carrousel.avis3.content": "\" My daughter had been asking me to buy cryptocurrencies for quite some time, but I wasn't comfortable with this idea. When she told me about Pocket I thought that it was a good way to please her and keep my peace of mind. \"",
+  "carrousel.avis3.author": "John, Lou's father (16 yo)",
+
+  "backedby.title": "Our partners",
+
+  "footer.copyright": "© 2022 Pocket.",
+  "footer.contact": "Contact : hello@gopocket.fr",
+
+  "intro.title": "Hello 👋",
+  "intro.subtitle": "We would like to know more about you.",
+  "intro.thirdtitle": "5 questions no more, we promise !",
+  "intro.letsgo": "Let's go !",
+
+  "question.email": "An email address to keep in touch ?",
+  "question.email.error": "You must submit a valid email.",
+
+  "question.cryptoKnowledge": "Do you have crypto-currencies or NFTs?",
+  "question.childKnowledge": "Have you ever talked about it with your teenagers?",
+  "question.childPlayToEarn": "Has your child ever talked about play-to-earn?",
+  "question.gavePocketMoney": "Do you give pocket money to your children?",
+  "question.contact.title": "Do you accept being contacted by email for our premiere trial?",
+
+  "question.next": "Next",
+
+  "choices.yes": "Yes",
+  "choices.no": "No",
+  "choices.nochild": "I don't have children",
+  "choices.bankaccount": "Yes, through a bank account",
+  "choices.cash": "Yes, in cash",
+
+  "conclusion.title": "Thank you for your interest in our product 👍",
+  "conclusion.team": "Pocket team"
+}

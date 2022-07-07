@@ -47,7 +47,7 @@ To develop all apps and packages, run the following commands:
 # install the different dependencies
 yarn
 
-# if you don't have a postgres container already, use this to lauch it
+# if you don't have a postgres container already, use this to launch it
 yarn p docker:up
 
 # fork the mainnet (must be in a different terminal since it's blocking)

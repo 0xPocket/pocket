@@ -1,5 +1,6 @@
 import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FormattedMessage } from 'react-intl';
 
 type IndexCardProps = {
   title: string;
@@ -21,9 +22,11 @@ function IndexCard({
           varitaion ? 'bg-gradient-pink-text' : 'bg-gradient-blue-text'
         } bg-clip-text pb-4 text-center text-4xl text-transparent`}
       >
-        {title}
+        <FormattedMessage id={title} />
       </h2>
-      <div className="z-10 text-center text-xl tracking-wide">{content}</div>
+      <div className="z-10 text-center text-xl tracking-wide">
+        <FormattedMessage id={content} />
+      </div>
       <FontAwesomeIcon
         icon={icon}
         className="absolute bottom-0 -right-8 -z-10 h-40 w-40 -rotate-12 opacity-10"

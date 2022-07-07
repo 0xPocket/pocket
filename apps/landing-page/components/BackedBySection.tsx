@@ -1,3 +1,4 @@
+import { FormattedMessage } from 'react-intl';
 import LogoPartenaire from './LogoPartenaire';
 
 type BackedBySectionProps = {};
@@ -7,7 +8,9 @@ function BackedBySection({}: BackedBySectionProps) {
     <div className=" rounded-xl bg-dark-lightest py-12 px-4 dark:bg-transparent">
       <div className="container mx-auto">
         <div className="flex flex-col items-center justify-center gap-24 lg:flex-row">
-          <h2 className="text-bright">Nos partenaires</h2>
+          <h2 className="text-bright">
+            <FormattedMessage id="backedby.title" />
+          </h2>
           <LogoPartenaire
             imgUrl="/assets/backer_icons/cryptofellowship.svg"
             width="w-28"
