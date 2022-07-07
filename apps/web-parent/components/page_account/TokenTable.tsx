@@ -1,3 +1,4 @@
+import { CovalentItem } from '@lib/types/interfaces';
 import {
   ColumnDef,
   useReactTable,
@@ -7,14 +8,13 @@ import {
   getSortedRowModel,
 } from '@tanstack/react-table';
 import { useMemo, useState } from 'react';
-import { covalentItem } from './TokenContent';
 
 type TokenTableProps = {
-  tokenList: covalentItem[];
+  tokenList: CovalentItem[];
 };
 
 function TokenTable({ tokenList }: TokenTableProps) {
-  const defaultColumns = useMemo<ColumnDef<covalentItem>[]>(
+  const defaultColumns = useMemo<ColumnDef<CovalentItem>[]>(
     () => [
       {
         header: 'Token Name',
@@ -36,7 +36,7 @@ function TokenTable({ tokenList }: TokenTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = useState({});
 
-  const table = useReactTable<covalentItem>({
+  const table = useReactTable<CovalentItem>({
     data: tokenList,
     columns,
     state: {
