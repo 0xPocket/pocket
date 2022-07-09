@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { useAccount, useContractRead } from 'wagmi';
 import PocketFaucetJSON from 'pocket-contract/artifacts/contracts/PocketFaucet.sol/PocketFaucet.json';
 import ClaimButton from './ClaimButton';
@@ -26,7 +26,6 @@ const ClaimDashboard: React.FC = () => {
       return;
     }
     const lastClaim = data[3];
-    console.log(lastClaim.toNumber() * 1000);
     const periodicity = data[4];
     return moment(lastClaim.toNumber() * 1000).add(
       periodicity.toNumber(),
@@ -47,17 +46,33 @@ const ClaimDashboard: React.FC = () => {
         <div className="flex flex-col">
           <div>Balance : {(data[1] as BigNumber).toString()}</div>
           <div>Ceiling : {(data[2] as BigNumber).toString()}</div>
-          <div>Last Claim : {(data[3] as BigNumber).toString()}</div>
-          <div>Next Claim at {nextClaim?.toLocaleString()}</div>
-          <div>Next Claim : {nextClaim?.unix()}</div>
-          <div>Now : {now?.unix()}</div>
           <div>Periodicity : {(data[4] as BigNumber).toString()}</div>
+          <div>-</div>
+          <div>Last Claim : {(data[3] as BigNumber).toString()}</div>
+          <div>
+            Last Claim at :{' '}
+            {moment((data[3] as BigNumber).toNumber() * 1000).toLocaleString()}
+          </div>
+          <div>-</div>
+
+          <div>Now : {now?.unix()}</div>
+          <div>Now : {now?.toLocaleString()}</div>
+          <div>-</div>
+
+          <div>Next Claim : {nextClaim?.unix()}</div>
+          <div>Next Claim at {nextClaim?.toLocaleString()}</div>
+          <div>-</div>
         </div>
       )}
-      <ClaimButton
-        disabled={!canClaim || data[1].toNumber() === 0}
-        nextClaim={moment.duration(nextClaim?.diff(now)).humanize()}
-      />
+      {data && (
+        <ClaimButton disabled={!canClaim || data[1].toNumber() === 0}>
+          {!canClaim || data[1].toNumber() === 0
+            ? data[1].toNumber() === 0
+              ? 'No Balance...'
+              : 'Available in ' + nextClaim
+            : 'Claim your money !'}
+        </ClaimButton>
+      )}
       <ERC20Balance />
     </div>
   );
