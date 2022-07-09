@@ -2,6 +2,7 @@ import { Wallet, providers } from 'ethers';
 import { ParentContract } from '../ts/Parent';
 import { setErc20Balance } from '../utils/ERC20';
 import * as constants from '../utils/constants';
+import { formatUnits, parseUnits } from 'ethers/lib/utils';
 
 const ELON_MUSK = {
   publicKey: '0x70997970c51812dc3a010c7d01b50e0d17dc79c8',
@@ -10,7 +11,7 @@ const ELON_MUSK = {
 };
 
 const DAMIAN_MUSK = {
-  publicKey: '0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc',
+  publicKey: '0x3c44cdddb6a900fa2b585dd299e03d12fa4293bcs',
   privateKey:
     '0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a',
 };
@@ -26,7 +27,11 @@ async function main() {
     parentWallet
   );
 
-  const tx = await parent.addChild(20, 0, DAMIAN_MUSK.publicKey); // Damian Musk's Wallet
+  const tx = await parent.addChild(
+    parseUnits('20', 6),
+    1 * 1 * 5 * 60,
+    DAMIAN_MUSK.publicKey
+  ); // Damian Musk's Wallet
   const res = await provider.sendTransaction(tx);
 
   // Transfer some USDT to Elon Musk
@@ -34,6 +39,18 @@ async function main() {
     constants.TOKEN_POLY.USDC,
     parentWallet,
     '3000',
+    constants.WHALES_POLY.USDC
+  );
+
+  const childWallet = new Wallet(
+    DAMIAN_MUSK.privateKey, // Elon Musk's Wallet
+    provider
+  );
+
+  await setErc20Balance(
+    constants.TOKEN_POLY.USDC,
+    childWallet,
+    '12',
     constants.WHALES_POLY.USDC
   );
 

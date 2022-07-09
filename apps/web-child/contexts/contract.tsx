@@ -1,4 +1,6 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useEffect } from 'react';
+import { useAccount, useContract, useContractRead } from 'wagmi';
+import PocketFaucet from 'pocket-contract/artifacts/contracts/PocketFaucet.sol/PocketFaucet.json';
 
 interface SmartContractProviderProps {
   children: React.ReactNode;
@@ -19,6 +21,26 @@ const [SmartContractContext, SmartContractContextProvider] =
 export const SmartContractProvider = ({
   children,
 }: SmartContractProviderProps) => {
+  // const contract = useContract({
+  //   addressOrName: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+  //   contractInterface: ensRegistryABI,
+  // })
+  // const { address } = useAccount();
+
+  // const {
+  //   data: childConfig,
+  //   isError,
+  //   isLoading,
+  //   refetch,
+  // } = useContractRead({
+  //   addressOrName: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+  //   contractInterface: PocketFaucet.abi,
+  //   functionName: 'childToConfig',
+  //   args: address,
+  // });
+
+  // childConfig?.length && console.log(childConfig.length);
+
   return (
     <SmartContractContextProvider
       value={{

@@ -21,6 +21,7 @@
     "axios": "^0.27.2",
     "ethers": "^5.6.8",
     "jwt-decode": "^3.1.2",
+    "moment": "^2.29.4",
     "next": "12.2.0",
     "pocket-contract": "*",
     "react": "18.2.0",

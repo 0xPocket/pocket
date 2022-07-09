@@ -75,7 +75,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   return (
     <AuthContextProvider
       value={{
-        loggedIn: !!user && !!isConnected,
+        loggedIn: user && isConnected,
         getMessage,
         signOut: () => logout.mutate(),
         showModal,
