@@ -11,7 +11,7 @@ const ELON_MUSK = {
 };
 
 const DAMIAN_MUSK = {
-  publicKey: '0x3c44cdddb6a900fa2b585dd299e03d12fa4293bcs',
+  publicKey: '0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc',
   privateKey:
     '0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a',
 };
@@ -27,14 +27,12 @@ async function main() {
     parentWallet
   );
 
-  const tx = await parent.addChild(
+  await parent.contract.addChild(
     parseUnits('20', 6),
     1 * 1 * 5 * 60,
     DAMIAN_MUSK.publicKey
-  ); // Damian Musk's Wallet
-  const res = await provider.sendTransaction(tx);
-
-  // Transfer some USDT to Elon Musk
+  );
+  // // Transfer some USDT to Elon Musk
   await setErc20Balance(
     constants.TOKEN_POLY.USDC,
     parentWallet,
