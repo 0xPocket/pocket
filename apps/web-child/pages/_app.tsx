@@ -3,20 +3,13 @@ import { ThemeProvider } from '@lib/ui';
 import '../styles/globals.css';
 import { ReactElement, ReactNode, useState } from 'react';
 import { NextPage } from 'next';
-import {
-  configureChains,
-  chain,
-  createClient,
-  WagmiConfig,
-  Connector,
-} from 'wagmi';
+import { configureChains, chain, createClient, WagmiConfig } from 'wagmi';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import { AuthProvider } from '../contexts/auth';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import { SmartContractProvider } from '../contexts/contract';
 
 export type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -62,11 +55,7 @@ function App({ Component, pageProps: { ...pageProps } }: AppPropsWithLayout) {
     <ThemeProvider>
       <WagmiConfig client={wagmiClient}>
         <QueryClientProvider client={queryClient}>
-          <AuthProvider>
-            <SmartContractProvider>
-              {getLayout(<Component {...pageProps} />)}
-            </SmartContractProvider>
-          </AuthProvider>
+          <AuthProvider>{getLayout(<Component {...pageProps} />)}</AuthProvider>
           <ReactQueryDevtools />
         </QueryClientProvider>
       </WagmiConfig>
