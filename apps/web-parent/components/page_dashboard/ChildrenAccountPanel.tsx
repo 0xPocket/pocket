@@ -1,7 +1,7 @@
 import { UserChild } from '@lib/types/interfaces';
 import { useQuery } from 'react-query';
 import { useAxios } from '../../hooks/axios.hook';
-import ChildCard from '../cards/childcard/ChildCard';
+import ChildCard from './childcard/ChildCard';
 import { useRouter } from 'next/router';
 import { Button } from '@lib/ui';
 

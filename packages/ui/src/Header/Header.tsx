@@ -19,11 +19,11 @@ export function NavLink({ children, href, exact = false }: NavLinkProps) {
   );
 }
 
-type TitleProps = { children: React.ReactNode };
+type TitleProps = { children: React.ReactNode; href?: string };
 
-function Title({ children }: TitleProps) {
+function Title({ children, href }: TitleProps) {
   return (
-    <Link href="/" passHref>
+    <Link href={href ? href : "/"} passHref>
       <div className="cursor-pointer text-4xl font-bold">{children}</div>
     </Link>
   );

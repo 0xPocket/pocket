@@ -15,8 +15,4 @@
   h2 {
     @apply font-raleway text-3xl font-bold;
   }
-
-  p {
-    @apply font-bitter;
-  }
 }
