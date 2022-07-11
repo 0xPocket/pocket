@@ -36,11 +36,12 @@ function TokenTable({ tokenList }: TokenTableProps) {
       },
       {
         header: 'Value',
-        accessorKey: 'quote',
+        accessorFn: (row) => {
+          return Math.floor(Number(row.quote) * 100) / 100;
+        },
         id: 'quote',
         filterFn: (row) => {
-          console.log(row.getValue('quote'));
-          return row.getValue('quote') > 1;
+          return row.getValue('quote') > 0.1;
         },
       },
     ],
