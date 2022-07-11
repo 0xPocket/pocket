@@ -28,20 +28,6 @@ const { chains, provider } = configureChains(
   ],
 );
 
-const client = createClient({
-  autoConnect: true,
-  provider,
-  connectors: [
-    new MetaMaskConnector({ chains }),
-    new WalletConnectConnector({
-      chains,
-      options: {
-        qrcode: true,
-      },
-    }),
-  ],
-});
-
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
@@ -49,10 +35,25 @@ type AppPropsWithLayout = AppProps & {
 function App({ Component, pageProps: { ...pageProps } }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
   const [queryClient] = useState(() => new QueryClient());
+  const [wagmiClient] = useState(() =>
+    createClient({
+      autoConnect: true,
+      provider,
+      connectors: [
+        new MetaMaskConnector({ chains }),
+        new WalletConnectConnector({
+          chains,
+          options: {
+            qrcode: true,
+          },
+        }),
+      ],
+    }),
+  );
 
   return (
     <ThemeProvider>
-      <WagmiConfig client={client}>
+      <WagmiConfig client={wagmiClient}>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>{getLayout(<Component {...pageProps} />)}</AuthProvider>
           <ReactQueryDevtools />

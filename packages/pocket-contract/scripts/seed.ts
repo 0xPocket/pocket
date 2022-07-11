@@ -2,6 +2,7 @@ import { Wallet, providers } from 'ethers';
 import { ParentContract } from '../ts/Parent';
 import { setErc20Balance } from '../utils/ERC20';
 import * as constants from '../utils/constants';
+import { formatUnits, parseUnits } from 'ethers/lib/utils';
 
 const ELON_MUSK = {
   publicKey: '0x70997970c51812dc3a010c7d01b50e0d17dc79c8',
@@ -26,14 +27,28 @@ async function main() {
     parentWallet
   );
 
-  const tx = await parent.addChild(20, 0, DAMIAN_MUSK.publicKey); // Damian Musk's Wallet
-  const res = await provider.sendTransaction(tx);
-
-  // Transfer some USDT to Elon Musk
+  await parent.contract.addChild(
+    parseUnits('20', 6),
+    1 * 1 * 5 * 60,
+    DAMIAN_MUSK.publicKey
+  );
+  // // Transfer some USDT to Elon Musk
   await setErc20Balance(
     constants.TOKEN_POLY.USDC,
     parentWallet,
     '3000',
+    constants.WHALES_POLY.USDC
+  );
+
+  const childWallet = new Wallet(
+    DAMIAN_MUSK.privateKey, // Elon Musk's Wallet
+    provider
+  );
+
+  await setErc20Balance(
+    constants.TOKEN_POLY.USDC,
+    childWallet,
+    '12',
     constants.WHALES_POLY.USDC
   );
 

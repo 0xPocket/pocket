@@ -1,5 +1,6 @@
 import { UserChild } from '@lib/types/interfaces';
 import { FormErrorMessage } from '@lib/ui';
+import { parseUnits } from 'ethers/lib/utils';
 import { ParentContract } from 'pocket-contract/ts';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -26,7 +27,7 @@ function ChildSettingsForm({ child, config }: ChildSettingsFormProps) {
     formState: { errors },
   } = useForm<FormValues>();
   const [showModal, setShowModal] = useState(false);
-  const { provider } = useSmartContract();
+  const { provider, erc20Decimals } = useSmartContract();
   const formValues = watch();
   const axios = useAxios();
   const queryClient = useQueryClient();
@@ -35,7 +36,7 @@ function ChildSettingsForm({ child, config }: ChildSettingsFormProps) {
     console.log('changeConfig', formValues);
     contract
       .changeConfig(
-        formValues.ceiling,
+        parseUnits(String(formValues.ceiling), erc20Decimals),
         formValues.periodicity,
         child.web3Account.address,
       )
