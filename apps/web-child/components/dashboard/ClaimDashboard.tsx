@@ -69,7 +69,9 @@ const ClaimDashboard: React.FC = () => {
           {!canClaim || data[1].toNumber() === 0
             ? data[1].toNumber() === 0
               ? 'No Balance...'
-              : 'Available in ' + nextClaim
+              : 'Next claim in ' +
+                moment.duration(moment().diff(nextClaim)).humanize() +
+                '...'
             : 'Claim your money !'}
         </ClaimButton>
       )}
