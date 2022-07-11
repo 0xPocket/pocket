@@ -1,10 +1,15 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CovalentReturn } from '@lib/types/interfaces';
 import axios from 'axios';
 import { useQuery } from 'react-query';
 import { toast } from 'react-toastify';
 import TokenTable from './TokenTable';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { UserChild } from '.prisma/client';
 
-type TokenContentProps = {};
+type TokenContentProps = {
+  child: UserChild;
+};
 
 const fetchUsers = () => {
   const APIKEY = 'ckey_d68ffbaf2bdf47b6b58e84fada7';
@@ -17,19 +22,24 @@ const fetchUsers = () => {
   return res.then((res) => res.data.data);
 };
 
-function TokenContent({}: TokenContentProps) {
-  // TODO add child id for no request conflicts
+function TokenContent({ child }: TokenContentProps) {
+  console.log(child);
   const { isLoading, data: content } = useQuery<CovalentReturn>(
-    'child-token-content',
+    ['child-token-content', child.id],
     fetchUsers,
     {
+      enabled: !!child,
       onError: () => toast.error("Could not retrieve user's token"),
     },
   );
 
   return (
     <div>
-      {!isLoading && content?.items && <TokenTable tokenList={content.items} />}
+      {!isLoading && content?.items ? (
+        <TokenTable tokenList={content.items} />
+      ) : (
+        <FontAwesomeIcon icon={faSpinner} spin />
+      )}
     </div>
   );
 }

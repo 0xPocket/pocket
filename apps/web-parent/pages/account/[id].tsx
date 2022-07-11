@@ -80,9 +80,9 @@ function Account({
             </div>
             <div>
               <h2 className="mt-16  p-4">Overview</h2>
-              <div className="grid grid-cols-1 gap-8">
+              <div className="grid grid-cols-2 gap-8">
                 <div className=" bg-dark p-4 text-bright">
-                  <TokenContent />
+                  {child && <TokenContent child={child} />}
                 </div>
                 <div className="h-60 bg-dark p-4 text-bright">History</div>
               </div>
