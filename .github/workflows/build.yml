@@ -9,11 +9,21 @@ jobs:
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      DATABASE_URL: postgresql://postgres:@localhost:5432/pocket-test
     strategy:
       matrix:
         node: ["16.x"]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
+
+    services:
+      postgres:
+        image: postgres:12.1
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: pocket-test
+        ports:
+          - 5432:5432
 
     steps:
       - uses: actions/checkout@v2
