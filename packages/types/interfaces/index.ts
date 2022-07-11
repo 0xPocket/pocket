@@ -19,3 +19,5 @@ export interface UserParent extends Parent {
 export interface UserChild extends Child {
   web3Account: Web3Account;
 }
+
+export * from './Covalent.interface'
