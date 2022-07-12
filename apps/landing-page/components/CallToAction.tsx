@@ -49,18 +49,20 @@ const CallToAction: React.FC = () => {
     <div className="flex h-32 flex-col gap-2">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="relative mt-8 flex h-14 max-w-md items-center justify-evenly rounded-lg border border-bright-darkest bg-bright text-white-darker dark:border-none"
+        className="relative mt-8 flex h-14 max-w-md items-center justify-end rounded-lg border border-bright-darkest bg-bright text-white-darker dark:border-none"
       >
-        <FontAwesomeIcon icon={faEnvelope} className="px-4 opacity-70" />
-        <input
-          className="h-full flex-grow appearance-none outline-none"
-          placeholder={email_placeholder}
-          type="email"
-          {...register('email')}
-        />
+        <div className="absolute left-0">
+          <FontAwesomeIcon icon={faEnvelope} className="px-4 opacity-70" />
+          <input
+            className="h-full flex-grow appearance-none outline-none "
+            placeholder={email_placeholder}
+            type="email"
+            {...register('email')}
+          />
+        </div>
         <button
           type="submit"
-          className="flex h-full w-28 cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap rounded-lg bg-primary px-4 py-3 text-bright dark:bg-primary"
+          className="z-10 flex h-full w-28 cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap rounded-lg bg-primary px-4 py-3 text-bright dark:bg-primary"
         >
           {mutation.isLoading ? (
             <FontAwesomeIcon icon={faSpinner} spin />

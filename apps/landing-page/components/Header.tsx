@@ -13,7 +13,7 @@ function Header({}: HeaderProps) {
         <Link href="/">
           <a className="text-5xl font-bold">Pocket.</a>
         </Link>
-        <div className="flex items-center justify-center gap-8 text-2xl">
+        <div className="flex items-center justify-center space-x-8 text-2xl">
           <div>
             {locale === 'fr' ? (
               <Link href={asPath} locale="en-US">

@@ -41,8 +41,10 @@ function IndexPageCardsChildren() {
             />
           </IndexCardAnimation>
         )}
-        <div className="col-span-1 hidden items-center justify-center bg-gradient-pink-text bg-clip-text text-6xl  font-bold text-transparent xl:col-span-1 xl:flex xl:aspect-square 2xl:aspect-[2/1.5]">
-          <FormattedMessage id="childcard.title" />
+        <div className="hidden items-center justify-center xl:flex">
+          <h2 className="col-span-1 bg-gradient-pink-text bg-clip-text text-6xl font-bold text-transparent">
+            <FormattedMessage id="childcard.title" />
+          </h2>
         </div>
       </div>
     </div>
