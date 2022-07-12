@@ -1,5 +1,4 @@
-import { Controller, Post, Req, UseGuards } from '@nestjs/common';
-import { Request } from 'express';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { AlchemyGuard } from './alchemy.guard';
 import { AlchemyAddressActivity } from './interfaces/AlchemyWebhook';
 import { NotifyService } from './notify.service';
@@ -10,10 +9,9 @@ export class NotifyController {
 
   @Post('webhook')
   @UseGuards(AlchemyGuard)
-  webhookAlchemy(@Req() req: Request) {
-    // console.log(req.body);
-    const alchemy = req.body as AlchemyAddressActivity;
+  webhookAlchemy(@Body() body: AlchemyAddressActivity) {
+    console.log('ALCHEMY NOTIFY : ' + body.id);
 
-    console.log(alchemy.event.activity);
+    return this.notifyService.webhookAlchemy(body);
   }
 }
