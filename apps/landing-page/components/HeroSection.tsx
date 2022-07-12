@@ -6,9 +6,9 @@ type HeroSectionProps = {};
 
 function HeroSection({}: HeroSectionProps) {
   return (
-    <section className="relative flex min-h-[100vh] items-center pt-28 2xl:pt-0 ">
+    <section className="relative flex min-h-[100vh] items-center justify-center pt-28 2xl:pt-0 ">
       <div className="grid grid-cols-10">
-        <div className="relative -z-10 col-span-10 mb-8 block  aspect-[2/1.5] min-h-[500px] w-full xl:col-span-6 xl:hidden">
+        <div className="relative -z-10 col-span-10 mb-8 block min-h-[400px] w-full xl:col-span-6 xl:hidden">
           <Image
             src="/assets/illu.svg"
             alt="illu"
