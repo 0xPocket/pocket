@@ -12,7 +12,7 @@ describe('Testing conf changement', function () {
   let PocketFaucet_factory: PocketFaucet__factory, pocketFaucet: PocketFaucet;
   let provider: providers.JsonRpcProvider;
   let parent1Wallet: Wallet;
-  const tokenAddr = constants.TOKEN_POLY.JEUR;
+  const tokenAddr = constants.TOKEN_POLY.USDC;
 
   before(async function () {
     provider = new providers.JsonRpcProvider('http://localhost:8545');
@@ -31,34 +31,34 @@ describe('Testing conf changement', function () {
 
   it('Should revert because new child addr is zero', async function () {
     await expect(
-      parent1.changeConfigAndSend(0, 0, ethers.constants.AddressZero)
+      parent1.changeConfigAndSend(0, 1, ethers.constants.AddressZero)
     ).to.be.revertedWith('!_areRelated : null child address');
   });
 
   it('Should revert because child2 is not set for this parent', async function () {
     await expect(
-      parent1.changeConfigAndSend(0, 0, child2.address)
+      parent1.changeConfigAndSend(0, 1, child2.address)
     ).to.be.revertedWith("!_areRelated : child doesn't match");
   });
 
   it('Should revert because child1 is not set anymore', async function () {
     await parent1.removeChild(child1.address);
     await expect(
-      parent1.changeConfigAndSend(0, 0, child1.address)
+      parent1.changeConfigAndSend(0, 1, child1.address)
     ).to.be.revertedWith("!_areRelated : child doesn't match");
   });
 
   it('Should change ceiling', async function () {
     await parent1.addStdChildAndSend(child1.address, tokenAddr);
     const ceilingBefore = await parent1.getChildCeiling(child1.address);
-    await parent1.changeConfigAndSend(10, 0, child1.address);
+    await parent1.changeConfigAndSend(10, 1, child1.address);
     const ceilingAfter = await parent1.getChildCeiling(child1.address);
     assert(!ceilingAfter.eq(ceilingBefore), 'Ceiling value did not change');
   });
 
   it('Should not change lastClaim', async function () {
     const lastClaimBefore = await parent1.getLastClaim(child1.address);
-    await parent1.changeConfigAndSend(20, 0, child1.address);
+    await parent1.changeConfigAndSend(20, 1, child1.address);
     const lastClaimAfter = await parent1.getLastClaim(child1.address);
     assert(
       lastClaimAfter.eq(lastClaimBefore),
@@ -68,7 +68,7 @@ describe('Testing conf changement', function () {
 
   it('Should not change parent param', async function () {
     const parentBefore = await parent1.getParent(child1.address);
-    await parent1.changeConfigAndSend(10, 0, child1.address);
+    await parent1.changeConfigAndSend(10, 1, child1.address);
     const parentAfter = await parent1.getParent(child1.address);
     assert(parentAfter === parentBefore, 'Parent value changed');
   });

@@ -12,7 +12,7 @@ describe('Testing add Child', function () {
   let PocketFaucet_factory: PocketFaucet__factory, pocketFaucet: PocketFaucet;
   let provider: providers.JsonRpcProvider;
   let parent1Wallet: Wallet;
-  const tokenAddr = constants.TOKEN_POLY.JEUR;
+  const tokenAddr = constants.TOKEN_POLY.USDC;
 
   before(async function () {
     provider = new providers.JsonRpcProvider('http://localhost:8545');
