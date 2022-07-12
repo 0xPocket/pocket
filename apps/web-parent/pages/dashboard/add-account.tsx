@@ -9,14 +9,14 @@ function addAccount({}: addAccountProps) {
     <MainWrapper authProtected>
       <SectionContainer>
         <div className=" grid grid-cols-2 gap-8">
-          <div className=" flex flex-col gap-4 rounded-xl bg-dark-light p-8">
-            <h2>Set-up a new account</h2>
+          <div className="relative flex flex-col space-y-10 overflow-hidden rounded-lg border border-dark border-opacity- bg-white p-4 shadow-lg dark:border-white-darker dark:bg-dark-light">
+            <h2>How to set-up a new account?</h2>
             <div className="flex flex-col gap-4">
-              <h3>Steps</h3>
+              {/* <h3>The 3 steps:</h3> */}
               <ol>
-                <li>Fill the form</li>
-                <li>Child click on the link he received</li>
-                <li>Validate the account in dashboard</li>
+                <li>&#x2022; Register his info</li>
+                <li>&#x2022; Your teen receives an email to fill in his web3 address</li>
+                <li>&#x2022; You can give him crypto !</li>
               </ol>
             </div>
           </div>

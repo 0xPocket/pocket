@@ -11,6 +11,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@alch/alchemy-sdk": "^1.0.8",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/free-brands-svg-icons": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",

@@ -21,3 +21,4 @@ export interface UserChild extends Child {
 }
 
 export * from './Covalent.interface'
+export * from './NftData.interface'

@@ -23,9 +23,9 @@ function ChildrenAccountPanel({}: ChildrenAccountPanelProps) {
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="">My accounts</h2>
+        <h2 className="">My children</h2>
         <Button action={() => router.push('/dashboard/add-account/')}>
-          Add Account
+          Add a child
         </Button>
       </div>
       <div className="grid grid-cols-4 gap-4">

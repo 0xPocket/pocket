@@ -8,7 +8,8 @@ import ChildSettingsForm from '../../components/forms/ChildSettingsForm';
 import AddfundsForm from '../../components/forms/AddfundsForm';
 import { useSmartContract } from '../../contexts/contract';
 import { ethers } from 'ethers';
-import TokenContent from '../../components/page_account/TokenContent';
+import TokenContent from '../../components/page_account/token/TokenContent';
+import NftContent from '../../components/page_account/nft/NftContent';
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.query.id;
@@ -67,8 +68,9 @@ function Account({
                 </span>
                 <p>Balance</p>
                 <span className=" text-4xl">
-                  {childConfig?.[1] &&
-                    ethers.utils.formatUnits(childConfig?.[1], 6).toString()}
+                  {childConfig?.[1]
+                    ? ethers.utils.formatUnits(childConfig?.[1], 6).toString()
+                    : 0}
                   $
                 </span>
                 <span>usdc</span>
@@ -79,12 +81,12 @@ function Account({
               <ChildSettingsForm child={child} config={childConfig} />
             </div>
             <div>
-              <h2 className="mt-16  p-4">Overview</h2>
               <div className="grid grid-cols-2 gap-8">
-                <div className=" bg-dark p-4 text-bright">
-                  {child && <TokenContent child={child} />}
-                </div>
-                <div className="h-60 bg-dark p-4 text-bright">History</div>
+                <NftContent child={child} />
+                <TokenContent child={child} />
+                {/* <div className="border-opacity- relative flex flex-col overflow-hidden rounded-lg border border-dark bg-white p-4 shadow-lg dark:border-white-darker dark:bg-dark-light">
+                  History
+                </div> */}
               </div>
             </div>
           </div>

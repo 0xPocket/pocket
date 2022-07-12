@@ -1,11 +1,12 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { CovalentReturn } from '@lib/types/interfaces';
+import { CovalentReturn, UserChild } from '@lib/types/interfaces';
 import axios from 'axios';
 import { useQuery } from 'react-query';
 import { toast } from 'react-toastify';
 import TokenTable from './TokenTable';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { UserChild } from '.prisma/client';
+import { getTokenBalances } from '@alch/alchemy-sdk';
+import { useAlchemy } from '../../../contexts/alchemy';
 
 type TokenContentProps = {
   child: UserChild;
@@ -24,9 +25,11 @@ const fetchUsers = () => {
 
 function TokenContent({ child }: TokenContentProps) {
   console.log(child);
-  const { isLoading, data: content } = useQuery<CovalentReturn>(
+  const { alchemy } = useAlchemy();
+
+  const { isLoading, data: content } = useQuery(
     ['child-token-content', child.id],
-    fetchUsers,
+    () => getTokenBalances(alchemy, child.web3Account.address),
     {
       enabled: !!child,
       onError: () => toast.error("Could not retrieve user's token"),
@@ -35,11 +38,11 @@ function TokenContent({ child }: TokenContentProps) {
 
   return (
     <div>
-      {!isLoading && content?.items ? (
+      {/* {!isLoading && content?.items ? (
         <TokenTable tokenList={content.items} />
       ) : (
         <FontAwesomeIcon icon={faSpinner} spin />
-      )}
+      )} */}
     </div>
   );
 }
