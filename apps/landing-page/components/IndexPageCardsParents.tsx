@@ -15,13 +15,17 @@ function IndexPageCardsParents() {
   return (
     <div className="min-h-96  z-10">
       <Waypoint onEnter={() => setShow(true)} />
+
       <div className="mb-8 bg-gradient-blue-text bg-clip-text text-center text-6xl font-bold text-transparent  sm:text-left xl:hidden">
         <FormattedMessage id="parentcard.title" />
       </div>
       <div className="relative grid grid-cols-4 gap-8">
-        <div className=" hidden items-center justify-center bg-gradient-blue-text bg-clip-text  text-6xl font-bold text-transparent xl:col-span-1 xl:flex">
-          <FormattedMessage id="parentcard.title" />
+        <div className="hidden items-center justify-center xl:flex">
+          <h2 className="col-span-1 bg-gradient-blue-text bg-clip-text text-6xl font-bold text-transparent">
+            <FormattedMessage id="parentcard.title" />
+          </h2>
         </div>
+
         {show && (
           <IndexCardAnimation>
             <IndexCard

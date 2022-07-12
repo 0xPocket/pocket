@@ -24,9 +24,7 @@ const SimpleSection: React.FC = () => {
         <div className="mt-4 text-xl">
           <FormattedMessage id="simple.section.content" />
         </div>
-        <div className="self-center lg:self-auto">
-          <CallToAction />
-        </div>
+        <CallToAction />
       </div>
     </section>
   );

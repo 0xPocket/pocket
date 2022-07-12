@@ -7,7 +7,7 @@ function BackedBySection({}: BackedBySectionProps) {
   return (
     <div className=" rounded-xl bg-dark-lightest py-12 px-4 dark:bg-transparent">
       <div className="container mx-auto">
-        <div className="flex flex-col items-center justify-center gap-24 lg:flex-row">
+        <div className="flex flex-col items-center justify-center space-y-24 lg:flex-row lg:space-x-24 lg:space-y-0">
           <h2 className="text-bright">
             <FormattedMessage id="backedby.title" />
           </h2>
