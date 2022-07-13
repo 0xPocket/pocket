@@ -47,6 +47,16 @@ const config: HardhatUserConfig = {
           : [],
       chainId: 137,
     },
+    mumbai: {
+      url:
+        'https://polygon-mumbai.g.alchemy.com/v2/' +
+        process.env.NEXT_PUBLIC_KEY_ALCHEMY_POLYGON,
+      accounts:
+        process.env.PRIVATE_KEY_POLYGON !== undefined
+          ? [process.env.PRIVATE_KEY_POLYGON]
+          : [],
+      chainId: 137,
+    },
   },
   //   gasReporter: {
   //     enabled: process.env.REPORT_GAS !== undefined,
