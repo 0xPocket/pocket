@@ -19,7 +19,7 @@ describe('Testing addr changement', function () {
   let PocketFaucet_factory: PocketFaucet__factory, pocketFaucet: PocketFaucet;
   let provider: providers.JsonRpcProvider;
   let parent1Wallet: Wallet;
-  const tokenAddr = constants.TOKEN_POLY.JEUR;
+  const tokenAddr = constants.TOKEN_POLY.USDC;
 
   before(async function () {
     provider = new providers.JsonRpcProvider('http://localhost:8545');
@@ -67,7 +67,7 @@ describe('Testing addr changement', function () {
       tokenAddr,
       parent1Wallet,
       '100',
-      constants.WHALES_POLY.JEUR
+      constants.WHALES_POLY.USDC
     );
     await setAllowance(
       tokenAddr,
@@ -76,7 +76,7 @@ describe('Testing addr changement', function () {
       toSend.toString()
     );
     await parent1.addFunds(toSend, child2.address);
-    await pocketFaucet.connect(child2).claim();
+    await pocketFaucet.connect(child2).claim({ gasLimit: 3000000 });
     assert(
       tokenBefore.lt(
         await getERC20Balance(tokenAddr, child2.address, provider)
