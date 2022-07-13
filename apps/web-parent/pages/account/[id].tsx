@@ -55,7 +55,7 @@ function Account({
         {isLoading ? (
           <>Loading</>
         ) : child ? (
-          <div>
+          <div className="space-y-20">
             <div className="mb-8 flex justify-between">
               <div>
                 <h1 className="mb-4">{child?.firstName}</h1>
@@ -80,14 +80,13 @@ function Account({
               <AddfundsForm child={child} />
               <ChildSettingsForm child={child} config={childConfig} />
             </div>
-            <div>
-              <div className="grid grid-cols-2 gap-8">
-                <NftContent child={child} />
-                <TokenContent child={child} />
-                {/* <div className="border-opacity- relative flex flex-col overflow-hidden rounded-lg border border-dark bg-white p-4 shadow-lg dark:border-white-darker dark:bg-dark-light">
+
+            <div className="grid grid-cols-2 gap-8">
+              <NftContent child={child} />
+              <TokenContent child={child} />
+              {/* <div className="border-opacity- relative flex flex-col overflow-hidden rounded-lg border border-dark bg-white p-4 shadow-lg dark:border-white-darker dark:bg-dark-light">
                   History
                 </div> */}
-              </div>
             </div>
           </div>
         ) : (

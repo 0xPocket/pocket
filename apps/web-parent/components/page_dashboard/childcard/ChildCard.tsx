@@ -28,7 +28,7 @@ function ChildCard({ child }: ChildCardProps) {
   return (
     <>
       <Link href={`/account/${child.id}`}>
-        <div className="relative flex aspect-square flex-col cursor-pointer justify-end overflow-hidden rounded-lg border border-dark border-opacity- bg-white p-4 shadow-lg dark:border-white-darker dark:bg-dark-light">
+        <div className="relative flex aspect-square cursor-pointer flex-col justify-end overflow-hidden rounded-lg border border-dark border-opacity-10 bg-white p-4 shadow-lg dark:border-white-darker dark:bg-dark-light">
           <h2>
             {child?.firstName}{' '}
             {child && <FontAwesomeIcon icon={faCheckCircle} />}
