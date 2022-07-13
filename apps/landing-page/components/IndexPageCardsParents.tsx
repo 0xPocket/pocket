@@ -15,7 +15,6 @@ function IndexPageCardsParents() {
   return (
     <div className="min-h-96  z-10">
       <Waypoint onEnter={() => setShow(true)} />
-
       <div className="mb-8 bg-gradient-blue-text bg-clip-text text-center text-6xl font-bold text-transparent  sm:text-left xl:hidden">
         <FormattedMessage id="parentcard.title" />
       </div>
@@ -25,7 +24,6 @@ function IndexPageCardsParents() {
             <FormattedMessage id="parentcard.title" />
           </h2>
         </div>
-
         {show && (
           <IndexCardAnimation>
             <IndexCard

@@ -9,9 +9,9 @@ function Header({}: HeaderProps) {
 
   return (
     <header className="absolute left-0 right-0 z-10 flex px-4 md:px-0">
-      <div className="flex h-28 w-full items-center justify-between">
+      <div className="my-4 flex w-full items-center justify-between md:my-8">
         <Link href="/">
-          <a className="text-5xl font-bold">Pocket.</a>
+          <a className=" text-4xl font-bold md:text-5xl">Pocket.</a>
         </Link>
         <div className="flex items-center justify-center space-x-8 text-2xl">
           <div>
@@ -25,7 +25,7 @@ function Header({}: HeaderProps) {
               </Link>
             )}
           </div>
-          <ThemeToggler />
+          <ThemeToggler className="h-6 w-6 md:h-8 md:w-8" />
         </div>
       </div>
     </header>

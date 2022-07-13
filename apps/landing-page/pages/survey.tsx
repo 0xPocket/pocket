@@ -6,7 +6,6 @@ import Question from '../components/form/Question';
 import Introduction from '../components/form/Introduction';
 import Conclusion from '../components/form/Conclusion';
 import AnimationLayer from '../components/form/AnimationLayer';
-import Header from '../components/Header';
 import QuestionText from '../components/form/QuestionText';
 import MainContainer from '../components/containers/MainContainer';
 import { useMutation } from 'react-query';
@@ -120,8 +119,6 @@ function Index() {
 
   return (
     <MainContainer>
-      <Header />
-
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="relative h-screen overflow-hidden"
