@@ -1,5 +1,6 @@
 import { SectionContainer } from '@lib/ui';
 import ChildrenAccountPanel from '../../components/page_dashboard/ChildrenAccountPanel';
+import Ramp from '../../components/ramp/Ramp';
 import MainWrapper from '../../components/wrappers/MainWrapper';
 
 type IndexProps = {};
@@ -15,6 +16,7 @@ function Index({}: IndexProps) {
           <div className="grid grid-cols-1 gap-8">
             <ChildrenAccountPanel />
           </div>
+          <Ramp />
         </div>
       </SectionContainer>
     </MainWrapper>
