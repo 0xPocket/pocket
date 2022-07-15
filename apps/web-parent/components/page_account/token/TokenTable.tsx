@@ -1,3 +1,5 @@
+import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CovalentItem } from '@lib/types/interfaces';
 import {
   ColumnDef,
@@ -75,26 +77,25 @@ function TokenTable({ tokenList }: TokenTableProps) {
     <table className="w-full bg-dark-light">
       <thead>
         {table.getHeaderGroups().map((headerGroup) => (
-          <tr key={headerGroup.id} className="bg-dark">
+          <tr key={headerGroup.id}>
             {headerGroup.headers.map((header) => {
               return (
                 <th key={header.id} colSpan={header.colSpan}>
                   {header.isPlaceholder ? null : (
                     <div
-                      {...{
-                        className: header.column.getCanSort()
-                          ? 'cursor-pointer select-none'
-                          : '',
-                        onClick: header.column.getToggleSortingHandler(),
-                      }}
+                      className={`${
+                        header.column.getCanSort() &&
+                        'cursor-pointer select-none'
+                      } flex items-center gap-2 text-left`}
+                      onClick={header.column.getToggleSortingHandler()}
                     >
                       {flexRender(
                         header.column.columnDef.header,
                         header.getContext(),
                       )}
                       {{
-                        asc: ' 🔼',
-                        desc: ' 🔽',
+                        asc: <FontAwesomeIcon icon={faArrowUp} />,
+                        desc: <FontAwesomeIcon icon={faArrowDown} />,
                       }[header.column.getIsSorted() as string] ?? null}
                     </div>
                   )}

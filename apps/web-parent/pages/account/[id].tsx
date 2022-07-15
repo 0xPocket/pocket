@@ -7,9 +7,9 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import ChildSettingsForm from '../../components/forms/ChildSettingsForm';
 import AddfundsForm from '../../components/forms/AddfundsForm';
 import { useSmartContract } from '../../contexts/contract';
-import { ethers } from 'ethers';
 import TokenContent from '../../components/page_account/token/TokenContent';
 import NftContent from '../../components/page_account/nft/NftContent';
+import AccountCard from '../../components/page_account/card/AccountCard';
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.query.id;
@@ -49,6 +49,11 @@ function Account({
     },
   );
 
+  /**
+   * TODO: transaction history take the place of token balance
+   * TODO: token balance go on its own row, with a pie chart and table
+   */
+
   return (
     <MainWrapper authProtected>
       <SectionContainer>
@@ -56,42 +61,22 @@ function Account({
           <>Loading</>
         ) : child ? (
           <div className="space-y-20">
-            <div className="mb-8 flex justify-between">
-              <div>
-                <h1 className="mb-4">{child?.firstName}</h1>
-                <h3>{child.email}</h3>
-                <p>Status: {child.status}</p>
-              </div>
-              <div className="flex max-w-md flex-col items-end rounded-md bg-dark-light p-4">
-                <span className="max-w-xs rounded-md bg-bright px-2 text-sm text-dark-light">
-                  {child.web3Account?.address}
-                </span>
-                <p>Balance</p>
-                <span className=" text-4xl">
-                  {childConfig?.[1]
-                    ? ethers.utils.formatUnits(childConfig?.[1], 6).toString()
-                    : 0}
-                  $
-                </span>
-                <span>usdc</span>
+            <div className="grid grid-cols-2 gap-8">
+              <AccountCard child={child} config={childConfig} />
+              <div className="flex flex-col justify-center gap-4">
+                <AddfundsForm child={child} />
+                <ChildSettingsForm child={child} config={childConfig} />
               </div>
             </div>
-            <div className="flex justify-center gap-4">
-              <AddfundsForm child={child} />
-              <ChildSettingsForm child={child} config={childConfig} />
-            </div>
-
             <div className="grid grid-cols-2 gap-8">
               <NftContent child={child} />
               <TokenContent child={child} />
-              {/* <div className="border-opacity- relative flex flex-col overflow-hidden rounded-lg border border-dark bg-white p-4 shadow-lg dark:border-white-darker dark:bg-dark-light">
-                  History
-                </div> */}
             </div>
           </div>
         ) : (
           <div>User not found</div>
         )}
+        <div className="absolute right-[-700px] bottom-[-200px] -z-50 h-[1080px] w-[1920px] bg-dark-radial-herosection dark:opacity-10"></div>
       </SectionContainer>
     </MainWrapper>
   );
