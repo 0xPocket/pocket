@@ -70,8 +70,9 @@ function Account({
             </div>
             <div className="grid grid-cols-2 gap-8">
               <NftContent child={child} />
-              <TokenContent child={child} />
+              <div>History</div>
             </div>
+            <TokenContent child={child} />
           </div>
         ) : (
           <div>User not found</div>

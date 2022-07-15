@@ -5,6 +5,7 @@ import { useQuery } from 'react-query';
 import { toast } from 'react-toastify';
 import TokenTable from './TokenTable';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import PieChartComp from './PieChart';
 
 type TokenContentProps = {
   child: UserChild;
@@ -23,7 +24,7 @@ const fetchUsers = (address: string) => {
 function TokenContent({ child }: TokenContentProps) {
   console.log(child);
 
-  const { isLoading, data: content } = useQuery(
+  const { isLoading, data } = useQuery(
     ['child-token-content', child.id],
     () => fetchUsers(child.web3Account.address),
     {
@@ -35,11 +36,22 @@ function TokenContent({ child }: TokenContentProps) {
   return (
     <div className="space-y-8">
       <h2>Token Balance</h2>
-      {!isLoading && content?.items ? (
-        <TokenTable tokenList={content.items} />
-      ) : (
-        <FontAwesomeIcon icon={faSpinner} spin />
-      )}
+      <div className="grid grid-cols-12 ">
+        <div className="col-span-4 aspect-square">
+          {!isLoading && data?.items ? (
+            <PieChartComp tokenList={data.items} />
+          ) : (
+            <FontAwesomeIcon icon={faSpinner} spin />
+          )}
+        </div>
+        <div className="col-span-8">
+          {!isLoading && data?.items ? (
+            <TokenTable tokenList={data.items} />
+          ) : (
+            <FontAwesomeIcon icon={faSpinner} spin />
+          )}
+        </div>
+      </div>
     </div>
   );
 }
