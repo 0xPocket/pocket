@@ -10,32 +10,33 @@ function HeroSection({}: HeroSectionProps) {
         <div className="relative -z-10 col-span-10 mb-4 w-full md:h-auto xl:col-span-6 xl:mb-0 xl:hidden">
           <Image
             src="/assets/illu.svg"
-            alt="illu"
+            alt="illustration pocket"
             style={{ objectFit: 'contain' }}
+            priority
           />
         </div>
-        <div className="col-span-10 flex flex-col justify-center gap-4 xl:col-span-4">
-          <div className="max-w-fit text-[38px] font-bold leading-[40px] text-transparent md:text-[65px] md:leading-[80px]">
-            <span className="block bg-gradient-blue-text bg-clip-text">
+        <div className="col-span-10 flex flex-col justify-center space-y-4 xl:col-span-4 2xl:pr-2">
+          <div>
+            <h1 className="block max-w-fit bg-gradient-blue-text bg-clip-text text-[38px] font-bold leading-[40px] text-transparent  md:text-[65px] md:leading-[80px]  lg:text-[65px] lg:leading-[80px]">
               <FormattedMessage id="hero.title.top" />
-            </span>
-            <span className="block bg-gradient-pink-text bg-clip-text ">
+            </h1>
+            <h2 className="block max-w-fit bg-gradient-pink-text bg-clip-text text-[38px] font-bold leading-[40px] text-transparent  md:text-[65px] md:leading-[80px]  lg:text-[65px] lg:leading-[80px]">
               <FormattedMessage id="hero.title.bottom" />
-            </span>
+            </h2>
           </div>
           <div>
-            <div className="sm:text-2xl sm:leading-relaxed">
+            <h3 className="sm:text-2xl sm:leading-relaxed">
               <FormattedMessage id="hero.subtitle.top" />
-            </div>
-            <div className="sm:text-2xl sm:leading-relaxed">
+            </h3>
+            <h3 className="sm:text-2xl sm:leading-relaxed">
               <FormattedMessage id="hero.subtitle.bottom" />
-            </div>
+            </h3>
           </div>
 
           <CallToAction />
         </div>
         <div className="relative -z-10 col-span-10 hidden w-full items-center justify-center xl:col-span-6 xl:flex">
-          <Image src="/assets/illu.svg" alt="illu" />
+          <Image src="/assets/illu.svg" alt="illustration pocket" priority />
         </div>
       </div>
       <div className="absolute bottom-[-100px] right-0 -z-50 h-[800px] w-[1800px] bg-light-radial-herosection dark:opacity-10"></div>
