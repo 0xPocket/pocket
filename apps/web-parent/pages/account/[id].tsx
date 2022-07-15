@@ -10,6 +10,7 @@ import { useSmartContract } from '../../contexts/contract';
 import TokenContent from '../../components/page_account/token/TokenContent';
 import NftContent from '../../components/page_account/nft/NftContent';
 import AccountCard from '../../components/page_account/card/AccountCard';
+import TransactionContent from '../../components/page_account/transaction/TransactionContent';
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.query.id;
@@ -70,7 +71,7 @@ function Account({
             </div>
             <div className="grid grid-cols-2 gap-8">
               <NftContent child={child} />
-              <h2>Transaction history</h2>
+              <TransactionContent />
             </div>
             <TokenContent child={child} />
           </div>

@@ -72,6 +72,7 @@ function PieChartComp({ tokenList }: PieChartCompProps) {
           isAnimationActive={false}
           fill="#8884d8"
           dataKey="value"
+          innerRadius="50%"
         >
           {chartData.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
