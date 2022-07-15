@@ -57,8 +57,8 @@ type HeaderProps = {
 
 export function Header({ children }: HeaderProps) {
   return (
-    <header className="flex border-b border-dark border-opacity-10 bg-bright dark:border-bright dark:border-opacity-10 dark:bg-dark">
-      <div className="container mx-auto flex h-28 w-full items-center justify-between">
+    <header className="flex">
+      <div className="mx-8 flex h-28 w-full items-center justify-between">
         {children}
       </div>
     </header>
