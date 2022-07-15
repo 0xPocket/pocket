@@ -10,8 +10,9 @@ function HeroSection({}: HeroSectionProps) {
         <div className="relative -z-10 col-span-10 mb-4 w-full md:h-auto xl:col-span-6 xl:mb-0 xl:hidden">
           <Image
             src="/assets/illu.svg"
-            alt="illu"
+            alt="illustration pocket"
             style={{ objectFit: 'contain' }}
+            priority
           />
         </div>
         <div className="col-span-10 flex flex-col justify-center space-y-4 xl:col-span-4 2xl:pr-2">
@@ -35,7 +36,7 @@ function HeroSection({}: HeroSectionProps) {
           <CallToAction />
         </div>
         <div className="relative -z-10 col-span-10 hidden w-full items-center justify-center xl:col-span-6 xl:flex">
-          <Image src="/assets/illu.svg" alt="illu" />
+          <Image src="/assets/illu.svg" alt="illustration pocket" priority />
         </div>
       </div>
       <div className="absolute bottom-[-100px] right-0 -z-50 h-[800px] w-[1800px] bg-light-radial-herosection dark:opacity-10"></div>
