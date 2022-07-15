@@ -6,7 +6,7 @@ type PieChartCompProps = {
 };
 
 function formatData(tokenList: CovalentItem[]) {
-  const data: any[] = [];
+  const data: {}[] = [];
 
   tokenList.forEach(
     (token) =>
@@ -59,7 +59,6 @@ const renderCustomizedLabel = ({
 
 function PieChartComp({ tokenList }: PieChartCompProps) {
   const chartData = formatData(tokenList);
-  console.log(chartData);
 
   return (
     <ResponsiveContainer width="100%" height="100%">

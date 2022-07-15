@@ -70,7 +70,7 @@ function Account({
             </div>
             <div className="grid grid-cols-2 gap-8">
               <NftContent child={child} />
-              <div>History</div>
+              <h2>Transaction history</h2>
             </div>
             <TokenContent child={child} />
           </div>
