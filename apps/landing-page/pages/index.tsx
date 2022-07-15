@@ -14,7 +14,7 @@ function Index({}: IndexProps) {
     <>
       <MainContainer>
         <HeroSection />
-        <div className="mt-2 space-y-28 py-32  md:gap-60 md:space-y-40">
+        <div className="mt-2 space-y-28 py-32 md:gap-60 md:space-y-40 xl:space-y-72">
           <div className="space-y-32">
             <IndexPageCardsParents />
             <IndexPageCardsChildren />

@@ -19,7 +19,7 @@ export default function Document() {
           href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
         />
       </Head>
-      <body className=" bg-bright-bg text-dark-lightest dark:bg-dark dark:text-white">
+      <body className="bg-bright-bg text-dark-lightest dark:bg-dark dark:text-white">
         <Main />
         <NextScript />
       </body>

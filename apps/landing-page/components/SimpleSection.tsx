@@ -14,15 +14,17 @@ const SimpleSection: React.FC = () => {
           alt="pocket website"
         />
       </div>
-      <div className="col-span-2 flex flex-col justify-center text-center md:text-left lg:col-span-1">
-        <h1 className="bg-gradient-blue-text bg-clip-text  text-6xl font-bold leading-[75px] text-transparent">
-          <FormattedMessage id="simple.section.title" />
-        </h1>
-        <h1 className="bg-gradient-pink-text bg-clip-text  text-3xl font-bold text-transparent md:text-5xl md:leading-[1.5]">
-          <FormattedMessage id="simple.section.subtitle" />
-        </h1>
-        <div className="mt-4 text-xl">
-          <FormattedMessage id="simple.section.content" />
+      <div className="col-span-2 flex flex-col justify-center space-y-8 text-center md:text-left lg:col-span-1">
+        <div>
+          <h2 className="bg-gradient-blue-text bg-clip-text  text-6xl font-bold leading-[75px] text-transparent">
+            <FormattedMessage id="simple.section.title" />
+          </h2>
+          <h3 className="bg-gradient-pink-text bg-clip-text  text-3xl font-bold text-transparent md:text-5xl md:leading-[1.5]">
+            <FormattedMessage id="simple.section.subtitle" />
+          </h3>
+          <div className="mt-4 text-xl">
+            <FormattedMessage id="simple.section.content" />
+          </div>
         </div>
         <CallToAction />
       </div>
