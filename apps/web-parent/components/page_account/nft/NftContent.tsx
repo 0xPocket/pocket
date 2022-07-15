@@ -26,8 +26,8 @@ function NftContent({ child }: NftContentProps) {
       <h2>Nft Library</h2>
       {!isLoading && content && (
         <div className="grid grid-cols-12 gap-4">
-          {content.ownedNfts.map((nft) => (
-            <NftCard nft={nft} />
+          {content.ownedNfts.map((nft, index) => (
+            <NftCard nft={nft} key={index} />
           ))}
         </div>
       )}
