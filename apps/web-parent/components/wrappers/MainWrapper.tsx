@@ -22,12 +22,10 @@ function MainWrapper({
   }
 
   return (
-    <AuthGuard>
-      <div className="max-w-screen min-h-screen overflow-hidden">
-        {!noHeader && <Header />}
-        {children}
-      </div>
-    </AuthGuard>
+    <div className="max-w-screen min-h-screen overflow-hidden">
+      {!noHeader && <Header />}
+      <AuthGuard>{children}</AuthGuard>
+    </div>
   );
 }
 
