@@ -17,6 +17,7 @@ function NftContent({ child }: NftContentProps) {
     () => getNftsForOwner(alchemy, child.web3Account.address),
     {
       enabled: !!child,
+      staleTime: 60 * 1000,
       onError: () => toast.error("Could not retrieve user's token"),
     },
   );

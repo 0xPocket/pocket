@@ -1,7 +1,7 @@
 import { UserChild } from '@lib/types/interfaces';
 import { useQuery } from 'react-query';
 import { useAxios } from '../../hooks/axios.hook';
-import ChildCard from './childcard/ChildCard';
+import ChildCard from '../card/ChildCard';
 import { useRouter } from 'next/router';
 import { Button } from '@lib/ui';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -34,11 +34,13 @@ function ChildrenAccountPanel({}: ChildrenAccountPanelProps) {
           <p>Add a child</p>
         </Button>
       </div>
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-4">
         {isLoading ? (
           <div>Loading...</div>
         ) : (
-          data?.map((child) => <ChildCard key={child.id} child={child} />)
+          data?.map((child) => (
+            <ChildCard key={child.id} child={child} asLink />
+          ))
         )}
       </div>
     </div>

@@ -22,13 +22,12 @@ const fetchUsers = (address: string) => {
 };
 
 function TokenContent({ child }: TokenContentProps) {
-  console.log(child);
-
   const { isLoading, data } = useQuery(
     ['child-token-content', child.id],
     () => fetchUsers(child.web3Account.address),
     {
       enabled: !!child,
+      staleTime: 60 * 1000,
       onError: () => toast.error("Could not retrieve user's token"),
     },
   );

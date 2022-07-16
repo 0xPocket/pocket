@@ -15,4 +15,8 @@
   h2 {
     @apply font-raleway text-3xl font-bold;
   }
+
+	.container-classic {
+		@apply border border-dark border-opacity-10 shadow-lg dark:border-white-darker dark:bg-dark-light;
+	}
 }

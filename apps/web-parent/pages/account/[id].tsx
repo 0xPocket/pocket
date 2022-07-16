@@ -4,13 +4,7 @@ import { useAxios } from '../../hooks/axios.hook';
 import MainWrapper from '../../components/wrappers/MainWrapper';
 import { SectionContainer } from '@lib/ui';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
-import ChildSettingsForm from '../../components/forms/ChildSettingsForm';
-import AddfundsForm from '../../components/forms/AddfundsForm';
-import { useSmartContract } from '../../contexts/contract';
-import TokenContent from '../../components/page_account/token/TokenContent';
-import NftContent from '../../components/page_account/nft/NftContent';
-import AccountCard from '../../components/page_account/card/AccountCard';
-import TransactionContent from '../../components/page_account/transaction/TransactionContent';
+import AccountDashboard from '../../components/page_account/AccountDashboard';
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.query.id;
@@ -26,7 +20,6 @@ function Account({
   id,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const axios = useAxios();
-  const { contract } = useSmartContract();
 
   const { isLoading, data: child } = useQuery<UserChild>(
     ['child', id],
@@ -42,39 +35,13 @@ function Account({
     },
   );
 
-  const { data: childConfig } = useQuery(
-    'config',
-    async () => await contract?.childToConfig(child!.web3Account.address),
-    {
-      enabled: !!child,
-    },
-  );
-
-  /**
-   * TODO: transaction history take the place of token balance
-   * TODO: token balance go on its own row, with a pie chart and table
-   */
-
   return (
     <MainWrapper authProtected>
       <SectionContainer>
         {isLoading ? (
           <>Loading</>
         ) : child ? (
-          <div className="space-y-20">
-            <div className="grid grid-cols-2 gap-8">
-              <AccountCard child={child} config={childConfig} />
-              <div className="flex flex-col justify-center gap-4">
-                <AddfundsForm child={child} />
-                <ChildSettingsForm child={child} config={childConfig} />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-8">
-              <NftContent child={child} />
-              <TransactionContent />
-            </div>
-            <TokenContent child={child} />
-          </div>
+          <AccountDashboard child={child} />
         ) : (
           <div>User not found</div>
         )}
