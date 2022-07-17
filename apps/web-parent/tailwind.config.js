@@ -26,11 +26,14 @@ module.exports = {
       bright: {
         bg: 'rgb(237,249,254)',
         DEFAULT: '#fff',
-        dark: '#f9fcfe',
-        darkest: '#d1dee9',
+        dark: '#f8ffff',
+        darkest: '#b5d8f7',
       },
       danger: '#FF0000',
-			success: '#00FF00',
+			success: {
+				DEFAULT :'#3deb57',
+				dark:'#00be26'
+			},
       black: '#000',
       white: {
         DEFAULT: '#fff',
