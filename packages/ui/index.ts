@@ -10,3 +10,4 @@ export {
   DialogFullWrapper,
   DialogPopupWrapper,
 } from "./src/Wrappers/DialogsWrapper";
+export * from './src/Background/BackgoundSplit'
