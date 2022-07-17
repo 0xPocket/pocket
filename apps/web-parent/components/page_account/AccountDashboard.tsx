@@ -9,12 +9,8 @@ type AccountDashboardProps = { child: UserChild };
 function AccountDashboard({ child }: AccountDashboardProps) {
   return (
     <div className="space-y-20">
-      <div className="grid grid-cols-2 gap-8">
-        <ChildCard child={child} />
-        <div className="flex flex-col justify-center gap-4">
-          {/* <AddfundsForm child={child} />
-          <ChildSettingsForm child={child} config={childConfig} /> */}
-        </div>
+      <div className="grid grid-cols-6 gap-8">
+        <ChildCard child={child} className="col-span-3" />
       </div>
       <div className="grid grid-cols-2 gap-8">
         <NftContent child={child} />

@@ -10,14 +10,18 @@ function TransactionContent({}: TransactionContentProps) {
         <Tab.List className="space-x-8">
           <Tab
             className={({ selected }) =>
-              selected ? 'text-white underline' : 'text-white-darker'
+              selected
+                ? 'text-dark underline dark:text-white'
+                : 'text-white-darker'
             }
           >
             activity
           </Tab>
           <Tab
             className={({ selected }) =>
-              selected ? 'text-white underline' : 'text-white-darker'
+              selected
+                ? 'text-dark underline dark:text-white'
+                : 'text-white-darker'
             }
           >
             top-ups

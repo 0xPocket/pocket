@@ -1,10 +1,13 @@
 import { UserChild } from '@lib/types/interfaces';
 import { useQuery } from 'react-query';
-import { useAxios } from '../../hooks/axios.hook';
-import MainWrapper from '../../components/wrappers/MainWrapper';
+import { useAxios } from '../../../hooks/axios.hook';
+import MainWrapper from '../../../components/wrappers/MainWrapper';
 import { SectionContainer } from '@lib/ui';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
-import AccountDashboard from '../../components/page_account/AccountDashboard';
+import AccountDashboard from '../../../components/page_account/AccountDashboard';
+import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.query.id;
@@ -38,6 +41,14 @@ function Account({
   return (
     <MainWrapper authProtected>
       <SectionContainer>
+        <div className="mb-12 flex items-center space-x-4">
+          <FontAwesomeIcon icon={faAngleRight} />
+          <Link href="/dashboard">
+            <a>dashboard</a>
+          </Link>
+          <p>{`>`}</p>
+          <p>{child?.firstName}</p>
+        </div>
         {isLoading ? (
           <>Loading</>
         ) : child ? (
@@ -45,7 +56,6 @@ function Account({
         ) : (
           <div>User not found</div>
         )}
-        <div className="absolute right-[-700px] bottom-[-200px] -z-50 h-[1080px] w-[1920px] bg-dark-radial-herosection dark:opacity-10"></div>
       </SectionContainer>
     </MainWrapper>
   );

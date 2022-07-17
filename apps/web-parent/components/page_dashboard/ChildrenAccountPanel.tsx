@@ -23,9 +23,9 @@ function ChildrenAccountPanel({}: ChildrenAccountPanelProps) {
   );
 
   return (
-    <div>
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="">My children</h2>
+    <div className="flex flex-col space-y-12">
+      <div className="flex items-center justify-between">
+        <h1>My children</h1>
         <Button
           action={() => router.push('/dashboard/add-account/')}
           className="space-x-2"
@@ -39,7 +39,7 @@ function ChildrenAccountPanel({}: ChildrenAccountPanelProps) {
           <div>Loading...</div>
         ) : (
           data?.map((child) => (
-            <ChildCard key={child.id} child={child} asLink />
+            <ChildCard key={child.id} child={child} hasLink />
           ))
         )}
       </div>
