@@ -3,35 +3,38 @@ export type WebhookType =
   | 'DROPPED_TRANSACTION'
   | 'ADDRESS_ACTIVITY';
 
-export interface AlchemyWebhookCommon {
+export interface AlchemyWebhook {
   webhookId: string;
   id: string;
   createdAt: Date;
   type: WebhookType;
-  event: object;
+  event: {
+    network: 'MATIC_MAINNET' | 'MATIC_MUMBAI' | 'ETH_MAINNET';
+    activity: unknown;
+  };
 }
 
-export interface AddressActivityEvent {
-  network: 'MATIC_MAINNET' | 'ETH_MAINNET';
-  activity: {
-    fromAddress: string;
-    toAddress?: string;
-    blockNum: string;
-    hash: string;
-    category: 'external' | 'internal' | 'token';
-    value: number;
-    asset?: 'ETH' | 'MATIC';
-    erc721TokenId?: string;
-    rawContract?: {
-      rawValue?: string;
-      address?: string;
-      decimal?: string;
-    };
-    log: unknown;
-  }[];
+export interface AddressActivityPayload {
+  fromAddress: string;
+  toAddress?: string;
+  blockNum: string;
+  hash: string;
+  category: 'external' | 'internal' | 'token';
+  value: string;
+  asset?: 'ETH' | 'MATIC';
+  erc721TokenId?: string;
+  rawContract?: {
+    rawValue?: string;
+    address?: string;
+    decimal?: string;
+  };
+  log: unknown;
 }
 
-export interface AlchemyAddressActivity extends AlchemyWebhookCommon {
+export interface AlchemyAddressActivity extends AlchemyWebhook {
   type: 'ADDRESS_ACTIVITY';
-  event: AddressActivityEvent;
+  event: {
+    network: 'MATIC_MAINNET' | 'MATIC_MUMBAI' | 'ETH_MAINNET';
+    activity: AddressActivityPayload[];
+  };
 }
