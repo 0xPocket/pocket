@@ -49,7 +49,9 @@ describe('Deploy and tests on proxy functions', function () {
   });
 
   it('Should have set baseToken', async function () {
-    expect(await pocketFaucet.baseToken()).to.equal(constants.TOKEN_POLY.USDC);
+    expect(await pocketFaucet.baseToken()).to.equal(
+      constants.TOKEN_RINKEBY.FAKEUSDC
+    );
   });
 
   it('Should have set good admin for proxy + owner of proxyAdmin', async function () {

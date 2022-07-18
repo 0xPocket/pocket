@@ -12,7 +12,7 @@ describe('Testing add Child', function () {
   let PocketFaucet_factory: PocketFaucet__factory, pocketFaucet: PocketFaucet;
   let provider: providers.JsonRpcProvider;
   let parent1Wallet: Wallet;
-  const tokenAddr = constants.TOKEN_POLY.JEUR;
+  const tokenAddr = constants.TOKEN_RINKEBY.FAKEUSDC;
 
   before(async function () {
     provider = new providers.JsonRpcProvider('http://localhost:8545');
@@ -39,12 +39,20 @@ describe('Testing add Child', function () {
     ).to.be.revertedWith('Child address already taken');
   });
 
-  it('Should add 20 children', async function () {
-    for (let i = 0; i < 20; i++) {
-      await parent1.addStdChildAndSend(constants.RDM_ADDRESS[i], tokenAddr);
-    }
+  // it('Should add 20 children', async function () {
+  //   for (let i = 0; i < 20; i++) {
+  //     await parent1.addStdChildAndSend(constants.RDM_ADDRESS[i], tokenAddr);
+  //   }
+  //   assert(
+  //     (await parent1.getNbChildren()) === 21,
+  //     'Number of children is not good'
+  //   );
+  // });
+
+  it('Should add 1 child', async function () {
+    await parent1.addStdChildAndSend(constants.RDM_ADDRESS[1], tokenAddr);
     assert(
-      (await parent1.getNbChildren()) === 21,
+      (await parent1.getNbChildren()) === 2,
       'Number of children is not good'
     );
   });

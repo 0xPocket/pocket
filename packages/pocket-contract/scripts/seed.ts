@@ -34,10 +34,10 @@ async function main() {
   );
   // // Transfer some USDT to Elon Musk
   await setErc20Balance(
-    constants.TOKEN_POLY.FAKEUSDC,
+    constants.TOKEN_RINKEBY.FAKEUSDC,
     parentWallet,
     '3000',
-    constants.WHALES_POLY.FAKEUSDC
+    constants.WHALES_RINKEBY.FAKEUSDC
   );
 
   const childWallet = new Wallet(
@@ -46,10 +46,10 @@ async function main() {
   );
 
   await setErc20Balance(
-    constants.TOKEN_POLY.FAKEUSDC,
+    constants.TOKEN_RINKEBY.FAKEUSDC,
     childWallet,
     '12',
-    constants.WHALES_POLY.FAKEUSDC
+    constants.WHALES_RINKEBY.FAKEUSDC
   );
 
   console.log('Contract seeding complete !');

@@ -16,7 +16,7 @@ describe('Testing withdraw', function () {
   let parent1Wallet: Wallet;
   let adminWallet: Wallet;
   let adminContract: AdminContract;
-  const tokenAddr = constants.TOKEN_POLY.JEUR;
+  const tokenAddr = constants.TOKEN_RINKEBY.FAKEUSDC;
 
   before(async function () {
     provider = new providers.JsonRpcProvider('http://localhost:8545');
@@ -58,7 +58,7 @@ is missing role 0x5d8e12c39142ff96d79d04d15d1ba1269e4fe57bb9d26f43523628b34ba108
       adminWallet,
       pocketFaucet.address,
       '100',
-      constants.WHALES_POLY.JEUR
+      constants.WHALES_RINKEBY.FAKEUSDC
     );
     const balanceBefore = await getERC20Balance(
       tokenAddr,

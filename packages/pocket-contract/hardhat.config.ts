@@ -5,7 +5,7 @@ import '@nomiclabs/hardhat-ethers';
 // import '@nomiclabs/hardhat-etherscan';
 import '@nomiclabs/hardhat-waffle';
 import '@typechain/hardhat';
-// import "hardhat-gas-reporter";
+import 'hardhat-gas-reporter';
 // import "solidity-coverage";
 import '@openzeppelin/hardhat-upgrades';
 
@@ -58,10 +58,11 @@ const config: HardhatUserConfig = {
       chainId: 137,
     },
   },
-  //   gasReporter: {
-  //     enabled: process.env.REPORT_GAS !== undefined,
-  //     currency: "USD",
-  //   },
+
+  gasReporter: {
+    enabled: true,
+    // currency: 'USD',
+  },
   //   etherscan: {
   //     apiKey: process.env.ETHERSCAN_API_KEY,
   //   },

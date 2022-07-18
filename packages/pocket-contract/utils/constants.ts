@@ -57,11 +57,18 @@ export const TOKEN_POLY = {
   FAKEUSDC: '0x47DA6C0b7f3fadA850898D1e61ae546fc7B603F9',
 };
 
+export const TOKEN_RINKEBY = {
+  FAKEUSDC: '0x47da6c0b7f3fada850898d1e61ae546fc7b603f9',
+};
+
+export const WHALES_RINKEBY = {
+  FAKEUSDC: '0xe2e0256d6785d49ec7badcd1d44adbd3f6b0ab58',
+};
+
 export const WHALES_POLY = {
   USDC: '0xf977814e90da44bfa03b6295a0616a897441acec',
   USDT: '0xe7804c37c13166ff0b37f5ae0bb07a3aebb6e245',
   JEUR: '0xc4fcbb58e36e8f5c3b0e904cb20c3947af246891',
-  FAKEUSDC: '0xe2e0256d6785d49ec7badcd1d44adbd3f6b0ab58',
 };
 
 export const RDM_ADDRESS = [

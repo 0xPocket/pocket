@@ -16,7 +16,7 @@ describe('Deploy and tests on proxy functions', function () {
   let parent1Wallet: Wallet;
   let PocketFaucet_factory: PocketFaucet__factory, pocketFaucet: PocketFaucet;
   let PocketFaucetV2_factory: PocketFaucetV2__factory;
-  const tokenAddr = constants.TOKEN_POLY.USDC;
+  const tokenAddr = constants.TOKEN_RINKEBY.FAKEUSDC;
 
   before(async function () {
     provider = new providers.JsonRpcProvider('http://localhost:8545');
