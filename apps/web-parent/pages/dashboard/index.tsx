@@ -1,3 +1,5 @@
+import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { SectionContainer } from '@lib/ui';
 import ChildrenAccountPanel from '../../components/page_dashboard/ChildrenAccountPanel';
 import MainWrapper from '../../components/wrappers/MainWrapper';
@@ -8,14 +10,11 @@ function Index({}: IndexProps) {
   return (
     <MainWrapper authProtected>
       <SectionContainer>
-        <div className="absolute right-[-700px] bottom-[-200px] -z-50 h-[1080px] w-[1920px] bg-dark-radial-herosection dark:opacity-10"></div>
-        <h1>My Dashboard</h1>
-        <div className="mt-8">
-          {/* Accounts list  */}
-          <div className="grid grid-cols-1 gap-8">
-            <ChildrenAccountPanel />
-          </div>
+        <div className="mb-12 flex items-center space-x-4">
+          <FontAwesomeIcon icon={faAngleRight} />
+          <p>dashboard</p>
         </div>
+        <ChildrenAccountPanel />
       </SectionContainer>
     </MainWrapper>
   );

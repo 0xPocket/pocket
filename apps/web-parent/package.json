@@ -11,6 +11,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@alch/alchemy-sdk": "^1.0.8",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/free-brands-svg-icons": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
@@ -37,6 +38,7 @@
     "react-spring": "^9.4.5",
     "react-toastify": "^9.0.4",
     "react-waypoint": "^10.3.0",
+    "recharts": "^2.1.12",
     "wagmi": "^0.5.5"
   },
   "devDependencies": {

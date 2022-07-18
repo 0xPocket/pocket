@@ -1,4 +1,7 @@
 export interface CovalentReturn {
+	data: CovalentData
+}
+export interface CovalentData {
   address: string;
   updated_at: string;
   next_update_at: string;

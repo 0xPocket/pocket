@@ -16,7 +16,16 @@
     @apply font-raleway text-3xl font-bold;
   }
 
-  p {
-    @apply font-bitter;
-  }
+	a {
+		@apply text-primary
+	}
+
+	.container-classic {
+		@apply border border-dark border-opacity-10 shadow-lg dark:border-white-darker dark:bg-dark-light bg-bright-dark;
+	}
+
+	.success-btn {
+		@apply  bg-primary dark:bg-success-dark px-4 py-3 rounded-md text-bright flex items-center
+	}
+
 }

@@ -19,11 +19,11 @@ export function NavLink({ children, href, exact = false }: NavLinkProps) {
   );
 }
 
-type TitleProps = { children: React.ReactNode };
+type TitleProps = { children: React.ReactNode; href?: string };
 
-function Title({ children }: TitleProps) {
+function Title({ children, href }: TitleProps) {
   return (
-    <Link href="/" passHref>
+    <Link href={href ? href : "/"} passHref>
       <div className="cursor-pointer text-4xl font-bold">{children}</div>
     </Link>
   );
@@ -57,8 +57,8 @@ type HeaderProps = {
 
 export function Header({ children }: HeaderProps) {
   return (
-    <header className="flex border-b border-dark border-opacity-10 bg-bright dark:border-bright dark:border-opacity-10 dark:bg-dark">
-      <div className="container mx-auto flex h-28 w-full items-center justify-between">
+    <header className="flex">
+      <div className="mx-8 flex h-28 w-full items-center justify-between">
         {children}
       </div>
     </header>

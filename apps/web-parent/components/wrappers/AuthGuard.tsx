@@ -1,4 +1,7 @@
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAuth } from '@lib/nest-auth/next';
+import { SectionContainer } from '@lib/ui';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
@@ -19,7 +22,12 @@ function AuthGuard({ children }: AuthGuardProps) {
     }
   }, [router, status]);
 
-  if (loading) return <h1>Loading</h1>;
+  if (loading)
+    return (
+      <SectionContainer>
+        <FontAwesomeIcon icon={faSpinner} spin size="3x" />
+      </SectionContainer>
+    );
 
   return <>{children}</>;
 }
