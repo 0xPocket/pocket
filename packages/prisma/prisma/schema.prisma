@@ -21,6 +21,30 @@ model UserParent {
   account       Account?
   children      UserChild[]
   wallet        UserParentWallet?
+  Ramp          Ramp[]
+}
+
+// User Parent Ramp
+
+model Ramp {
+  id           Int        @id @default(autoincrement())
+  rampId       String     @unique
+  createdAt    DateTime   @default(now())
+  cryptoAmount String
+  cryptoAsset  String
+  fiatValue    Float
+  fiatCurrency String
+  appliedFee   Float
+  status RampStatus
+  userParent   UserParent @relation(fields: [userParentId], references: [id])
+  userParentId String
+}
+
+enum RampStatus {
+  CREATED
+  RELEASED
+  RETURNED
+  ERROR
 }
 
 model UserChild {
