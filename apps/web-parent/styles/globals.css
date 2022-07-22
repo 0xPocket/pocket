@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply font-raleway;
+    @apply font-raleway background;
   }
   html {
     scroll-behavior: smooth;
@@ -20,12 +20,25 @@
 		@apply text-primary
 	}
 
+	.background {
+		@apply bg-bright-bg text-dark-lightest dark:bg-dark dark:text-white;
+	}
+
 	.container-classic {
 		@apply border border-dark border-opacity-10 shadow-lg dark:border-white-darker dark:bg-dark-light bg-bright-dark;
 	}
 
 	.success-btn {
-		@apply  bg-primary dark:bg-success-dark px-4 py-3 rounded-md text-bright flex items-center
+		@apply  bg-primary  px-4 py-3 rounded-md text-bright flex items-center
 	}
 
+	::-webkit-scrollbar {
+		@apply background;
+		width: 12px;
+	}
+	
+	::-webkit-scrollbar-thumb {
+		@apply bg-dark-lightest dark:bg-bright;
+		@apply rounded-3xl border-4 border-solid border-bright-bg dark:border-dark ;
+	}
 }

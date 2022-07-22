@@ -9,10 +9,8 @@ export default function Document() {
           rel="stylesheet"
         />
       </Head>
-      <body className=" bg-bright-bg text-dark-lightest dark:bg-dark dark:text-white">
-        <Main />
-        <NextScript />
-      </body>
+      <Main />
+      <NextScript />
     </Html>
   );
 }
