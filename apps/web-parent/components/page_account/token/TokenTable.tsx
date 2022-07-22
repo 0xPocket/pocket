@@ -22,7 +22,7 @@ function TokenTable({ tokenList }: TokenTableProps) {
   const defaultColumns = useMemo<ColumnDef<CovalentItem>[]>(
     () => [
       {
-        header: 'Token Name',
+        header: () => 'Token Name',
         accessorKey: 'contract_name',
         cell: (data) => data.getValue(),
       },
@@ -35,12 +35,19 @@ function TokenTable({ tokenList }: TokenTableProps) {
           );
           return Math.floor(Number(bal) * 100) / 100;
         },
+        cell: (row) => (
+          <div className="text-right tracking-wider">{row.getValue()}</div>
+        ),
       },
       {
         header: 'Value',
         accessorFn: (row) => {
-          return Math.floor(Number(row.quote) * 100) / 100;
+          const roundValue = Math.floor(Number(row.quote) * 100) / 100;
+          return roundValue;
         },
+        cell: (row) => (
+          <div className="text-right tracking-wider">{row.getValue()} $</div>
+        ),
         id: 'quote',
         filterFn: (row) => {
           return row.getValue('quote') > 0.1;
@@ -74,7 +81,7 @@ function TokenTable({ tokenList }: TokenTableProps) {
   });
 
   return (
-    <table className="w-full bg-dark-light">
+    <table className="w-full">
       <thead>
         {table.getHeaderGroups().map((headerGroup) => (
           <tr key={headerGroup.id}>
@@ -86,7 +93,9 @@ function TokenTable({ tokenList }: TokenTableProps) {
                       className={`${
                         header.column.getCanSort() &&
                         'cursor-pointer select-none'
-                      } flex items-center gap-2 text-left`}
+                      } mb-2 flex items-center text-xl ${
+                        header.index !== 0 && 'justify-end'
+                      }`}
                       onClick={header.column.getToggleSortingHandler()}
                     >
                       {flexRender(
@@ -94,8 +103,15 @@ function TokenTable({ tokenList }: TokenTableProps) {
                         header.getContext(),
                       )}
                       {{
-                        asc: <FontAwesomeIcon icon={faArrowUp} />,
-                        desc: <FontAwesomeIcon icon={faArrowDown} />,
+                        asc: (
+                          <FontAwesomeIcon icon={faArrowUp} className="ml-2" />
+                        ),
+                        desc: (
+                          <FontAwesomeIcon
+                            icon={faArrowDown}
+                            className="ml-2"
+                          />
+                        ),
                       }[header.column.getIsSorted() as string] ?? null}
                     </div>
                   )}
@@ -110,10 +126,12 @@ function TokenTable({ tokenList }: TokenTableProps) {
           return (
             <tr
               key={row.id}
-              className={`${index % 2 === 1 && 'bg-dark'} font-light`}
+              className={`${
+                index % 2 === 1 && ''
+              } border-b border-dark border-opacity-10 font-light dark:border-bright-bg dark:border-opacity-10`}
             >
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
+                <td key={cell.id} className="py-2">
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
