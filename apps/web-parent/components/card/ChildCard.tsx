@@ -1,7 +1,6 @@
 import { UserChild } from '@lib/types/interfaces';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useQuery } from 'react-query';
+import { useContractRead } from 'wagmi';
 import { useSmartContract } from '../../contexts/contract';
 import AccountStatus from './AccountStatus';
 import RightTab from './RightTab';
@@ -13,18 +12,16 @@ type ChildCardProps = {
 };
 
 function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
-  const { contract } = useSmartContract();
-  const router = useRouter();
+  const { abi } = useSmartContract();
 
-  const { data: config } = useQuery(
-    ['config', child.id],
-    async () => await contract?.childToConfig(child!.web3Account.address),
-    {
-      staleTime: 60 * 1000,
-      retry: false,
-      // refetchOnWindowFocus: false,
-    },
-  );
+  const { data: config } = useContractRead({
+    addressOrName: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+    functionName: 'childToConfig',
+    contractInterface: abi,
+    args: [child.web3Account.address],
+    watch: true,
+  });
+
   return (
     <div
       className={`${className} container-classic grid min-h-[260px] grid-cols-2 rounded-lg p-8`}
@@ -44,7 +41,7 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
             <a>See on etherscan</a>
           </Link>
         ) : (
-          <Link href={`/dashboard/account/${child.id}`}>
+          <Link href={`/account/${child.id}`}>
             <a>{`Go to ${child.firstName}'s profile`}</a>
           </Link>
         )}

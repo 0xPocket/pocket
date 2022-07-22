@@ -1,24 +1,23 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import { providers } from 'ethers';
-import {
-  ERC20,
-  ERC20__factory,
-  IERC20Upgradeable,
-  PocketFaucet,
-  PocketFaucet__factory,
-} from 'pocket-contract/typechain-types';
+import { createContext, useContext, useState } from 'react';
+import PocketFaucetJson from 'pocket-contract/artifacts/contracts/PocketFaucet.sol/PocketFaucet.json';
+import { erc20ABI, useContract, useSigner, useToken } from 'wagmi';
+import { ERC20 } from 'pocket-contract/typechain-types';
 
 interface SmartContractProviderProps {
   children: React.ReactNode;
 }
 
 interface ISmartContractContext {
-  active: boolean;
-  provider: providers.JsonRpcProvider | undefined;
-  contract: PocketFaucet | undefined;
-  USDTContract: ERC20 | undefined;
-  erc20Decimals: number | undefined;
-  erc20Symbol: string | undefined;
+  erc20Data:
+    | {
+        address: string;
+        decimals: number;
+        name: string;
+        symbol: string;
+      }
+    | undefined;
+  contract: ERC20 | undefined;
+  abi: typeof PocketFaucetJson.abi;
 }
 
 export function createCtx<A extends {} | null>() {
@@ -32,52 +31,24 @@ const [SmartContractContext, SmartContractContextProvider] =
 export const SmartContractProvider = ({
   children,
 }: SmartContractProviderProps) => {
-  const [provider, setProvider] = useState<providers.JsonRpcProvider>();
-  const [contract, setContract] = useState<PocketFaucet>();
-  const [USDTContract, setUSDTContract] = useState<ERC20>();
-  const [erc20Decimals, setErc20Decimals] = useState<number>();
-  const [erc20Symbol, setErc20Symbol] = useState<string>();
+  const { data } = useToken({
+    address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+  });
+  const [abi] = useState(PocketFaucetJson.abi);
+  const { data: signer } = useSigner();
 
-  useEffect(() => {
-    const provider = new providers.JsonRpcProvider('http://localhost:8545');
-    setProvider(provider);
-  }, []);
-
-  useEffect(() => {
-    if (provider) {
-      const contract = PocketFaucet__factory.connect(
-        process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
-        provider,
-      );
-
-      setContract(contract);
-
-      const usdtContract = ERC20__factory.connect(
-        '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
-        provider,
-      );
-
-      usdtContract.decimals().then((res) => {
-        setErc20Decimals(res);
-      });
-
-      usdtContract.symbol().then((res) => {
-        setErc20Symbol(res);
-      });
-
-      setUSDTContract(usdtContract);
-    }
-  }, [provider]);
+  const contract = useContract<ERC20>({
+    addressOrName: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+    contractInterface: erc20ABI,
+    signerOrProvider: signer,
+  });
 
   return (
     <SmartContractContextProvider
       value={{
-        active: true,
-        provider,
+        erc20Data: data,
         contract,
-        USDTContract,
-        erc20Decimals,
-        erc20Symbol,
+        abi,
       }}
     >
       {children}

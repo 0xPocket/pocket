@@ -43,7 +43,7 @@ function TokenTable({ tokenList }: TokenTableProps) {
         },
         id: 'quote',
         filterFn: (row) => {
-          return row.getValue('quote') > 0.1;
+          return row.getValue<number>('quote') > 0.1;
         },
       },
     ],

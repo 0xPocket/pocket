@@ -1,61 +1,49 @@
-import { useRouter } from 'next/router';
-import { Dispatch, SetStateAction } from 'react';
-import { UseQueryResult } from 'react-query';
 import { toast } from 'react-toastify';
-import { useWallet } from '../../contexts/wallet';
 import { Button } from '@lib/ui';
+import { useAccount, useBalance } from 'wagmi';
 import { useSmartContract } from '../../contexts/contract';
 
-type MainTabPanelProps = {
-  balanceQuery: UseQueryResult<string | undefined, unknown>;
-  setSelectedIndex: Dispatch<SetStateAction<number>>;
-};
+type MainTabPanelProps = {};
 
-function MainTabPanel({ balanceQuery, setSelectedIndex }: MainTabPanelProps) {
-  const router = useRouter();
-  const { wallet } = useWallet();
-  const { erc20Symbol } = useSmartContract();
-
-  if (!wallet) {
-    return (
-      <div className="flex flex-col gap-4">
-        <Button action={() => router.push('/create-wallet')}>
-          CREATE YOUR WALLET
-        </Button>
-      </div>
-    );
-  }
+function MainTabPanel({}: MainTabPanelProps) {
+  const { address } = useAccount();
+  const { erc20Data } = useSmartContract();
+  const { data, isLoading } = useBalance({
+    addressOrName: address,
+    token: erc20Data?.address,
+    formatUnits: erc20Data?.decimals,
+    watch: true,
+  });
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between border-b pb-4">
         <h2 className="">My Wallet</h2>
-        <Button
-          action={() => {
-            navigator.clipboard.writeText(wallet.publicKey!);
-            toast.success('Address copied to clipboard !');
-          }}
-        >
-          Copy address
-        </Button>
+        {address && (
+          <Button
+            action={() => {
+              navigator.clipboard.writeText(address);
+              toast.success('Address copied to clipboard !');
+            }}
+          >
+            Copy address
+          </Button>
+        )}
       </div>
       <div className="border-b pb-4">
         <span>Available funds</span>
         <div>
-          {balanceQuery.isLoading ? (
+          {isLoading ? (
             <h2>loading...</h2>
           ) : (
             <div className="flex items-end gap-2">
-              <h2>{balanceQuery.data}</h2>
-              <span>{erc20Symbol}</span>
+              <h2>{data?.formatted}</h2>
+              <span>{data?.symbol}</span>
             </div>
           )}
         </div>
       </div>
       <Button>Top-Up</Button>
-      <Button light action={() => setSelectedIndex(1)}>
-        Settings
-      </Button>
     </div>
   );
 }

@@ -2,72 +2,65 @@ import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { UserChild } from '@lib/types/interfaces';
 import { FormErrorMessage } from '@lib/ui';
-import { BigNumber, constants, Wallet } from 'ethers';
-import { useState } from 'react';
+import { BigNumber } from 'ethers';
+import { parseUnits, Result } from 'ethers/lib/utils';
 import { useForm } from 'react-hook-form';
-import { useQueryClient } from 'react-query';
+import { erc20ABI, useAccount, useContractWrite } from 'wagmi';
 import { useSmartContract } from '../../contexts/contract';
-import Web3Modal from '../wallet/Web3Modal';
 
 type AddfundsFormProps = {
   child: UserChild;
   returnFn: () => void;
+  allowance: Result | undefined;
 };
 
 type FormValues = {
   topup: number;
 };
 
-function AddfundsForm({ child, returnFn }: AddfundsFormProps) {
+function AddFundsForm({ allowance, child, returnFn }: AddfundsFormProps) {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<FormValues>();
-  const [showModal, setShowModal] = useState(false);
-  const { USDTContract, contract: pocketContract } = useSmartContract();
-  const queryClient = useQueryClient();
+  const { address } = useAccount();
+  const { contract, abi, erc20Data } = useSmartContract();
 
-  const formValues = watch();
+  const { writeAsync: approve } = useContractWrite({
+    addressOrName: erc20Data?.address!,
+    functionName: 'approve',
+    contractInterface: erc20ABI,
+  });
 
-  const increaseAllowance = async (signer: Wallet) => {
-    const contract = USDTContract?.connect(signer);
+  const { writeAsync: addFunds } = useContractWrite({
+    addressOrName: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+    functionName: 'addFunds',
+    contractInterface: abi,
+  });
 
-    const allowance = await contract?.allowance(
-      signer.address,
-      process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
-    );
-
-    console.log('allowance :', allowance?.toString());
-
-    if (allowance?.lt(formValues.topup)) {
-      console.log('approve allowance infinite');
-      await contract?.approve(
-        process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
-        constants.MaxUint256,
-      );
+  const onSubmit = async (data: FormValues) => {
+    if (!address || !contract?.signer) {
+      return;
     }
-    console.log('sending funds ...');
-    console.log((await contract?.balanceOf(signer.address))?.toString());
-    console.log(BigNumber.from(formValues.topup).mul(1000000).toString());
-    const tx = await pocketContract
-      ?.connect(signer)
-      .addFunds(
-        BigNumber.from(formValues.topup).mul(1000000),
-        child.web3Account.address,
-      );
-    tx?.wait().then(() => {
-      console.log('invalidate query');
-      queryClient.invalidateQueries('config');
-    });
-    returnFn();
-    // console.log(tx);
-  };
 
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
-    setShowModal(true);
+    if (allowance?.lt(data.topup)) {
+      await approve({
+        args: [
+          process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+          parseUnits(data.topup.toString(), erc20Data?.decimals),
+        ],
+      });
+    }
+
+    await addFunds({
+      args: [
+        BigNumber.from(data.topup).mul(1000000),
+        child.web3Account.address,
+      ],
+    });
+
+    returnFn();
   };
 
   return (
@@ -103,14 +96,8 @@ function AddfundsForm({ child, returnFn }: AddfundsFormProps) {
           Send
         </button>
       </div>
-
-      <Web3Modal
-        callback={increaseAllowance}
-        isOpen={showModal}
-        setIsOpen={setShowModal}
-      />
     </form>
   );
 }
 
-export default AddfundsForm;
+export default AddFundsForm;

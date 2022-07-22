@@ -1,30 +1,32 @@
-import { useForm } from 'react-hook-form';
-import { useAxios } from '../../hooks/axios.hook';
 import { useMutation, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { FormInputText } from '@lib/ui';
 import { useRouter } from 'next/router';
-import { AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
 import { BackResError } from '@lib/types/interfaces';
+import { z } from 'zod';
+import { useZodForm } from '../../utils/useZodForm';
 
 type AddChildFormProps = {};
 
-type FormValues = {
-  firstName: string;
-  lastName: string;
-  email: string;
-};
+const AddChildSchema = z.object({
+  firstName: z.string(),
+  email: z.string().email(),
+});
+
+type FormValues = z.infer<typeof AddChildSchema>;
 
 function AddChildForm({}: AddChildFormProps) {
   const router = useRouter();
-  const axios = useAxios();
   const queryClient = useQueryClient();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormValues>();
+  } = useZodForm({
+    schema: AddChildSchema,
+  });
 
   const mutation = useMutation(
     (data: FormValues) =>
@@ -32,7 +34,6 @@ function AddChildForm({}: AddChildFormProps) {
     {
       onSuccess: () => {
         queryClient.invalidateQueries('children');
-        queryClient.invalidateQueries('balance');
         router.push('/dashboard');
         toast.success(`Account created !`);
       },
@@ -52,30 +53,14 @@ function AddChildForm({}: AddChildFormProps) {
         <FormInputText
           type="text"
           placeHolder="Firstname"
-          registerValues={register('firstName', {
-            required: 'This field is required',
-          })}
+          registerValues={register('firstName')}
           error={errors.firstName}
-        />
-        <FormInputText
-          placeHolder="Lastname"
-          registerValues={register('lastName', {
-            required: 'This field is required',
-          })}
-          type="text"
-          error={errors.lastName}
         />
       </div>
 
       <FormInputText
         placeHolder="john@doe.com"
-        registerValues={register('email', {
-          required: 'This field is required',
-          pattern: {
-            value: /\S+@\S+\.\S+/,
-            message: 'Entered value does not match email format',
-          },
-        })}
+        registerValues={register('email')}
         type="email"
         error={errors.email}
       />

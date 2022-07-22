@@ -1,34 +1,57 @@
-import { useAuth } from '@lib/nest-auth/next';
 import MainWrapper from '../components/wrappers/MainWrapper';
-import SocialAuth from '../components/auth/SocialAuth';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-import SignUpForm from '../components/forms/ConnectForm';
+import { useAccount, useConnect } from 'wagmi';
+import EmailSignin from '../components/auth/EmailSignin';
+import { Spinner } from '../components/common/Spinner';
+import Image from 'next/image';
 
 function SignUp() {
-  const router = useRouter();
-  const { status } = useAuth();
+  const { status } = useAccount();
+  const { connectors, connectAsync } = useConnect();
 
-  useEffect(() => {
-    console.log(status);
-    if (status === 'authenticated') {
-      router.push('/dashboard');
-    }
-  }, [router, status]);
+  if (status === 'reconnecting' || status === 'connecting') {
+    return (
+      <MainWrapper>
+        <section className="flex min-h-[85vh] items-center justify-center">
+          <Spinner />
+        </section>
+      </MainWrapper>
+    );
+  }
 
   return (
-    <MainWrapper noHeader>
-      <section className="relative grid min-h-screen grid-cols-2">
-        <div className="flex flex-col items-center justify-center gap-8">
-          <SignUpForm />
+    <MainWrapper>
+      <section className="relative grid min-h-[85vh] grid-cols-1">
+        <div className="mx-auto flex w-72 flex-col items-center justify-center gap-8">
+          <EmailSignin />
           <div className="flex w-72 items-center">
-            <div className="w-full border-b"></div>
-            <h2 className="m-4 font-bold">OR</h2>
-            <div className="w-full border-b"></div>
+            <div className="w-full border-b opacity-25"></div>
+            <h2 className="mx-2 text-lg font-bold">OR</h2>
+            <div className="w-full border-b opacity-25"></div>
           </div>
-          <SocialAuth />
+          <div className="flex gap-4">
+            {connectors
+              .filter((connector) => connector.id !== 'magic')
+              .map((connector) => (
+                <button
+                  key={connector.id}
+                  onClick={() => connectAsync({ connector })}
+                  className="container-classic relative flex w-32 items-center justify-center gap-4 p-4 transition-all dark:bg-dark-light/50 dark:hover:bg-dark-light"
+                >
+                  <div className="relative h-8 w-8">
+                    <Image
+                      src={`/assets/providers/${connector.id}.svg`}
+                      objectFit="contain"
+                      layout="fill"
+                      alt={connector.name}
+                    />
+                  </div>
+                  {/* {connector.name} */}
+                </button>
+              ))}
+          </div>
+          {/* <SocialAuth /> */}
         </div>
-        <div className="flex items-center justify-center">ILLU</div>
+        {/* <div className="flex items-center justify-center">ILLU</div> */}
       </section>
     </MainWrapper>
   );

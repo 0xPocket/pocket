@@ -14,19 +14,16 @@ datasource db {
 
 model UserParent {
   id            String            @id @default(cuid())
-  firstName     String
-  lastName      String
+  firstName     String?
+  lastName      String?
   email         String            @unique
-  emailVerified DateTime?
-  account       Account?
+  address       String
   children      UserChild[]
-  wallet        UserParentWallet?
 }
 
 model UserChild {
   id           String       @id @default(cuid())
   firstName    String
-  lastName     String
   username     String?      @unique
   email        String       @unique
   status       ChildStatus  @default(INVITED)
@@ -34,16 +31,6 @@ model UserChild {
   userParent   UserParent   @relation(fields: [userParentId], references: [id])
   userParentId String
   Activity     Activity[]
-}
-
-// Wallet
-
-model UserParentWallet {
-  id                  String     @id @default(cuid())
-  publicKey           String
-  encryptedPrivateKey String?
-  userParent          UserParent @relation(fields: [userParentId], references: [id])
-  userParentId        String     @unique
 }
 
 // Authentication Account
@@ -67,8 +54,6 @@ model Account {
   expiresAt         Int?
   tokenType         TokenType?
   scope             String?
-  user              UserParent @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId            String     @unique
 }
 
 model Activity {

@@ -1,51 +1,38 @@
-import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { UserParent } from '@lib/types/interfaces';
 import { Button, Header, ThemeToggler } from '@lib/ui';
-import { useAuth } from '@lib/nest-auth/next';
 import WalletPopover from '../wallet/WalletPopover';
-import { useQueryClient } from 'react-query';
+import { useMagic } from '../../contexts/auth';
+import { useRouter } from 'next/router';
 
 type GlobalHeaderProps = {};
 
 function GlobalHeader({}: GlobalHeaderProps) {
+  const { user, signOut } = useMagic();
   const router = useRouter();
-  const { user, status, signOut } = useAuth<UserParent>();
-  const queryClient = useQueryClient();
-
-  const handleConnect = () => {
-    router.push('/connect');
-  };
-
-  const handleLogout = () => {
-    signOut();
-    queryClient.invalidateQueries();
-  };
 
   return (
     <Header>
       <Header.BlockLeft>
-        <Header.Title href="/dashboard">Pocket.</Header.Title>
-        {/* <Header.Nav show={status === 'authenticated'}>
-          <Header.NavLink href="/dashboard">Dashboard</Header.NavLink>
-          <Header.NavLink href="#">Blog</Header.NavLink>
-          <Header.NavLink href="#">FAQ</Header.NavLink>
-        </Header.Nav> */}
+        <Header.Title href="/">Pocket.</Header.Title>
       </Header.BlockLeft>
       <Header.BlockRight>
-        {status === 'authenticated' ? (
+        {user ? (
           <>
-            <Link href="/dashboard" passHref>
+            <Link href="/" passHref>
               <div className="cursor-pointer">
-                {user?.firstName} {user?.lastName?.charAt(0)}.
+                {user.firstName
+                  ? `${user.firstName} ${user.lastName}`
+                  : user.address}
               </div>
             </Link>
             <WalletPopover />
-            <Button action={handleLogout}>Logout</Button>
+            <Button action={signOut}>Logout</Button>
           </>
         ) : (
           <>
-            <Button action={handleConnect}>Connect</Button>
+            {router.pathname !== '/connect' && (
+              <Link href="/connect">Connect</Link>
+            )}
           </>
         )}
         <ThemeToggler />

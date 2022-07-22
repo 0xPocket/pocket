@@ -1,16 +1,15 @@
 import { UserChild } from '@lib/types/interfaces';
 import { useQuery } from 'react-query';
-import { useAxios } from '../../hooks/axios.hook';
 import ChildCard from '../card/ChildCard';
 import { useRouter } from 'next/router';
 import { Button } from '@lib/ui';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 
 type ChildrenAccountPanelProps = {};
 
 function ChildrenAccountPanel({}: ChildrenAccountPanelProps) {
-  const axios = useAxios();
   const router = useRouter();
 
   const { isLoading, data } = useQuery(
@@ -27,7 +26,7 @@ function ChildrenAccountPanel({}: ChildrenAccountPanelProps) {
       <div className="flex items-center justify-between">
         <h1>My children</h1>
         <Button
-          action={() => router.push('/dashboard/add-account/')}
+          action={() => router.push('/add-account')}
           className="space-x-2"
         >
           <FontAwesomeIcon icon={faPlus} />

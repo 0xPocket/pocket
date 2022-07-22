@@ -22,7 +22,7 @@
     "ethers": "^5.6.8",
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.4",
-    "next": "12.2.2",
+    "next": "12.2.3",
     "pocket-contract": "*",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -30,7 +30,7 @@
     "react-query": "^3.39.2",
     "siwe": "^1.1.6",
     "ui": "*",
-    "wagmi": "^0.5.5",
+    "wagmi": "^0.5.11",
     "web3modal": "1.9.8"
   },
   "devDependencies": {

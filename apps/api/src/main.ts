@@ -16,10 +16,6 @@ async function bootstrap() {
       secret: 'super-secret',
       resave: true,
       saveUninitialized: true,
-      cookie: {
-        httpOnly: true,
-        secure: false,
-      },
       store: new PrismaSessionStore(prisma, {
         checkPeriod: 2 * 60 * 1000, //ms
         dbRecordIdIsSessionId: true,

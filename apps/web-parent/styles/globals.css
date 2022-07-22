@@ -16,16 +16,19 @@
     @apply font-raleway text-3xl font-bold;
   }
 
-	a {
-		@apply text-primary
-	}
+  a {
+    @apply text-primary;
+  }
 
-	.container-classic {
-		@apply border border-dark border-opacity-10 shadow-lg dark:border-white-darker dark:bg-dark-light bg-bright-dark;
-	}
+  .container-classic {
+    @apply border border-dark border-opacity-10 bg-bright-dark shadow-lg dark:border-white-darker dark:bg-dark-light;
+  }
 
-	.success-btn {
-		@apply  bg-primary dark:bg-success-dark px-4 py-3 rounded-md text-bright flex items-center
-	}
+  .success-btn {
+    @apply flex items-center rounded-md bg-primary px-4 py-3 text-bright dark:bg-success-dark;
+  }
 
+  .without-ring {
+    @apply focus:outline-0;
+  }
 }

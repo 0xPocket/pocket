@@ -1,7 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { providers } from 'ethers';
 import { ParentsService } from 'src/users/parents/parents.service';
-import { SendTransactionDto } from './dto/send-transaction.dto';
 import {
   PocketFaucet,
   PocketFaucet__factory,
@@ -44,9 +43,5 @@ export class EthereumService implements OnModuleInit {
         // console.log('child to validate :', childAddress.toLowerCase());
       },
     );
-  }
-
-  async sendTransaction(data: SendTransactionDto) {
-    return this.provider.sendTransaction(data.hash);
   }
 }
