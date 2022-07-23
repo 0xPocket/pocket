@@ -45,6 +45,9 @@ function App({ Component, pageProps: { ...pageProps } }: AppProps) {
         new MagicConnector({
           options: {
             apiKey: 'pk_live_4752F69D8DDF4CF5',
+            oauthOptions: {
+              providers: ['facebook', 'google'],
+            },
             additionalMagicOptions: {
               network: {
                 rpcUrl: 'http://localhost:8545',

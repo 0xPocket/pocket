@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import type { FC } from 'react';
-import { useQueryClient } from 'react-query';
 import { z } from 'zod';
 import { useMagic } from '../../contexts/auth';
 import { useZodForm } from '../../utils/useZodForm';
@@ -17,11 +16,9 @@ const EmailSignin: FC = () => {
     reValidateMode: 'onChange',
     schema: EmailSchema,
   });
-  const queryClient = useQueryClient();
 
   const onSubmit = async (data: z.infer<typeof EmailSchema>) => {
     await signInWithEmail(data.email).then(() => {
-      queryClient.invalidateQueries('user');
       router.push('/');
     });
   };

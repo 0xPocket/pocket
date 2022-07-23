@@ -1,12 +1,11 @@
 import { UserParent } from '@lib/types/interfaces';
-import { OAuthExtension } from '@magic-ext/oauth';
 import axios, { AxiosResponse } from 'axios';
-import { Magic } from 'magic-sdk';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { useAccount, useDisconnect } from 'wagmi';
+import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { createCtx } from '../utils/createContext';
+import type { MagicConnector } from '../utils/MagicConnector';
 
 interface MagicAuthProviderProps {
   children: React.ReactNode;
@@ -14,9 +13,8 @@ interface MagicAuthProviderProps {
 
 interface IMagicAuthContext {
   loggedIn: boolean;
-  signInWithEmail: (email: string) => Promise<AxiosResponse | undefined>;
+  signInWithEmail: (email: string) => Promise<any>;
   signOut: () => Promise<AxiosResponse>;
-  magic: Magic<OAuthExtension[]> | undefined;
   user: UserParent | undefined;
 }
 
@@ -25,66 +23,61 @@ export const [useMagic, MagicAuthContextProvider] =
 
 export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
   const { isConnected } = useAccount();
-  const { disconnect } = useDisconnect();
+  const { disconnectAsync } = useDisconnect();
   const queryClient = useQueryClient();
   const router = useRouter();
-  const [magic, setMagic] = useState<Magic<OAuthExtension[]>>();
+  const [magic, setMagic] = useState<MagicConnector>();
+  const { connectors, connectAsync } = useConnect();
 
+  console.log(isConnected);
   const user = useQuery(
     'user',
     () => axios.get('/api/auth/parents/me').then((res) => res.data),
     { refetchOnWindowFocus: false, retry: false, enabled: isConnected },
   );
 
-  const verifyUser = useMutation((token: string) =>
+  const verifyMagicUser = useMutation((token: string) =>
     axios.post('/api/auth/magic', { token }),
   );
 
-  const logout = useMutation(() => axios.post('/api/auth/logout'), {
-    onMutate: () => {
-      disconnect();
+  const signInWithEmail = useMutation(
+    () => connectAsync({ connector: magic }),
+    {
+      onSuccess: async () => {
+        const token = await magic?.getDidToken();
+        if (token) {
+          return verifyMagicUser.mutateAsync(token).then(() => {
+            user.refetch();
+          });
+        }
+      },
     },
-    onSuccess: () => {
-      queryClient.removeQueries('user');
+  );
+
+  const logout = useMutation(() => axios.post('/api/auth/logout'), {
+    onSuccess: async () => {
+      await disconnectAsync();
+      queryClient.removeQueries();
       router.push('/connect');
     },
   });
 
   useEffect(() => {
-    const magic = new Magic('pk_live_4752F69D8DDF4CF5', {
-      extensions: [new OAuthExtension()],
-      network: {
-        rpcUrl: 'http://localhost:8545',
-        chainId: 137,
-      },
-    });
-    setMagic(magic);
-    magic.preload();
-  }, []);
-
-  const signInWithEmail = async (email: string) => {
-    try {
-      const token = await magic?.auth.loginWithMagicLink({
-        email,
-      });
-
-      if (!token) {
-        throw new Error('No token');
-      }
-
-      return verifyUser.mutateAsync(token);
-    } catch (e) {
-      console.log(e);
+    const magic = connectors.find((c) => c.id === 'magic') as MagicConnector;
+    if (magic) {
+      setMagic(magic);
     }
-  };
+  }, [connectors]);
 
   return (
     <MagicAuthContextProvider
       value={{
         loggedIn: user && isConnected,
-        signInWithEmail,
+        signInWithEmail: async (email: string) => {
+          magic?.setUserDetails({ email });
+          return signInWithEmail.mutateAsync();
+        },
         signOut: async () => logout.mutateAsync(),
-        magic,
         user: user.data,
       }}
     >

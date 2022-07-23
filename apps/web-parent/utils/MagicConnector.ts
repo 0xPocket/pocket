@@ -4,11 +4,11 @@ import {
   MagicSDKAdditionalConfiguration,
   SDKBase,
 } from '@magic-sdk/provider';
-import { normalizeChainId, UserRejectedRequestError } from '@wagmi/core';
+import { normalizeChainId } from '@wagmi/core';
 import { ethers, Signer } from 'ethers';
 import { getAddress } from 'ethers/lib/utils';
 import { Magic } from 'magic-sdk';
-import { Chain, Connector } from 'wagmi';
+import { Chain, Connector, UserRejectedRequestError } from 'wagmi';
 
 const IS_SERVER = typeof window === 'undefined';
 
@@ -24,6 +24,18 @@ interface Options {
   >;
 }
 
+interface UserDetailsEmail {
+  email: string;
+  oauthProvider?: OAuthProvider;
+}
+
+interface UserDetailsOAuth {
+  oauthProvider: OAuthProvider;
+  email?: string;
+}
+
+type UserDetails = UserDetailsEmail | UserDetailsOAuth;
+
 export class MagicConnector extends Connector {
   ready = !IS_SERVER;
 
@@ -31,11 +43,13 @@ export class MagicConnector extends Connector {
 
   readonly name = 'Magic';
 
-  provider: any;
+  provider?: any;
 
   magicSDK: InstanceWithExtensions<SDKBase, OAuthExtension[]> | undefined;
 
   magicOptions: Options;
+
+  userDetails: UserDetails | undefined;
 
   oauthProviders: OAuthProvider[];
 
@@ -46,6 +60,14 @@ export class MagicConnector extends Connector {
     this.magicOptions = config.options;
     this.oauthProviders = config.options.oauthOptions?.providers || [];
     this.oauthCallbackUrl = config.options.oauthOptions?.callbackUrl;
+  }
+
+  setUserDetails(details: UserDetails) {
+    this.userDetails = details;
+  }
+
+  clearUserDetails() {
+    this.userDetails = undefined;
   }
 
   async connect() {
@@ -66,27 +88,52 @@ export class MagicConnector extends Connector {
         return {
           provider,
           chain: {
-            id: 0,
+            id: await this.getChainId(),
             unsupported: false,
           },
           account: await this.getAccount(),
         };
       }
 
-      const signer = await this.getSigner();
-      const account = await signer.getAddress();
+      if (!this.userDetails) {
+        throw new UserRejectedRequestError('Something went wrong');
+      }
 
-      return {
-        account,
-        chain: {
-          id: 0,
-          unsupported: false,
-        },
-        provider,
-      };
+      const userDetails = { ...this.userDetails };
+
+      this.clearUserDetails();
+
+      if (userDetails) {
+        const magic = this.getMagicSDK();
+
+        if (userDetails.email) {
+          await magic.auth.loginWithMagicLink({
+            email: userDetails.email,
+          });
+        }
+
+        const signer = await this.getSigner();
+        const account = await signer.getAddress();
+
+        return {
+          account,
+          chain: {
+            id: 0,
+            unsupported: false,
+          },
+          provider,
+        };
+      }
+
+      throw new UserRejectedRequestError('Something went wrong');
     } catch (error) {
       throw new UserRejectedRequestError('Something went wrong');
     }
+  }
+
+  getDidToken() {
+    const magic = this.getMagicSDK();
+    return magic.user.getIdToken();
   }
 
   async getAccount(): Promise<string> {
