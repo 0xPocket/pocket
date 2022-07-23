@@ -1,7 +1,6 @@
 import { createContext, useContext, useState } from 'react';
 import PocketFaucetJson from 'pocket-contract/artifacts/contracts/PocketFaucet.sol/PocketFaucet.json';
-import { erc20ABI, useContract, useSigner, useToken } from 'wagmi';
-import { ERC20 } from 'pocket-contract/typechain-types';
+import { useAccount, useToken } from 'wagmi';
 
 interface SmartContractProviderProps {
   children: React.ReactNode;
@@ -16,7 +15,6 @@ interface ISmartContractContext {
         symbol: string;
       }
     | undefined;
-  contract: ERC20 | undefined;
   abi: typeof PocketFaucetJson.abi;
 }
 
@@ -31,23 +29,19 @@ const [SmartContractContext, SmartContractContextProvider] =
 export const SmartContractProvider = ({
   children,
 }: SmartContractProviderProps) => {
+  const { isConnected } = useAccount();
+
   const { data } = useToken({
     address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+    enabled: isConnected,
   });
-  const [abi] = useState(PocketFaucetJson.abi);
-  const { data: signer } = useSigner();
 
-  const contract = useContract<ERC20>({
-    addressOrName: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
-    contractInterface: erc20ABI,
-    signerOrProvider: signer,
-  });
+  const [abi] = useState(PocketFaucetJson.abi);
 
   return (
     <SmartContractContextProvider
       value={{
         erc20Data: data,
-        contract,
         abi,
       }}
     >

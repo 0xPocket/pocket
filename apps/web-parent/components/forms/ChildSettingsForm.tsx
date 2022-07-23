@@ -48,7 +48,6 @@ function ChildSettingsForm({
   });
 
   const onSubmit = async (data: FormValues) => {
-    console.log(data);
     await changeConfig({
       args: [
         parseUnits(data.ceiling.toString(), erc20Data?.decimals),

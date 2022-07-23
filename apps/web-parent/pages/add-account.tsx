@@ -6,7 +6,7 @@ type addAccountProps = {};
 
 function addAccount({}: addAccountProps) {
   return (
-    <MainWrapper authProtected>
+    <MainWrapper>
       <SectionContainer>
         <div className=" grid grid-cols-2 gap-8">
           <div className="border-opacity- relative flex flex-col space-y-10 overflow-hidden rounded-lg border border-dark bg-white p-4 shadow-lg dark:border-white-darker dark:bg-dark-light">

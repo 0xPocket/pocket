@@ -37,7 +37,7 @@ function Account({
   );
 
   return (
-    <MainWrapper authProtected>
+    <MainWrapper>
       <SectionContainer>
         <div className="mb-12 flex items-center space-x-4">
           <FontAwesomeIcon icon={faAngleRight} />

@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { erc20ABI, useAccount, useContractWrite } from 'wagmi';
 import { useSmartContract } from '../../contexts/contract';
 
-type AddfundsFormProps = {
+type AddFundsFormProps = {
   child: UserChild;
   returnFn: () => void;
   allowance: Result | undefined;
@@ -18,14 +18,14 @@ type FormValues = {
   topup: number;
 };
 
-function AddFundsForm({ allowance, child, returnFn }: AddfundsFormProps) {
+function AddFundsForm({ allowance, child, returnFn }: AddFundsFormProps) {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
   const { address } = useAccount();
-  const { contract, abi, erc20Data } = useSmartContract();
+  const { abi, erc20Data } = useSmartContract();
 
   const { writeAsync: approve } = useContractWrite({
     addressOrName: erc20Data?.address!,
@@ -40,7 +40,7 @@ function AddFundsForm({ allowance, child, returnFn }: AddfundsFormProps) {
   });
 
   const onSubmit = async (data: FormValues) => {
-    if (!address || !contract?.signer) {
+    if (!address) {
       return;
     }
 

@@ -4,7 +4,6 @@ import Header from '../header/Header';
 type MainWrapperProps = {
   children: React.ReactNode;
   noHeader?: boolean;
-  authProtected?: boolean;
 };
 
 function MainWrapper({ children, noHeader = false }: MainWrapperProps) {

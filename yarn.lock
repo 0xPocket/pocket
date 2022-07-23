@@ -3,9 +3,9 @@
 
 
 "@alch/alchemy-sdk@^1.0.8":
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@alch/alchemy-sdk/-/alchemy-sdk-1.0.8.tgz#5cb49c04795ad728155baf81615a629b908dc23f"
-  integrity sha512-rCFTzLarEVl51atLRA/OG1Nx99BVw7/xbbYUy2x3MKkeh6wOpHJMAuw6pRwgumqBDCV8r5NqyWuNM5NZLfdQ0A==
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@alch/alchemy-sdk/-/alchemy-sdk-1.2.0.tgz#e185ec6ccfc1ba570f0dff75d040d7970f17371d"
+  integrity sha512-V7ajgkdIsTuKfJAzT/6+JQfG4+UodmGduaXcBiuEuTsDnw/sX6Q+ATiBuex0m6ZEPx0QpRe7NYHZNSpSJbtWpg==
   dependencies:
     "@ethersproject/abstract-provider" "^5.6.1"
     "@ethersproject/bignumber" "^5.6.2"
@@ -2233,16 +2233,16 @@
     defer-to-connect "^1.0.1"
 
 "@tanstack/react-table@^8.2.6":
-  version "8.2.6"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.2.6.tgz#a44855d1958d9e8fa7a34280f81f08d2ef7f8d4f"
-  integrity sha512-hHEKSqRPSojhFLosSpqKMRNDX8mk/UVvFdekXHai86NAg1WaLYB51hWVg18IqFe9PCaPZNpTPNguJ7u54ed8Gg==
+  version "8.3.1"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.3.1.tgz#a1bd45e3e9f1b856e7fb45449a12e4788d7d667a"
+  integrity sha512-+S8WvJGhYaeRwXDOBSAgt797KrvRv3xLi03UHfDqInTAySFp7SWebS6scpwiie55AAfHT36UL3mIq7uVUmpk1Q==
   dependencies:
-    "@tanstack/table-core" "8.2.6"
+    "@tanstack/table-core" "8.3.1"
 
-"@tanstack/table-core@8.2.6":
-  version "8.2.6"
-  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.2.6.tgz#7240ac14a43cc43adbe01fbc6ae4d8a2bf82541a"
-  integrity sha512-yHjKksyq5ZI4GoVJgR/+X8Z1gaZdOL1om3G9M4af6yTTyRP5ZquMlU5318MBtx2NzXl4BxtENLXBWYrcz5WKSA==
+"@tanstack/table-core@8.3.1":
+  version "8.3.1"
+  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.3.1.tgz#a16c1e24245dd1ca6900b55459b750c84291c157"
+  integrity sha512-ujOENKf/QSNmupmwqMx8vz/tKr8yT9zKjnG6EJvxoe6wV8qp/bI9TsYLsb5PkdLWKomBABs6IFQCedW9X1Pf2w==
 
 "@tootallnate/once@1":
   version "1.1.2"

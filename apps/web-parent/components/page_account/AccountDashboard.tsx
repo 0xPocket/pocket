@@ -2,8 +2,8 @@ import TokenContent from '../../components/page_account/token/TokenContent';
 import NftContent from '../../components/page_account/nft/NftContent';
 import TransactionContent from '../../components/page_account/transaction/TransactionContent';
 import { UserChild } from '@lib/types/interfaces';
-
 import ChildCard from '../card/ChildCard';
+
 type AccountDashboardProps = { child: UserChild };
 
 function AccountDashboard({ child }: AccountDashboardProps) {

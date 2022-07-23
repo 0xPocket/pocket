@@ -17,7 +17,7 @@ function ChildrenAccountPanel({}: ChildrenAccountPanelProps) {
     () =>
       axios
         .get<UserChild[]>('http://localhost:3000/api/users/parents/children')
-        .then((res: { data: UserChild[] }) => res.data),
+        .then((res) => res.data),
     { staleTime: 60 * 1000 },
   );
 
