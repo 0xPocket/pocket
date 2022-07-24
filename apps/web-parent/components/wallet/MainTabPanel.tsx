@@ -7,11 +7,11 @@ type MainTabPanelProps = {};
 
 function MainTabPanel({}: MainTabPanelProps) {
   const { address } = useAccount();
-  const { erc20Data } = useSmartContract();
+  const { erc20 } = useSmartContract();
   const { data, isLoading } = useBalance({
     addressOrName: address,
-    token: erc20Data?.address,
-    formatUnits: erc20Data?.decimals,
+    token: erc20.data?.address,
+    formatUnits: erc20.data?.decimals,
     watch: true,
   });
 

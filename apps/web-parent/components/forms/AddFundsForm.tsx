@@ -5,8 +5,9 @@ import { FormErrorMessage } from '@lib/ui';
 import { BigNumber } from 'ethers';
 import { parseUnits, Result } from 'ethers/lib/utils';
 import { useForm } from 'react-hook-form';
-import { erc20ABI, useAccount, useContractWrite } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { useSmartContract } from '../../contexts/contract';
+import useContractWrite from '../../hooks/useContractWrite';
 
 type AddFundsFormProps = {
   child: UserChild;
@@ -25,18 +26,16 @@ function AddFundsForm({ allowance, child, returnFn }: AddFundsFormProps) {
     formState: { errors },
   } = useForm<FormValues>();
   const { address } = useAccount();
-  const { abi, erc20Data } = useSmartContract();
+  const { pocketContract, erc20 } = useSmartContract();
 
   const { writeAsync: approve } = useContractWrite({
-    addressOrName: erc20Data?.address!,
+    contract: erc20.contract,
     functionName: 'approve',
-    contractInterface: erc20ABI,
   });
 
   const { writeAsync: addFunds } = useContractWrite({
-    addressOrName: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+    contract: pocketContract,
     functionName: 'addFunds',
-    contractInterface: abi,
   });
 
   const onSubmit = async (data: FormValues) => {
@@ -48,7 +47,7 @@ function AddFundsForm({ allowance, child, returnFn }: AddFundsFormProps) {
       await approve({
         args: [
           process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
-          parseUnits(data.topup.toString(), erc20Data?.decimals),
+          parseUnits(data.topup.toString(), erc20.data?.decimals),
         ],
       });
     }

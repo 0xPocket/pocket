@@ -1,21 +1,25 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useMemo } from 'react';
 import PocketFaucetJson from 'pocket-contract/artifacts/contracts/PocketFaucet.sol/PocketFaucet.json';
-import { useAccount, useToken } from 'wagmi';
+import { erc20ABI, useAccount, useContract, useToken } from 'wagmi';
+import { IERC20, PocketFaucet } from 'pocket-contract/typechain-types';
 
 interface SmartContractProviderProps {
   children: React.ReactNode;
 }
 
 interface ISmartContractContext {
-  erc20Data:
-    | {
-        address: string;
-        decimals: number;
-        name: string;
-        symbol: string;
-      }
-    | undefined;
-  abi: typeof PocketFaucetJson.abi;
+  erc20: {
+    contract: IERC20;
+    data:
+      | {
+          address: string;
+          decimals: number;
+          name: string;
+          symbol: string;
+        }
+      | undefined;
+  };
+  pocketContract: PocketFaucet;
 }
 
 export function createCtx<A extends {} | null>() {
@@ -31,20 +35,33 @@ export const SmartContractProvider = ({
 }: SmartContractProviderProps) => {
   const { isConnected } = useAccount();
 
-  const { data } = useToken({
+  const { data: erc20Data } = useToken({
     address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
     enabled: isConnected,
   });
 
-  const [abi] = useState(PocketFaucetJson.abi);
+  const erc20Contract = useContract<IERC20>({
+    addressOrName: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+    contractInterface: erc20ABI,
+  });
+
+  const pocketContract = useContract<PocketFaucet>({
+    addressOrName: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+    contractInterface: PocketFaucetJson.abi,
+  });
+
+  const value = useMemo(() => {
+    return {
+      erc20: {
+        data: erc20Data,
+        contract: erc20Contract,
+      },
+      pocketContract,
+    };
+  }, [erc20Data, erc20Contract, pocketContract]);
 
   return (
-    <SmartContractContextProvider
-      value={{
-        erc20Data: data,
-        abi,
-      }}
-    >
+    <SmartContractContextProvider value={value}>
       {children}
     </SmartContractContextProvider>
   );

@@ -1,8 +1,12 @@
 import { Tab } from '@headlessui/react';
 import { UserChild } from '@lib/types/interfaces';
+import { PocketFaucet } from 'pocket-contract/typechain-types';
 import { useState } from 'react';
-import { erc20ABI, useAccount, useContractRead } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { useSmartContract } from '../../contexts/contract';
+import useContractRead, {
+  ContractMethodReturn,
+} from '../../hooks/useContractRead';
 import AddFundsForm from '../forms/AddFundsForm';
 import ChildSettingsForm from '../forms/ChildSettingsForm';
 import Balance from './Balance';
@@ -10,20 +14,19 @@ import TabAnimation from './TabAnimation';
 
 type RightTabProps = {
   child: UserChild;
-  config: any;
+  config: ContractMethodReturn<PocketFaucet, 'childToConfig'> | undefined;
   hideActions?: boolean;
 };
 
 function RightTab({ child, config, hideActions = false }: RightTabProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const { erc20Data } = useSmartContract();
+  const { erc20 } = useSmartContract();
   const { address } = useAccount();
 
   const { data: allowance } = useContractRead({
-    addressOrName: erc20Data?.address!,
+    contract: erc20.contract,
     functionName: 'allowance',
-    contractInterface: erc20ABI,
-    args: [address, process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!],
+    args: [address!, process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!],
   });
 
   return (
@@ -41,7 +44,7 @@ function RightTab({ child, config, hideActions = false }: RightTabProps) {
       <Tab.Panels as="div" className="h-full">
         <TabAnimation>
           <Balance
-            value={config?.[1]}
+            value={config?.balance}
             setSelectedIndex={setSelectedIndex}
             hideActions={hideActions}
           />

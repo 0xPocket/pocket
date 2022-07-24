@@ -7,6 +7,7 @@ function NftCard({ nft }: { nft: OwnedNft }) {
   return (
     <div className="container-classic col-span-4 flex flex-col overflow-hidden rounded-md">
       {nft.media[0].gateway && (
+        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={nft.media[0].gateway}
           alt={nft.title}

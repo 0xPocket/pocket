@@ -1,10 +1,11 @@
 import { faCircleDollarToSlot } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ethers } from 'ethers';
+import { BigNumber } from 'ethers';
+import { formatUnits } from 'ethers/lib/utils';
 import { Dispatch, SetStateAction } from 'react';
 
 type BalanceProps = {
-  value: string;
+  value: BigNumber | undefined;
   setSelectedIndex: Dispatch<SetStateAction<number>>;
   hideActions: boolean;
 };
@@ -15,7 +16,7 @@ function Balance({ value, setSelectedIndex, hideActions }: BalanceProps) {
       <div className="flex flex-col items-end">
         {/* <p>Balance</p> */}
         <span className="text-4xl">
-          {value ? ethers.utils.formatUnits(value, 6).toString() : '0'} $
+          {value ? formatUnits(value, 6).toString() : '0'} $
         </span>
         <p>usdc</p>
       </div>

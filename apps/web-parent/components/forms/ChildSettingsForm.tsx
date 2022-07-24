@@ -2,16 +2,17 @@ import { faWrench } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { UserChild } from '@lib/types/interfaces';
 import { FormErrorMessage } from '@lib/ui';
-import { ethers } from 'ethers';
-import { parseUnits } from 'ethers/lib/utils';
-import { useContractWrite } from 'wagmi';
+import { formatUnits, parseUnits } from 'ethers/lib/utils';
+import { PocketFaucet } from 'pocket-contract/typechain-types';
 import { z } from 'zod';
 import { useSmartContract } from '../../contexts/contract';
+import { ContractMethodReturn } from '../../hooks/useContractRead';
+import useContractWrite from '../../hooks/useContractWrite';
 import { useZodForm } from '../../utils/useZodForm';
 
 type ChildSettingsFormProps = {
   child: UserChild;
-  config: any;
+  config: ContractMethodReturn<PocketFaucet, 'childToConfig'> | undefined;
   returnFn: () => void;
 };
 
@@ -34,23 +35,22 @@ function ChildSettingsForm({
   } = useZodForm({
     schema: ChildSettingsSchema,
     defaultValues: {
-      periodicity: ethers.utils.formatUnits(config?.[4], 0).toString(),
-      ceiling: ethers.utils.formatUnits(config?.[2], 6).toString(),
+      periodicity: formatUnits(config?.[4]!, 0).toString(),
+      ceiling: formatUnits(config?.[2]!, 6).toString(),
     },
   });
 
-  const { erc20Data, abi } = useSmartContract();
+  const { erc20, pocketContract } = useSmartContract();
 
   const { writeAsync: changeConfig } = useContractWrite({
-    addressOrName: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+    contract: pocketContract,
     functionName: 'changeConfig',
-    contractInterface: abi,
   });
 
   const onSubmit = async (data: FormValues) => {
     await changeConfig({
       args: [
-        parseUnits(data.ceiling.toString(), erc20Data?.decimals),
+        parseUnits(data.ceiling, erc20.data?.decimals),
         data.periodicity,
         child.web3Account.address,
       ],

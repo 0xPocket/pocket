@@ -1,7 +1,7 @@
 import { UserChild } from '@lib/types/interfaces';
 import Link from 'next/link';
-import { useContractRead } from 'wagmi';
 import { useSmartContract } from '../../contexts/contract';
+import useContractRead from '../../hooks/useContractRead';
 import AccountStatus from './AccountStatus';
 import RightTab from './RightTab';
 
@@ -12,12 +12,11 @@ type ChildCardProps = {
 };
 
 function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
-  const { abi } = useSmartContract();
+  const { pocketContract } = useSmartContract();
 
   const { data: config } = useContractRead({
-    addressOrName: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+    contract: pocketContract,
     functionName: 'childToConfig',
-    contractInterface: abi,
     args: [child.web3Account.address],
     watch: true,
   });
