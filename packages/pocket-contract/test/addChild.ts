@@ -15,7 +15,7 @@ describe('Testing add Child', function () {
   const tokenAddr = constants.CHOSEN_TOKEN;
 
   before(async function () {
-    provider = new providers.JsonRpcProvider('http://localhost:8545');
+    provider = new providers.JsonRpcProvider(constants.RPC_URL.LOCAL);
     child1 = new Wallet(constants.FAMILY_ACCOUNT.child1, provider);
     PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
     pocketFaucet = (await upgrades.deployProxy(PocketFaucet_factory, [
@@ -29,7 +29,7 @@ describe('Testing add Child', function () {
   it('Should revert because new child addr is zero', async function () {
     await expect(
       parent1.changeConfigAndSend(0, 0, ethers.constants.AddressZero)
-    ).to.be.revertedWith('!_areRelated : null child address');
+    ).to.be.revertedWith('!_areRelated: null child address');
   });
 
   it('Should revert because child2 is not set for this parent', async function () {

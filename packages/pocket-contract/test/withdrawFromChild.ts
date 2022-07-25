@@ -69,7 +69,7 @@ describe('Testing to withdraw funds from child account as parent', function () {
     );
     await expect(
       parent2.contract.withdrawFundsFromChild(0, child1.address)
-    ).to.be.revertedWith("!_areRelated : child doesn't match");
+    ).to.be.revertedWith("!_areRelated: child doesn't match");
   });
 
   it('Should withdraw half of child funds', async function () {

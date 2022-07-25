@@ -35,7 +35,7 @@ describe('Deploy and tests on proxy functions', function () {
   });
 
   it('Should retrieve child and childConfig after upgrade', async function () {
-    await parent1.addStdChildAndSend(child1.address, constants.CHOSEN_TOKEN);
+    await parent1.addStdChildAndSend(child1.address, tokenAddr);
     const children = await parent1.getChildren();
     const conf = await parent1.getChildConfig(child1.address);
     await upgrades.upgradeProxy(pocketFaucet.address, PocketFaucetV2_factory);

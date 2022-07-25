@@ -43,7 +43,7 @@ describe('Testing active param change', function () {
 
   it('Should revert because not related', async function () {
     await expect(parent1.setActive(false, child2.address)).to.be.revertedWith(
-      "!_areRelated : child doesn't match"
+      "!_areRelated: child doesn't match"
     );
   });
 

@@ -82,6 +82,38 @@ class ParentTester extends ParentContract {
       .addChild(ceiling, periodicity, childAddr);
   };
 
+  addChildAndFundsAndSend = async (
+    ceiling: BigNumberish,
+    periodicity: BigNumberish,
+    childAddr: string,
+    amount: BigNumberish,
+    token: string,
+    whale: string | null
+  ) => {
+    const amountWithDeci = await stringToDecimalsVersion(
+      token,
+      this.signer,
+      amount.toString()
+    );
+    if (whale != null) {
+      await setErc20Balance(
+        token,
+        this.signer,
+        amountWithDeci.toString(),
+        whale
+      );
+      await setAllowance(
+        token,
+        this.signer,
+        this.contract.address,
+        amountWithDeci.toString()
+      );
+    }
+    await this.contract
+      .connect(this.signer)
+      .addChildAndFunds(ceiling, periodicity, childAddr, amountWithDeci);
+  };
+
   addStdChildAndSend = async (address: string, tokenAddr: string) => {
     const ceiling = ethers.utils.parseUnits(
       '10',

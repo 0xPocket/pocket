@@ -22,7 +22,7 @@ describe('Testing addr changement', function () {
   const tokenAddr = constants.CHOSEN_TOKEN;
 
   before(async function () {
-    provider = new providers.JsonRpcProvider('http://localhost:8545');
+    provider = new providers.JsonRpcProvider(constants.RPC_URL.LOCAL);
     child1 = new Wallet(constants.FAMILY_ACCOUNT.child1, provider);
     child2 = new Wallet(constants.FAMILY_ACCOUNT.child2, provider);
 
@@ -39,7 +39,7 @@ describe('Testing addr changement', function () {
   it('Should reverse because child2 is not parent1 child', async function () {
     await expect(
       parent1.changeChildAddress(child2.address, child1.address)
-    ).to.be.revertedWith("!_areRelated : child doesn't match");
+    ).to.be.revertedWith("!_areRelated: child doesn't match");
   });
 
   it('Should change child1 to child2 for parent1', async function () {
@@ -62,7 +62,7 @@ describe('Testing addr changement', function () {
       child2.address,
       provider
     );
-    await goForwardNDays('http://localhost:8545', 21);
+    await goForwardNDays(constants.RPC_URL.LOCAL, 21);
     await setErc20Balance(
       tokenAddr,
       parent1Wallet,

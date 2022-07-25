@@ -89,7 +89,7 @@ First, create a fork:
 `yarn fork` at the root of the repo
 
 Secondly, run the tests:
-`FORCE_COLOR=1 yarn test` at the root of the repo
+`yarn test` at the root of the repo
 
 If you want to change the base token/network, go to the constants.ts file in the utils
 and change the value of the CHOSEN variable.
