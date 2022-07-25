@@ -1,3 +1,9 @@
+import * as dotenv from 'dotenv';
+
+dotenv.config({
+  path: '../../.env',
+});
+
 export const HH_ACCOUNT = {
   account0:
     '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80',
@@ -50,26 +56,39 @@ export const FAMILY_ACCOUNT = {
   child3: HH_ACCOUNT.account15,
 };
 
-export const TOKEN_POLY = {
-  JEUR: '0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c',
-  USDC: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
-  USDT: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
-  FAKEUSDC: '0x47DA6C0b7f3fadA850898D1e61ae546fc7B603F9',
+export const TOKENS = {
+  RINKEBY_FAKEUSDC: '0x47da6c0b7f3fada850898d1e61ae546fc7b603f9',
+  POLY_JEUR: '0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c',
+  POLY_USDC: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
+  POLY_USDT: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
 };
 
-export const TOKEN_RINKEBY = {
-  FAKEUSDC: '0x47da6c0b7f3fada850898d1e61ae546fc7b603f9',
+export const WHALES = {
+  RINKEBY_FAKEUSDC: '0xe2e0256d6785d49ec7badcd1d44adbd3f6b0ab58',
+  POLY_USDC: '0xf977814e90da44bfa03b6295a0616a897441acec',
+  POLY_USDT: '0xe7804c37c13166ff0b37f5ae0bb07a3aebb6e245',
+  POLY_JEUR: '0xc4fcbb58e36e8f5c3b0e904cb20c3947af246891',
 };
 
-export const WHALES_RINKEBY = {
-  FAKEUSDC: '0xe2e0256d6785d49ec7badcd1d44adbd3f6b0ab58',
+export const NETWORK = {
+  RINKEBY_FAKEUSDC:
+    'https://eth-rinkeby.alchemyapi.io/v2/' + process.env.ALCHEMY_RINKEBY_TOKEN,
+  POLY_USDC:
+    'https://polygon-mainnet.g.alchemy.com/v2/' +
+    process.env.NEXT_PUBLIC_KEY_ALCHEMY_POLYGON,
+  POLY_USDT:
+    'https://polygon-mainnet.g.alchemy.com/v2/' +
+    process.env.NEXT_PUBLIC_KEY_ALCHEMY_POLYGON,
+  POLY_JEUR:
+    'https://polygon-mainnet.g.alchemy.com/v2/' +
+    process.env.NEXT_PUBLIC_KEY_ALCHEMY_POLYGON,
 };
 
-export const WHALES_POLY = {
-  USDC: '0xf977814e90da44bfa03b6295a0616a897441acec',
-  USDT: '0xe7804c37c13166ff0b37f5ae0bb07a3aebb6e245',
-  JEUR: '0xc4fcbb58e36e8f5c3b0e904cb20c3947af246891',
-};
+const CHOSEN = 'RINKEBY_FAKEUSDC';
+
+export const CHOSEN_TOKEN = TOKENS[CHOSEN];
+export const CHOSEN_WHALE = WHALES[CHOSEN];
+export const CHOSEN_NETWORK = NETWORK[CHOSEN];
 
 export const RDM_ADDRESS = [
   '0xf977814e90da44bfa01b6295a0616a897441acec',

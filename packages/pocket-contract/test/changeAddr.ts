@@ -19,7 +19,7 @@ describe('Testing addr changement', function () {
   let PocketFaucet_factory: PocketFaucet__factory, pocketFaucet: PocketFaucet;
   let provider: providers.JsonRpcProvider;
   let parent1Wallet: Wallet;
-  const tokenAddr = constants.TOKEN_RINKEBY.FAKEUSDC;
+  const tokenAddr = constants.CHOSEN_TOKEN;
 
   before(async function () {
     provider = new providers.JsonRpcProvider('http://localhost:8545');
@@ -67,7 +67,7 @@ describe('Testing addr changement', function () {
       tokenAddr,
       parent1Wallet,
       '100',
-      constants.WHALES_RINKEBY.FAKEUSDC
+      constants.CHOSEN_WHALE
     );
     await setAllowance(
       tokenAddr,

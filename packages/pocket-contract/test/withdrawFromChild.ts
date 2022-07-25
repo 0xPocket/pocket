@@ -15,7 +15,7 @@ describe('Testing to withdraw funds from child account as parent', function () {
   let provider: providers.JsonRpcProvider;
   let parent1Wallet: Wallet;
   let parent2Wallet: Wallet;
-  const tokenAddr = constants.TOKEN_RINKEBY.FAKEUSDC;
+  const tokenAddr = constants.CHOSEN_TOKEN;
 
   before(async function () {
     provider = new providers.JsonRpcProvider('http://localhost:8545');
@@ -35,7 +35,7 @@ describe('Testing to withdraw funds from child account as parent', function () {
       child1.address,
       '100',
       tokenAddr,
-      constants.WHALES_RINKEBY.FAKEUSDC
+      constants.CHOSEN_WHALE
     );
   });
 
@@ -65,7 +65,7 @@ describe('Testing to withdraw funds from child account as parent', function () {
       child1.address,
       '100',
       tokenAddr,
-      constants.WHALES_RINKEBY.FAKEUSDC
+      constants.CHOSEN_WHALE
     );
     await expect(
       parent2.contract.withdrawFundsFromChild(0, child1.address)

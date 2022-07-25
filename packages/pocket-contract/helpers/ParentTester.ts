@@ -106,7 +106,7 @@ class ParentTester extends ParentContract {
     );
     await setErc20Balance(token, this.signer, amount, whale);
     await setAllowance(
-      constants.TOKEN_POLY.JEUR,
+      token,
       this.signer,
       this.contract.address,
       amountWithDeci.toString()

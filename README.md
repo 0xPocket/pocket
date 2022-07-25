@@ -83,6 +83,17 @@ You can then copy the address and use it in your Alchemy or Ramp webhook :
 - Alchemy : `https://8ae0-80-12-41-71.eu.ngrok.io/notify/webhook`
 - Ramp : `https://8ae0-80-12-41-71.eu.ngrok.io/ramp/webhook`
 
+## Testing the smart contract
+
+First, create a fork:
+`yarn fork` at the root of the repo
+
+Secondly, run the tests:
+`FORCE_COLOR=1 yarn test` at the root of the repo
+
+If you want to change the base token/network, go to the constants.ts file in the utils
+and change the value of the CHOSEN variable.
+
 ## Useful commands
 
 There is many commands available to facilitate working with the repo:

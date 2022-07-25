@@ -16,7 +16,7 @@ describe('Testing withdraw', function () {
   let parent1Wallet: Wallet;
   let adminWallet: Wallet;
   let adminContract: AdminContract;
-  const tokenAddr = constants.TOKEN_RINKEBY.FAKEUSDC;
+  const tokenAddr = constants.CHOSEN_TOKEN;
 
   before(async function () {
     provider = new providers.JsonRpcProvider('http://localhost:8545');
@@ -34,9 +34,8 @@ describe('Testing withdraw', function () {
   });
 
   it('should revert because there are no token', async function () {
-    await expect(
-      adminContract.withdrawToken(tokenAddr, '1000000')
-    ).to.be.revertedWith('ERC20: transfer amount exceeds balance');
+    await expect(adminContract.withdrawToken(tokenAddr, '1000000')).to.be
+      .reverted;
   });
 
   it('should revert because not granted withdraw role', async function () {
@@ -58,7 +57,7 @@ is missing role 0x5d8e12c39142ff96d79d04d15d1ba1269e4fe57bb9d26f43523628b34ba108
       adminWallet,
       pocketFaucet.address,
       '100',
-      constants.WHALES_RINKEBY.FAKEUSDC
+      constants.CHOSEN_WHALE
     );
     const balanceBefore = await getERC20Balance(
       tokenAddr,

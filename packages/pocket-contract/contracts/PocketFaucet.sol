@@ -82,7 +82,7 @@ contract PocketFaucet is AccessControlUpgradeable {
         uint256 ceiling,
         uint256 periodicity,
         address child
-    ) external {
+    ) public {
         require(child != address(0), "Address is null");
         require(
             childToConfig[child].parent == address(0),
@@ -100,6 +100,15 @@ contract PocketFaucet is AccessControlUpgradeable {
 
         emit ChildAdded(msg.sender, child);
     }
+
+    // function addChildAndFunds(
+    //     uint256 ceiling,
+    //     uint256 periodicity,
+    //     address child, 
+    //     uint256 amount ) external {
+    //     addChild(ceiling, periodicity, child);
+    //     addFunds(amount, child);
+    // }
 
     function removeChild(address child)
         external
