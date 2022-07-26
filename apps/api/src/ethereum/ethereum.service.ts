@@ -1,32 +1,36 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { providers } from 'ethers';
 import { ParentsService } from 'src/users/parents/parents.service';
-import {
-  SendTransactionDto,
-  TransactionType,
-} from './dto/send-transaction.dto';
+import { SendTransactionDto } from './dto/send-transaction.dto';
 import {
   PocketFaucet,
   PocketFaucet__factory,
 } from '@pocket-contract/typechain-types';
+import { NotifyService } from 'src/notify/notify.service';
 
 @Injectable()
-export class EthereumService {
+export class EthereumService implements OnModuleInit {
   provider: providers.JsonRpcProvider;
   contract: PocketFaucet;
 
-  constructor(private parentsService: ParentsService) {
+  constructor(
+    private parentsService: ParentsService,
+    private notifyService: NotifyService,
+  ) {
     this.provider = new providers.JsonRpcProvider('http://localhost:8545');
 
     this.contract = PocketFaucet__factory.connect(
       process.env.NEXT_PUBLIC_CONTRACT_ADDRESS,
       this.provider,
     );
+  }
 
+  onModuleInit() {
     this.contract.on(
       this.contract.filters['ChildAdded(address,address)'](),
       (parentAddress, childAddress) => {
         this.parentsService.validateChildren(childAddress.toLowerCase());
+        this.notifyService.addAddressToWebhook(childAddress.toLowerCase());
         // console.log(parentAddress);
         // console.log('child to validate :', childAddress.toLowerCase());
       },
@@ -44,16 +48,5 @@ export class EthereumService {
 
   async sendTransaction(data: SendTransactionDto) {
     return this.provider.sendTransaction(data.hash);
-  }
-
-  async dispatch(data: SendTransactionDto) {
-    console.log('dispatch');
-    switch (data.type) {
-      case TransactionType.ADD_CHILD: {
-        console.log('add child');
-        // await this.parentsService.validateChildren(data.childAddress);
-        console.log('updated!');
-      }
-    }
   }
 }

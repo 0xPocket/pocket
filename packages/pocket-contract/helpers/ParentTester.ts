@@ -36,6 +36,7 @@ class ParentTester extends ParentContract {
 
   getActive = async (address: string) => {
     const [active, , , , ,] = await this.getChildConfig(address);
+
     return active;
   };
 

@@ -51,14 +51,14 @@ describe('Testing conf changement', function () {
   it('Should change ceiling', async function () {
     await parent1.addStdChildAndSend(child1.address, tokenAddr);
     const ceilingBefore = await parent1.getChildCeiling(child1.address);
-    await parent1.changeConfigAndSend(10, 0, child1.address);
+    await parent1.changeConfigAndSend(10, 1, child1.address);
     const ceilingAfter = await parent1.getChildCeiling(child1.address);
     assert(!ceilingAfter.eq(ceilingBefore), 'Ceiling value did not change');
   });
 
   it('Should not change lastClaim', async function () {
     const lastClaimBefore = await parent1.getLastClaim(child1.address);
-    await parent1.changeConfigAndSend(20, 0, child1.address);
+    await parent1.changeConfigAndSend(20, 1, child1.address);
     const lastClaimAfter = await parent1.getLastClaim(child1.address);
     assert(
       lastClaimAfter.eq(lastClaimBefore),
@@ -68,7 +68,7 @@ describe('Testing conf changement', function () {
 
   it('Should not change parent param', async function () {
     const parentBefore = await parent1.getParent(child1.address);
-    await parent1.changeConfigAndSend(10, 0, child1.address);
+    await parent1.changeConfigAndSend(10, 1, child1.address);
     const parentAfter = await parent1.getParent(child1.address);
     assert(parentAfter === parentBefore, 'Parent value changed');
   });

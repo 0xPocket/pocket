@@ -46,7 +46,7 @@ function Web3Modal({ callback, contract, isOpen, setIsOpen }: Web3ModalProps) {
 
   return (
     <DialogPopupWrapper isOpen={isOpen} setIsOpen={setIsOpen}>
-      <div className="flex flex-col gap-4 rounded-md bg-dark p-4">
+      <div className="flex flex-col space-y-4">
         <h2 className="">Unlock Wallet</h2>
         <input
           className="w-full rounded-md border border-gray-light px-5 py-3 placeholder-gray focus:border-primary-dark focus:ring-primary-dark dark:text-gray sm:max-w-xs"

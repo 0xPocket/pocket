@@ -25,18 +25,18 @@ function GlobalHeader({}: GlobalHeaderProps) {
   return (
     <Header>
       <Header.BlockLeft>
-        <Header.Title>Pocket.</Header.Title>
-        <Header.Nav show={status === 'authenticated'}>
+        <Header.Title href="/dashboard">Pocket.</Header.Title>
+        {/* <Header.Nav show={status === 'authenticated'}>
           <Header.NavLink href="/dashboard">Dashboard</Header.NavLink>
           <Header.NavLink href="#">Blog</Header.NavLink>
           <Header.NavLink href="#">FAQ</Header.NavLink>
-        </Header.Nav>
+        </Header.Nav> */}
       </Header.BlockLeft>
       <Header.BlockRight>
         {status === 'authenticated' ? (
           <>
             <Link href="/dashboard" passHref>
-              <div className=" cursor-pointer">
+              <div className="cursor-pointer">
                 {user?.firstName} {user?.lastName?.charAt(0)}.
               </div>
             </Link>

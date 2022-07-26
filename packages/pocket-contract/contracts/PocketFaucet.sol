@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 // TO DO : take me off
-import "hardhat/console.sol";
+import 'hardhat/console.sol';
 
-import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+import '@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol';
+import '@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol';
+import '@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol';
 
 // TO DO : check multisig
 // TO DO : gouvernor should be -> TimelockController
@@ -15,7 +15,7 @@ import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol"
 contract PocketFaucet is AccessControlUpgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
-    bytes32 public constant WITHDRAW_ROLE = keccak256("WITHDRAW_ROLE");
+    bytes32 public constant WITHDRAW_ROLE = keccak256('WITHDRAW_ROLE');
     // bytes32 public constant PARENT_ROLE = keccak256("PARENT_ROLE");
     // bytes32 public constant CHILD_ROLE = keccak256("CHILD_ROLE");
 
@@ -41,10 +41,10 @@ contract PocketFaucet is AccessControlUpgradeable {
 
     function initialize(address token) public initializer {
         baseToken = token;
-				__AccessControl_init_unchained();
+        __AccessControl_init_unchained();
         // _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _setupRole(WITHDRAW_ROLE, msg.sender);
-		// console.log(hasRole(DEFAULT_ADMIN_ROLE, msg.sender));
+        // console.log(hasRole(DEFAULT_ADMIN_ROLE, msg.sender));
     }
 
     struct Config {
@@ -88,6 +88,7 @@ contract PocketFaucet is AccessControlUpgradeable {
             childToConfig[child].parent == address(0),
             "!addChild: Child address already taken"
         );
+        require(periodicity != 0, '!addChild: periodicity cannot be 0');
         Config memory conf;
         conf.balance = 0;
         conf.lastClaim = block.timestamp - periodicity;
@@ -142,9 +143,10 @@ contract PocketFaucet is AccessControlUpgradeable {
         public
         _areRelated(msg.sender, child)
     {
+
         require(child != address(0), "!activateSwitch: null child address");
         Config storage conf = childToConfig[child];
-        require(conf.parent != address(0), "!activateSwitch: child not set");
+        require(conf.parent != address(0), '!activateSwitch: child not set');
         conf.active = active;
         if (conf.active == true)
             // && conf.lastClaim < block.timestamp - conf.periodicity; --> avoid weird situation where jsut because you changed this parameter 2 times in a week (not grounded --> grounded --> not grounded anymore, your child get to get his money 2 times)
@@ -156,13 +158,13 @@ contract PocketFaucet is AccessControlUpgradeable {
         uint256 periodicity,
         address child
     ) public _areRelated(msg.sender, child) {
-
         Config storage conf = childToConfig[child];
-        require(conf.parent != address(0), "!changeConfig: child not set");
+        require(conf.parent != address(0), '!changeConfig: child not set');
+        require(conf.periodicity != 0, '!changeConfig: periodicity cannot be 0');
         conf.ceiling = ceiling;
         conf.periodicity = periodicity;
         emit ConfigChanged(conf.active, conf.ceiling, child);
-		}
+    }
 
     function changeChildAddress(address oldAddr, address newAddr)
         public
@@ -221,7 +223,7 @@ contract PocketFaucet is AccessControlUpgradeable {
         uint256 childBalance = conf.balance;
         require(
             amount <= childBalance,
-            "!withdrawFundsFromChild: amount > childBalance"
+            '!withdrawFundsFromChild: amount > childBalance'
         );
         if (amount == 0) amount = childBalance;
         conf.balance -= amount;
@@ -235,8 +237,9 @@ contract PocketFaucet is AccessControlUpgradeable {
     {
         require(
             conf.lastClaim + conf.periodicity <= block.timestamp,
-            "!calculateClaimable: period is not finished"
+            '!calculateClaimable: period is not finished'
         );
+        if (conf.periodicity == 0) return 0;
         uint256 claimable;
         while (conf.lastClaim + conf.periodicity <= block.timestamp) {
             claimable += conf.ceiling;
@@ -247,11 +250,11 @@ contract PocketFaucet is AccessControlUpgradeable {
 
     function claim() public {
         Config storage conf = childToConfig[msg.sender];
-        require(conf.active, "!claim: not active");
-        require(conf.balance > 0, "!claim: null balance");
+        require(conf.active, '!claim: not active');
+        require(conf.balance > 0, '!claim: null balance');
         require(
             childToConfig[msg.sender].active == true,
-            "!claim: account is inactive"
+            '!claim: account is inactive'
         );
 
         uint256 claimable = _calculateClaimable(conf);
@@ -265,7 +268,7 @@ contract PocketFaucet is AccessControlUpgradeable {
     function changeParentAddr(address oldAddr, address newAddr) public {
         require(
             parentToChildren[oldAddr][0] != address(0),
-            "!changeParentAddr : parent not set"
+            '!changeParentAddr : parent not set'
         );
 
         address[] storage children = parentToChildren[newAddr];

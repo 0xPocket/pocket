@@ -46,10 +46,10 @@ const CallToAction: React.FC = () => {
   };
 
   return (
-    <div className="flex h-32 flex-col gap-2">
+    <div className="flex flex-col gap-2">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="relative mt-8 flex h-14 max-w-md items-center justify-end rounded-lg border border-bright-darkest bg-bright text-white-darker dark:border-none"
+        className="relative flex h-14 max-w-md items-center justify-end rounded-lg border border-bright-darkest bg-bright text-white-darker dark:border-none md:mt-8"
       >
         <div className="absolute left-0">
           <FontAwesomeIcon icon={faEnvelope} className="px-4 opacity-70" />

@@ -18,9 +18,9 @@
   },
   "devDependencies": {
     "crypto-js": "^4.1.1",
-    "prettier-plugin-prisma": "^3.14.0",
+    "prettier-plugin-prisma": "^4.1.0",
     "prisma": "^4.0.0",
-    "ts-node": "^10.8.2"
+    "ts-node": "^10.9.1"
   },
   "dependencies": {
     "@prisma/client": "^4.0.0"

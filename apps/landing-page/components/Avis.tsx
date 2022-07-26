@@ -11,9 +11,9 @@ function Avis({ author, content }: AvisProps) {
       <p className="text-xl font-thin leading-relaxed">
         <FormattedMessage id={content} />
       </p>
-      <h3 className="text-right text-2xl">
+      <div className="text-right text-2xl">
         <FormattedMessage id={author} />
-      </h3>
+      </div>
     </div>
   );
 }

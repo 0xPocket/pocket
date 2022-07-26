@@ -57,6 +57,7 @@ model UserChild {
   web3Account  Web3Account?
   userParent   UserParent   @relation(fields: [userParentId], references: [id])
   userParentId String
+  Activity     Activity[]
 }
 
 // Wallet
@@ -92,6 +93,20 @@ model Account {
   scope             String?
   user              UserParent @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId            String     @unique
+}
+
+model Activity {
+  id            String      @id @default(cuid())
+  createdAt     DateTime    @default(now())
+  fromAddress   String
+  toAddress     String?
+  child         UserChild[]
+  blockNum      String
+  hash          String
+  category      String
+  value         String
+  asset         String?
+  erc721TokenId String?
 }
 
 model Session {
