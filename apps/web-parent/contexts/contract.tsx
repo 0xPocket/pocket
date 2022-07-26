@@ -53,7 +53,7 @@ export const SmartContractProvider = ({
       setContract(contract);
 
       const usdtContract = ERC20__factory.connect(
-        '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+        process.env.NEXT_PUBLIC_ERC20_FAKEUSDC_RINKEBY!,
         provider,
       );
 

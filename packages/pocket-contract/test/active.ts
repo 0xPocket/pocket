@@ -10,7 +10,7 @@ describe('Testing active param change', function () {
   let child1: Wallet, child2: Wallet;
   let parent1: ParentTester, parent2: ParentTester;
   let PocketFaucet_factory: PocketFaucet__factory, pocketFaucet: PocketFaucet;
-  const tokenAddr = constants.TOKEN_POLY.USDC;
+  const tokenAddr = constants.CHOSEN_TOKEN;
 
   before(async function () {
     const provider = new providers.JsonRpcProvider('http://localhost:8545');
@@ -43,7 +43,7 @@ describe('Testing active param change', function () {
 
   it('Should revert because not related', async function () {
     await expect(parent1.setActive(false, child2.address)).to.be.revertedWith(
-      "!_areRelated : child doesn't match"
+      "!_areRelated: child doesn't match"
     );
   });
 

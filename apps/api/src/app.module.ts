@@ -10,6 +10,7 @@ import { EmailModule } from './email/email.module';
 import { WalletModule } from './wallet/wallet.module';
 import { NotifyModule } from './notify/notify.module';
 import { EthereumModule } from './ethereum/ethereum.module';
+import { RampModule } from './ramp/ramp.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { EthereumModule } from './ethereum/ethereum.module';
     EmailModule,
     WalletModule,
     NotifyModule,
+    RampModule,
     EthereumModule,
   ],
   controllers: [AppController],

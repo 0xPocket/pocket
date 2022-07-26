@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { useWallet } from '../../contexts/wallet';
 import { Button } from '@lib/ui';
 import { useSmartContract } from '../../contexts/contract';
+import useRamp from '../../hooks/useRamp';
 
 type MainTabPanelProps = {
   balanceQuery: UseQueryResult<string | undefined, unknown>;
@@ -15,6 +16,7 @@ function MainTabPanel({ balanceQuery, setSelectedIndex }: MainTabPanelProps) {
   const router = useRouter();
   const { wallet } = useWallet();
   const { erc20Symbol } = useSmartContract();
+  const { showRamp } = useRamp({});
 
   if (!wallet) {
     return (
@@ -52,7 +54,7 @@ function MainTabPanel({ balanceQuery, setSelectedIndex }: MainTabPanelProps) {
           )}
         </div>
       </div>
-      <Button>Top-Up</Button>
+      <Button action={showRamp}>Top-Up</Button>
       <Button light action={() => setSelectedIndex(1)}>
         Settings
       </Button>

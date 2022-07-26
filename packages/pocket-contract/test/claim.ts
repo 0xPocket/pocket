@@ -16,7 +16,7 @@ describe('Testing to claim funds as child', function () {
   let PocketFaucet_factory: PocketFaucet__factory, pocketFaucet: PocketFaucet;
   let provider: providers.JsonRpcProvider;
   let parent1Wallet: Wallet;
-  const tokenAddr = constants.TOKEN_POLY.USDC;
+  const tokenAddr = constants.CHOSEN_TOKEN;
   const URL = constants.RPC_URL.LOCAL;
 
   before(async function () {
@@ -43,8 +43,10 @@ describe('Testing to claim funds as child', function () {
       child1.address,
       '10',
       tokenAddr,
-      constants.WHALES_POLY.USDC
+      constants.CHOSEN_WHALE
+
     );
+
     await child1.claim();
     await expect(child1.claim()).to.be.revertedWith('!claim: null balance');
   });
@@ -60,7 +62,7 @@ describe('Testing to claim funds as child', function () {
       child1.address,
       '100',
       tokenAddr,
-      constants.WHALES_POLY.USDC
+      constants.CHOSEN_WHALE
     );
     await goForwardNDays(URL, 8);
     await child1.claim();
@@ -88,7 +90,7 @@ describe('Testing to claim funds as child', function () {
       child1.address,
       '1000',
       tokenAddr,
-      constants.WHALES_POLY.USDC
+      constants.CHOSEN_WHALE
     );
     await goForwardNDays(URL, 7 * 5 + 1);
     await child1.claim();
@@ -116,7 +118,7 @@ describe('Testing to claim funds as child', function () {
       child1.address,
       '30',
       tokenAddr,
-      constants.WHALES_POLY.USDC
+      constants.CHOSEN_WHALE
     );
     const diffExpected = await parent1.getChildBalance(child1Wallet.address);
     await goForwardNDays(URL, 7 * 5);
@@ -144,7 +146,7 @@ describe('Testing to claim funds as child', function () {
       child1.address,
       '100',
       tokenAddr,
-      constants.WHALES_POLY.USDC
+      constants.CHOSEN_WHALE
     );
     const newPeriodicity = constants.TIME.WEEK * 3;
     await parent1.changeConfig('100', newPeriodicity, child1.address);
@@ -174,7 +176,8 @@ describe('Testing to claim funds as child', function () {
       child1.address,
       '100',
       tokenAddr,
-      constants.WHALES_POLY.USDC
+      constants.CHOSEN_WHALE
+
     );
     const newPeriodicity = constants.TIME.DAY * 3;
     await parent1.changeConfig('100', newPeriodicity, child1.address);
@@ -199,7 +202,8 @@ describe('Testing to claim funds as child', function () {
       child1.address,
       '100',
       tokenAddr,
-      constants.WHALES_POLY.USDC
+      constants.CHOSEN_WHALE
+
     );
     await parent1.setActive(false, child1.address);
     await expect(child1.claim()).to.be.revertedWith('!claim: not active');
@@ -216,7 +220,7 @@ describe('Testing to claim funds as child', function () {
       child1.address,
       '100',
       tokenAddr,
-      constants.WHALES_POLY.USDC
+      constants.CHOSEN_WHALE
     );
     await parent1.setActive(false, child1.address);
     await parent1.setActive(true, child1.address);

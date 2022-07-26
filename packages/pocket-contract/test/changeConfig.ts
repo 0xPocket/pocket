@@ -12,10 +12,10 @@ describe('Testing conf changement', function () {
   let PocketFaucet_factory: PocketFaucet__factory, pocketFaucet: PocketFaucet;
   let provider: providers.JsonRpcProvider;
   let parent1Wallet: Wallet;
-  const tokenAddr = constants.TOKEN_POLY.USDC;
+  const tokenAddr = constants.CHOSEN_TOKEN;
 
   before(async function () {
-    provider = new providers.JsonRpcProvider('http://localhost:8545');
+    provider = new providers.JsonRpcProvider(constants.RPC_URL.LOCAL);
     child1 = new Wallet(constants.FAMILY_ACCOUNT.child1, provider);
     child2 = new Wallet(constants.FAMILY_ACCOUNT.child2, provider);
 
@@ -31,21 +31,21 @@ describe('Testing conf changement', function () {
 
   it('Should revert because new child addr is zero', async function () {
     await expect(
-      parent1.changeConfigAndSend(0, 1, ethers.constants.AddressZero)
-    ).to.be.revertedWith('!_areRelated : null child address');
+      parent1.changeConfigAndSend(0, 0, ethers.constants.AddressZero)
+    ).to.be.revertedWith('!_areRelated: null child address');
   });
 
   it('Should revert because child2 is not set for this parent', async function () {
     await expect(
-      parent1.changeConfigAndSend(0, 1, child2.address)
-    ).to.be.revertedWith("!_areRelated : child doesn't match");
+      parent1.changeConfigAndSend(0, 0, child2.address)
+    ).to.be.revertedWith("!_areRelated: child doesn't match");
   });
 
   it('Should revert because child1 is not set anymore', async function () {
     await parent1.removeChild(child1.address);
     await expect(
-      parent1.changeConfigAndSend(0, 1, child1.address)
-    ).to.be.revertedWith("!_areRelated : child doesn't match");
+      parent1.changeConfigAndSend(0, 0, child1.address)
+    ).to.be.revertedWith("!_areRelated: child doesn't match");
   });
 
   it('Should change ceiling', async function () {
