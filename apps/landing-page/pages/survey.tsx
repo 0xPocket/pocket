@@ -60,34 +60,34 @@ function Index() {
 
   const questions = useMemo(() => {
     const questions = [
-      <Question
-        register={register('cryptoKnowledge')}
-        title="question.cryptoKnowledge"
-        options={['choices.yes', 'choices.no']}
-        values={['Oui', 'Non']}
-      />,
-      <Question
-        register={register('childKnowledge')}
-        title="question.childKnowledge"
-        options={['choices.yes', 'choices.no', 'choices.nochild']}
-        values={['Oui', 'Non', "Je n'ai pas d'enfants"]}
-      />,
-      <Question
-        register={register('childPlayToEarn')}
-        title="question.childPlayToEarn"
-        options={['choices.yes', 'choices.no', 'choices.nochild']}
-        values={['Oui', 'Non', "Je n'ai pas d'enfants"]}
-      />,
-      <Question
-        register={register('gavePocketMoney')}
-        title="question.gavePocketMoney"
-        options={['choices.bankaccount', 'choices.cash', 'choices.no']}
-        values={[
-          'Oui, via un compte bancaire',
-          'Oui, en espèces',
-          "Je n'ai pas d'enfants",
-        ]}
-      />,
+      // <Question
+      //   register={register('cryptoKnowledge')}
+      //   title="question.cryptoKnowledge"
+      //   options={['choices.yes', 'choices.no']}
+      //   values={['Oui', 'Non']}
+      // />,
+      // <Question
+      //   register={register('childKnowledge')}
+      //   title="question.childKnowledge"
+      //   options={['choices.yes', 'choices.no', 'choices.nochild']}
+      //   values={['Oui', 'Non', "Je n'ai pas d'enfants"]}
+      // />,
+      // <Question
+      //   register={register('childPlayToEarn')}
+      //   title="question.childPlayToEarn"
+      //   options={['choices.yes', 'choices.no', 'choices.nochild']}
+      //   values={['Oui', 'Non', "Je n'ai pas d'enfants"]}
+      // />,
+      // <Question
+      //   register={register('gavePocketMoney')}
+      //   title="question.gavePocketMoney"
+      //   options={['choices.bankaccount', 'choices.cash', 'choices.no']}
+      //   values={[
+      //     'Oui, via un compte bancaire',
+      //     'Oui, en espèces',
+      //     "Je n'ai pas d'enfants",
+      //   ]}
+      // />,
       <Question
         register={register('contact')}
         title="question.contact.title"

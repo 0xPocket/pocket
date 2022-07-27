@@ -34,7 +34,7 @@
   "simple.section.subtitle": "Be an early adopter.",
   "simple.section.content": "Pocket will be open to the public very soon. Be among the first subscribers and enjoy exclusive benefits.",
 
-  "calltoaction.action": "Start",
+  "calltoaction.action": "Register",
   "calltoaction.error": "You must submit a valid email.",
   "calltoaction.eamil": "Email address",
 
@@ -74,6 +74,6 @@
   "choices.bankaccount": "Yes, through a bank account",
   "choices.cash": "Yes, in cash",
 
-  "conclusion.title": "Thank you for your interest in our product 👍",
-  "conclusion.team": "Pocket team"
+  "conclusion.title": "Thank you for you interest ❤️",
+  "conclusion.team": "Pocket is still in development, we will contact you soon 🚀"
 }

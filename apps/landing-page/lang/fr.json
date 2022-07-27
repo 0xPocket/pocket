@@ -34,7 +34,7 @@
   "simple.section.subtitle": "Soyez le premier.",
   "simple.section.content": "Pocket sera disponible très rapidement. Faites partie des premiers inscrits et profitez d'avantages exclusifs.",
 
-  "calltoaction.action": "Commencer",
+  "calltoaction.action": "S'inscrire",
   "calltoaction.error": "Vous devez rentrer un email valide",
   "calltoaction.eamil": "Adresse email",
 
@@ -74,6 +74,6 @@
   "choices.bankaccount": "Oui, via un compte bancaire",
   "choices.cash": "Oui, en espèces",
 
-  "conclusion.title": "Merci de votre intérêt pour notre produit 👍",
-  "conclusion.team": "L'équipe de Pocket."
+  "conclusion.title": "Merci de votre intérêt ❤️",
+  "conclusion.team": "Pocket est toujours en développement, à très bientôt 🚀"
 }
