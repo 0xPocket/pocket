@@ -14,14 +14,14 @@
   "parentcard.simplicity.content": "Créez un compte, ajustez la fréquence et le montant d’argent de poche en quelques clics.",
 
   "parentcard.serenity.title": "Sérénité",
-  "parentcard.serenity.content": "Soyez avertis en temps réel de l’activité de vos enfants ou recevez un résumé hebdomadaire.",
+  "parentcard.serenity.content": "Soyez avertis en temps réel de l’activité de vos enfants et recevez un résumé hebdomadaire.",
 
   "parentcard.stability.title": "Stabilité",
-  "parentcard.stability.content": "Vos fonds ne sont pas soumis aux aléas du marché grâce à une cryptomonnaie indexée sur l'euro.",
+  "parentcard.stability.content": "L'argent de poche n'est pas soumis aux aléas du marché grâce à une cryptomonnaie indexée sur l'euro ou le dollar.",
 
   "childcard.title": "Enfants",
 
-  "childcard.practice.title": "Apprentissage",
+  "childcard.practice.title": "Initiation",
   "childcard.practice.content": "Une plateforme pédagogique pour faire ses premiers pas dans le web3.",
 
   "childcard.discovery.title": "Découverte",
@@ -34,7 +34,7 @@
   "simple.section.subtitle": "Soyez le premier.",
   "simple.section.content": "Pocket sera disponible très rapidement. Faites partie des premiers inscrits et profitez d'avantages exclusifs.",
 
-  "calltoaction.action": "Commencer",
+  "calltoaction.action": "S'inscrire",
   "calltoaction.error": "Vous devez rentrer un email valide",
   "calltoaction.eamil": "Adresse email",
 
@@ -74,6 +74,6 @@
   "choices.bankaccount": "Oui, via un compte bancaire",
   "choices.cash": "Oui, en espèces",
 
-  "conclusion.title": "Merci de votre intérêt pour notre produit 👍",
-  "conclusion.team": "L'équipe de Pocket."
+  "conclusion.title": "Merci de votre intérêt ❤️",
+  "conclusion.team": "Pocket est en cours de développement, à très bientôt 🚀"
 }

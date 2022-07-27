@@ -20,7 +20,7 @@ function Index({}: IndexProps) {
             <IndexPageCardsChildren />
           </div>
           <SimpleSection />
-          <Carrousel />
+          {/* <Carrousel /> */}
           <BackedBySection />
         </div>
         <Footer />
