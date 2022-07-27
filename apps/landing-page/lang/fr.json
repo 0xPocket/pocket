@@ -14,14 +14,14 @@
   "parentcard.simplicity.content": "Créez un compte, ajustez la fréquence et le montant d’argent de poche en quelques clics.",
 
   "parentcard.serenity.title": "Sérénité",
-  "parentcard.serenity.content": "Soyez avertis en temps réel de l’activité de vos enfants ou recevez un résumé hebdomadaire.",
+  "parentcard.serenity.content": "Soyez avertis en temps réel de l’activité de vos enfants et recevez un résumé hebdomadaire.",
 
   "parentcard.stability.title": "Stabilité",
-  "parentcard.stability.content": "Vos fonds ne sont pas soumis aux aléas du marché grâce à une cryptomonnaie indexée sur l'euro.",
+  "parentcard.stability.content": "L'argent de poche n'est pas soumis aux aléas du marché grâce à une cryptomonnaie indexée sur l'euro ou le dollar.",
 
   "childcard.title": "Enfants",
 
-  "childcard.practice.title": "Apprentissage",
+  "childcard.practice.title": "Initiation",
   "childcard.practice.content": "Une plateforme pédagogique pour faire ses premiers pas dans le web3.",
 
   "childcard.discovery.title": "Découverte",
@@ -75,5 +75,5 @@
   "choices.cash": "Oui, en espèces",
 
   "conclusion.title": "Merci de votre intérêt ❤️",
-  "conclusion.team": "Pocket est toujours en développement, à très bientôt 🚀"
+  "conclusion.team": "Pocket est en cours de développement, à très bientôt 🚀"
 }

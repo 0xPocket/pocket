@@ -36,7 +36,7 @@ function Index() {
     resolver: zodResolver(formSchema),
   });
 
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(1);
   const submitRef = useRef<HTMLInputElement>(null);
 
   const mutation = useMutation((data: FormValues) =>
@@ -124,7 +124,7 @@ function Index() {
         className="relative h-screen overflow-hidden"
       >
         <AnimationLayer show={step === 0} questionsLength={questions.length}>
-          <Introduction onClick={() => setStep((step) => step + 1)} />
+          {/* <Introduction onClick={() => setStep((step) => step + 1)} /> */}
         </AnimationLayer>
 
         {questions.map((question, index) => (
