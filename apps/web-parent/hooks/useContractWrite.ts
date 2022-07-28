@@ -1,6 +1,6 @@
 import type { TransactionResponse } from '@ethersproject/providers';
 import type { CallOverrides, Contract } from 'ethers';
-import { useContractWrite as wagmiUseContractWrite } from 'wagmi';
+import { useDeprecatedContractWrite as wagmiUseContractWrite } from 'wagmi';
 import type { UseContractWriteArgs } from 'wagmi/dist/declarations/src/hooks/contracts/useContractWrite';
 
 type ContractMethodNames<T extends Contract> = keyof T['functions'];
@@ -13,7 +13,10 @@ type ContractMethodArgs<
 type UseContractWriteParams<
   T extends Contract,
   U extends ContractMethodNames<T>,
-> = Omit<UseContractWriteArgs, 'addressOrName' | 'contractInterface'> & {
+> = Omit<
+  UseContractWriteArgs,
+  'addressOrName' | 'contractInterface' | 'mode'
+> & {
   contract: T;
   functionName: U;
   args?: ContractMethodArgs<T, U>;

@@ -34,6 +34,7 @@ export async function setErc20Balance(
       .transfer(randomAddress, balance.sub(newAmount));
   } else if (balance.lt(newAmount)) {
     const sender = await impersonate(whaleAddr);
+
     await tokenContract
       .connect(sender)
       .transfer(await account.getAddress(), newAmount.sub(balance));

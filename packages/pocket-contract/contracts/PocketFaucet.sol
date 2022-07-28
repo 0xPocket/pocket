@@ -57,7 +57,7 @@ contract PocketFaucet is AccessControlUpgradeable {
     }
 
     modifier _areRelated(address parent, address child) {
-        require(child != address(0), '!_areRelated : null child address');
+        require(child != address(0), "!_areRelated: null child address");
         bool isChild = false;
         uint256 length = parentToChildren[parent].length;
         for (uint256 i = 0; i < length; i++) {
@@ -66,10 +66,10 @@ contract PocketFaucet is AccessControlUpgradeable {
                 break;
             }
         }
-        require(isChild == true, "!_areRelated : child doesn't match");
+        require(isChild == true, "!_areRelated: child doesn't match");
         require(
             childToConfig[child].parent == parent,
-            "!_areRelated : parent doesn't match"
+            "!_areRelated: parent doesn't match"
         );
         _;
     }
@@ -82,11 +82,11 @@ contract PocketFaucet is AccessControlUpgradeable {
         uint256 ceiling,
         uint256 periodicity,
         address child
-    ) external {
-        require(child != address(0), 'Address is null');
+    ) public {
+        require(child != address(0), "!addChild: Address is null");
         require(
             childToConfig[child].parent == address(0),
-            '!addChid: Child address already taken'
+            "!addChild: Child address already taken"
         );
         require(periodicity != 0, '!addChild: periodicity cannot be 0');
         Config memory conf;
@@ -100,6 +100,15 @@ contract PocketFaucet is AccessControlUpgradeable {
         parentToChildren[msg.sender].push(child);
 
         emit ChildAdded(msg.sender, child);
+    }
+
+    function addChildAndFunds(
+        uint256 ceiling,
+        uint256 periodicity,
+        address child, 
+        uint256 amount ) external {
+        addChild(ceiling, periodicity, child);
+        if (amount != 0) addFunds(amount, child);
     }
 
     function removeChild(address child)
@@ -129,12 +138,13 @@ contract PocketFaucet is AccessControlUpgradeable {
         emit ChildRemoved(childConfig.parent, child);
     }
 
-    // TO DO : test
+    // TO DO: test
     function setActive(bool active, address child)
         public
         _areRelated(msg.sender, child)
     {
-        require(child != address(0), '!activateSwitch : null child address');
+
+        require(child != address(0), "!activateSwitch: null child address");
         Config storage conf = childToConfig[child];
         require(conf.parent != address(0), '!activateSwitch: child not set');
         conf.active = active;
@@ -163,11 +173,11 @@ contract PocketFaucet is AccessControlUpgradeable {
         Config memory conf = childToConfig[oldAddr];
         require(
             conf.parent != address(0),
-            '!changeAddr : child does not exist'
+            "!changeAddr: child does not exist"
         );
         require(
             childToConfig[newAddr].parent == address(0),
-            '!changeChildAddress : child already exist'
+            "!changeChildAddress: child already exist"
         );
 
         childToConfig[newAddr] = conf;

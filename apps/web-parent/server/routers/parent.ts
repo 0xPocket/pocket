@@ -1,29 +1,30 @@
-import { User } from "@prisma/client";
-import { TRPCError } from "@trpc/server";
-import { z } from "zod";
-import { createProtectedRouter } from "../createRouter";
+import { User } from '@prisma/client';
+import { TRPCError } from '@trpc/server';
+import { z } from 'zod';
+import { createProtectedRouter } from '../createRouter';
+import { prisma } from '../prisma';
 import {
   generateVerificationToken,
   hashToken,
   saveVerificationToken,
-} from "../services/jwt";
-import { sendEmail } from "../services/sendMail";
+} from '../services/jwt';
+import { sendEmail } from '../services/sendMail';
 
 export const parentRouter = createProtectedRouter()
   .middleware(({ ctx, next }) => {
-    if (ctx.session.user.type !== "Parent") {
+    if (ctx.session.user.type !== 'Parent') {
       throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "You must be a Parent to access those routes",
+        code: 'BAD_REQUEST',
+        message: 'You must be a Parent to access those routes',
       });
     }
     return next();
   })
-  .query("children", {
+  .query('children', {
     resolve: ({ ctx }) => {
-      return ctx.prisma.user.findMany({
+      return prisma.user.findMany({
         where: {
-          type: "Child",
+          type: 'Child',
           child: {
             parentUserId: ctx.session.user.id,
           },
@@ -34,12 +35,12 @@ export const parentRouter = createProtectedRouter()
       });
     },
   })
-  .query("childById", {
+  .query('childById', {
     input: z.object({
       id: z.string(),
     }),
     resolve: ({ ctx, input }) => {
-      return ctx.prisma.user.findUnique({
+      return prisma.user.findUnique({
         where: {
           id: input.id,
         },
@@ -49,13 +50,13 @@ export const parentRouter = createProtectedRouter()
       });
     },
   })
-  .mutation("children", {
+  .mutation('children', {
     input: z.object({
       name: z.string(),
       email: z.string().email(),
     }),
     resolve: async ({ ctx, input }) => {
-      const parent = await ctx.prisma.user.findUnique({
+      const parent = await prisma.user.findUnique({
         where: {
           id: ctx.session?.user.id,
         },
@@ -64,19 +65,19 @@ export const parentRouter = createProtectedRouter()
       console.log(input);
 
       if (!parent) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+        throw new TRPCError({ code: 'UNAUTHORIZED' });
       }
 
       let child: User;
 
-      console.log("parent id", parent.id);
+      console.log('parent id', parent.id);
       try {
-        child = await ctx.prisma.user.create({
+        child = await prisma.user.create({
           data: {
             name: input.name,
             email: input.email,
-            type: "Child",
-            address: "adga",
+            type: 'Child',
+            address: 'adga',
             newUser: true,
             child: {
               create: {
@@ -92,8 +93,8 @@ export const parentRouter = createProtectedRouter()
       } catch (e) {
         console.log(e);
         throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Child with this email already exists",
+          code: 'BAD_REQUEST',
+          message: 'Child with this email already exists',
         });
       }
 
@@ -113,8 +114,8 @@ export const parentRouter = createProtectedRouter()
 
         await sendEmail({
           to: child.email!,
-          subject: "Welcome to the family",
-          template: "child_invitation",
+          subject: 'Welcome to the family',
+          template: 'child_invitation',
           context: {
             name: child.name!,
             // TODO: Use correct URL from production
@@ -123,8 +124,8 @@ export const parentRouter = createProtectedRouter()
         });
       }
 
-      console.log("children created");
+      console.log('children created');
 
-      return "OK";
+      return 'OK';
     },
   });

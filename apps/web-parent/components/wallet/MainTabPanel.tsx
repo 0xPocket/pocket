@@ -2,12 +2,14 @@ import { toast } from 'react-toastify';
 import { Button } from '@lib/ui';
 import { useAccount, useBalance } from 'wagmi';
 import { useSmartContract } from '../../contexts/contract';
+import useRamp from '../../hooks/useRamp';
 
 type MainTabPanelProps = {};
 
 function MainTabPanel({}: MainTabPanelProps) {
   const { address } = useAccount();
   const { erc20 } = useSmartContract();
+  const { showRamp } = useRamp({});
   const { data, isLoading } = useBalance({
     addressOrName: address,
     token: erc20.data?.address,
@@ -43,7 +45,7 @@ function MainTabPanel({}: MainTabPanelProps) {
           )}
         </div>
       </div>
-      <Button>Top-Up</Button>
+      <Button action={showRamp}>Top-Up</Button>
     </div>
   );
 }

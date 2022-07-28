@@ -52,7 +52,7 @@ function ChildSettingsForm({
       args: [
         parseUnits(data.ceiling, erc20.data?.decimals),
         data.periodicity,
-        child.web3Account.address,
+        child.address,
       ],
     });
     returnFn();

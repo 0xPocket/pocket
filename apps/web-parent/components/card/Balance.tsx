@@ -22,7 +22,9 @@ function Balance({ value, setSelectedIndex, hideActions }: BalanceProps) {
       </div>
       {!hideActions && (
         <div className="flex space-x-4">
-          <button onClick={() => setSelectedIndex(2)}>settings</button>
+          <button onClick={() => setSelectedIndex(2)} className="text-primary">
+            settings
+          </button>
           <button onClick={() => setSelectedIndex(1)} className="success-btn">
             <FontAwesomeIcon icon={faCircleDollarToSlot} className="mr-2" />
             add funds

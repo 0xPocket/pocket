@@ -18,10 +18,7 @@ interface Options {
     providers: OAuthProvider[];
     callbackUrl?: string;
   };
-  additionalMagicOptions?: MagicSDKAdditionalConfiguration<
-    string,
-    OAuthExtension[]
-  >;
+  additionalMagicOptions?: MagicSDKAdditionalConfiguration<string>;
 }
 
 interface UserDetailsEmail {
@@ -45,7 +42,7 @@ export class MagicConnector extends Connector {
 
   provider?: any;
 
-  magicSDK: InstanceWithExtensions<SDKBase, OAuthExtension[]> | undefined;
+  magicSDK: Magic | undefined;
 
   magicOptions: Options;
 
@@ -174,11 +171,10 @@ export class MagicConnector extends Connector {
     }
   }
 
-  getMagicSDK(): InstanceWithExtensions<SDKBase, OAuthExtension[]> {
+  getMagicSDK(): Magic {
     if (!this.magicSDK) {
       this.magicSDK = new Magic(this.magicOptions.apiKey, {
         ...this.magicOptions.additionalMagicOptions,
-        extensions: [new OAuthExtension()],
       });
       this.magicSDK.preload();
       return this.magicSDK;

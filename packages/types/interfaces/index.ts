@@ -1,9 +1,4 @@
-import {
-  Account,
-  User,
-  UserParent as Parent,
-  Web3Account,
-} from "@prisma/client";
+import { User, Parent } from "@prisma/client";
 import { Child } from "@prisma/client";
 
 export * from "./Test.interface";
@@ -11,7 +6,7 @@ export * from "./BackResError.interface";
 
 export interface UserParent extends User {
   type: "Parent";
-  parent: Parent;
+  parent: Parent | null;
 }
 
 export interface UserChild extends User {

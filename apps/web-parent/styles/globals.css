@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply font-raleway;
+    @apply background font-raleway;
   }
   html {
     scroll-behavior: smooth;
@@ -20,15 +20,48 @@
     @apply text-primary;
   }
 
+  .without-ring {
+    @apply focus:outline-0;
+  }
+
+  .background {
+    @apply bg-bright-bg text-dark-lightest dark:bg-dark dark:text-white;
+  }
+
   .container-classic {
-    @apply border border-dark border-opacity-10 bg-bright-dark shadow-lg dark:border-white-darker dark:bg-dark-light;
+    @apply border border-dark border-opacity-10 bg-bright-dark dark:border-white-darker dark:bg-dark-light dark:shadow-lg;
   }
 
   .success-btn {
-    @apply flex items-center rounded-md bg-primary px-4 py-3 text-bright dark:bg-success-dark;
+    @apply flex  items-center rounded-md bg-primary px-4 py-3 text-bright;
   }
 
-  .without-ring {
-    @apply focus:outline-0;
+  .skeleton {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .skeleton::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0,
+      rgba(255, 255, 255, 0.2) 20%,
+      rgba(255, 255, 255, 0.5) 60%,
+      rgba(255, 255, 255, 0)
+    );
+    animation: shimmer 2s infinite;
+    content: '';
+  }
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
   }
 }

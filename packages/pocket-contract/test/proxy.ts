@@ -36,7 +36,7 @@ describe('Deploy and tests on proxy functions', function () {
     [admin, testAccount1, badActor] = await ethers.getSigners();
     PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
     pocketFaucet = (await upgrades.deployProxy(PocketFaucet_factory, [
-      constants.TOKEN_POLY.USDC,
+      constants.CHOSEN_TOKEN,
     ])) as PocketFaucet;
     await pocketFaucet.deployed();
 
@@ -49,7 +49,9 @@ describe('Deploy and tests on proxy functions', function () {
   });
 
   it('Should have set baseToken', async function () {
-    expect(await pocketFaucet.baseToken()).to.equal(constants.TOKEN_POLY.USDC);
+    expect((await pocketFaucet.baseToken()).toLowerCase()).to.equal(
+      constants.CHOSEN_TOKEN
+    );
   });
 
   it('Should have set good admin for proxy + owner of proxyAdmin', async function () {

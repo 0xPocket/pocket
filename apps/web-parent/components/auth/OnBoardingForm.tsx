@@ -2,8 +2,8 @@ import { useSession } from 'next-auth/react';
 import { FC, useEffect } from 'react';
 import { z } from 'zod';
 import { useZodForm } from '../../utils/useZodForm';
-import { UserSchema } from '@lib/trpc/schemas';
 import { trpc } from '../../utils/trpc';
+import { UserSchema } from '../../server/schemas';
 
 const OnBoardingForm: FC = () => {
   const { data } = useSession();

@@ -1,21 +1,14 @@
-import { Wallet, providers, BigNumber } from 'ethers';
-import { ParentContract } from '../ts/Parent';
+import { BigNumber } from 'ethers';
 import { setErc20Balance } from '../utils/ERC20';
 import * as constants from '../utils/constants';
-import { formatUnits, parseUnits } from 'ethers/lib/utils';
-import { ethers, network } from 'hardhat';
+import { parseUnits } from 'ethers/lib/utils';
+import { ethers } from 'hardhat';
 import {
   impersonateAccount,
   setBalance,
   stopImpersonatingAccount,
 } from '@nomicfoundation/hardhat-network-helpers';
 import { PocketFaucet__factory } from '../typechain-types';
-
-const ELON_MUSK = {
-  publicKey: '0x70997970c51812dc3a010c7d01b50e0d17dc79c8',
-  privateKey:
-    '0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d',
-};
 
 const DAMIAN_MUSK = {
   publicKey: '0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc',
@@ -51,27 +44,13 @@ async function main() {
   );
 
   await setErc20Balance(
-    constants.TOKEN_POLY.USDC,
+    constants.CHOSEN_TOKEN,
     signer,
     '3000',
-    constants.WHALES_POLY.USDC
+    constants.CHOSEN_WHALE
   );
 
   await stopImpersonatingAccount(SOLAL_DUNCKEL.publicKey);
-
-  // // Transfer some USDT to Elon Musk
-
-  // const childWallet = new Wallet(
-  //   DAMIAN_MUSK.privateKey, // Elon Musk's Wallet
-  //   provider
-  // );
-
-  // await setErc20Balance(
-  //   constants.TOKEN_POLY.USDC,
-  //   childWallet,
-  //   '12',
-  //   constants.WHALES_POLY.USDC
-  // );
 
   console.log('Contract seeding complete !');
 }

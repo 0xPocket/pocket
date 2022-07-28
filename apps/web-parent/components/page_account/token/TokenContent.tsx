@@ -35,7 +35,7 @@ function TokenContent({ child }: TokenContentProps) {
   return (
     <div className="space-y-8">
       <h2>Token Balance</h2>
-      <div className="grid grid-cols-12 ">
+      <div className="container-classic grid grid-cols-12 rounded-lg px-8 ">
         <div className="col-span-4 aspect-square">
           {!isLoading && data?.items ? (
             <PieChartComp tokenList={data.items} />
@@ -43,7 +43,7 @@ function TokenContent({ child }: TokenContentProps) {
             <FontAwesomeIcon icon={faSpinner} spin />
           )}
         </div>
-        <div className="col-span-8">
+        <div className="col-span-8 flex items-center">
           {!isLoading && data?.items ? (
             <TokenTable tokenList={data.items} />
           ) : (

@@ -3,8 +3,6 @@ const dotenv = require('dotenv');
 dotenv.config({ path: '../../.env' });
 
 const withTM = require('next-transpile-modules')([
-  '@lib/prisma',
-  '@lib/trpc',
   '@lib/ui',
   'pocket-contract',
 ]);
@@ -12,6 +10,12 @@ const withTM = require('next-transpile-modules')([
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  experimental: {
+    images: { allowFutureImage: true },
+  },
+  images: {
+    domains: ['logos.covalenthq.com'],
+  },
   async rewrites() {
     return [
       {

@@ -1,22 +1,23 @@
-import type { NextAuthOptions, Session } from "next-auth";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import CredentialsProvider from "next-auth/providers/credentials";
-import { Magic } from "@magic-sdk/admin";
-import { prisma } from "@lib/prisma";
-import { SiweMessage } from "siwe";
-import { UserType } from "@prisma/client";
+import type { NextAuthOptions, Session } from 'next-auth';
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import { Magic } from '@magic-sdk/admin';
+import { SiweMessage } from 'siwe';
+import { PrismaClient, UserType } from '@prisma/client';
 
-const mAdmin = new Magic("sk_live_8185E1937878AC9A");
+const mAdmin = new Magic('sk_live_8185E1937878AC9A');
+
+const prisma = new PrismaClient();
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
-      name: "Magic",
-      id: "magic",
+      name: 'Magic',
+      id: 'magic',
       credentials: {
-        token: { label: "token", type: "text", placeholder: "token" },
+        token: { label: 'token', type: 'text', placeholder: 'token' },
       },
       async authorize(credentials) {
         if (!credentials) return null;
@@ -30,11 +31,11 @@ export const authOptions: NextAuthOptions = {
 
         const userAddress = mAdmin.token.getPublicAddress(credentials.token);
         const userMetadata = await mAdmin.users.getMetadataByPublicAddress(
-          userAddress
+          userAddress,
         );
 
         if (!userMetadata.email) {
-          throw new Error("no email");
+          throw new Error('no email');
         }
 
         const existingUser = await prisma.user.findUnique({
@@ -47,7 +48,7 @@ export const authOptions: NextAuthOptions = {
               email: userMetadata.email,
               emailVerified: new Date(),
               address: userAddress,
-              type: "Parent",
+              type: 'Parent',
               parent: {
                 create: {},
               },
@@ -74,67 +75,67 @@ export const authOptions: NextAuthOptions = {
       },
     }),
     CredentialsProvider({
-      name: "Ethereum",
-      id: "ethereum",
+      name: 'Ethereum',
+      id: 'ethereum',
       credentials: {
         message: {
-          label: "Message",
-          type: "text",
-          placeholder: "0x0",
+          label: 'Message',
+          type: 'text',
+          placeholder: '0x0',
         },
         signature: {
-          label: "Signature",
-          type: "text",
-          placeholder: "0x0",
+          label: 'Signature',
+          type: 'text',
+          placeholder: '0x0',
         },
         type: {
-          label: "Type",
-          type: "text",
-          placeholder: "Parent",
+          label: 'Type',
+          type: 'text',
+          placeholder: 'Parent',
         },
       },
       async authorize(credentials) {
         try {
           if (!credentials) {
-            throw new Error("no credentials");
+            throw new Error('no credentials');
           }
 
           const { message, signature, type } = credentials;
 
           if (type !== UserType.Parent && type !== UserType.Child) {
-            throw new Error("invalid type");
+            throw new Error('invalid type');
           }
 
-          console.log("test0");
+          console.log('test0');
 
-          const siwe = new SiweMessage(JSON.parse(message || "{}"));
-          await siwe.validate(signature || "");
+          const siwe = new SiweMessage(JSON.parse(message || '{}'));
+          await siwe.validate(signature || '');
 
           const existingUser = await prisma.user.findUnique({
             where: { address: siwe.address },
           });
 
-          console.log("test1");
+          console.log('test1');
 
           if (!existingUser && type === UserType.Child) {
-            throw new Error("Your parent must create your account.");
+            throw new Error('Your parent must create your account.');
           }
 
-          console.log("test2");
+          console.log('test2');
 
           if (existingUser && existingUser.type !== type) {
             throw new Error(
-              `You must sign in with the ${existingUser.type} form.`
+              `You must sign in with the ${existingUser.type} form.`,
             );
           }
 
-          console.log("test3");
+          console.log('test3');
 
           if (!existingUser) {
             const newUser = await prisma.user.create({
               data: {
                 address: siwe.address,
-                type: "Parent",
+                type: 'Parent',
               },
             });
 
@@ -161,10 +162,10 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   session: {
-    strategy: "jwt",
+    strategy: 'jwt',
   },
   pages: {
-    signIn: "/connect",
+    signIn: '/connect',
   },
   callbacks: {
     signIn: async ({ user, account }) => {
@@ -185,14 +186,14 @@ export const authOptions: NextAuthOptions = {
         user: {
           ...session.user,
           name: token.name,
-          type: token.type as "Parent" | "Child",
+          type: token.type as 'Parent' | 'Child',
           id: token.sub as string,
         },
       };
       return newSession;
     },
     jwt: async ({ token, account, user }) => {
-      console.log("==== JWT CALLBACK ====");
+      console.log('==== JWT CALLBACK ====');
       // console.log("token", token); //name, email, picture, sub (id)
       // console.log("account", account);
       // console.log("user", user); // user from return
@@ -205,10 +206,10 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (checkUser?.newUser) {
-          console.log("New user, we keep the token", token);
+          console.log('New user, we keep the token', token);
           return token;
         } else {
-          console.log("Wet set a new token");
+          console.log('Wet set a new token');
           token = {
             ...token,
             type: checkUser?.type,
@@ -221,7 +222,7 @@ export const authOptions: NextAuthOptions = {
       // console.log("NO");
 
       if (user) {
-        console.log("Wet set a the user from scratch");
+        console.log('Wet set a the user from scratch');
 
         token = {
           ...token,

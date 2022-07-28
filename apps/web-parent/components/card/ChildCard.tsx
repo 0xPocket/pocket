@@ -34,12 +34,12 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
           <h3>{child.email}</h3>
         </div>
         {!hasLink ? (
-          <Link href={`https://etherscan.io/address/${child.address}`}>
-            <a>See on etherscan</a>
+          <Link href={`https://polygonscan.com/address/${child.address}`}>
+            <a className="py-3">See on polygonscan</a>
           </Link>
         ) : (
           <Link href={`/account/${child.id}`}>
-            <a>{`Go to ${child.name}'s profile`}</a>
+            <a className="py-3">{`Go to ${child.name}'s profile`}</a>
           </Link>
         )}
       </div>

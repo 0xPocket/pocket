@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["interactiveTransactions"]
 }
 
@@ -25,7 +25,7 @@ model User {
   address   String   @unique
   newUser   Boolean  @default(true)
 
-  email         String?    @unique
+  email         String?   @unique
   emailVerified DateTime?
 
   type   UserType
@@ -37,6 +37,7 @@ model Parent {
   user   User   @relation(fields: [userId], references: [id])
   userId String @id @unique
 
+  ramp     Ramp[]
   children Child[]
 }
 
@@ -44,42 +45,37 @@ model Child {
   user   User   @relation(fields: [userId], references: [id])
   userId String @id @unique
 
-  status ChildStatus @default(INVITED)
+  status     ChildStatus @default(INVITED)
+  activities Activity[]
 
   parent       Parent @relation(fields: [parentUserId], references: [userId])
   parentUserId String
 }
 
-model UserParent {
-  id        String      @id @default(cuid())
-  firstName String?
-  lastName  String?
-  email     String      @unique
-  address   String
-  children  UserChild[]
+// User Parent Ramp
+
+model Ramp {
+  id           Int        @id @default(autoincrement())
+  rampId       String     @unique
+  createdAt    DateTime   @default(now())
+  cryptoAmount String
+  cryptoAsset  String
+  fiatValue    Float
+  fiatCurrency String
+  appliedFee   Float
+  status       RampStatus
+  userParent   Parent     @relation(fields: [userParentId], references: [userId])
+  userParentId String
 }
 
-model UserChild {
-  id           String       @id @default(cuid())
-  firstName    String
-  username     String?      @unique
-  email        String       @unique
-  status       ChildStatus  @default(INVITED)
-  web3Account  Web3Account?
-  userParent   UserParent   @relation(fields: [userParentId], references: [id])
-  userParentId String
-  Activity     Activity[]
+enum RampStatus {
+  CREATED
+  RELEASED
+  RETURNED
+  ERROR
 }
 
 // Authentication Account
-
-model Web3Account {
-  id      String    @id @default(cuid())
-  address String    @unique
-  nonce   String
-  user    UserChild @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId  String    @unique
-}
 
 model Account {
   id                String     @id @default(cuid())
@@ -95,11 +91,11 @@ model Account {
 }
 
 model Activity {
-  id            String      @id @default(cuid())
-  createdAt     DateTime    @default(now())
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
   fromAddress   String
   toAddress     String?
-  child         UserChild[]
+  child         Child[]
   blockNum      String
   hash          String
   category      String

@@ -11,11 +11,13 @@
     "healthcheck": "curl -m 10 --retry 40 --retry-connrefused --retry-delay 1 http://127.0.0.1:8545/ >/dev/null 2>&1",
     "deploy": "yarn hardhat run scripts/deploy.ts --network localhost",
     "seed": "yarn hardhat run ./scripts/seed.ts --network localhost",
-    "lint": "eslint \"{test,utils,helpers}/**/*.ts\" --fix"
+    "lint": "eslint \"{test,utils,helpers}/**/*.ts\" --fix",
+    "test": "FORCECOLOR=1 yarn hardhat test --network localhost"
   },
   "dependencies": {
     "dotenv": "^16.0.1",
-    "ethers": "^5.6.8"
+    "ethers": "^5.6.8",
+    "hardhat-gas-reporter": "^1.0.8"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-network-helpers": "^1.0.3",

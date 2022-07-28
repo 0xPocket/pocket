@@ -36,7 +36,7 @@ function Index() {
     resolver: zodResolver(formSchema),
   });
 
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(1);
   const submitRef = useRef<HTMLInputElement>(null);
 
   const mutation = useMutation((data: FormValues) =>
@@ -60,34 +60,34 @@ function Index() {
 
   const questions = useMemo(() => {
     const questions = [
-      <Question
-        register={register('cryptoKnowledge')}
-        title="question.cryptoKnowledge"
-        options={['choices.yes', 'choices.no']}
-        values={['Oui', 'Non']}
-      />,
-      <Question
-        register={register('childKnowledge')}
-        title="question.childKnowledge"
-        options={['choices.yes', 'choices.no', 'choices.nochild']}
-        values={['Oui', 'Non', "Je n'ai pas d'enfants"]}
-      />,
-      <Question
-        register={register('childPlayToEarn')}
-        title="question.childPlayToEarn"
-        options={['choices.yes', 'choices.no', 'choices.nochild']}
-        values={['Oui', 'Non', "Je n'ai pas d'enfants"]}
-      />,
-      <Question
-        register={register('gavePocketMoney')}
-        title="question.gavePocketMoney"
-        options={['choices.bankaccount', 'choices.cash', 'choices.no']}
-        values={[
-          'Oui, via un compte bancaire',
-          'Oui, en espèces',
-          "Je n'ai pas d'enfants",
-        ]}
-      />,
+      // <Question
+      //   register={register('cryptoKnowledge')}
+      //   title="question.cryptoKnowledge"
+      //   options={['choices.yes', 'choices.no']}
+      //   values={['Oui', 'Non']}
+      // />,
+      // <Question
+      //   register={register('childKnowledge')}
+      //   title="question.childKnowledge"
+      //   options={['choices.yes', 'choices.no', 'choices.nochild']}
+      //   values={['Oui', 'Non', "Je n'ai pas d'enfants"]}
+      // />,
+      // <Question
+      //   register={register('childPlayToEarn')}
+      //   title="question.childPlayToEarn"
+      //   options={['choices.yes', 'choices.no', 'choices.nochild']}
+      //   values={['Oui', 'Non', "Je n'ai pas d'enfants"]}
+      // />,
+      // <Question
+      //   register={register('gavePocketMoney')}
+      //   title="question.gavePocketMoney"
+      //   options={['choices.bankaccount', 'choices.cash', 'choices.no']}
+      //   values={[
+      //     'Oui, via un compte bancaire',
+      //     'Oui, en espèces',
+      //     "Je n'ai pas d'enfants",
+      //   ]}
+      // />,
       <Question
         register={register('contact')}
         title="question.contact.title"
@@ -124,7 +124,7 @@ function Index() {
         className="relative h-screen overflow-hidden"
       >
         <AnimationLayer show={step === 0} questionsLength={questions.length}>
-          <Introduction onClick={() => setStep((step) => step + 1)} />
+          {/* <Introduction onClick={() => setStep((step) => step + 1)} /> */}
         </AnimationLayer>
 
         {questions.map((question, index) => (

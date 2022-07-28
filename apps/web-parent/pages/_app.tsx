@@ -14,7 +14,7 @@ import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { MagicAuthProvider } from '../contexts/auth';
 import { MagicConnector } from '../utils/MagicConnector';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
-import type { AppRouter } from '@lib/trpc';
+import type { AppRouter } from '../server';
 import superjson from 'superjson';
 import { httpBatchLink } from '@trpc/client/links/httpBatchLink';
 import { httpLink } from '@trpc/client/links/httpLink';

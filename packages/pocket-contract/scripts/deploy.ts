@@ -16,7 +16,8 @@ function replaceEnvInString(
 async function main() {
   const PocketFaucet = await ethers.getContractFactory('PocketFaucet');
   const pocketFaucet = await upgrades.deployProxy(PocketFaucet, [
-    constants.TOKEN_POLY.USDC,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    process.env.NEXT_PUBLIC_CHOSEN_ERC20!,
   ]);
   await pocketFaucet.deployed();
 

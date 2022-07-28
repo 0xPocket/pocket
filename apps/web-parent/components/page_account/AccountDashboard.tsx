@@ -13,7 +13,7 @@ function AccountDashboard({ child }: AccountDashboardProps) {
         <ChildCard child={child} className="col-span-3" />
       </div>
       <div className="grid grid-cols-2 gap-8">
-        <NftContent child={child} />
+        <NftContent child={child} fill_nbr={9} />
         <TransactionContent />
       </div>
       <TokenContent child={child} />

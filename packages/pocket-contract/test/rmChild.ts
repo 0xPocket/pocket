@@ -13,10 +13,10 @@ describe('Testing rm child', function () {
   let PocketFaucet_factory: PocketFaucet__factory, pocketFaucet: PocketFaucet;
   let provider: providers.JsonRpcProvider;
   let parent1Wallet: Wallet;
-  const tokenAddr = constants.TOKEN_POLY.USDC;
 
+  const tokenAddr = constants.CHOSEN_TOKEN;
   before(async function () {
-    provider = new providers.JsonRpcProvider('http://localhost:8545');
+    provider = new providers.JsonRpcProvider(constants.RPC_URL.LOCAL);
     child1 = new Wallet(constants.FAMILY_ACCOUNT.child1, provider);
     child2 = new Wallet(constants.FAMILY_ACCOUNT.child2, provider);
 
@@ -41,7 +41,7 @@ describe('Testing rm child', function () {
   it('Should revert because child2 is not set for this parent', async function () {
     await parent1.addStdChildAndSend(child1.address, tokenAddr);
     await expect(parent1.removeChild(child2.address)).to.be.revertedWith(
-      "!_areRelated : child doesn't match"
+      "!_areRelated: child doesn't match"
     );
   });
 

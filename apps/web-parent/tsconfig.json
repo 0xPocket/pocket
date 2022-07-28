@@ -3,6 +3,7 @@
   "include": [
     "../../packages/types/**/*.ts",
     "next-env.d.ts",
+    "next-auth.d.ts",
     "**/*.ts",
     "**/*.tsx"
   ],

@@ -22,9 +22,20 @@ function TokenTable({ tokenList }: TokenTableProps) {
   const defaultColumns = useMemo<ColumnDef<CovalentItem>[]>(
     () => [
       {
-        header: 'Token Name',
+        header: '',
+        accessorKey: 'logo_url',
+        cell: ({ getValue }) => (
+          <div className="flex w-8 items-center justify-center">
+            <img src={getValue() as string} alt="" />
+          </div>
+        ),
+      },
+      {
+        header: () => 'Token Name',
         accessorKey: 'contract_name',
-        cell: (data) => data.getValue(),
+        cell: ({ getValue }) => {
+          return <div>{getValue() as number}</div>;
+        },
       },
       {
         header: 'Balance',
@@ -35,15 +46,26 @@ function TokenTable({ tokenList }: TokenTableProps) {
           );
           return Math.floor(Number(bal) * 100) / 100;
         },
+        cell: ({ getValue }) => (
+          <div className="text-right tracking-wider">
+            {getValue() as number}
+          </div>
+        ),
       },
       {
         header: 'Value',
         accessorFn: (row) => {
-          return Math.floor(Number(row.quote) * 100) / 100;
+          const roundValue = Math.floor(Number(row.quote) * 100) / 100;
+          return roundValue;
         },
+        cell: (cell) => (
+          <div className="text-right tracking-wider">
+            <>{cell.getValue()} $</>
+          </div>
+        ),
         id: 'quote',
         filterFn: (row) => {
-          return row.getValue<number>('quote') > 0.1;
+          return (row.getValue('quote') as number) > 0.1;
         },
       },
     ],
@@ -74,7 +96,7 @@ function TokenTable({ tokenList }: TokenTableProps) {
   });
 
   return (
-    <table className="w-full bg-dark-light">
+    <table className="w-full">
       <thead>
         {table.getHeaderGroups().map((headerGroup) => (
           <tr key={headerGroup.id}>
@@ -86,7 +108,9 @@ function TokenTable({ tokenList }: TokenTableProps) {
                       className={`${
                         header.column.getCanSort() &&
                         'cursor-pointer select-none'
-                      } flex items-center gap-2 text-left`}
+                      } mb-2 flex items-center text-xl ${
+                        header.index !== 1 && 'justify-end'
+                      } `}
                       onClick={header.column.getToggleSortingHandler()}
                     >
                       {flexRender(
@@ -94,8 +118,15 @@ function TokenTable({ tokenList }: TokenTableProps) {
                         header.getContext(),
                       )}
                       {{
-                        asc: <FontAwesomeIcon icon={faArrowUp} />,
-                        desc: <FontAwesomeIcon icon={faArrowDown} />,
+                        asc: (
+                          <FontAwesomeIcon icon={faArrowUp} className="ml-2" />
+                        ),
+                        desc: (
+                          <FontAwesomeIcon
+                            icon={faArrowDown}
+                            className="ml-2"
+                          />
+                        ),
                       }[header.column.getIsSorted() as string] ?? null}
                     </div>
                   )}
@@ -106,14 +137,14 @@ function TokenTable({ tokenList }: TokenTableProps) {
         ))}
       </thead>
       <tbody>
-        {table.getRowModel().rows.map((row, index) => {
+        {table.getRowModel().rows.map((row) => {
           return (
             <tr
               key={row.id}
-              className={`${index % 2 === 1 && 'bg-dark'} font-light`}
+              className={`border-b border-dark border-opacity-10 font-light dark:border-bright-bg dark:border-opacity-10`}
             >
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
+                <td key={cell.id} className={`py-2`}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}

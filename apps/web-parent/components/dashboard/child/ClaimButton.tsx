@@ -13,7 +13,6 @@ const ClaimButton: React.FC<ClaimButtonProps> = ({ disabled, children }) => {
   const { write } = useContractWrite({
     contract: pocketContract,
     functionName: 'claim',
-    mode: 'prepared',
   });
 
   if (disabled) {
