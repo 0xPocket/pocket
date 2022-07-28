@@ -16,11 +16,8 @@ export default function Web() {
           <FontAwesomeIcon icon={faAngleRight} />
           <p>dashboard</p>
         </div>
-        {data?.user.type === 'Parent' ? (
-          <ChildrenAccountPanel />
-        ) : (
-          <ClaimDashboard />
-        )}
+        {data?.user.type === 'Parent' && <ChildrenAccountPanel />}
+        {data?.user.type === 'Child' && <ClaimDashboard />}
       </SectionContainer>
     </MainWrapper>
   );

@@ -1,4 +1,4 @@
-import { User } from '@prisma/client';
+import type { User } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { createProtectedRouter } from '../createRouter';
@@ -21,7 +21,7 @@ export const parentRouter = createProtectedRouter()
     return next();
   })
   .query('children', {
-    resolve: ({ ctx }) => {
+    resolve: async ({ ctx }) => {
       return prisma.user.findMany({
         where: {
           type: 'Child',

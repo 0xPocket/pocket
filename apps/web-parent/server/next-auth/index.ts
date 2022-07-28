@@ -3,11 +3,10 @@ import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { Magic } from '@magic-sdk/admin';
 import { SiweMessage } from 'siwe';
-import { PrismaClient, UserType } from '@prisma/client';
+import { UserType } from '@prisma/client';
+import { prisma } from '../prisma';
 
 const mAdmin = new Magic('sk_live_8185E1937878AC9A');
-
-const prisma = new PrismaClient();
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
