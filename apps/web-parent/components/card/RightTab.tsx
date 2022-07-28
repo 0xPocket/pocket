@@ -1,6 +1,5 @@
 import { Tab } from '@headlessui/react';
 import { UserChild } from '@lib/types/interfaces';
-import { ethers } from 'ethers';
 import { useState } from 'react';
 import AddfundsForm from '../forms/AddfundsForm';
 import ChildSettingsForm from '../forms/ChildSettingsForm';

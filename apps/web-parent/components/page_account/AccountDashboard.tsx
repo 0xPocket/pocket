@@ -2,8 +2,8 @@ import TokenContent from '../../components/page_account/token/TokenContent';
 import NftContent from '../../components/page_account/nft/NftContent';
 import TransactionContent from '../../components/page_account/transaction/TransactionContent';
 import { UserChild } from '@lib/types/interfaces';
-
 import ChildCard from '../card/ChildCard';
+
 type AccountDashboardProps = { child: UserChild };
 
 function AccountDashboard({ child }: AccountDashboardProps) {
@@ -13,7 +13,7 @@ function AccountDashboard({ child }: AccountDashboardProps) {
         <ChildCard child={child} className="col-span-3" />
       </div>
       <div className="grid grid-cols-2 gap-8">
-        <NftContent child={child} />
+        <NftContent child={child} fill_nbr={9} />
         <TransactionContent />
       </div>
       <TokenContent child={child} />

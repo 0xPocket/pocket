@@ -7,9 +7,10 @@ import NftCard from './NftCard';
 
 type NftContentProps = {
   child: UserChild;
+  fill_nbr?: number;
 };
 
-function NftContent({ child }: NftContentProps) {
+function NftContent({ child, fill_nbr = 0 }: NftContentProps) {
   const { alchemy } = useAlchemy();
 
   const { isLoading, data: content } = useQuery(
@@ -25,13 +26,19 @@ function NftContent({ child }: NftContentProps) {
   return (
     <div className="space-y-8">
       <h2>Nft Library</h2>
-      {!isLoading && content && (
-        <div className="grid grid-cols-12 gap-4">
-          {content.ownedNfts.map((nft, index) => (
+      <div className="grid grid-cols-12 gap-4">
+        {content &&
+          content.ownedNfts.map((nft, index) => (
             <NftCard nft={nft} key={index} />
           ))}
-        </div>
-      )}
+        {content &&
+          fill_nbr > content.ownedNfts.length &&
+          [...Array(fill_nbr - content.ownedNfts.length)].map(() => (
+            <NftCard />
+          ))}
+
+        {isLoading && [...Array(fill_nbr)].map(() => <NftCard isLoading />)}
+      </div>
     </div>
   );
 }

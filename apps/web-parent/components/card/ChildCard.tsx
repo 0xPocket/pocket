@@ -1,6 +1,5 @@
 import { UserChild } from '@lib/types/interfaces';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { useQuery } from 'react-query';
 import { useSmartContract } from '../../contexts/contract';
 import AccountStatus from './AccountStatus';
@@ -14,7 +13,6 @@ type ChildCardProps = {
 
 function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
   const { contract } = useSmartContract();
-  const router = useRouter();
 
   const { data: config } = useQuery(
     ['config', child.id],
@@ -22,7 +20,6 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
     {
       staleTime: 60 * 1000,
       retry: false,
-      // refetchOnWindowFocus: false,
     },
   );
   return (
@@ -39,13 +36,13 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
         </div>
         {!hasLink ? (
           <Link
-            href={`https://etherscan.io/address/${child.web3Account.address}`}
+            href={`https://polygonscan.com/address/${child.web3Account.address}`}
           >
-            <a>See on etherscan</a>
+            <a className="py-3">See on polygonscan</a>
           </Link>
         ) : (
           <Link href={`/dashboard/account/${child.id}`}>
-            <a>{`Go to ${child.firstName}'s profile`}</a>
+            <a className="py-3">{`Go to ${child.firstName}'s profile`}</a>
           </Link>
         )}
       </div>
