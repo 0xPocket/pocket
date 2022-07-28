@@ -1,5 +1,3 @@
-import { UserChild } from '@lib/types/interfaces';
-import { useQuery } from 'react-query';
 import MainWrapper from '../../components/wrappers/MainWrapper';
 import { SectionContainer } from '@lib/ui';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
@@ -7,14 +5,14 @@ import AccountDashboard from '../../components/page_account/AccountDashboard';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
-import axios from 'axios';
+import { trpc } from '../../utils/trpc';
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const id = context.query.id;
+  const id = context.params?.id as string;
 
   return {
     props: {
-      id: id,
+      id,
     },
   };
 }
@@ -22,19 +20,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 function Account({
   id,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { isLoading, data: child } = useQuery<UserChild>(
-    ['child', id],
-    () =>
-      axios
-        .get<UserChild>('http://localhost:3000/api/users/children/' + id)
-        .then((res) => {
-          return res.data;
-        }),
-    {
-      staleTime: 60 * 1000,
-      retry: false,
-    },
-  );
+  const { isLoading, data: child } = trpc.useQuery([
+    'parent.childById',
+    { id },
+  ]);
 
   return (
     <MainWrapper>
@@ -45,7 +34,7 @@ function Account({
             <a>dashboard</a>
           </Link>
           <p>{`>`}</p>
-          <p>{child?.firstName}</p>
+          <p>{child?.name}</p>
         </div>
         {isLoading ? (
           <>Loading</>

@@ -1,31 +1,30 @@
+import { withAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
 
-function getSession(sessionId: string | undefined) {
-  return fetch('http://localhost:3000/api/auth/parents/me', {
-    credentials: 'omit',
-    headers: {
-      cookie: 'connect.sid=' + sessionId,
+export default withAuth(
+  // `withAuth` augments your `Request` with the user's token.
+  function middleware(req) {
+    const token = req.nextauth.token;
+
+    // New user go to onboarding !
+    if (token && token.isNewUser && req.nextUrl.pathname !== '/onboarding') {
+      return NextResponse.redirect(new URL('/onboarding', req.url));
+    }
+
+    // Onboarding is locked for existing users
+    if (token && !token.isNewUser && req.nextUrl.pathname === '/onboarding') {
+      return NextResponse.redirect(new URL('/', req.url));
+    }
+
+    return NextResponse.next();
+  },
+  {
+    callbacks: {
+      authorized: ({ token }) => {
+        return !!token;
+      },
     },
-  });
-}
+  },
+);
 
-// This function can be marked `async` if using `await` inside
-export async function middleware(request: NextRequest) {
-  const res = await getSession(request.cookies.get('connect.sid')).catch();
-
-  if (request.nextUrl.pathname === '/connect' && res.ok) {
-    return NextResponse.redirect(new URL('/', request.url));
-  }
-
-  if (!res.ok && request.nextUrl.pathname !== '/connect') {
-    return NextResponse.redirect(new URL('/connect', request.url));
-  }
-
-  return NextResponse.next();
-}
-
-// See "Matching Paths" below to learn more
-export const config = {
-  matcher: ['/', '/connect'],
-};
+export const config = { matcher: ['/', '/onboarding'] };

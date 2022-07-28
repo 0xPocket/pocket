@@ -14,6 +14,14 @@ import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { MagicAuthProvider } from '../contexts/auth';
 import { MagicConnector } from '../utils/MagicConnector';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
+import type { AppRouter } from '@lib/trpc';
+import superjson from 'superjson';
+import { httpBatchLink } from '@trpc/client/links/httpBatchLink';
+import { httpLink } from '@trpc/client/links/httpLink';
+import { loggerLink } from '@trpc/client/links/loggerLink';
+import { splitLink } from '@trpc/client/links/splitLink';
+import { withTRPC } from '@trpc/next';
+import { SessionProvider } from 'next-auth/react';
 
 const { chains, provider } = configureChains(
   [chain.polygon],
@@ -28,8 +36,18 @@ const { chains, provider } = configureChains(
   ],
 );
 
-function App({ Component, pageProps: { ...pageProps } }: AppProps) {
-  const [queryClient] = useState(() => new QueryClient());
+function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 600 * 1000,
+            cacheTime: 600 * 1000,
+          },
+        },
+      }),
+  );
   const [wagmiClient] = useState(() =>
     createClient({
       autoConnect: true,
@@ -64,20 +82,73 @@ function App({ Component, pageProps: { ...pageProps } }: AppProps) {
   return (
     <WagmiConfig client={wagmiClient}>
       <QueryClientProvider client={queryClient}>
-        <MagicAuthProvider>
-          <AlchemyProvider>
-            <ThemeProvider>
-              <SmartContractProvider>
-                <Component {...pageProps} />
-              </SmartContractProvider>
-            </ThemeProvider>
-            <ToastContainer position="bottom-right" autoClose={3000} />
-          </AlchemyProvider>
-          <ReactQueryDevtools />
-        </MagicAuthProvider>
+        <SessionProvider session={session}>
+          <MagicAuthProvider>
+            <AlchemyProvider>
+              <ThemeProvider>
+                <SmartContractProvider>
+                  <Component {...pageProps} />
+                </SmartContractProvider>
+              </ThemeProvider>
+              <ToastContainer position="bottom-right" autoClose={3000} />
+            </AlchemyProvider>
+            <ReactQueryDevtools />
+          </MagicAuthProvider>
+        </SessionProvider>
       </QueryClientProvider>
     </WagmiConfig>
   );
 }
 
-export default App;
+export default withTRPC<AppRouter>({
+  config() {
+    const url =
+      typeof window !== 'undefined'
+        ? '/api/trpc'
+        : process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}/api/trpc`
+        : `http://${process.env.NEXT_PUBLIC_WEB_URL}/api/trpc`;
+
+    /**
+     * If you want to use SSR, you need to use the server's full URL
+     * @link https://trpc.io/docs/ssr
+     */
+    return {
+      /**
+       * @link https://trpc.io/docs/links
+       */
+      links: [
+        // adds pretty logs to your console in development and logs errors in production
+        loggerLink({
+          enabled: (opts) =>
+            !!process.env.NEXT_PUBLIC_DEBUG ||
+            (opts.direction === 'down' && opts.result instanceof Error),
+        }),
+        splitLink({
+          // check for context property `skipBatch`
+          condition: (op) => {
+            return op.context.skipBatch === true;
+          },
+          // when condition is true, use normal request
+          true: httpLink({ url }),
+          // when condition is false, use batching
+          false: httpBatchLink({
+            url,
+            /** @link https://github.com/trpc/trpc/issues/2008 */
+            // maxBatchSize: 7
+          }),
+        }),
+      ],
+      /**
+       * @link https://trpc.io/docs/data-transformers
+       */
+      transformer: superjson,
+    };
+  },
+  /**
+   * @link https://trpc.io/docs/ssr
+   */
+  ssr: false,
+})(App);
+
+// export default App;

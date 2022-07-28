@@ -23,8 +23,8 @@ const fetchUsers = async (address: string) => {
 
 function TokenContent({ child }: TokenContentProps) {
   const { isLoading, data } = useQuery(
-    ['child-token-content', child.id],
-    () => fetchUsers(child.web3Account.address),
+    ['child.token-content', child.id],
+    () => fetchUsers(child.address),
     {
       enabled: !!child,
       staleTime: 60 * 1000,

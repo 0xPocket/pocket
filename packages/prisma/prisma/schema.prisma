@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
 }
 
 datasource db {
@@ -12,13 +13,50 @@ datasource db {
 
 // User
 
+enum UserType {
+  Parent
+  Child
+}
+
+model User {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  name      String?
+  address   String   @unique
+  newUser   Boolean  @default(true)
+
+  email         String?    @unique
+  emailVerified DateTime?
+
+  type   UserType
+  parent Parent?
+  child  Child?
+}
+
+model Parent {
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @id @unique
+
+  children Child[]
+}
+
+model Child {
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @id @unique
+
+  status ChildStatus @default(INVITED)
+
+  parent       Parent @relation(fields: [parentUserId], references: [userId])
+  parentUserId String
+}
+
 model UserParent {
-  id            String            @id @default(cuid())
-  firstName     String?
-  lastName      String?
-  email         String            @unique
-  address       String
-  children      UserChild[]
+  id        String      @id @default(cuid())
+  firstName String?
+  lastName  String?
+  email     String      @unique
+  address   String
+  children  UserChild[]
 }
 
 model UserChild {
@@ -83,6 +121,16 @@ enum ChildStatus {
   PENDING
   ACTIVE
   LOCKED
+}
+
+// Verification Token
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }
 
 // Survey ?

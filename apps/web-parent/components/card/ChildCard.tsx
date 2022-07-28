@@ -1,9 +1,9 @@
-import { UserChild } from '@lib/types/interfaces';
 import Link from 'next/link';
 import { useSmartContract } from '../../contexts/contract';
 import useContractRead from '../../hooks/useContractRead';
 import AccountStatus from './AccountStatus';
 import RightTab from './RightTab';
+import { UserChild } from '@lib/types/interfaces';
 
 type ChildCardProps = {
   child: UserChild;
@@ -17,7 +17,7 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
   const { data: config } = useContractRead({
     contract: pocketContract,
     functionName: 'childToConfig',
-    args: [child.web3Account.address],
+    args: [child.address],
     watch: true,
   });
 
@@ -28,20 +28,18 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
       <div className="flex flex-col justify-between">
         <div className="space-y-2">
           <div className="flex space-x-4">
-            <h1>{child?.firstName}</h1>
+            <h1>{child?.name}</h1>
             <AccountStatus child={child} />
           </div>
           <h3>{child.email}</h3>
         </div>
         {!hasLink ? (
-          <Link
-            href={`https://etherscan.io/address/${child.web3Account.address}`}
-          >
+          <Link href={`https://etherscan.io/address/${child.address}`}>
             <a>See on etherscan</a>
           </Link>
         ) : (
           <Link href={`/account/${child.id}`}>
-            <a>{`Go to ${child.firstName}'s profile`}</a>
+            <a>{`Go to ${child.name}'s profile`}</a>
           </Link>
         )}
       </div>

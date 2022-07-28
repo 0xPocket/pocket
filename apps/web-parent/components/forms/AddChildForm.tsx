@@ -1,16 +1,14 @@
-import { useMutation, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { FormInputText } from '@lib/ui';
 import { useRouter } from 'next/router';
-import axios, { AxiosError } from 'axios';
-import { BackResError } from '@lib/types/interfaces';
 import { z } from 'zod';
 import { useZodForm } from '../../utils/useZodForm';
+import { trpc } from '../../utils/trpc';
 
 type AddChildFormProps = {};
 
 const AddChildSchema = z.object({
-  firstName: z.string(),
+  name: z.string(),
   email: z.string().email(),
 });
 
@@ -18,7 +16,7 @@ type FormValues = z.infer<typeof AddChildSchema>;
 
 function AddChildForm({}: AddChildFormProps) {
   const router = useRouter();
-  const queryClient = useQueryClient();
+  const queryClient = trpc.useContext();
 
   const {
     register,
@@ -28,23 +26,19 @@ function AddChildForm({}: AddChildFormProps) {
     schema: AddChildSchema,
   });
 
-  const mutation = useMutation(
-    (data: FormValues) =>
-      axios.put('http://localhost:3000/api/users/parents/children', data),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('children');
-        router.push('/dashboard');
-        toast.success(`Account created !`);
-      },
-      onError: (e: AxiosError<BackResError>) => {
-        toast.error(e.response?.data.message);
-      },
+  const addChild = trpc.useMutation(['parent.children'], {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['parent.children']);
+      router.push('/');
+      toast.success(`Account created !`);
     },
-  );
+    onError: (e) => {
+      toast.error(e.message);
+    },
+  });
 
   const onSubmit = (data: FormValues) => {
-    mutation.mutate(data);
+    addChild.mutate(data);
   };
 
   return (
@@ -52,9 +46,9 @@ function AddChildForm({}: AddChildFormProps) {
       <div className="flex gap-4">
         <FormInputText
           type="text"
-          placeHolder="Firstname"
-          registerValues={register('firstName')}
-          error={errors.firstName}
+          placeHolder="Name"
+          registerValues={register('name')}
+          error={errors.name}
         />
       </div>
 

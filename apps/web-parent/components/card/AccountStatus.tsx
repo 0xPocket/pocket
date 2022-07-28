@@ -47,7 +47,7 @@ function AccountStatus({ child }: AccountStatusProps) {
       onMouseLeave={() => setShow(false)}
       ref={setReferenceElement}
     >
-      <FontAwesomeIcon icon={getIcon(child.status)} />
+      <FontAwesomeIcon icon={getIcon(child.child!.status)} />
       {show && (
         <div
           ref={setPopperElement}

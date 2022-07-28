@@ -1,11 +1,10 @@
-import { UserParent } from '@lib/types/interfaces';
-import axios, { AxiosResponse } from 'axios';
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import { useMutation, useQueryClient } from 'react-query';
+import { Connector, useAccount, useConnect, useDisconnect } from 'wagmi';
 import { createCtx } from '../utils/createContext';
 import type { MagicConnector } from '../utils/MagicConnector';
+import { signIn as signInNextAuth, signOut, useSession } from 'next-auth/react';
+import { CustomSessionUser } from 'next-auth';
 
 interface MagicAuthProviderProps {
   children: React.ReactNode;
@@ -13,54 +12,56 @@ interface MagicAuthProviderProps {
 
 interface IMagicAuthContext {
   loggedIn: boolean;
-  signInWithEmail: (email: string) => Promise<any>;
-  signOut: () => Promise<AxiosResponse>;
-  user: UserParent | undefined;
+  loading: boolean;
+  signInWithEmail: (email: string) => Promise<unknown>;
+  signOut: () => Promise<void>;
+  user: CustomSessionUser | undefined;
 }
 
 export const [useMagic, MagicAuthContextProvider] =
   createCtx<IMagicAuthContext>();
 
 export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
-  const { isConnected } = useAccount();
+  const { isConnected, status: wagmiStatus } = useAccount();
   const { disconnectAsync } = useDisconnect();
   const queryClient = useQueryClient();
-  const router = useRouter();
   const [magic, setMagic] = useState<MagicConnector>();
   const { connectors, connectAsync } = useConnect();
-
-  console.log(isConnected);
-  const user = useQuery(
-    'user',
-    () => axios.get('/api/auth/parents/me').then((res) => res.data),
-    { refetchOnWindowFocus: false, retry: false, enabled: isConnected },
-  );
-
-  const verifyMagicUser = useMutation((token: string) =>
-    axios.post('/api/auth/magic', { token }),
-  );
+  const { data, status } = useSession();
+  const [reconnect, setReconnect] = useState(false);
 
   const signInWithEmail = useMutation(
-    () => connectAsync({ connector: magic }),
+    () => connectAsync({ connector: magic }).catch(),
     {
-      onSuccess: async () => {
+      onSettled: async () => {
         const token = await magic?.getDidToken();
         if (token) {
-          return verifyMagicUser.mutateAsync(token).then(() => {
-            user.refetch();
-          });
+          return signInNextAuth('magic', { token, callbackUrl: '/' });
         }
       },
     },
   );
 
-  const logout = useMutation(() => axios.post('/api/auth/logout'), {
+  const logout = useMutation(() => disconnectAsync(), {
     onSuccess: async () => {
-      await disconnectAsync();
       queryClient.removeQueries();
-      router.push('/connect');
+      signOut({ callbackUrl: '/connect' });
     },
   });
+
+  useEffect(() => {
+    console.log(reconnect);
+    console.log(wagmiStatus);
+    if (wagmiStatus === 'reconnecting' && !reconnect) {
+      setReconnect(true);
+      return;
+    }
+
+    if (wagmiStatus === 'disconnected' && reconnect) {
+      signOut();
+      setReconnect(false);
+    }
+  }, [wagmiStatus, reconnect]);
 
   useEffect(() => {
     const magic = connectors.find((c) => c.id === 'magic') as MagicConnector;
@@ -72,13 +73,18 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
   return (
     <MagicAuthContextProvider
       value={{
-        loggedIn: user && isConnected,
+        loggedIn: status === 'authenticated' && isConnected,
+        loading:
+          logout.isLoading || signInWithEmail.isLoading || logout.isLoading,
         signInWithEmail: async (email: string) => {
+          if (!isConnected) {
+            await disconnectAsync();
+          }
           magic?.setUserDetails({ email });
           return signInWithEmail.mutateAsync();
         },
         signOut: async () => logout.mutateAsync(),
-        user: user.data,
+        user: data?.user,
       }}
     >
       {children}

@@ -1,25 +1,16 @@
-import { UserChild } from '@lib/types/interfaces';
-import { useQuery } from 'react-query';
 import ChildCard from '../card/ChildCard';
 import { useRouter } from 'next/router';
 import { Button } from '@lib/ui';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import axios from 'axios';
+import { trpc } from '../../utils/trpc';
 
 type ChildrenAccountPanelProps = {};
 
 function ChildrenAccountPanel({}: ChildrenAccountPanelProps) {
   const router = useRouter();
 
-  const { isLoading, data } = useQuery(
-    'children',
-    () =>
-      axios
-        .get<UserChild[]>('http://localhost:3000/api/users/parents/children')
-        .then((res) => res.data),
-    { staleTime: 60 * 1000 },
-  );
+  const { isLoading, data } = trpc.useQuery(['parent.children']);
 
   return (
     <div className="flex flex-col space-y-12">

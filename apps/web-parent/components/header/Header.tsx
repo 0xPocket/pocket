@@ -8,8 +8,9 @@ type GlobalHeaderProps = {};
 
 function GlobalHeader({}: GlobalHeaderProps) {
   const { user, signOut } = useMagic();
-  const { address } = useAccount();
+  const { address, connector } = useAccount();
 
+  console.log(user);
   return (
     <Header>
       <Header.BlockLeft>
@@ -18,12 +19,10 @@ function GlobalHeader({}: GlobalHeaderProps) {
       <Header.BlockRight>
         {user && (
           <>
-            {address ?? 'Not Connected'}
+            {address ? `${connector?.name} : ${address}` : 'Not Connected'}
             <Link href="/" passHref>
               <div className="cursor-pointer">
-                {user.firstName
-                  ? `${user.firstName} ${user.lastName}`
-                  : user.address}
+                {user.name ? ` ${user.name}` : user.address}
               </div>
             </Link>
             <WalletPopover />

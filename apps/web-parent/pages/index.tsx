@@ -3,8 +3,12 @@ import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { SectionContainer } from '@lib/ui';
 import ChildrenAccountPanel from '../components/page_dashboard/ChildrenAccountPanel';
+import { useSession } from 'next-auth/react';
+import ClaimDashboard from '../components/dashboard/child/ClaimDashboard';
 
 export default function Web() {
+  const { data } = useSession();
+
   return (
     <MainWrapper>
       <SectionContainer>
@@ -12,7 +16,11 @@ export default function Web() {
           <FontAwesomeIcon icon={faAngleRight} />
           <p>dashboard</p>
         </div>
-        <ChildrenAccountPanel />
+        {data?.user.type === 'Parent' ? (
+          <ChildrenAccountPanel />
+        ) : (
+          <ClaimDashboard />
+        )}
       </SectionContainer>
     </MainWrapper>
   );

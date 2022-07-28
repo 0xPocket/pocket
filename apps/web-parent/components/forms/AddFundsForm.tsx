@@ -53,10 +53,7 @@ function AddFundsForm({ allowance, child, returnFn }: AddFundsFormProps) {
     }
 
     await addFunds({
-      args: [
-        BigNumber.from(data.topup).mul(1000000),
-        child.web3Account.address,
-      ],
+      args: [BigNumber.from(data.topup).mul(1000000), child.address],
     });
 
     returnFn();
@@ -67,7 +64,7 @@ function AddFundsForm({ allowance, child, returnFn }: AddFundsFormProps) {
       onSubmit={handleSubmit(onSubmit)}
       className="flex h-full flex-col items-end justify-between space-y-4"
     >
-      <label htmlFor="topup">Add funds to {child.firstName} account</label>
+      <label htmlFor="topup">Add funds to {child.name} account</label>
       <input
         className="border p-2 text-dark"
         min="1"

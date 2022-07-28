@@ -1,14 +1,14 @@
 import MainWrapper from '../components/wrappers/MainWrapper';
-import { useAccount } from 'wagmi';
-import EmailSignin from '../components/auth/EmailSignin';
 import { Spinner } from '../components/common/Spinner';
-import SocialSignin from '../components/auth/SocialSignin';
-import EthereumSignin from '../components/auth/EthereumSignin';
+import { useMagic } from '../contexts/auth';
+import { Tab } from '@headlessui/react';
+import ParentSignin from '../components/auth/ParentSignin';
+import ChildSignin from '../components/auth/ChildSignin';
 
-function SignUp() {
-  const { status } = useAccount();
+function Connect() {
+  const { loading } = useMagic();
 
-  if (status === 'reconnecting' || status === 'connecting') {
+  if (loading) {
     return (
       <MainWrapper>
         <section className="flex min-h-[85vh] items-center justify-center">
@@ -20,20 +20,24 @@ function SignUp() {
 
   return (
     <MainWrapper>
-      <section className="relative grid min-h-[85vh] grid-cols-1">
-        <div className="mx-auto flex w-72 flex-col items-center justify-center gap-8">
-          <EmailSignin />
-          <SocialSignin />
-          <div className="flex w-72 items-center">
-            <div className="w-full border-b opacity-25"></div>
-            <h2 className="mx-2 text-lg font-bold">OR</h2>
-            <div className="w-full border-b opacity-25"></div>
-          </div>
-          <EthereumSignin />
-        </div>
-      </section>
+      <div className="mx-auto flex w-72 flex-col items-center justify-center gap-8">
+        <Tab.Group>
+          <Tab.List className="flex gap-4">
+            <Tab className="container-classic px-4 py-2">Parent</Tab>
+            <Tab className="container-classic px-4 py-2">Child</Tab>
+          </Tab.List>
+          <Tab.Panels>
+            <Tab.Panel className="mx-auto flex w-72 flex-col items-center justify-center gap-8">
+              <ParentSignin />
+            </Tab.Panel>
+            <Tab.Panel className="mx-auto flex w-72 flex-col items-center justify-center gap-8">
+              <ChildSignin />
+            </Tab.Panel>
+          </Tab.Panels>
+        </Tab.Group>
+      </div>
     </MainWrapper>
   );
 }
 
-export default SignUp;
+export default Connect;

@@ -95,12 +95,14 @@ export class MagicConnector extends Connector {
         };
       }
 
+      console.log('conenctor !');
       if (!this.userDetails) {
         throw new UserRejectedRequestError('Something went wrong');
       }
 
       const userDetails = { ...this.userDetails };
 
+      console.log(userDetails);
       this.clearUserDetails();
 
       if (userDetails) {
@@ -127,6 +129,7 @@ export class MagicConnector extends Connector {
 
       throw new UserRejectedRequestError('Something went wrong');
     } catch (error) {
+      console.log(error);
       throw new UserRejectedRequestError('Something went wrong');
     }
   }
@@ -177,6 +180,7 @@ export class MagicConnector extends Connector {
         ...this.magicOptions.additionalMagicOptions,
         extensions: [new OAuthExtension()],
       });
+      this.magicSDK.preload();
       return this.magicSDK;
     }
     return this.magicSDK;

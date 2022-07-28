@@ -1,32 +1,87 @@
-import Image from 'next/image';
-import type { FC } from 'react';
-import { useConnect } from 'wagmi';
+import { FC, useCallback } from 'react';
+import { useAccount, useDisconnect, useSignMessage } from 'wagmi';
+import { getCsrfToken, signIn } from 'next-auth/react';
+import SignMessage from '../onboarding/SignMessage';
+import EthereumProviders from './EthereumProviders';
+import { SiweMessage } from 'siwe';
+import { Spinner } from '../common/Spinner';
+import { useIsMounted } from '../../hooks/useIsMounted';
 
-const EthereumSignin: FC = () => {
-  const { connectors, connectAsync } = useConnect();
+type EthereumSigninProps = {
+  type: 'Parent' | 'Child';
+};
+
+const EthereumSignin: FC<EthereumSigninProps> = ({ type }) => {
+  const { isConnected, address } = useAccount();
+  const { disconnect } = useDisconnect();
+  const { signMessageAsync, isLoading, error } = useSignMessage();
+  const mounted = useIsMounted();
+
+  const siweSignMessage = useCallback(
+    async (address: string, chainId: number) => {
+      const message = new SiweMessage({
+        domain: window.location.host,
+        address,
+        statement: 'Sign this message to access Pocket.',
+        uri: window.location.origin,
+        version: '1',
+        chainId,
+        nonce: await getCsrfToken(),
+      });
+
+      try {
+        const signature = await signMessageAsync({
+          message: message.prepareMessage(),
+        });
+
+        signIn('ethereum', {
+          message: JSON.stringify(message),
+          signature,
+          type: type,
+          callbackUrl: '/',
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    [type, signMessageAsync],
+  );
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
-    <div className="grid w-full grid-cols-2 gap-4">
-      {connectors
-        .filter((connector) => connector.id !== 'magic')
-        .map((connector) => (
+    <>
+      <EthereumProviders callback={siweSignMessage} />
+      {isLoading && <Spinner />}
+      {error && <div className="text-sm text-danger">{error.message}</div>}
+      {isConnected && !isLoading && (
+        <>
           <button
-            key={connector.id}
-            onClick={() => connectAsync({ connector })}
-            className="container-classic relative flex items-center justify-center gap-4 p-4 transition-all dark:bg-dark-light/50 dark:hover:bg-dark-light"
+            onClick={(e) => {
+              e.preventDefault();
+              disconnect();
+            }}
           >
-            <div className="relative h-8 w-8">
-              <Image
-                src={`/assets/providers/${connector.id}.svg`}
-                objectFit="contain"
-                layout="fill"
-                alt={connector.name}
-              />
-            </div>
-            {/* {connector.name} */}
+            Disconnect
           </button>
-        ))}
-    </div>
+          <span>Connected with {address}</span>
+        </>
+      )}
+      {isConnected && !isLoading && (
+        <SignMessage
+          callback={(message, signature) =>
+            signIn('ethereum', {
+              message,
+              signature,
+              type: type,
+              callbackUrl: '/',
+            })
+          }
+        />
+      )}
+    </>
   );
 };
 
