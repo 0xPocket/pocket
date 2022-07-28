@@ -135,6 +135,9 @@ export const authOptions: NextAuthOptions = {
               data: {
                 address: siwe.address,
                 type: 'Parent',
+								parent : {
+									create: {}
+								}
               },
             });
 
