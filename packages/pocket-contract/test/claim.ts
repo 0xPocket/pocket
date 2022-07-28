@@ -44,7 +44,6 @@ describe('Testing to claim funds as child', function () {
       '10',
       tokenAddr,
       constants.CHOSEN_WHALE
-
     );
 
     await child1.claim();
@@ -177,7 +176,6 @@ describe('Testing to claim funds as child', function () {
       '100',
       tokenAddr,
       constants.CHOSEN_WHALE
-
     );
     const newPeriodicity = constants.TIME.DAY * 3;
     await parent1.changeConfig('100', newPeriodicity, child1.address);
@@ -203,7 +201,6 @@ describe('Testing to claim funds as child', function () {
       '100',
       tokenAddr,
       constants.CHOSEN_WHALE
-
     );
     await parent1.setActive(false, child1.address);
     await expect(child1.claim()).to.be.revertedWith('!claim: not active');

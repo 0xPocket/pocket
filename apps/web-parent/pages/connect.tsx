@@ -1,37 +1,43 @@
-import { useAuth } from '@lib/nest-auth/next';
 import MainWrapper from '../components/wrappers/MainWrapper';
-import SocialAuth from '../components/auth/SocialAuth';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-import SignUpForm from '../components/forms/ConnectForm';
+import { Spinner } from '../components/common/Spinner';
+import { useMagic } from '../contexts/auth';
+import { Tab } from '@headlessui/react';
+import ParentSignin from '../components/auth/ParentSignin';
+import ChildSignin from '../components/auth/ChildSignin';
 
-function SignUp() {
-  const router = useRouter();
-  const { status } = useAuth();
+function Connect() {
+  const { loading } = useMagic();
 
-  useEffect(() => {
-    console.log(status);
-    if (status === 'authenticated') {
-      router.push('/dashboard');
-    }
-  }, [router, status]);
+  if (loading) {
+    return (
+      <MainWrapper>
+        <section className="flex min-h-[85vh] items-center justify-center">
+          <Spinner />
+        </section>
+      </MainWrapper>
+    );
+  }
 
   return (
-    <MainWrapper noHeader>
-      <section className="relative grid min-h-screen grid-cols-2">
-        <div className="flex flex-col items-center justify-center gap-8">
-          <SignUpForm />
-          <div className="flex w-72 items-center">
-            <div className="w-full border-b"></div>
-            <h2 className="m-4 font-bold">OR</h2>
-            <div className="w-full border-b"></div>
-          </div>
-          <SocialAuth />
-        </div>
-        <div className="flex items-center justify-center">ILLU</div>
-      </section>
+    <MainWrapper>
+      <div className="mx-auto flex w-72 flex-col items-center justify-center gap-8">
+        <Tab.Group>
+          <Tab.List className="flex gap-4">
+            <Tab className="container-classic px-4 py-2">Parent</Tab>
+            <Tab className="container-classic px-4 py-2">Child</Tab>
+          </Tab.List>
+          <Tab.Panels>
+            <Tab.Panel className="mx-auto flex w-72 flex-col items-center justify-center gap-8">
+              <ParentSignin />
+            </Tab.Panel>
+            <Tab.Panel className="mx-auto flex w-72 flex-col items-center justify-center gap-8">
+              <ChildSignin />
+            </Tab.Panel>
+          </Tab.Panels>
+        </Tab.Group>
+      </div>
     </MainWrapper>
   );
 }
 
-export default SignUp;
+export default Connect;

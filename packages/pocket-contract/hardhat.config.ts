@@ -1,6 +1,7 @@
 import * as dotenv from 'dotenv';
 import { HardhatUserConfig } from 'hardhat/config';
 import '@nomiclabs/hardhat-ethers';
+import '@nomicfoundation/hardhat-network-helpers';
 // import '@nomiclabs/hardhat-etherscan';
 import '@nomiclabs/hardhat-waffle';
 import '@typechain/hardhat';
@@ -31,28 +32,14 @@ const config: HardhatUserConfig = {
   networks: {
     hardhat: {
       forking: {
-        url: constants.CHOSEN_NETWORK,
+        url: constants.CHOSEN_NETWORK.url,
       },
-      chainId: 4,
+      chainId: constants.CHOSEN_NETWORK.chainId,
     },
     polygon: {
       url:
         'https://polygon-mainnet.g.alchemy.com/v2/' +
         process.env.NEXT_PUBLIC_KEY_ALCHEMY_POLYGON,
-      accounts:
-        process.env.PRIVATE_KEY_POLYGON !== undefined
-          ? [process.env.PRIVATE_KEY_POLYGON]
-          : [],
-      chainId: 137,
-    },
-    mumbai: {
-      url:
-        'https://polygon-mumbai.g.alchemy.com/v2/' +
-        process.env.NEXT_PUBLIC_KEY_ALCHEMY_POLYGON,
-      accounts:
-        process.env.PRIVATE_KEY_POLYGON !== undefined
-          ? [process.env.PRIVATE_KEY_POLYGON]
-          : [],
       chainId: 137,
     },
   },

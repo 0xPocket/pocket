@@ -7,23 +7,24 @@
     "clean": "rm -rf .turbo && rm -rf node_modules",
     "build": "prisma generate",
     "generate": "prisma generate",
+    "dev": "yarn seed",
     "studio": "prisma studio",
     "deploy": "prisma migrate deploy",
     "seed": "prisma db seed",
     "migrate": "prisma migrate dev",
-    "push": "prisma db push",
-    "drop": "prisma migrate reset --force",
+    "push": "prisma db push --skip-generate",
+    "drop": "prisma migrate reset && yarn push",
     "docker:up": "docker-compose up -d --build",
     "docker:down": "docker-compose down"
   },
   "devDependencies": {
     "crypto-js": "^4.1.1",
     "prettier-plugin-prisma": "^4.1.0",
-    "prisma": "^4.0.0",
+    "prisma": "^4.1.0",
     "ts-node": "^10.9.1"
   },
   "dependencies": {
-    "@prisma/client": "^4.0.0"
+    "@prisma/client": "^4.1.0"
   },
   "prisma": {
     "seed": "ts-node ./src/seed.ts"

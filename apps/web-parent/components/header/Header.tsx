@@ -1,51 +1,32 @@
-import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { UserParent } from '@lib/types/interfaces';
 import { Button, Header, ThemeToggler } from '@lib/ui';
-import { useAuth } from '@lib/nest-auth/next';
 import WalletPopover from '../wallet/WalletPopover';
-import { useQueryClient } from 'react-query';
+import { useMagic } from '../../contexts/auth';
+import { useAccount } from 'wagmi';
 
 type GlobalHeaderProps = {};
 
 function GlobalHeader({}: GlobalHeaderProps) {
-  const router = useRouter();
-  const { user, status, signOut } = useAuth<UserParent>();
-  const queryClient = useQueryClient();
+  const { user, signOut } = useMagic();
+  const { address, connector } = useAccount();
 
-  const handleConnect = () => {
-    router.push('/connect');
-  };
-
-  const handleLogout = () => {
-    signOut();
-    queryClient.invalidateQueries();
-  };
-
+  console.log(user);
   return (
     <Header>
       <Header.BlockLeft>
-        <Header.Title href="/dashboard">Pocket.</Header.Title>
-        {/* <Header.Nav show={status === 'authenticated'}>
-          <Header.NavLink href="/dashboard">Dashboard</Header.NavLink>
-          <Header.NavLink href="#">Blog</Header.NavLink>
-          <Header.NavLink href="#">FAQ</Header.NavLink>
-        </Header.Nav> */}
+        <Header.Title href="/">Pocket.</Header.Title>
       </Header.BlockLeft>
       <Header.BlockRight>
-        {status === 'authenticated' ? (
+        {user && (
           <>
-            <Link href="/dashboard" passHref>
+            {address ? `${connector?.name} : ${address}` : 'Not Connected'}
+            <Link href="/" passHref>
               <div className="cursor-pointer">
-                {user?.firstName} {user?.lastName?.charAt(0)}.
+                {user.name ? ` ${user.name}` : user.address}
               </div>
             </Link>
             <WalletPopover />
-            <Button action={handleLogout}>Logout</Button>
-          </>
-        ) : (
-          <>
-            <Button action={handleConnect}>Connect</Button>
+            <Button action={signOut}>Logout</Button>
           </>
         )}
         <ThemeToggler />

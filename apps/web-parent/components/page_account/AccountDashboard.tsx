@@ -1,6 +1,6 @@
-import TokenContent from '../../components/page_account/token/TokenContent';
-import NftContent from '../../components/page_account/nft/NftContent';
-import TransactionContent from '../../components/page_account/transaction/TransactionContent';
+import TokenContent from './token/TokenContent';
+import NftContent from './nft/NftContent';
+import TransactionContent from './transaction/TransactionContent';
 import { UserChild } from '@lib/types/interfaces';
 import ChildCard from '../card/ChildCard';
 

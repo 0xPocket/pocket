@@ -57,38 +57,35 @@ export const FAMILY_ACCOUNT = {
 };
 
 export const TOKENS = {
-  RINKEBY_FAKEUSDC: '0x47da6c0b7f3fada850898d1e61ae546fc7b603f9',
-  POLY_JEUR: '0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c',
-  POLY_USDC: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
-  POLY_USDT: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
+  RINKEBY: '0x47da6c0b7f3fada850898d1e61ae546fc7b603f9',
+  POLYGON: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
 };
 
 export const WHALES = {
-  RINKEBY_FAKEUSDC: '0xe2e0256d6785d49ec7badcd1d44adbd3f6b0ab58',
-  POLY_USDC: '0xf977814e90da44bfa03b6295a0616a897441acec',
-  POLY_USDT: '0xe7804c37c13166ff0b37f5ae0bb07a3aebb6e245',
-  POLY_JEUR: '0xc4fcbb58e36e8f5c3b0e904cb20c3947af246891',
+  RINKEBY: '0xe2e0256d6785d49ec7badcd1d44adbd3f6b0ab58',
+  POLYGON: '0xf977814e90da44bfa03b6295a0616a897441acec',
 };
 
-export const NETWORK = {
-  RINKEBY_FAKEUSDC:
-    'https://eth-rinkeby.alchemyapi.io/v2/' + process.env.ALCHEMY_RINKEBY_TOKEN,
-  POLY_USDC:
-    'https://polygon-mainnet.g.alchemy.com/v2/' +
-    process.env.NEXT_PUBLIC_KEY_ALCHEMY_POLYGON,
-  POLY_USDT:
-    'https://polygon-mainnet.g.alchemy.com/v2/' +
-    process.env.NEXT_PUBLIC_KEY_ALCHEMY_POLYGON,
-  POLY_JEUR:
-    'https://polygon-mainnet.g.alchemy.com/v2/' +
-    process.env.NEXT_PUBLIC_KEY_ALCHEMY_POLYGON,
+const NETWORK = {
+  RINKEBY: {
+    url:
+      'https://eth-rinkeby.alchemyapi.io/v2/' +
+      process.env.NEXT_PUBLIC_KEY_ALCHEMY_RINKEBY,
+    chainId: 4,
+  },
+  POLYGON: {
+    url:
+      'https://polygon-mainnet.g.alchemy.com/v2/' +
+      process.env.NEXT_PUBLIC_KEY_ALCHEMY_POLYGON,
+    chainId: 137,
+  },
 };
 
-const CHOSEN = 'RINKEBY_FAKEUSDC';
+const CHOSEN = 'RINKEBY';
 
+export const CHOSEN_NETWORK = NETWORK[CHOSEN];
 export const CHOSEN_TOKEN = TOKENS[CHOSEN];
 export const CHOSEN_WHALE = WHALES[CHOSEN];
-export const CHOSEN_NETWORK = NETWORK[CHOSEN];
 
 export const RDM_ADDRESS = [
   '0xf977814e90da44bfa01b6295a0616a897441acec',

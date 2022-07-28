@@ -1,10 +1,10 @@
 import { RampInstantSDK } from '@ramp-network/ramp-instant-sdk';
-import { useWallet } from '../contexts/wallet';
+import { useAccount } from 'wagmi';
 
 type RampProps = {};
 
 function useRamp({}: RampProps) {
-  const { wallet } = useWallet();
+  const { address } = useAccount();
 
   function showRamp() {
     new RampInstantSDK({
@@ -14,7 +14,7 @@ function useRamp({}: RampProps) {
       fiatCurrency: 'EUR',
       fiatValue: '15',
       // swapAsset: 'MUMBAI_USDC',
-      userAddress: wallet?.publicKey,
+      userAddress: address,
       userEmailAddress: 'test@gmail.com',
       hostApiKey: 'fukzkzsk5wfybdp6d6rspmuq54utvo37wsd9uk9h',
       webhookStatusUrl:

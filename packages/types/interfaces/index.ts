@@ -1,23 +1,17 @@
-import {
-  Account,
-  UserParent as Parent,
-  UserParentWallet,
-  Web3Account,
-} from "@lib/prisma";
-import { UserChild as Child } from "@lib/prisma";
+import { User, Parent } from "@prisma/client";
+import { Child } from "@prisma/client";
+
 export * from "./Test.interface";
 export * from "./BackResError.interface";
 
-export interface UserParent extends Parent {
-  children: UserChild[];
-  wallet?: UserParentWallet;
-  account: {
-    type: "oauth" | "credentials";
-  };
+export interface UserParent extends User {
+  type: "Parent";
+  parent: Parent | null;
 }
 
-export interface UserChild extends Child {
-  web3Account: Web3Account;
+export interface UserChild extends User {
+  child: Child | null;
 }
 
-export * from './Covalent.interface'
+export * from "./Covalent.interface";
+export * from "./AlchemyWebhook.interface";

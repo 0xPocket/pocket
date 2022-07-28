@@ -2,26 +2,26 @@ import { faWrench } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { UserChild } from '@lib/types/interfaces';
 import { FormErrorMessage } from '@lib/ui';
-import { ethers } from 'ethers';
-import { parseUnits } from 'ethers/lib/utils';
-import { ParentContract } from 'pocket-contract/ts';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useQueryClient } from 'react-query';
+import { formatUnits, parseUnits } from 'ethers/lib/utils';
+import { PocketFaucet } from 'pocket-contract/typechain-types';
+import { z } from 'zod';
 import { useSmartContract } from '../../contexts/contract';
-import { useAxios } from '../../hooks/axios.hook';
-import Web3Modal from '../wallet/Web3Modal';
+import { ContractMethodReturn } from '../../hooks/useContractRead';
+import useContractWrite from '../../hooks/useContractWrite';
+import { useZodForm } from '../../utils/useZodForm';
 
 type ChildSettingsFormProps = {
   child: UserChild;
-  config: any;
+  config: ContractMethodReturn<PocketFaucet, 'childToConfig'> | undefined;
   returnFn: () => void;
 };
 
-type FormValues = {
-  ceiling: string;
-  periodicity: string;
-};
+const ChildSettingsSchema = z.object({
+  ceiling: z.string(),
+  periodicity: z.string(),
+});
+
+type FormValues = z.infer<typeof ChildSettingsSchema>;
 
 function ChildSettingsForm({
   child,
@@ -31,44 +31,31 @@ function ChildSettingsForm({
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
-  } = useForm<FormValues>({
+  } = useZodForm({
+    schema: ChildSettingsSchema,
     defaultValues: {
-      periodicity: ethers.utils.formatUnits(config?.[4], 0).toString(),
-      ceiling: ethers.utils.formatUnits(config?.[2], 6).toString(),
+      periodicity: formatUnits(config?.[4]!, 0).toString(),
+      ceiling: formatUnits(config?.[2]!, 6).toString(),
     },
   });
 
-  const [showModal, setShowModal] = useState(false);
-  const { provider, erc20Decimals } = useSmartContract();
-  const formValues = watch();
-  const axios = useAxios();
-  const queryClient = useQueryClient();
+  const { erc20, pocketContract } = useSmartContract();
 
-  const changeConfig = (contract: ParentContract) => {
-    console.log('changeConfig', formValues);
-    contract
-      .changeConfig(
-        parseUnits(formValues.ceiling, erc20Decimals),
-        formValues.periodicity,
-        child.web3Account.address,
-      )
-      .then(async (res) => {
-        const response = await axios.post('/api/ethereum/broadcast', {
-          hash: res,
-          type: 'CHANGE_CONFIG',
-          childAddress: child.web3Account.address,
-        });
-        await provider?.waitForTransaction(response.data.hash);
-        queryClient.invalidateQueries('config');
-      });
+  const { writeAsync: changeConfig } = useContractWrite({
+    contract: pocketContract,
+    functionName: 'changeConfig',
+  });
+
+  const onSubmit = async (data: FormValues) => {
+    await changeConfig({
+      args: [
+        parseUnits(data.ceiling, erc20.data?.decimals),
+        data.periodicity,
+        child.address,
+      ],
+    });
     returnFn();
-  };
-
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
-    setShowModal(true);
   };
 
   return (
@@ -82,7 +69,7 @@ function ChildSettingsForm({
           <input
             type="radio"
             id="weekly"
-            value="7"
+            value="604800"
             {...register('periodicity')}
           />
           <label htmlFor="huey">Weekly</label>
@@ -92,7 +79,7 @@ function ChildSettingsForm({
           <input
             type="radio"
             id="monthly"
-            value="30"
+            value="2592000"
             {...register('periodicity')}
           />
           <label htmlFor="dewey">Monthly</label>
@@ -103,12 +90,7 @@ function ChildSettingsForm({
         <input
           className="border p-2 text-dark"
           min="0"
-          {...register('ceiling', {
-            min: {
-              value: 0,
-              message: 'Ceiling cannot be negative',
-            },
-          })}
+          {...register('ceiling')}
           type="number"
         />
         {errors.ceiling && (
@@ -125,11 +107,6 @@ function ChildSettingsForm({
           Apply
         </button>
       </div>
-      <Web3Modal
-        contract={changeConfig}
-        isOpen={showModal}
-        setIsOpen={setShowModal}
-      />
     </form>
   );
 }

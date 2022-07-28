@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
 }
 
 datasource db {
@@ -12,16 +13,43 @@ datasource db {
 
 // User
 
-model UserParent {
-  id            String            @id @default(cuid())
-  firstName     String
-  lastName      String
-  email         String            @unique
+enum UserType {
+  Parent
+  Child
+}
+
+model User {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  name      String?
+  address   String   @unique
+  newUser   Boolean  @default(true)
+
+  email         String?   @unique
   emailVerified DateTime?
-  account       Account?
-  children      UserChild[]
-  wallet        UserParentWallet?
-  Ramp          Ramp[]
+
+  type   UserType
+  parent Parent?
+  child  Child?
+}
+
+model Parent {
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @id @unique
+
+  ramp     Ramp[]
+  children Child[]
+}
+
+model Child {
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @id @unique
+
+  status     ChildStatus @default(INVITED)
+  activities Activity[]
+
+  parent       Parent @relation(fields: [parentUserId], references: [userId])
+  parentUserId String
 }
 
 // User Parent Ramp
@@ -35,8 +63,8 @@ model Ramp {
   fiatValue    Float
   fiatCurrency String
   appliedFee   Float
-  status RampStatus
-  userParent   UserParent @relation(fields: [userParentId], references: [id])
+  status       RampStatus
+  userParent   Parent     @relation(fields: [userParentId], references: [userId])
   userParentId String
 }
 
@@ -47,38 +75,7 @@ enum RampStatus {
   ERROR
 }
 
-model UserChild {
-  id           String       @id @default(cuid())
-  firstName    String
-  lastName     String
-  username     String?      @unique
-  email        String       @unique
-  status       ChildStatus  @default(INVITED)
-  web3Account  Web3Account?
-  userParent   UserParent   @relation(fields: [userParentId], references: [id])
-  userParentId String
-  Activity     Activity[]
-}
-
-// Wallet
-
-model UserParentWallet {
-  id                  String     @id @default(cuid())
-  publicKey           String
-  encryptedPrivateKey String?
-  userParent          UserParent @relation(fields: [userParentId], references: [id])
-  userParentId        String     @unique
-}
-
 // Authentication Account
-
-model Web3Account {
-  id      String    @id @default(cuid())
-  address String    @unique
-  nonce   String
-  user    UserChild @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId  String    @unique
-}
 
 model Account {
   id                String     @id @default(cuid())
@@ -91,16 +88,14 @@ model Account {
   expiresAt         Int?
   tokenType         TokenType?
   scope             String?
-  user              UserParent @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId            String     @unique
 }
 
 model Activity {
-  id            String      @id @default(cuid())
-  createdAt     DateTime    @default(now())
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
   fromAddress   String
   toAddress     String?
-  child         UserChild[]
+  child         Child[]
   blockNum      String
   hash          String
   category      String
@@ -122,6 +117,16 @@ enum ChildStatus {
   PENDING
   ACTIVE
   LOCKED
+}
+
+// Verification Token
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }
 
 // Survey ?

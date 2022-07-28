@@ -21,7 +21,6 @@ describe('Testing addr changement', function () {
   let parent1Wallet: Wallet;
   const tokenAddr = constants.CHOSEN_TOKEN;
 
-
   before(async function () {
     provider = new providers.JsonRpcProvider(constants.RPC_URL.LOCAL);
     child1 = new Wallet(constants.FAMILY_ACCOUNT.child1, provider);
@@ -69,7 +68,6 @@ describe('Testing addr changement', function () {
       parent1Wallet,
       '100',
       constants.CHOSEN_WHALE
-
     );
     await setAllowance(
       tokenAddr,

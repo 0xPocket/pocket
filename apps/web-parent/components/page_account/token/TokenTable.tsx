@@ -12,7 +12,6 @@ import {
   getFilteredRowModel,
 } from '@tanstack/react-table';
 import { ethers } from 'ethers';
-import Image from 'next/future/image';
 import { useMemo, useState } from 'react';
 
 type TokenTableProps = {
@@ -25,17 +24,17 @@ function TokenTable({ tokenList }: TokenTableProps) {
       {
         header: '',
         accessorKey: 'logo_url',
-        cell: (cell) => (
+        cell: ({ getValue }) => (
           <div className="flex w-8 items-center justify-center">
-            <Image src={cell.getValue()} alt="" />
+            <img src={getValue() as string} alt="" />
           </div>
         ),
       },
       {
         header: () => 'Token Name',
         accessorKey: 'contract_name',
-        cell: (row) => {
-          return <div>{row.getValue()}</div>;
+        cell: ({ getValue }) => {
+          return <div>{getValue() as number}</div>;
         },
       },
       {
@@ -47,8 +46,10 @@ function TokenTable({ tokenList }: TokenTableProps) {
           );
           return Math.floor(Number(bal) * 100) / 100;
         },
-        cell: (cell) => (
-          <div className="text-right tracking-wider">{cell.getValue()}</div>
+        cell: ({ getValue }) => (
+          <div className="text-right tracking-wider">
+            {getValue() as number}
+          </div>
         ),
       },
       {
@@ -58,11 +59,13 @@ function TokenTable({ tokenList }: TokenTableProps) {
           return roundValue;
         },
         cell: (cell) => (
-          <div className="text-right tracking-wider">{cell.getValue()} $</div>
+          <div className="text-right tracking-wider">
+            <>{cell.getValue()} $</>
+          </div>
         ),
         id: 'quote',
         filterFn: (row) => {
-          return row.getValue('quote') > 0.1;
+          return (row.getValue('quote') as number) > 0.1;
         },
       },
     ],

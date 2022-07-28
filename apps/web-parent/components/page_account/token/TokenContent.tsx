@@ -11,7 +11,7 @@ type TokenContentProps = {
   child: UserChild;
 };
 
-const fetchUsers = (address: string) => {
+const fetchUsers = async (address: string) => {
   const APIKEY = 'ckey_d68ffbaf2bdf47b6b58e84fada7';
   const baseURL = 'https://api.covalenthq.com/v1';
   const blockchainChainId = '137';
@@ -23,8 +23,8 @@ const fetchUsers = (address: string) => {
 
 function TokenContent({ child }: TokenContentProps) {
   const { isLoading, data } = useQuery(
-    ['child-token-content', child.id],
-    () => fetchUsers(child.web3Account.address),
+    ['child.token-content', child.id],
+    () => fetchUsers(child.address),
     {
       enabled: !!child,
       staleTime: 60 * 1000,

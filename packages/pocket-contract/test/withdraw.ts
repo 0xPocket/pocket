@@ -19,7 +19,6 @@ describe('Testing withdraw', function () {
 
   const tokenAddr = constants.CHOSEN_TOKEN;
 
-
   before(async function () {
     provider = new providers.JsonRpcProvider('http://localhost:8545');
     child1 = new Wallet(constants.FAMILY_ACCOUNT.child1, provider);
@@ -61,7 +60,6 @@ is missing role 0x5d8e12c39142ff96d79d04d15d1ba1269e4fe57bb9d26f43523628b34ba108
       '100',
 
       constants.CHOSEN_WHALE
-
     );
     const balanceBefore = await getERC20Balance(
       tokenAddr,

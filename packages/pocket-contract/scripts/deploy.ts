@@ -17,7 +17,7 @@ async function main() {
   const PocketFaucet = await ethers.getContractFactory('PocketFaucet');
   const pocketFaucet = await upgrades.deployProxy(PocketFaucet, [
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    process.env.NEXT_PUBLIC_ERC20_FAKEUSDC_RINKEBY!,
+    process.env.NEXT_PUBLIC_CHOSEN_ERC20!,
   ]);
   await pocketFaucet.deployed();
 

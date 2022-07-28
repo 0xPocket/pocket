@@ -1,3 +1,4 @@
+import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 import { BigNumberish, Signer, Wallet } from 'ethers';
 import { PocketFaucet__factory, PocketFaucet } from '../typechain-types';
 

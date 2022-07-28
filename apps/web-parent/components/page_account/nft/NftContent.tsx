@@ -14,8 +14,8 @@ function NftContent({ child, fill_nbr = 0 }: NftContentProps) {
   const { alchemy } = useAlchemy();
 
   const { isLoading, data: content } = useQuery(
-    ['child-nft-content', child.id],
-    () => getNftsForOwner(alchemy, child.web3Account.address),
+    ['child.nft-content', child.id],
+    () => getNftsForOwner(alchemy, child.address),
     {
       enabled: !!child,
       staleTime: 60 * 1000,
