@@ -13,20 +13,18 @@
       "cache": false,
       "outputs": []
     },
-    "@lib/prisma#seed": {
-      "dependsOn": ["deploy"],
-      "cache": false
+    "@lib/prisma#push": {
+      "dependsOn": ["generate"],
+      "inputs": ["./prisma/migrations/**/*.sql"],
+      "cache": false,
+      "outputs": []
     },
     "pocket-contract#build": {
-      "inputs": ["./contracts/**/*.sol"],
+      "inputs": ["**/*.sol"],
       "outputs": ["./artifacts/**/*", "./typechain-types/**/*", "./cache/**/*"]
     },
     "pocket-contract#deploy": {
       "dependsOn": ["build"],
-      "cache": false
-    },
-    "pocket-contract#seed": {
-      "dependsOn": ["build", "deploy"],
       "cache": false
     },
     "fork": {
@@ -44,7 +42,11 @@
       "outputs": ["dist/**", ".next/**"]
     },
     "dev": {
-      "dependsOn": ["//#env-check", "@lib/prisma#seed", "pocket-contract#seed"],
+      "dependsOn": [
+        "//#env-check",
+        "@lib/prisma#push",
+        "pocket-contract#deploy"
+      ],
       "cache": false
     },
     "start": {
