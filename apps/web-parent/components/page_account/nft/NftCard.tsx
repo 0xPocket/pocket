@@ -13,9 +13,9 @@ function NftCard({ nft, isLoading = false }: NftCardProps) {
   if (nft)
     return (
       <div className="container-classic col-span-4 flex flex-col overflow-hidden rounded-md">
-        {nft.media[0].gateway && (
+        {nft.media[0]?.gateway && (
           <img
-            src={nft.media[0].gateway}
+            src={nft.media[0]?.gateway}
             alt={nft.title}
             className="aspect-square object-cover"
           />
