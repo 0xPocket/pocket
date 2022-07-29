@@ -93,7 +93,6 @@ class ParentTester extends ParentContract {
   ) => {
     const amountWithDeci = await stringToDecimalsVersion(
       token,
-      this.signer,
       amount.toString()
     );
     if (whale != null) {
@@ -116,10 +115,7 @@ class ParentTester extends ParentContract {
   };
 
   addStdChildAndSend = async (address: string, tokenAddr: string) => {
-    const ceiling = ethers.utils.parseUnits(
-      '10',
-      await getDecimals(tokenAddr, this.signer)
-    );
+    const ceiling = ethers.utils.parseUnits('10', await getDecimals(tokenAddr));
     const periodicity = constants.TIME.WEEK;
     await this.contract
       .connect(this.signer)
@@ -132,11 +128,7 @@ class ParentTester extends ParentContract {
     token: string,
     whale: string
   ) => {
-    const amountWithDeci = await stringToDecimalsVersion(
-      token,
-      this.signer,
-      amount
-    );
+    const amountWithDeci = await stringToDecimalsVersion(token, amount);
     await setErc20Balance(token, this.signer, amount, whale);
     await setAllowance(
       token,

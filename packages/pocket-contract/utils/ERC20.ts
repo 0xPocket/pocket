@@ -66,27 +66,20 @@ export async function sendErc20(
   await stopImpersonate(whaleAddr);
 }
 
-export async function getDecimals(
-  tokenAddr: string,
-  provider: providers.JsonRpcProvider | Signer
-) {
+export async function getDecimals(tokenAddr: string) {
   const tokenContract = new Contract(
     tokenAddr,
     ERC20Abi,
-    provider
+    ethers.provider
   ) as IERC20MetadataUpgradeable;
   return await tokenContract.decimals();
 }
 
 export async function stringToDecimalsVersion(
   tokenAddr: string,
-  provider: providers.JsonRpcProvider | Signer,
   amount: string
 ) {
-  return ethers.utils.parseUnits(
-    amount,
-    await getDecimals(tokenAddr, provider)
-  );
+  return ethers.utils.parseUnits(amount, await getDecimals(tokenAddr));
 }
 
 export async function setAllowance(
@@ -103,15 +96,11 @@ export async function setAllowance(
   return await tokenContract.connect(account).approve(receiver, amount);
 }
 
-export async function getERC20Balance(
-  tokenAddr: string,
-  address: string,
-  provider: providers.JsonRpcProvider
-) {
+export async function getERC20Balance(tokenAddr: string, address: string) {
   const tokenContract = new Contract(
     tokenAddr,
     ERC20Abi,
-    provider
+    ethers.provider
   ) as IERC20MetadataUpgradeable;
   return await tokenContract.balanceOf(address);
 }

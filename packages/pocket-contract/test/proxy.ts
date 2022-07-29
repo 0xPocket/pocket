@@ -72,7 +72,9 @@ describe('Deploy and tests on proxy functions', function () {
 
     it('Should change proxyAdmin owner', async function () {
       mute();
+      console.log(testAccount1.address);
       await upgrades.admin.transferProxyAdminOwnership(testAccount1.address);
+
       unmute();
       expect(await proxyAdmin.connect(testAccount1).owner()).to.be.equal(
         testAccount1.address

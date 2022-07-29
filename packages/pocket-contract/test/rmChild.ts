@@ -11,21 +11,22 @@ describe('Testing rm child', function () {
   let child2: Wallet;
   let parent1: ParentTester;
   let PocketFaucet_factory: PocketFaucet__factory, pocketFaucet: PocketFaucet;
-  let provider: providers.JsonRpcProvider;
   let parent1Wallet: Wallet;
 
   const tokenAddr = constants.CHOSEN_TOKEN;
   before(async function () {
-    provider = new providers.JsonRpcProvider(constants.RPC_URL.LOCAL);
-    child1 = new Wallet(constants.FAMILY_ACCOUNT.child1, provider);
-    child2 = new Wallet(constants.FAMILY_ACCOUNT.child2, provider);
+    child1 = new Wallet(constants.FAMILY_ACCOUNT.child1, ethers.provider);
+    child2 = new Wallet(constants.FAMILY_ACCOUNT.child2, ethers.provider);
 
     PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
     pocketFaucet = (await upgrades.deployProxy(PocketFaucet_factory, [
       tokenAddr,
     ])) as PocketFaucet;
     await pocketFaucet.deployed();
-    parent1Wallet = new Wallet(constants.FAMILY_ACCOUNT.parent1, provider);
+    parent1Wallet = new Wallet(
+      constants.FAMILY_ACCOUNT.parent1,
+      ethers.provider
+    );
     parent1 = new ParentTester(pocketFaucet.address, parent1Wallet);
   });
 

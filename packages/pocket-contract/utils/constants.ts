@@ -69,8 +69,9 @@ export const WHALES = {
 const NETWORK = {
   RINKEBY: {
     url:
-      'https://eth-rinkeby.alchemyapi.io/v2/' +
-      process.env.NEXT_PUBLIC_KEY_ALCHEMY_RINKEBY,
+      // 'https://eth-rinkeby.alchemyapi.io/v2/' +
+      'https://rinkeby.infura.io/v3/' +
+      process.env.NEXT_PUBLIC_KEY_INFURA_RINKEBY,
     chainId: 4,
   },
   POLYGON: {
