@@ -81,7 +81,7 @@ const NETWORK = {
   },
 };
 
-const CHOSEN = 'RINKEBY';
+const CHOSEN = 'POLYGON';
 
 export const CHOSEN_NETWORK = NETWORK[CHOSEN];
 export const CHOSEN_TOKEN = TOKENS[CHOSEN];

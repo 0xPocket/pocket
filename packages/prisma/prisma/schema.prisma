@@ -41,6 +41,11 @@ model Parent {
   children Child[]
 }
 
+enum ChildStatus {
+  INVITED
+  ACTIVE
+}
+
 model Child {
   user   User   @relation(fields: [userId], references: [id])
   userId String @id @unique
@@ -53,6 +58,13 @@ model Child {
 }
 
 // User Parent Ramp
+
+enum RampStatus {
+  CREATED
+  RELEASED
+  RETURNED
+  ERROR
+}
 
 model Ramp {
   id           Int        @id @default(autoincrement())
@@ -68,27 +80,9 @@ model Ramp {
   userParentId String
 }
 
-enum RampStatus {
-  CREATED
-  RELEASED
-  RETURNED
-  ERROR
-}
+
 
 // Authentication Account
-
-model Account {
-  id                String     @id @default(cuid())
-  type              AuthType
-  provider          String
-  providerAccountId String?
-  refresh_token     String?
-  access_token      String?
-  password          String?
-  expiresAt         Int?
-  tokenType         TokenType?
-  scope             String?
-}
 
 model Activity {
   id            String   @id @default(cuid())
@@ -102,21 +96,6 @@ model Activity {
   value         String
   asset         String?
   erc721TokenId String?
-}
-
-model Session {
-  id        String   @id
-  sid       String   @unique
-  data      String
-  expiresAt DateTime
-}
-
-enum ChildStatus {
-  INVITED
-  LINKED
-  PENDING
-  ACTIVE
-  LOCKED
 }
 
 // Verification Token
@@ -140,15 +119,4 @@ model Survey {
   contact         String?
   email           String   @unique
   createdAt       DateTime @default(now())
-}
-
-// Auth Enums
-
-enum AuthType {
-  oauth
-  credentials
-}
-
-enum TokenType {
-  Bearer
 }
