@@ -1,13 +1,18 @@
 import * as constants from '../utils/constants';
 import { ethers } from 'hardhat';
 
-export default async function goForwardNDays(rpcUrl: string, nbDays: number) {
-  const netProvider = new ethers.providers.JsonRpcProvider(rpcUrl);
-  let block = await netProvider.getBlock(await netProvider.getBlockNumber());
+export default async function goForwardNDays(nbDays: number) {
+  let block = await ethers.provider.getBlock(
+    await ethers.provider.getBlockNumber()
+  );
   let timestampBefore = block.timestamp;
   for (let i = 0; i < nbDays; i++) {
-    block = await netProvider.getBlock(await netProvider.getBlockNumber());
+    block = await ethers.provider.getBlock(
+      await ethers.provider.getBlockNumber()
+    );
     timestampBefore = block.timestamp;
-    await netProvider.send('evm_mine', [timestampBefore + constants.TIME.DAY]);
+    await ethers.provider.send('evm_mine', [
+      timestampBefore + constants.TIME.DAY,
+    ]);
   }
 }

@@ -13,9 +13,8 @@ describe('Testing active param change', function () {
   const tokenAddr = constants.CHOSEN_TOKEN;
 
   before(async function () {
-    const provider = new providers.JsonRpcProvider('http://localhost:8545');
-    child1 = new Wallet(constants.FAMILY_ACCOUNT.child1, provider);
-    child2 = new Wallet(constants.FAMILY_ACCOUNT.child2, provider);
+    child1 = new Wallet(constants.FAMILY_ACCOUNT.child1, ethers.provider);
+    child2 = new Wallet(constants.FAMILY_ACCOUNT.child2, ethers.provider);
 
     PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
     pocketFaucet = (await upgrades.deployProxy(PocketFaucet_factory, [
@@ -24,11 +23,11 @@ describe('Testing active param change', function () {
     await pocketFaucet.deployed();
     parent1 = new ParentTester(
       pocketFaucet.address,
-      new Wallet(constants.FAMILY_ACCOUNT.parent1, provider)
+      new Wallet(constants.FAMILY_ACCOUNT.parent1, ethers.provider)
     );
     parent2 = new ParentTester(
       pocketFaucet.address,
-      new Wallet(constants.FAMILY_ACCOUNT.parent2, provider)
+      new Wallet(constants.FAMILY_ACCOUNT.parent2, ethers.provider)
     );
     await parent1.addStdChildAndSend(child1.address, tokenAddr);
     await parent2.addStdChildAndSend(child2.address, tokenAddr);

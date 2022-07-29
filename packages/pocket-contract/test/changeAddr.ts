@@ -17,21 +17,22 @@ describe('Testing addr changement', function () {
   let child1: Wallet, child2: Wallet;
   let parent1: ParentTester;
   let PocketFaucet_factory: PocketFaucet__factory, pocketFaucet: PocketFaucet;
-  let provider: providers.JsonRpcProvider;
   let parent1Wallet: Wallet;
   const tokenAddr = constants.CHOSEN_TOKEN;
 
   before(async function () {
-    provider = new providers.JsonRpcProvider(constants.RPC_URL.LOCAL);
-    child1 = new Wallet(constants.FAMILY_ACCOUNT.child1, provider);
-    child2 = new Wallet(constants.FAMILY_ACCOUNT.child2, provider);
+    child1 = new Wallet(constants.FAMILY_ACCOUNT.child1, ethers.provider);
+    child2 = new Wallet(constants.FAMILY_ACCOUNT.child2, ethers.provider);
 
     PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
     pocketFaucet = (await upgrades.deployProxy(PocketFaucet_factory, [
       tokenAddr,
     ])) as PocketFaucet;
     await pocketFaucet.deployed();
-    parent1Wallet = new Wallet(constants.FAMILY_ACCOUNT.parent1, provider);
+    parent1Wallet = new Wallet(
+      constants.FAMILY_ACCOUNT.parent1,
+      ethers.provider
+    );
     parent1 = new ParentTester(pocketFaucet.address, parent1Wallet);
     await parent1.addStdChildAndSend(child1.address, tokenAddr);
   });
@@ -53,16 +54,9 @@ describe('Testing addr changement', function () {
   });
 
   it('Should test that new child2 can withdraw', async function () {
-    const toSend = ethers.utils.parseUnits(
-      '100',
-      await getDecimals(tokenAddr, provider)
-    );
-    const tokenBefore = await getERC20Balance(
-      tokenAddr,
-      child2.address,
-      provider
-    );
-    await goForwardNDays(constants.RPC_URL.LOCAL, 21);
+    const toSend = ethers.utils.parseUnits('100', await getDecimals(tokenAddr));
+    const tokenBefore = await getERC20Balance(tokenAddr, child2.address);
+    await goForwardNDays(21);
     await setErc20Balance(
       tokenAddr,
       parent1Wallet,
@@ -78,9 +72,7 @@ describe('Testing addr changement', function () {
     await parent1.addFunds(toSend, child2.address);
     await pocketFaucet.connect(child2).claim({ gasLimit: 3000000 });
     assert(
-      tokenBefore.lt(
-        await getERC20Balance(tokenAddr, child2.address, provider)
-      ),
+      tokenBefore.lt(await getERC20Balance(tokenAddr, child2.address)),
       'Child2 number of token did not increased'
     );
   });

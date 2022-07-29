@@ -12,7 +12,7 @@
     "deploy": "yarn hardhat run scripts/deploy.ts --network localhost",
     "seed": "yarn hardhat run ./scripts/seed.ts --network localhost",
     "lint": "eslint \"{test,utils,helpers}/**/*.ts\" --fix",
-    "test": "FORCECOLOR=1 yarn hardhat test --network localhost"
+    "test": "FORCECOLOR=1 yarn hardhat test"
   },
   "dependencies": {
     "dotenv": "^16.0.1",

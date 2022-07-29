@@ -18,16 +18,21 @@ describe('Testing to withdraw funds from child account as parent', function () {
   const tokenAddr = constants.CHOSEN_TOKEN;
 
   before(async function () {
-    provider = new providers.JsonRpcProvider('http://localhost:8545');
-    child1 = new Wallet(constants.FAMILY_ACCOUNT.child1, provider);
+    child1 = new Wallet(constants.FAMILY_ACCOUNT.child1, ethers.provider);
 
     PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
     pocketFaucet = (await upgrades.deployProxy(PocketFaucet_factory, [
       tokenAddr,
     ])) as PocketFaucet;
     await pocketFaucet.deployed();
-    parent1Wallet = new Wallet(constants.FAMILY_ACCOUNT.parent1, provider);
-    parent2Wallet = new Wallet(constants.FAMILY_ACCOUNT.parent2, provider);
+    parent1Wallet = new Wallet(
+      constants.FAMILY_ACCOUNT.parent1,
+      ethers.provider
+    );
+    parent2Wallet = new Wallet(
+      constants.FAMILY_ACCOUNT.parent2,
+      ethers.provider
+    );
     parent1 = new ParentTester(pocketFaucet.address, parent1Wallet);
     parent2 = new ParentTester(pocketFaucet.address, parent2Wallet);
     await parent1.addStdChildAndSend(child1.address, tokenAddr);
@@ -41,17 +46,9 @@ describe('Testing to withdraw funds from child account as parent', function () {
 
   it('Should withdraw all child fund', async function () {
     const diffExpected = await parent1.getChildBalance(child1.address);
-    const tokenBefore = await getERC20Balance(
-      tokenAddr,
-      parent1Wallet.address,
-      provider
-    );
+    const tokenBefore = await getERC20Balance(tokenAddr, parent1Wallet.address);
     await parent1.contract.withdrawFundsFromChild(0, child1.address);
-    const tokenAfter = await getERC20Balance(
-      tokenAddr,
-      parent1Wallet.address,
-      provider
-    );
+    const tokenAfter = await getERC20Balance(tokenAddr, parent1Wallet.address);
     const diff = tokenAfter.sub(tokenBefore);
 
     assert(
@@ -75,17 +72,9 @@ describe('Testing to withdraw funds from child account as parent', function () {
   it('Should withdraw half of child funds', async function () {
     const childBalance = await parent1.getChildBalance(child1.address);
     const diffExpected = childBalance.div(2);
-    const tokenBefore = await getERC20Balance(
-      tokenAddr,
-      parent1Wallet.address,
-      provider
-    );
+    const tokenBefore = await getERC20Balance(tokenAddr, parent1Wallet.address);
     await parent1.contract.withdrawFundsFromChild(diffExpected, child1.address);
-    const tokenAfter = await getERC20Balance(
-      tokenAddr,
-      parent1Wallet.address,
-      provider
-    );
+    const tokenAfter = await getERC20Balance(tokenAddr, parent1Wallet.address);
     const diff = tokenAfter.sub(tokenBefore);
     assert(
       diff.eq(diffExpected) && !diff.eq(0),
