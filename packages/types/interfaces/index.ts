@@ -12,6 +12,6 @@ export interface UserParent extends User {
 export interface UserChild extends User {
   child: Child | null;
 }
-
+export * from "./Alchemy.interface";
 export * from "./Covalent.interface";
 export * from "./AlchemyWebhook.interface";

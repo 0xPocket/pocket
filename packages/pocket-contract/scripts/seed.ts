@@ -1,56 +1,71 @@
-import { BigNumber } from 'ethers';
-import { setErc20Balance } from '../utils/ERC20';
+import { setAllowance, setErc20Balance } from '../utils/ERC20';
 import * as constants from '../utils/constants';
 import { parseUnits } from 'ethers/lib/utils';
 import { ethers } from 'hardhat';
-import {
-  impersonateAccount,
-  setBalance,
-  stopImpersonatingAccount,
-} from '@nomicfoundation/hardhat-network-helpers';
 import { PocketFaucet__factory } from '../typechain-types';
 
 const DAMIAN_MUSK = {
-  publicKey: '0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc',
+  address: '0x1CBd3b2770909D4e10f157cABC84C7264073C9Ec',
   privateKey:
-    '0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a',
+    '0x47c99abed3324a2707c28affff1267e45918ec8c3f20b8aa892e8b065d2942dd',
 };
 
-const SOLAL_DUNCKEL = {
-  publicKey: '0x9DA96cb647116313129EAb5BB81E87940fAD6f60',
+const XAVIER_MUSK = {
+  address: '0xdF3e18d64BC6A983f673Ab319CCaE4f1a57C7097',
+  privateKey:
+    '0xc526ee95bf44d8fc405a158bb884d9d1238d99f0612e9f33d006bb0789009aaa',
+};
+
+const LOLA_MUSK = {
+  address: '0xcd3B766CCDd6AE721141F452C550Ca635964ce71',
+  privateKey:
+    '0x8166f546bab6da521a8369cab06c5d2b9e46670292d85c875ee9ec20e84ffb61',
+};
+
+const ELON_MUSK = {
+  address: '0xBcd4042DE499D14e55001CcbB24a551F3b954096',
+  privateKey:
+    '0xf214f2b2cd398c806f84e317254e0f0b801d0643303237d97a22a48e01628897',
 };
 
 async function main() {
-  // Set Balance
-  await setBalance(
-    SOLAL_DUNCKEL.publicKey,
-    BigNumber.from('3000').mul(BigNumber.from('10').pow(18)).toHexString()
-  );
-
-  // Impersonate Account
-  await impersonateAccount(SOLAL_DUNCKEL.publicKey);
-
-  const signer = await ethers.getSigner(SOLAL_DUNCKEL.publicKey);
-
-  const parent = PocketFaucet__factory.connect(
+  const parent = await ethers.getSigner(ELON_MUSK.address);
+  const faucet = PocketFaucet__factory.connect(
     process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string,
-    signer
+    parent
   );
 
-  await parent.addChild(
-    parseUnits('20', 6),
+  console.log('Contract1!');
+  await faucet.addChild(
+    parseUnits('100', 6),
+    1 * 1 * 5 * 6000,
+    LOLA_MUSK.address
+  );
+  await faucet.addChild(
+    parseUnits('10', 6),
     1 * 1 * 5 * 60,
-    DAMIAN_MUSK.publicKey
+    DAMIAN_MUSK.address
   );
 
   await setErc20Balance(
     constants.CHOSEN_TOKEN,
-    signer,
+    parent,
     '3000',
     constants.CHOSEN_WHALE
   );
 
-  await stopImpersonatingAccount(SOLAL_DUNCKEL.publicKey);
+  console.log('Contract 2 !');
+
+  await setAllowance(
+    constants.CHOSEN_TOKEN,
+    parent,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+    parseUnits('100000', 6).toString()
+  );
+  console.log('Contract 3 !');
+
+  await faucet.addFunds(parseUnits('10', 6), LOLA_MUSK.address);
 
   console.log('Contract seeding complete !');
 }

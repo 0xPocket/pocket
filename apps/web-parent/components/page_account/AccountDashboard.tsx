@@ -14,7 +14,7 @@ function AccountDashboard({ child }: AccountDashboardProps) {
       </div>
       <div className="grid grid-cols-2 gap-8">
         <NftContent child={child} fill_nbr={9} />
-        <TransactionContent />
+        <TransactionContent child={child} />
       </div>
       <TokenContent child={child} />
     </div>
