@@ -52,6 +52,7 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
     createClient({
       autoConnect: true,
       provider,
+      persister: null,
       connectors: [
         new MetaMaskConnector({ chains }),
         new WalletConnectConnector({

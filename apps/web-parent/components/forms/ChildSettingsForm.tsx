@@ -35,7 +35,7 @@ function ChildSettingsForm({
   } = useZodForm({
     schema: ChildSettingsSchema,
     defaultValues: {
-      periodicity: formatUnits(config?.[4]!, 0).toString(),
+      periodicity: formatUnits(config?.periodicity!, 0).toString(),
       ceiling: formatUnits(config?.[2]!, 6).toString(),
     },
   });
