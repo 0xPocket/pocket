@@ -18,7 +18,7 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
     contract: pocketContract,
     functionName: 'childToConfig',
     args: [child.address],
-    watch: true,
+    // watch: true,
   });
 
   return (

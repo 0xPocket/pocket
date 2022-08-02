@@ -29,8 +29,6 @@ function RightTab({ child, config, hideActions = false }: RightTabProps) {
     args: [address!, process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!],
   });
 
-  if (config) console.log(config.toString());
-
   return (
     <Tab.Group
       defaultIndex={1}

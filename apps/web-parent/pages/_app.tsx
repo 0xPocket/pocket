@@ -25,14 +25,14 @@ import { withTRPC } from '@trpc/next';
 import { SessionProvider } from 'next-auth/react';
 
 const { chains, provider } = configureChains(
-  [chain.polygonMumbai],
+  [chain.polygon],
   [
-    alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_KEY_ALCHEMY_MUMBAI! }),
-    // jsonRpcProvider({
-    //   rpc: () => ({
-    //     http: `http://localhost:8545`,
-    //   }),
-    // }),
+    // alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_KEY_ALCHEMY_MUMBAI! }),
+    jsonRpcProvider({
+      rpc: () => ({
+        http: `http://localhost:8545`,
+      }),
+    }),
     // publicProvider(),
   ],
 );

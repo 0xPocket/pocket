@@ -99,13 +99,15 @@ and change the value of the CHOSEN variable.
 1. Go to turbo.json and remove, in the pipeline, in dev this line :
    "pocket-contract#deploy"
 
-2. Go to ./apps/web-parent/pages/\_app.tsx and edit the configureChains parameters accordingly
+2. Go to ./apps/web-parent/pages/\_app.tsx and edit ALL the configureChains parameters accordingly
 
 3. Go to ./env and change the NEXT_PUBLIC_CHOSEN_ERC20 variable value accordingly
 
 4. Still in ./env, change the NEXT_PUBLIC_CONTRACT_ADDRESS variable value accordingly
 
-5. Accounts to use can be found in ./packages/pocket-contract/scripts/deployOnMumbai.ts
+5. Accounts to use on metamask can be found in ./packages/pocket-contract/scripts/deployOnMumbai.ts
+
+6. Think to change metamask network accordingly
 
 ## Useful commands
 

@@ -46,14 +46,28 @@ function ChildSettingsForm({
     functionName: 'changeConfig',
   });
 
+  const { writeAsync: addChild } = useContractWrite({
+    contract: pocketContract,
+    functionName: 'addChild',
+  });
+
   const onSubmit = async (data: FormValues) => {
-    await changeConfig({
-      args: [
-        parseUnits(data.ceiling, erc20.data?.decimals),
-        data.periodicity,
-        child.address,
-      ],
-    });
+    if (config?.lastClaim.isZero())
+      await addChild({
+        args: [
+          parseUnits(data.ceiling, erc20.data?.decimals),
+          data.periodicity,
+          child.address,
+        ],
+      });
+    else
+      await changeConfig({
+        args: [
+          parseUnits(data.ceiling, erc20.data?.decimals),
+          data.periodicity,
+          child.address,
+        ],
+      });
     returnFn();
   };
 
