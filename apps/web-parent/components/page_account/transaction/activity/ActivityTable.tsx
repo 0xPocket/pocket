@@ -9,6 +9,7 @@ function TransactionsTable({ transactionsList }: TransactionsTableProps) {
   transactionsList = transactionsList.filter(
     (tx) => tx.to !== process.env.NEXT_PUBLIC_CONTRACT_ADDRESS,
   );
+  // transactionsList.reverse();
   return (
     <table className="w-full bg-dark-light">
       <thead>

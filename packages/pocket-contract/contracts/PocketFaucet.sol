@@ -16,12 +16,11 @@ contract PocketFaucet is AccessControlUpgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     bytes32 public constant WITHDRAW_ROLE = keccak256('WITHDRAW_ROLE');
-    // bytes32 public constant PARENT_ROLE = keccak256("PARENT_ROLE");
-    // bytes32 public constant CHILD_ROLE = keccak256("CHILD_ROLE");
+
 
     event ChildAdded(address indexed parent, address indexed child);
     event ChildRemoved(address indexed parent, address indexed child);
-    event FundsAdded(address indexed parent, uint256 amount, address child);
+    event FundsAdded(address indexed parent, uint256 amount, address indexed child, uint256 timestamp);
     event FundsWithdrawn(address indexed parent, uint256 amount, address child);
     event MoneyClaimed(address indexed child, uint256 amount);
     event TokenWithdrawed(address indexed token, uint256 amount);
@@ -212,7 +211,7 @@ contract PocketFaucet is AccessControlUpgradeable {
         );
         childToConfig[child].balance += amount;
 
-        emit FundsAdded(msg.sender, amount, child);
+        emit FundsAdded(msg.sender, amount, child, block.timestamp);
     }
 
     function withdrawFundsFromChild(uint256 amount, address child)

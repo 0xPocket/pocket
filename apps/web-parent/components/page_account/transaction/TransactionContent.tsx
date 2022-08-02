@@ -4,6 +4,7 @@ import { Tab } from '@headlessui/react';
 import {
   AssetTransfersParamsWithMetadata,
   AssetTransfersResponseWithMetadata,
+  AssetTransfersResultWithMetadata,
   UserChild,
 } from '@lib/types/interfaces';
 import { useQuery, useQueryClient } from 'react-query';
@@ -12,36 +13,42 @@ import { AssetTransfersCategory, getAssetTransfers } from '@alch/alchemy-sdk';
 import { useAlchemy } from '../../../contexts/alchemy';
 import { useMemo, useState } from 'react';
 import TopupsTable from './topups/TopupsTable';
+import { useAccount } from 'wagmi';
 
 type TransactionContentProps = {
   child: UserChild;
 };
 
-// metadata: { blockTimestamp: string };
-
-//docs.alchemy.com/alchemy/enhanced-apis/transfers-api
-
 function TransactionContent({ child }: TransactionContentProps) {
   const { alchemy } = useAlchemy();
-  const [pageNb, setPageNb] = useState<string>();
+  const [pageKey, setPageKey] = useState<string>();
   const [index, setIndex] = useState(0);
+  const [doneFetchingTx, setDoneFetchingTx] = useState(false);
+  const pageLen = 10;
+  const { address } = useAccount();
+
+  const lowerBound = () => index * pageLen;
+  const upperBound = () => (index + 1) * pageLen;
 
   const assetTransfersParams: AssetTransfersParamsWithMetadata = useMemo(() => {
     return {
-      fromAddress: '0x0ac93fee5ad4a6ee7e705ba53a5592e4456cf570',
+      // fromAddress: '0x0ac93fee5ad4a6ee7e705ba53a5592e4456cf570',
+      fromAddress: address,
       excludeZeroValue: false,
       withMetadata: true,
-      maxCount: 10,
-      pageKey: pageNb,
+      maxCount: 1000,
+      pageKey: pageKey,
 
       category: [
-        AssetTransfersCategory.ERC20,
-        AssetTransfersCategory.ERC721,
-        AssetTransfersCategory.ERC1155,
-        AssetTransfersCategory.SPECIALNFT,
+        // AssetTransfersCategory.ERC20,
+        // AssetTransfersCategory.ERC721,
+        // AssetTransfersCategory.ERC1155,
+        // AssetTransfersCategory.SPECIALNFT,
+        AssetTransfersCategory.EXTERNAL,
+        // AssetTransfersCategory.TOKEN,
       ],
     };
-  }, [pageNb]);
+  }, [pageKey, address]);
 
   const queryClient = useQueryClient();
   const {
@@ -49,15 +56,28 @@ function TransactionContent({ child }: TransactionContentProps) {
     data: content,
     isFetching,
   } = useQuery<AssetTransfersResponseWithMetadata>(
-    ['child-transactions-content', child.id, index],
+    ['child-transactions-content', child.id, pageKey],
     async () => {
       const page = await getAssetTransfers(alchemy, assetTransfersParams);
-
       return page as unknown as Promise<AssetTransfersResponseWithMetadata>;
     },
-    { keepPreviousData: true, staleTime: 6000000 },
+    {
+      keepPreviousData: true,
+      enabled: !!address,
+      onSuccess: (result) => {
+        if (result.pageKey !== undefined) {
+          setPageKey(result.pageKey);
+        } else {
+          setDoneFetchingTx(true);
+        }
+      },
+
+      select: (data) => {
+        data.transfers.reverse();
+        return data;
+      },
+    },
   );
-  // const data = fetchTransactions(child.web3Account.address);
 
   return (
     <div className="space-y-8">
@@ -89,7 +109,7 @@ function TransactionContent({ child }: TransactionContentProps) {
           <Tab.Panel>
             <button
               onClick={() => {
-                setPageNb(undefined);
+                setPageKey(undefined);
                 setIndex(0);
                 queryClient.invalidateQueries('child-transactions-content');
               }}
@@ -97,7 +117,14 @@ function TransactionContent({ child }: TransactionContentProps) {
               &#8635;
             </button>
             {!isLoading && !isFetching && content?.transfers ? (
-              <TransactionsTable transactionsList={content.transfers} />
+              <TransactionsTable
+                transactionsList={
+                  content.transfers.slice(
+                    lowerBound(),
+                    upperBound(),
+                  ) as AssetTransfersResultWithMetadata[]
+                }
+              />
             ) : (
               <FontAwesomeIcon icon={faSpinner} spin />
             )}
@@ -106,22 +133,25 @@ function TransactionContent({ child }: TransactionContentProps) {
           <Tab.Panel>
             <button
               onClick={() => {
-                setPageNb(undefined);
+                setPageKey(undefined);
                 setIndex(0);
                 queryClient.invalidateQueries('child-transactions-content');
               }}
             >
               &#8635;
             </button>
-            {!isLoading && !isFetching && content?.transfers ? (
-              <TopupsTable transactionsList={content.transfers} />
+            {doneFetchingTx && content?.transfers ? (
+              <TopupsTable
+                transactionsList={content.transfers}
+                childAddress={child.address}
+              />
             ) : (
               <FontAwesomeIcon icon={faSpinner} spin />
             )}
           </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>
-      <div className="flex flex-row gap-4">
+      <div className="grid grid-cols-3 gap-4">
         <button
           disabled={index === 0}
           onClick={() => {
@@ -130,17 +160,15 @@ function TransactionContent({ child }: TransactionContentProps) {
         >
           Previous
         </button>
-        {content?.pageKey && (
-          <button
-            onClick={() => {
-              setPageNb(content.pageKey);
-              setIndex((index) => index + 1);
-            }}
-          >
-            Next
-          </button>
-        )}
         Page : {index + 1}
+        <button
+          disabled={index < upperBound()}
+          onClick={() => {
+            setIndex((index) => index + 1);
+          }}
+        >
+          Next
+        </button>
       </div>
     </div>
   );

@@ -42,6 +42,17 @@ const config: HardhatUserConfig = {
         process.env.NEXT_PUBLIC_KEY_ALCHEMY_POLYGON,
       chainId: 137,
     },
+    mumbai: {
+      url:
+        'https://polygon-mumbai.g.alchemy.com/v2/' +
+        process.env.NEXT_PUBLIC_KEY_ALCHEMY_MUMBAI,
+      chainId: 80001,
+      gasPrice: 40000000000,
+      gas: 3000000,
+      accounts: [
+        '0x884167056218e26ea3aabadd56c3b30e1575f0085b70c5db516ed1c12127f0f3',
+      ],
+    },
   },
 
   // gasReporter: {

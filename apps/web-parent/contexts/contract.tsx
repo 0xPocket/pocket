@@ -36,12 +36,12 @@ export const SmartContractProvider = ({
   const { isConnected } = useAccount();
 
   const { data: erc20Data } = useToken({
-    address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+    address: '0xe11A86849d99F524cAC3E7A0Ec1241828e332C62',
     enabled: isConnected,
   });
 
   const erc20Contract = useContract<IERC20>({
-    addressOrName: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+    addressOrName: '0xe11A86849d99F524cAC3E7A0Ec1241828e332C62',
     contractInterface: erc20ABI,
   });
 

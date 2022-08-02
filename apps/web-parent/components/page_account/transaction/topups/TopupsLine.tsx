@@ -1,30 +1,22 @@
-import { AssetTransfersCategory } from '@alch/alchemy-sdk';
 import { AssetTransfersResultWithMetadata } from '@lib/types/interfaces';
 import moment from 'moment';
+import { useTransaction } from 'wagmi';
+import { useSmartContract } from '../../../../contexts/contract';
 
 type TopupsLineProps = {
   transaction: AssetTransfersResultWithMetadata;
 };
 
-function transformCategory(category: AssetTransfersCategory) {
-  if (category === 'erc20') return 'Cryptocurrency';
-  if (
-    category === 'erc721' ||
-    category === 'erc1155' ||
-    category === 'specialnft'
-  )
-    return 'NFT';
-  return category;
-}
-
 function TopupsLine({ transaction }: TopupsLineProps) {
+  const { pocketContract } = useSmartContract();
+
   const date = transaction.metadata.blockTimestamp;
   const asset = transaction.asset === 'ETH' ? 'Matic' : transaction.asset;
   const value =
     transaction.value?.toFixed(2) === '0.00'
       ? '0'
       : transaction.value?.toFixed(2);
-  const category = transformCategory(transaction.category);
+  const tx = useTransaction({ hash: transaction.hash as `0x${string}` });
 
   return (
     <tr className="grid grid-cols-3 gap-4">
@@ -32,7 +24,6 @@ function TopupsLine({ transaction }: TopupsLineProps) {
       <td>
         {value} {asset}
       </td>
-      <td>{category}</td>
     </tr>
   );
 }

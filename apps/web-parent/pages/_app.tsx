@@ -10,6 +10,7 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { AlchemyProvider } from '../contexts/alchemy';
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
+import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { MagicAuthProvider } from '../contexts/auth';
 import { MagicConnector } from '../utils/MagicConnector';
@@ -24,14 +25,14 @@ import { withTRPC } from '@trpc/next';
 import { SessionProvider } from 'next-auth/react';
 
 const { chains, provider } = configureChains(
-  [chain.polygon],
+  [chain.polygonMumbai],
   [
-    jsonRpcProvider({
-      rpc: () => ({
-        http: `http://localhost:8545`,
-      }),
-    }),
-    // alchemyProvider({ alchemyId: process.env.NEXT_PUBLIC_KEY_ALCHEMY_POLYGON }),
+    alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_KEY_ALCHEMY_POLYGON! }),
+    // jsonRpcProvider({
+    //   rpc: () => ({
+    //     http: `http://localhost:8545`,
+    //   }),
+    // }),
     // publicProvider(),
   ],
 );

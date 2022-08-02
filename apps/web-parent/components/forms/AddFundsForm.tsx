@@ -2,7 +2,7 @@ import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { UserChild } from '@lib/types/interfaces';
 import { FormErrorMessage } from '@lib/ui';
-import { BigNumber } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { parseUnits, Result } from 'ethers/lib/utils';
 import { useForm } from 'react-hook-form';
 import { useAccount } from 'wagmi';
@@ -33,17 +33,25 @@ function AddFundsForm({ allowance, child, returnFn }: AddFundsFormProps) {
     functionName: 'approve',
   });
 
+  const { writeAsync: addChildAndFunds } = useContractWrite({
+    contract: pocketContract,
+    functionName: 'addChildAndFunds',
+  });
+
   const { writeAsync: addFunds } = useContractWrite({
     contract: pocketContract,
     functionName: 'addFunds',
   });
 
+  console.log(allowance);
   const onSubmit = async (data: FormValues) => {
     if (!address) {
       return;
     }
 
-    if (allowance?.lt(data.topup)) {
+    if (
+      allowance?.lt(parseUnits(data.topup.toString(), erc20.data?.decimals))
+    ) {
       await approve({
         args: [
           process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
@@ -52,9 +60,24 @@ function AddFundsForm({ allowance, child, returnFn }: AddFundsFormProps) {
       });
     }
 
-    await addFunds({
-      args: [BigNumber.from(data.topup).mul(1000000), child.address],
+    await addChildAndFunds({
+      args: [
+        '5000000000000000000',
+        '604800',
+        child.address,
+        ethers.utils.parseUnits(data.topup.toString(), erc20.data?.decimals),
+        { gasLimit: 3000000 },
+      ],
     });
+
+    // await addFunds({
+    //   args: [
+    //     // BigNumber.from(data.topup).mul(10 ** 18),
+    //     ethers.utils.parseUnits(data.topup.toString(), 18),
+    //     child.address,
+    //   ],
+    //   overrides: { gasLimit: 3000000 },
+    // });
 
     returnFn();
   };

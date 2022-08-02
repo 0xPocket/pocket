@@ -29,6 +29,8 @@ function RightTab({ child, config, hideActions = false }: RightTabProps) {
     args: [address!, process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!],
   });
 
+  // const { data: config } = useSmartContract();
+
   return (
     <Tab.Group
       defaultIndex={1}

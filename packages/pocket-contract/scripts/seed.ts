@@ -35,7 +35,6 @@ async function main() {
     parent
   );
 
-  console.log('Contract1!');
   await faucet.addChild(
     parseUnits('100', 6),
     1 * 1 * 5 * 6000,
@@ -54,8 +53,6 @@ async function main() {
     constants.CHOSEN_WHALE
   );
 
-  console.log('Contract 2 !');
-
   await setAllowance(
     constants.CHOSEN_TOKEN,
     parent,
@@ -63,7 +60,6 @@ async function main() {
     process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
     parseUnits('100000', 6).toString()
   );
-  console.log('Contract 3 !');
 
   await faucet.addFunds(parseUnits('10', 6), LOLA_MUSK.address);
 
