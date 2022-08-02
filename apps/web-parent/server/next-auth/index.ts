@@ -105,28 +105,26 @@ export const authOptions: NextAuthOptions = {
             throw new Error('invalid type');
           }
 
-          console.log('test0');
-
           const siwe = new SiweMessage(JSON.parse(message || '{}'));
           await siwe.validate(signature || '');
+
+          console.log('test1');
 
           const existingUser = await prisma.user.findUnique({
             where: { address: siwe.address },
           });
 
-          console.log('test1');
-
           if (!existingUser && type === UserType.Child) {
             throw new Error('Your parent must create your account.');
           }
 
-          console.log('test2');
+          // console.log('test2');
 
-          if (existingUser && existingUser.type !== type) {
-            throw new Error(
-              `You must sign in with the ${existingUser.type} form.`,
-            );
-          }
+          // if (existingUser && existingUser.type !== type) {
+          //   throw new Error(
+          //     `You must sign in with the ${existingUser.type} form.`,
+          //   );
+          // }
 
           console.log('test3');
 
@@ -135,9 +133,9 @@ export const authOptions: NextAuthOptions = {
               data: {
                 address: siwe.address,
                 type: 'Parent',
-								parent : {
-									create: {}
-								}
+                parent: {
+                  create: {},
+                },
               },
             });
 
@@ -170,13 +168,6 @@ export const authOptions: NextAuthOptions = {
     signIn: '/connect',
   },
   callbacks: {
-    signIn: async ({ user, account }) => {
-      // console.log("SIGN IN CALLBACK");
-      // console.log("account", account);
-      // console.log("user", user);
-
-      return true;
-    },
     session: async ({ session, token, user }) => {
       // console.log("SESSION CALLBACK");
       // console.log("session", session);
@@ -188,14 +179,14 @@ export const authOptions: NextAuthOptions = {
         user: {
           ...session.user,
           name: token.name,
-          type: token.type as 'Parent' | 'Child',
-          id: token.sub as string,
+          type: token.type,
+          id: token.sub!,
         },
       };
       return newSession;
     },
-    jwt: async ({ token, account, user }) => {
-      console.log('==== JWT CALLBACK ====');
+    jwt: async ({ token, user }) => {
+      // console.log('==== JWT CALLBACK ====');
       // console.log("token", token); //name, email, picture, sub (id)
       // console.log("account", account);
       // console.log("user", user); // user from return
@@ -207,11 +198,15 @@ export const authOptions: NextAuthOptions = {
           },
         });
 
+        if (!checkUser) {
+          return token;
+        }
+
         if (checkUser?.newUser) {
-          console.log('New user, we keep the token', token);
+          // console.log('New user, we keep the token', token);
           return token;
         } else {
-          console.log('Wet set a new token');
+          // console.log('Wet set a new token');
           token = {
             ...token,
             type: checkUser?.type,
@@ -224,7 +219,7 @@ export const authOptions: NextAuthOptions = {
       // console.log("NO");
 
       if (user) {
-        console.log('Wet set a the user from scratch');
+        // console.log('Wet set a the user from scratch');
 
         token = {
           ...token,
