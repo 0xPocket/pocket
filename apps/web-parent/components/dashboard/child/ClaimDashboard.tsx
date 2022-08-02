@@ -40,8 +40,6 @@ const ClaimDashboard: React.FC = () => {
     return moment(nextClaim) < now;
   }, [now, nextClaim]);
 
-  // console.log(data[1].toNumber());
-
   return (
     <div>
       {data && (

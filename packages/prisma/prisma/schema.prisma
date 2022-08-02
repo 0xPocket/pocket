@@ -22,7 +22,7 @@ model User {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   name      String?
-  address   String   @unique
+  address   String?  @unique
   newUser   Boolean  @default(true)
 
   email         String?   @unique
@@ -79,8 +79,6 @@ model Ramp {
   userParent   Parent     @relation(fields: [userParentId], references: [userId])
   userParentId String
 }
-
-
 
 // Authentication Account
 

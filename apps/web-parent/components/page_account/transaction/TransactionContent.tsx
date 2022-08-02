@@ -62,7 +62,7 @@ function TransactionContent({ child }: TransactionContentProps) {
     data: content,
     isFetching,
   } = useQuery<AssetTransfersResponseWithMetadata>(
-    ['child-transactions-content', child.id, pageKey],
+    ['child.transactions-content', child.id, pageKey],
     () => fetchTransactions(alchemy, assetTransfersParams),
     {
       keepPreviousData: true,

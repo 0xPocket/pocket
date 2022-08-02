@@ -1,5 +1,4 @@
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useAccount, useDisconnect } from 'wagmi';
 import { trpc } from '../../utils/trpc';
@@ -15,14 +14,9 @@ type OnBoardingStepperProps = {
 function OnBoardingStepper({ token, email }: OnBoardingStepperProps) {
   const [step, setStep] = useState(0);
   const { isConnected, address } = useAccount();
-  const router = useRouter();
   const { disconnectAsync } = useDisconnect();
 
-  const mutation = trpc.useMutation(['auth.verifyChild'], {
-    onSuccess: () => {
-      router.push('/');
-    },
-  });
+  const mutation = trpc.useMutation(['auth.verifyChild']);
 
   useEffect(() => {
     if (isConnected) {
@@ -61,7 +55,7 @@ function OnBoardingStepper({ token, email }: OnBoardingStepperProps) {
                 signIn('ethereum', {
                   message,
                   signature,
-                  type: 'Parent',
+                  type: 'Child',
                   callbackUrl: '/',
                 }),
               )

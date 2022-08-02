@@ -1,11 +1,5 @@
 import { ChildStatus } from '.prisma/client';
-import {
-  faCircleCheck,
-  faClockRotateLeft,
-  faEnvelope,
-  faLink,
-  faLock,
-} from '@fortawesome/free-solid-svg-icons';
+import { faCircleCheck, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { UserChild } from '@lib/types/interfaces';
 import { useState } from 'react';
@@ -19,12 +13,6 @@ function getIcon(status: ChildStatus) {
       return faCircleCheck;
     case 'INVITED':
       return faEnvelope;
-    case 'LINKED':
-      return faLink;
-    case 'LOCKED':
-      return faLock;
-    case 'PENDING':
-      return faClockRotateLeft;
   }
 }
 

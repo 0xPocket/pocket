@@ -18,7 +18,19 @@ export const parentRouter = createProtectedRouter()
         message: 'You must be a Parent to access those routes',
       });
     }
-    return next();
+    return next({
+      ctx: {
+        ...ctx,
+        // infers that `user` and `session` are non-nullable to downstream procedures
+        session: {
+          ...ctx.session,
+          user: {
+            ...ctx.session.user,
+            type: 'Parent' as const,
+          },
+        },
+      },
+    });
   })
   .query('children', {
     resolve: async ({ ctx }) => {
@@ -35,22 +47,7 @@ export const parentRouter = createProtectedRouter()
       });
     },
   })
-  .query('childById', {
-    input: z.object({
-      id: z.string(),
-    }),
-    resolve: ({ ctx, input }) => {
-      return prisma.user.findUnique({
-        where: {
-          id: input.id,
-        },
-        include: {
-          child: true,
-        },
-      });
-    },
-  })
-  .mutation('children', {
+  .mutation('createChild', {
     input: z.object({
       name: z.string(),
       email: z.string().email(),
@@ -74,7 +71,6 @@ export const parentRouter = createProtectedRouter()
             name: input.name,
             email: input.email,
             type: 'Child',
-            address: 'adga',
             newUser: true,
             child: {
               create: {
@@ -124,5 +120,43 @@ export const parentRouter = createProtectedRouter()
       console.log('children created');
 
       return 'OK';
+    },
+  })
+  .middleware(async ({ ctx, next, rawInput }) => {
+    const inputSchema = z.object({
+      id: z.string(),
+    });
+    const result = inputSchema.safeParse(rawInput);
+
+    if (!result.success) throw new TRPCError({ code: 'BAD_REQUEST' });
+
+    const child = await prisma.child.findUnique({
+      where: {
+        userId: result.data.id,
+      },
+    });
+
+    if (child?.parentUserId !== ctx.session.user.id) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'You are not related to this child',
+      });
+    }
+
+    return next();
+  })
+  .query('childById', {
+    input: z.object({
+      id: z.string(),
+    }),
+    resolve: ({ input }) => {
+      return prisma.user.findUnique({
+        where: {
+          id: input.id,
+        },
+        include: {
+          child: true,
+        },
+      });
     },
   });

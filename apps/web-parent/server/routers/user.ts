@@ -1,5 +1,7 @@
 import { TRPCError } from '@trpc/server';
+import { unstable_getServerSession } from 'next-auth';
 import { createProtectedRouter } from '../createRouter';
+import { authOptions } from '../next-auth';
 import { prisma } from '../prisma';
 import { UserSchema } from '../schemas/user.schema';
 
@@ -31,6 +33,11 @@ export const userRouter = createProtectedRouter().mutation('onboard', {
         newUser: false,
       },
     });
+
+    // We force settings a new token
+    if (ctx.req && ctx.res) {
+      await unstable_getServerSession(ctx.req!, ctx.res!, authOptions);
+    }
 
     return updatedUser;
   },

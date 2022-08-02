@@ -17,7 +17,8 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
   const { data: config } = useContractRead({
     contract: pocketContract,
     functionName: 'childToConfig',
-    args: [child.address],
+    args: [child.address!],
+    enabled: !!child.address,
     // watch: true,
   });
 

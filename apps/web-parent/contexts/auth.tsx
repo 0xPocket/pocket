@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
-import { Connector, useAccount, useConnect, useDisconnect } from 'wagmi';
+import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { createCtx } from '../utils/createContext';
 import type { MagicConnector } from '../utils/MagicConnector';
 import { signIn as signInNextAuth, signOut, useSession } from 'next-auth/react';
@@ -50,8 +50,6 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
   });
 
   useEffect(() => {
-    console.log(reconnect);
-    console.log(wagmiStatus);
     if (wagmiStatus === 'reconnecting' && !reconnect) {
       setReconnect(true);
       return;
