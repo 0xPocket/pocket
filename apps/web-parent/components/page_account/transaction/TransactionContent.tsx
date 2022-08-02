@@ -48,13 +48,13 @@ function TransactionContent({ child }: TransactionContentProps) {
     isLoading,
     data: content,
     isFetching,
-  } = useQuery<AssetTransfersResponseWithMetadata>(
-    ['child-transactions-content', child.id, index],
-    async () => {
-      const page = await getAssetTransfers(alchemy, assetTransfersParams);
-
-      return page as unknown as Promise<AssetTransfersResponseWithMetadata>;
-    },
+  } = useQuery(
+    ['child.transactions-content', child.id, index],
+    () =>
+      getAssetTransfers(
+        alchemy,
+        assetTransfersParams,
+      ) as Promise<AssetTransfersResponseWithMetadata>,
     { keepPreviousData: true, staleTime: 6000000 },
   );
   // const data = fetchTransactions(child.web3Account.address);

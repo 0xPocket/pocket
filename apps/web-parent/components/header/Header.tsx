@@ -10,7 +10,6 @@ function GlobalHeader({}: GlobalHeaderProps) {
   const { user, signOut } = useMagic();
   const { address, connector } = useAccount();
 
-  console.log(user);
   return (
     <Header>
       <Header.BlockLeft>

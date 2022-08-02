@@ -1,7 +1,6 @@
 import type { AppProps } from 'next/app';
 import '../styles/globals.css';
 import { SmartContractProvider } from '../contexts/contract';
-import { QueryClient, QueryClientProvider } from 'react-query';
 import { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -37,17 +36,6 @@ const { chains, provider } = configureChains(
 );
 
 function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            staleTime: 600 * 1000,
-            cacheTime: 600 * 1000,
-          },
-        },
-      }),
-  );
   const [wagmiClient] = useState(() =>
     createClient({
       autoConnect: true,
@@ -82,21 +70,19 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 
   return (
     <WagmiConfig client={wagmiClient}>
-      <QueryClientProvider client={queryClient}>
-        <SessionProvider session={session}>
-          <MagicAuthProvider>
-            <AlchemyProvider>
-              <ThemeProvider>
-                <SmartContractProvider>
-                  <Component {...pageProps} />
-                </SmartContractProvider>
-              </ThemeProvider>
-              <ToastContainer position="bottom-right" autoClose={3000} />
-            </AlchemyProvider>
-            <ReactQueryDevtools />
-          </MagicAuthProvider>
-        </SessionProvider>
-      </QueryClientProvider>
+      <SessionProvider session={session}>
+        <MagicAuthProvider>
+          <AlchemyProvider>
+            <ThemeProvider>
+              <SmartContractProvider>
+                <Component {...pageProps} />
+                <ToastContainer position="bottom-right" autoClose={3000} />
+              </SmartContractProvider>
+            </ThemeProvider>
+          </AlchemyProvider>
+          <ReactQueryDevtools />
+        </MagicAuthProvider>
+      </SessionProvider>
     </WagmiConfig>
   );
 }
@@ -108,7 +94,7 @@ export default withTRPC<AppRouter>({
         ? '/api/trpc'
         : process.env.VERCEL_URL
         ? `https://${process.env.VERCEL_URL}/api/trpc`
-        : `http://${process.env.NEXT_PUBLIC_WEB_URL}/api/trpc`;
+        : `http://localhost:3000/api/trpc`;
 
     /**
      * If you want to use SSR, you need to use the server's full URL
@@ -144,6 +130,14 @@ export default withTRPC<AppRouter>({
        * @link https://trpc.io/docs/data-transformers
        */
       transformer: superjson,
+      queryClientConfig: {
+        defaultOptions: {
+          queries: {
+            staleTime: 600 * 1000,
+            cacheTime: 600 * 1000,
+          },
+        },
+      },
     };
   },
   /**

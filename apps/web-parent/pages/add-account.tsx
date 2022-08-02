@@ -2,9 +2,9 @@ import { SectionContainer } from '@lib/ui';
 import AddChildForm from '../components/forms/AddChildForm';
 import MainWrapper from '../components/wrappers/MainWrapper';
 
-type addAccountProps = {};
+type AddAccountProps = {};
 
-function addAccount({}: addAccountProps) {
+function AddAccount({}: AddAccountProps) {
   return (
     <MainWrapper>
       <SectionContainer>
@@ -30,4 +30,4 @@ function addAccount({}: addAccountProps) {
   );
 }
 
-export default addAccount;
+export default AddAccount;

@@ -13,7 +13,6 @@ const EthereumProviders: FC<EthereumProvidersProps> = ({ callback }) => {
 
   const handleConnect = (connector: Connector) => {
     connectAsync({ connector }).then((res) => {
-      console.log(res.account, res.chain.id);
       if (callback) {
         callback(res.account, res.chain.id);
       }

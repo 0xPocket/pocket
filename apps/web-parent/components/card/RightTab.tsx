@@ -27,6 +27,7 @@ function RightTab({ child, config, hideActions = false }: RightTabProps) {
     contract: erc20.contract,
     functionName: 'allowance',
     args: [address!, process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!],
+    enabled: !!address,
   });
 
   return (
