@@ -4,35 +4,50 @@ import { Tab } from '@headlessui/react';
 import {
   AssetTransfersParamsWithMetadata,
   AssetTransfersResponseWithMetadata,
+  AssetTransfersResultWithMetadata,
   UserChild,
 } from '@lib/types/interfaces';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 import TransactionsTable from './activity/ActivityTable';
-import { AssetTransfersCategory, getAssetTransfers } from '@alch/alchemy-sdk';
+import {
+  Alchemy,
+  AssetTransfersCategory,
+  getAssetTransfers,
+} from '@alch/alchemy-sdk';
 import { useAlchemy } from '../../../contexts/alchemy';
 import { useMemo, useState } from 'react';
 import TopupsTable from './topups/TopupsTable';
+import TransactionCategories from './TansactionCategories';
 
 type TransactionContentProps = {
   child: UserChild;
 };
 
-// metadata: { blockTimestamp: string };
-
-//docs.alchemy.com/alchemy/enhanced-apis/transfers-api
+const fetchTransactions = async (
+  alchemy: Alchemy,
+  assetTransfersParams: AssetTransfersParamsWithMetadata,
+) => {
+  const page = await getAssetTransfers(alchemy, assetTransfersParams);
+  return page as unknown as Promise<AssetTransfersResponseWithMetadata>;
+};
 
 function TransactionContent({ child }: TransactionContentProps) {
   const { alchemy } = useAlchemy();
-  const [pageNb, setPageNb] = useState<string>();
+  const [pageKey, setPageKey] = useState<string>();
   const [index, setIndex] = useState(0);
+  const [doneFetchingTx, setDoneFetchingTx] = useState(false);
+  const pageLen = 10;
+
+  const lowerBound = () => index * pageLen;
+  const upperBound = () => (index + 1) * pageLen;
 
   const assetTransfersParams: AssetTransfersParamsWithMetadata = useMemo(() => {
     return {
-      fromAddress: '0x0ac93fee5ad4a6ee7e705ba53a5592e4456cf570',
+      fromAddress: child.address,
       excludeZeroValue: false,
       withMetadata: true,
-      maxCount: 10,
-      pageKey: pageNb,
+      maxCount: 1000,
+      pageKey: pageKey,
 
       category: [
         AssetTransfersCategory.ERC20,
@@ -41,87 +56,61 @@ function TransactionContent({ child }: TransactionContentProps) {
         AssetTransfersCategory.SPECIALNFT,
       ],
     };
-  }, [pageNb]);
-
-  const queryClient = useQueryClient();
+  }, [pageKey, child.address]);
   const {
     isLoading,
     data: content,
     isFetching,
   } = useQuery<AssetTransfersResponseWithMetadata>(
-    ['child-transactions-content', child.id, index],
-    async () => {
-      const page = await getAssetTransfers(alchemy, assetTransfersParams);
-
-      return page as unknown as Promise<AssetTransfersResponseWithMetadata>;
+    ['child-transactions-content', child.id, pageKey],
+    () => fetchTransactions(alchemy, assetTransfersParams),
+    {
+      keepPreviousData: true,
+      enabled: !!child.address,
+      onSuccess: (result) => {
+        if (result.pageKey !== undefined) {
+          setPageKey(result.pageKey);
+        } else {
+          setDoneFetchingTx(true);
+        }
+      },
+      select: (data) => {
+        console.log('again');
+        data.transfers.reverse();
+        return data;
+      },
     },
-    { keepPreviousData: true, staleTime: 6000000 },
   );
-  // const data = fetchTransactions(child.web3Account.address);
 
   return (
     <div className="space-y-8">
       <h2>Transaction history</h2>
 
       <Tab.Group>
-        <Tab.List className="space-x-8">
-          <Tab
-            className={({ selected }) =>
-              selected
-                ? 'text-dark underline dark:text-white'
-                : 'text-white-darker'
-            }
-          >
-            activity
-          </Tab>
-
-          <Tab
-            className={({ selected }) =>
-              selected
-                ? 'text-dark underline dark:text-white'
-                : 'text-white-darker'
-            }
-          >
-            top-ups
-          </Tab>
-        </Tab.List>
+        <TransactionCategories />
         <Tab.Panels>
           <Tab.Panel>
-            <button
-              onClick={() => {
-                setPageNb(undefined);
-                setIndex(0);
-                queryClient.invalidateQueries('child-transactions-content');
-              }}
-            >
-              &#8635;
-            </button>
-            {!isLoading && !isFetching && content?.transfers ? (
-              <TransactionsTable transactionsList={content.transfers} />
+            {!isLoading && doneFetchingTx ? (
+              <TransactionsTable
+                transactionsList={
+                  content?.transfers.slice(
+                    lowerBound(),
+                    upperBound(),
+                  ) as AssetTransfersResultWithMetadata[]
+                }
+              />
             ) : (
               <FontAwesomeIcon icon={faSpinner} spin />
             )}
+            {!isLoading && !isFetching}
           </Tab.Panel>
 
           <Tab.Panel>
-            <button
-              onClick={() => {
-                setPageNb(undefined);
-                setIndex(0);
-                queryClient.invalidateQueries('child-transactions-content');
-              }}
-            >
-              &#8635;
-            </button>
-            {!isLoading && !isFetching && content?.transfers ? (
-              <TopupsTable transactionsList={content.transfers} />
-            ) : (
-              <FontAwesomeIcon icon={faSpinner} spin />
-            )}
+            <TopupsTable childAddress={child.address} />
           </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>
-      <div className="flex flex-row gap-4">
+      <div className="grid grid-cols-3 gap-4">
         <button
           disabled={index === 0}
           onClick={() => {
@@ -130,17 +119,15 @@ function TransactionContent({ child }: TransactionContentProps) {
         >
           Previous
         </button>
-        {content?.pageKey && (
-          <button
-            onClick={() => {
-              setPageNb(content.pageKey);
-              setIndex((index) => index + 1);
-            }}
-          >
-            Next
-          </button>
-        )}
         Page : {index + 1}
+        <button
+          disabled={index < upperBound()}
+          onClick={() => {
+            setIndex((index) => index + 1);
+          }}
+        >
+          Next
+        </button>
       </div>
     </div>
   );
