@@ -43,7 +43,7 @@ function TokenContent({ child }: TokenContentProps) {
             <FontAwesomeIcon icon={faSpinner} spin />
           )}
         </div>
-        <div className="col-span-8 flex items-center">
+        <div className="col-span-8 flex items-start">
           {!isLoading && data?.items ? (
             <TokenTable tokenList={data.items} />
           ) : (

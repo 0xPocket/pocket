@@ -6,12 +6,13 @@
   "scripts": {
     "clean": "yarn hardhat clean && rm -rf node_modules .turbo",
     "dev": "yarn seed",
-    "fork": "yarn hardhat node",
+    "fork": "yarn showNetwork ; yarn hardhat node",
     "build": "hardhat compile",
     "healthcheck": "curl -m 10 --retry 40 --retry-connrefused --retry-delay 1 http://127.0.0.1:8545/ >/dev/null 2>&1",
-    "deploy": "yarn hardhat run scripts/deploy.ts --network localhost",
+    "deploy": "yarn hardhat run ./scripts/deploy.ts --network localhost",
     "seed": "yarn hardhat run ./scripts/seed.ts --network localhost",
     "lint": "eslint \"{test,utils,helpers}/**/*.ts\" --fix",
+    "showNetwork": "yarn hardhat run ./scripts/displayNetwork.ts",
     "test": "FORCECOLOR=1 yarn hardhat test"
   },
   "dependencies": {

@@ -1,14 +1,12 @@
 import { AssetTransfersResultWithMetadata } from '@lib/types/interfaces';
 import ActivityLine from './ActivityLine';
 
-type TransactionsTableProps = {
+type ActivityTableProps = {
   transactionsList: AssetTransfersResultWithMetadata[];
 };
 
-function TransactionsTable({ transactionsList }: TransactionsTableProps) {
-  transactionsList = transactionsList.filter(
-    (tx) => tx.to !== process.env.NEXT_PUBLIC_CONTRACT_ADDRESS,
-  );
+function ActivityTable({ transactionsList }: ActivityTableProps) {
+  console.log('in the activity');
   return (
     <table className="w-full bg-dark-light">
       <thead>
@@ -19,12 +17,13 @@ function TransactionsTable({ transactionsList }: TransactionsTableProps) {
         </tr>
       </thead>
       <tbody>
-        {transactionsList.map((tx, index) => (
-          <ActivityLine transaction={tx} key={index} />
-        ))}
+        {transactionsList &&
+          transactionsList.map((tx, index) => (
+            <ActivityLine transaction={tx} key={index} />
+          ))}
       </tbody>
     </table>
   );
 }
 
-export default TransactionsTable;
+export default ActivityTable;

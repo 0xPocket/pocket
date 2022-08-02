@@ -1,38 +1,30 @@
-import { AssetTransfersCategory } from '@alch/alchemy-sdk';
 import { AssetTransfersResultWithMetadata } from '@lib/types/interfaces';
+import { ethers } from 'ethers';
+import { formatUnits } from 'ethers/lib/utils';
 import moment from 'moment';
+import { useToken, useTransaction } from 'wagmi';
+import { useSmartContract } from '../../../../contexts/contract';
 
 type TopupsLineProps = {
-  transaction: AssetTransfersResultWithMetadata;
+  log: ethers.utils.LogDescription;
 };
 
-function transformCategory(category: AssetTransfersCategory) {
-  if (category === 'erc20') return 'Cryptocurrency';
-  if (
-    category === 'erc721' ||
-    category === 'erc1155' ||
-    category === 'specialnft'
-  )
-    return 'NFT';
-  return category;
-}
+function TopupsLine({ log }: TopupsLineProps) {
+  const { erc20 } = useSmartContract();
 
-function TopupsLine({ transaction }: TopupsLineProps) {
-  const date = transaction.metadata.blockTimestamp;
-  const asset = transaction.asset === 'ETH' ? 'Matic' : transaction.asset;
-  const value =
-    transaction.value?.toFixed(2) === '0.00'
-      ? '0'
-      : transaction.value?.toFixed(2);
-  const category = transformCategory(transaction.category);
+  const date = log.args[3].toNumber();
+  const value = formatUnits(
+    log.args[1].toString(),
+    erc20.data?.decimals,
+  ).toString();
 
+  const symbol = erc20.data?.symbol;
   return (
-    <tr className="grid grid-cols-3 gap-4">
+    <tr className="grid grid-cols-2 gap-4">
       <td>{moment(date).format('D/MM')}</td>
       <td>
-        {value} {asset}
+        {value} {symbol}
       </td>
-      <td>{category}</td>
     </tr>
   );
 }

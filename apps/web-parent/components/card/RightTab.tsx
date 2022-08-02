@@ -52,6 +52,7 @@ function RightTab({ child, config, hideActions = false }: RightTabProps) {
           <AddFundsForm
             allowance={allowance}
             child={child}
+            config={config}
             returnFn={() => setSelectedIndex(0)}
           />
           <ChildSettingsForm

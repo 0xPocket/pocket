@@ -59,15 +59,12 @@ export const parentRouter = createProtectedRouter()
         },
       });
 
-      console.log(input);
-
       if (!parent) {
         throw new TRPCError({ code: 'UNAUTHORIZED' });
       }
 
       let child: User;
 
-      console.log('parent id', parent.id);
       try {
         child = await prisma.user.create({
           data: {

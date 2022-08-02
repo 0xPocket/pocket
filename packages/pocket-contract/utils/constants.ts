@@ -59,11 +59,13 @@ export const FAMILY_ACCOUNT = {
 export const TOKENS = {
   RINKEBY: '0x47da6c0b7f3fada850898d1e61ae546fc7b603f9',
   POLYGON: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
+  MUMBAI: '0xe11A86849d99F524cAC3E7A0Ec1241828e332C62',
 };
 
 export const WHALES = {
   RINKEBY: '0xe2e0256d6785d49ec7badcd1d44adbd3f6b0ab58',
   POLYGON: '0xf977814e90da44bfa03b6295a0616a897441acec',
+  MUMBAI: '0xd5b31FB565d608692d6422beB31Bf0875dad4fc3',
 };
 
 const NETWORK = {
@@ -80,9 +82,15 @@ const NETWORK = {
       process.env.NEXT_PUBLIC_KEY_ALCHEMY_POLYGON,
     chainId: 137,
   },
+  MUMBAI: {
+    url:
+      'https://polygon-mumbai.g.alchemy.com/v2/' +
+      process.env.NEXT_PUBLIC_KEY_ALCHEMY_MUMBAI,
+    chainId: 80001,
+  },
 };
 
-const CHOSEN = 'POLYGON';
+export const CHOSEN = 'POLYGON';
 
 export const CHOSEN_NETWORK = NETWORK[CHOSEN];
 export const CHOSEN_TOKEN = TOKENS[CHOSEN];
