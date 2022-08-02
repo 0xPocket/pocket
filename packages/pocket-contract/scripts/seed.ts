@@ -29,6 +29,7 @@ const ELON_MUSK = {
 };
 
 async function main() {
+  const tokenDecimals = 6;
   const parent = await ethers.getSigner(ELON_MUSK.address);
   const faucet = PocketFaucet__factory.connect(
     process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string,
@@ -36,12 +37,12 @@ async function main() {
   );
 
   await faucet.addChild(
-    parseUnits('100', 6),
+    parseUnits('100', tokenDecimals),
     1 * 1 * 5 * 6000,
     LOLA_MUSK.address
   );
   await faucet.addChild(
-    parseUnits('10', 6),
+    parseUnits('10', tokenDecimals),
     1 * 1 * 5 * 60,
     DAMIAN_MUSK.address
   );
@@ -58,10 +59,10 @@ async function main() {
     parent,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
-    parseUnits('100000', 6).toString()
+    parseUnits('100000', tokenDecimals).toString()
   );
 
-  await faucet.addFunds(parseUnits('10', 6), LOLA_MUSK.address);
+  await faucet.addFunds(parseUnits('10', tokenDecimals), LOLA_MUSK.address);
 
   console.log('Contract seeding complete !');
 }

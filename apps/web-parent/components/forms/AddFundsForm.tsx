@@ -2,24 +2,32 @@ import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { UserChild } from '@lib/types/interfaces';
 import { FormErrorMessage } from '@lib/ui';
-import { BigNumber, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import { parseUnits, Result } from 'ethers/lib/utils';
+import { PocketFaucet } from 'pocket-contract/typechain-types';
 import { useForm } from 'react-hook-form';
 import { useAccount } from 'wagmi';
 import { useSmartContract } from '../../contexts/contract';
+import { ContractMethodReturn } from '../../hooks/useContractRead';
 import useContractWrite from '../../hooks/useContractWrite';
 
 type AddFundsFormProps = {
   child: UserChild;
   returnFn: () => void;
   allowance: Result | undefined;
+  config: ContractMethodReturn<PocketFaucet, 'childToConfig'> | undefined;
 };
 
 type FormValues = {
   topup: number;
 };
 
-function AddFundsForm({ allowance, child, returnFn }: AddFundsFormProps) {
+function AddFundsForm({
+  allowance,
+  child,
+  config,
+  returnFn,
+}: AddFundsFormProps) {
   const {
     register,
     handleSubmit,
@@ -60,24 +68,24 @@ function AddFundsForm({ allowance, child, returnFn }: AddFundsFormProps) {
       });
     }
 
-    await addChildAndFunds({
-      args: [
-        '5000000000000000000',
-        '604800',
-        child.address,
-        ethers.utils.parseUnits(data.topup.toString(), erc20.data?.decimals),
-        { gasLimit: 3000000 },
-      ],
-    });
-
-    // await addFunds({
-    //   args: [
-    //     // BigNumber.from(data.topup).mul(10 ** 18),
-    //     ethers.utils.parseUnits(data.topup.toString(), 18),
-    //     child.address,
-    //   ],
-    //   overrides: { gasLimit: 3000000 },
-    // });
+    if (config?.lastClaim.isZero())
+      await addChildAndFunds({
+        args: [
+          '5000000000000000000',
+          '604800',
+          child.address,
+          ethers.utils.parseUnits(data.topup.toString(), erc20.data?.decimals),
+        ],
+        overrides: { gasLimit: 3000000 },
+      });
+    else
+      await addFunds({
+        args: [
+          ethers.utils.parseUnits(data.topup.toString(), erc20.data?.decimals),
+          child.address,
+        ],
+        overrides: { gasLimit: 3000000 },
+      });
 
     returnFn();
   };

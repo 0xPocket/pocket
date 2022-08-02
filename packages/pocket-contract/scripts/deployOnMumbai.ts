@@ -26,21 +26,16 @@ async function main() {
 
   // await tx.wait();
   // exit();
-  // const PocketFaucet = await ethers.getContractFactory('PocketFaucet');
-  // // console.log('about to deploy proxy');
-  // console.log('etape 1');
-  // const pocketFaucet = await upgrades.deployProxy(
-  //   PocketFaucet,
-  //   ['0xe11A86849d99F524cAC3E7A0Ec1241828e332C62'],
-  //   { timeout: 0 }
-  // );
-  // console.log('etape 2');
+  const PocketFaucet = await ethers.getContractFactory('PocketFaucet');
+  console.log('About to deploy proxy');
+  const pocketFaucet = await upgrades.deployProxy(
+    PocketFaucet,
+    ['0xe11A86849d99F524cAC3E7A0Ec1241828e332C62'],
+    { timeout: 0 }
+  );
 
-  // console.log('about to deploy proxy');
-
-  // await pocketFaucet.deployed();
-  // console.log('Contract deployed to ', pocketFaucet.address);
-
+  await pocketFaucet.deployed();
+  console.log('Contract deployed to ', pocketFaucet.address);
   //   console.log('Contract deployed to ', pocketFaucet.address);
 }
 

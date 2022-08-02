@@ -94,6 +94,19 @@ Secondly, run the tests:
 If you want to change the base token/network, go to the constants.ts file in the utils
 and change the value of the CHOSEN variable.
 
+## Testing on mumbai TESTNET
+
+1. Go to turbo.json and remove, in the pipeline, in dev this line :
+   "pocket-contract#deploy"
+
+2. Go to ./apps/web-parent/pages/\_app.tsx and edit the configureChains parameters accordingly
+
+3. Go to ./env and change the NEXT_PUBLIC_CHOSEN_ERC20 variable value accordingly
+
+4. Still in ./env, change the NEXT_PUBLIC_CONTRACT_ADDRESS variable value accordingly
+
+5. Accounts to use can be found in ./packages/pocket-contract/scripts/deployOnMumbai.ts
+
 ## Useful commands
 
 There is many commands available to facilitate working with the repo:

@@ -31,7 +31,6 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
             <h1>{child?.name}</h1>
             <AccountStatus child={child} />
           </div>
-          <h3>{child.email}</h3>
         </div>
         {!hasLink ? (
           <Link href={`https://polygonscan.com/address/${child.address}`}>

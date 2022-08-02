@@ -27,7 +27,7 @@ import { SessionProvider } from 'next-auth/react';
 const { chains, provider } = configureChains(
   [chain.polygonMumbai],
   [
-    alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_KEY_ALCHEMY_POLYGON! }),
+    alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_KEY_ALCHEMY_MUMBAI! }),
     // jsonRpcProvider({
     //   rpc: () => ({
     //     http: `http://localhost:8545`,

@@ -28,6 +28,7 @@ function ChildSettingsForm({
   config,
   returnFn,
 }: ChildSettingsFormProps) {
+  const { erc20, pocketContract } = useSmartContract();
   const {
     register,
     handleSubmit,
@@ -36,11 +37,9 @@ function ChildSettingsForm({
     schema: ChildSettingsSchema,
     defaultValues: {
       periodicity: formatUnits(config?.periodicity!, 0).toString(),
-      ceiling: formatUnits(config?.[2]!, 6).toString(),
+      ceiling: formatUnits(config?.[2]!, erc20.data?.decimals).toString(),
     },
   });
-
-  const { erc20, pocketContract } = useSmartContract();
 
   const { writeAsync: changeConfig } = useContractWrite({
     contract: pocketContract,

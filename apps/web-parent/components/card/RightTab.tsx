@@ -29,7 +29,7 @@ function RightTab({ child, config, hideActions = false }: RightTabProps) {
     args: [address!, process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!],
   });
 
-  // const { data: config } = useSmartContract();
+  if (config) console.log(config.toString());
 
   return (
     <Tab.Group
@@ -53,6 +53,7 @@ function RightTab({ child, config, hideActions = false }: RightTabProps) {
           <AddFundsForm
             allowance={allowance}
             child={child}
+            config={config}
             returnFn={() => setSelectedIndex(0)}
           />
           <ChildSettingsForm
