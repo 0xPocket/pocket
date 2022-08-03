@@ -1,18 +1,32 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import { useAccount, useSigner } from 'wagmi';
-import ERC20Balance from './ERC20Balance';
 import { BigNumberish, ethers } from 'ethers';
-import moment from 'moment';
 import { useQuery } from 'react-query';
 import { useSmartContract } from '../../../contexts/contract';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { CovalentItem, CovalentReturn } from '@lib/types/interfaces';
 import useContractWrite from '../../../hooks/useContractWrite';
+import { Button } from '@lib/ui';
 
 const chainId = '137';
 const apiBaseUrl = 'https://api.1inch.io/v4.0/' + chainId;
+
+interface OneInchReturn {
+  tokens: tokenId[];
+}
+
+// const usdc: tokenId
+
+interface tokenId {
+  address: string;
+  decimals: number;
+  logoURI: string;
+  name: string;
+  symbol: string;
+  tags: string[];
+}
 
 const generateTx = async (
   fromToken: string,
@@ -40,7 +54,7 @@ const generateTx = async (
 };
 const quote1Inch = async (
   fromToken: string,
-  toToken: string,
+  toTokenAddress: string,
   amount: BigNumberish,
 ) => {
   const url =
@@ -49,22 +63,18 @@ const quote1Inch = async (
     'fromTokenAddress=' +
     fromToken +
     '&toTokenAddress=' +
-    toToken +
+    toTokenAddress +
     '&amount=' +
     amount.toString();
 
   const res = await axios.get(url);
-
-  console.log(
-    'you will get',
-    ethers.utils.formatUnits(res.data.toTokenAmount, res.data.decimals),
-    res.data.toToken.name,
-  );
+  return ethers.utils.formatUnits(res.data.toTokenAmount, res.data.decimals);
 };
 
 const Swapper: React.FC = () => {
-  const [value, setValue] = useState('');
-  const [toToken, setToToken] = useState('');
+  const [amountToSwap, setAmountToSwap] = useState('');
+  const [toToken, setToToken] = useState<tokenId>();
+  const [quote, setQuote] = useState('');
   const { address } = useAccount();
   const { erc20 } = useSmartContract();
   const { data: signer } = useSigner();
@@ -74,29 +84,39 @@ const Swapper: React.FC = () => {
     functionName: 'approve',
   });
 
+  const { writeAsync: allowance } = useContractWrite({
+    contract: erc20.contract,
+    functionName: 'allowance',
+  });
+
   const swapUSDC = async () => {
     quote1Inch(
       erc20.data?.address!,
-      toToken,
-      ethers.utils.parseUnits(value, erc20.data?.decimals),
+      toToken?.address!,
+      ethers.utils.parseUnits(amountToSwap, erc20.data?.decimals),
     );
 
     const tx = await generateTx(
       erc20.data?.address!,
-      toToken,
-      ethers.utils.parseUnits(value, erc20.data?.decimals),
+      toToken?.address!,
+      ethers.utils.parseUnits(amountToSwap, erc20.data?.decimals),
       address!,
     );
-    console.log(tx);
-    // setSwapTx(tx);
-    // sendTransaction(tx);
 
-    await approve({
-      args: [
-        '0x1111111254fb6c44bAC0beD2854e76F90643097d',
-        ethers.constants.MaxUint256,
-      ],
-    });
+    if (
+      (
+        await allowance({
+          args: [address, '0x1111111254fb6c44bAC0beD2854e76F90643097d'],
+        })
+      ).toString() === '0'
+    )
+      await approve({
+        args: [
+          '0x1111111254fb6c44bAC0beD2854e76F90643097d',
+          ethers.constants.MaxUint256,
+        ],
+      });
+    else console.log('Allowance is ok');
 
     delete tx.gas;
 
@@ -110,13 +130,26 @@ const Swapper: React.FC = () => {
   const handleChange = (event: {
     target: { value: React.SetStateAction<string> };
   }) => {
-    setValue(event.target.value);
+    setAmountToSwap(event.target.value);
   };
 
-  const handleToToken = (event: {
-    value: { address: React.SetStateAction<string> };
-  }) => {
-    setToToken(event.value.address);
+  async function updateQuote() {
+    if (amountToSwap && toToken) {
+      const queryQuote = quote1Inch(
+        erc20.data?.address!,
+        toToken.address,
+        ethers.utils.parseUnits(amountToSwap, erc20.data?.decimals),
+      );
+      setQuote(await queryQuote);
+    }
+  }
+
+  useEffect(() => {
+    updateQuote();
+  }, [amountToSwap, toToken]);
+
+  const handleToToken = async (event) => {
+    setToToken(event.value);
   };
 
   const fetchUsers = async (address: string) => {
@@ -127,6 +160,11 @@ const Swapper: React.FC = () => {
       `${baseURL}/${blockchainChainId}/address/${address}/balances_v2/?key=${APIKEY}`,
     );
     return res.then((res) => res.data.data);
+  };
+
+  const fetch1InchTokens = async () => {
+    const res = axios.get<OneInchReturn>(apiBaseUrl + '/tokens');
+    return res.then((res) => res.data.tokens);
   };
 
   const { isLoading: isLoadingTokenChild, data: tokenInWallet } = useQuery(
@@ -146,12 +184,12 @@ const Swapper: React.FC = () => {
 
   const { isLoading, data: tokenList } = useQuery(
     ['swapper.token_list'],
-    () => axios.get(apiBaseUrl + '/tokens'),
+    () => fetch1InchTokens(),
     {
       staleTime: 60 * 1000,
       onError: () => toast.error('Could not retrieve 1inch token list'),
       select: (res) => {
-        return Object.values(res.data.tokens).map((token: any) => ({
+        return Object.values(res).map((token) => ({
           value: token,
           label: token.name,
         }));
@@ -160,13 +198,13 @@ const Swapper: React.FC = () => {
   );
 
   return (
-    <div>
-      {' '}
-      <div className="flex">
+    <div className="flex flex-row space-x-2">
+      <div>welcome to THE swapper :</div>
+      <div className="flex flex-col space-y-2">
         <input
           type="text"
-          placeholder="This is a test"
-          value={value}
+          placeholder="Amount"
+          value={amountToSwap}
           onChange={handleChange}
           className="text-dark"
         />
@@ -183,14 +221,22 @@ const Swapper: React.FC = () => {
             className="text-dark"
             isSearchable={true}
             options={tokenList}
-            value={toToken}
             onChange={handleToToken}
           />
         )}
-        <button onClick={swap}>Swap plzzz</button>
-      </div>
-      <div>
-        <button onClick={swapUSDC}>Swap USDC</button>
+        {quote ? (
+          <div>
+            You will get : {quote.slice(0, 6)} {toToken!.name}
+          </div>
+        ) : (
+          <div>loading</div>
+        )}
+        <Button className="bg-blue-700" action={swap}>
+          Swappah
+        </Button>
+        <Button className="bg-black" action={swapUSDC}>
+          Swap USDC
+        </Button>
       </div>
     </div>
   );

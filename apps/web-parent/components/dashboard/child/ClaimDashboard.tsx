@@ -41,47 +41,55 @@ const ClaimDashboard: React.FC = () => {
   }, [now, nextClaim]);
 
   return (
-    <div>
-      {data && (
-        <div className="flex flex-col">
-          <div>
-            Balance :{' '}
-            {ethers.utils.formatUnits(data[1], erc20.data?.decimals).toString()}
-          </div>
-          <div>
-            Ceiling :{' '}
-            {ethers.utils.formatUnits(data[2], erc20.data?.decimals).toString()}
-          </div>
-          <div>Periodicity : {(data[4] as BigNumber).toString()}</div>
-          <div>-</div>
-          <div>Last Claim : {(data[3] as BigNumber).toString()}</div>
-          <div>
-            Last Claim at :{' '}
-            {moment((data[3] as BigNumber).toNumber() * 1000).toLocaleString()}
-          </div>
-          <div>-</div>
+    <div className="flex space-x-24">
+      <div>
+        {data && (
+          <div className="flex flex-col">
+            <div>
+              Balance :{' '}
+              {ethers.utils
+                .formatUnits(data[1], erc20.data?.decimals)
+                .toString()}
+            </div>
+            <div>
+              Ceiling :{' '}
+              {ethers.utils
+                .formatUnits(data[2], erc20.data?.decimals)
+                .toString()}
+            </div>
+            <div>Periodicity : {(data[4] as BigNumber).toString()}</div>
+            <div>-</div>
+            <div>Last Claim : {(data[3] as BigNumber).toString()}</div>
+            <div>
+              Last Claim at :{' '}
+              {moment(
+                (data[3] as BigNumber).toNumber() * 1000,
+              ).toLocaleString()}
+            </div>
+            <div>-</div>
 
-          <div>Now : {now?.unix()}</div>
-          <div>Now : {now?.toLocaleString()}</div>
-          <div>-</div>
+            <div>Now : {now?.unix()}</div>
+            <div>Now : {now?.toLocaleString()}</div>
+            <div>-</div>
 
-          <div>Next Claim : {nextClaim?.unix()}</div>
-          <div>Next Claim at {nextClaim?.toLocaleString()}</div>
-          <div>-</div>
-        </div>
-      )}
-      {data && (
-        <ClaimButton disabled={!canClaim || data[1].toNumber() === 0}>
-          {!canClaim || data[1].toNumber() === 0
-            ? data[1].toNumber() === 0
-              ? 'No Balance...'
-              : 'Next claim in ' +
-                moment.duration(moment().diff(nextClaim)).humanize() +
-                '...'
-            : 'Claim your money !'}
-        </ClaimButton>
-      )}
-      <ERC20Balance />
+            <div>Next Claim : {nextClaim?.unix()}</div>
+            <div>Next Claim at {nextClaim?.toLocaleString()}</div>
+            <div>-</div>
+          </div>
+        )}
+        {data && (
+          <ClaimButton disabled={!canClaim || data[1].toNumber() === 0}>
+            {!canClaim || data[1].toNumber() === 0
+              ? data[1].toNumber() === 0
+                ? 'No Balance...'
+                : 'Next claim in ' +
+                  moment.duration(moment().diff(nextClaim)).humanize() +
+                  '...'
+              : 'Claim your money !'}
+          </ClaimButton>
+        )}
+        <ERC20Balance />
+      </div>
       <Swapper />
     </div>
   );
