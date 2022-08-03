@@ -7,10 +7,7 @@ import '@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol';
 import '@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol';
 import '@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol';
 
-// TO DO : check multisig
 // TO DO : gouvernor should be -> TimelockController
-// TO DO : secure all func with roles
-// TO DO : test roles
 
 contract PocketFaucet is AccessControlUpgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
@@ -57,7 +54,7 @@ contract PocketFaucet is AccessControlUpgradeable {
     }
 
     modifier _areRelated(address parent, address child) {
-        require(child != address(0), "!_areRelated: null child address");
+        require(child != address(0), '!_areRelated: null child address');
         bool isChild = false;
         uint256 length = parentToChildren[parent].length;
         for (uint256 i = 0; i < length; i++) {
@@ -83,10 +80,10 @@ contract PocketFaucet is AccessControlUpgradeable {
         uint256 periodicity,
         address child
     ) public {
-        require(child != address(0), "!addChild: Address is null");
+        require(child != address(0), '!addChild: Address is null');
         require(
             childToConfig[child].parent == address(0),
-            "!addChild: Child address already taken"
+            '!addChild: Child address already taken'
         );
         require(periodicity != 0, '!addChild: periodicity cannot be 0');
         Config memory conf;
@@ -105,8 +102,9 @@ contract PocketFaucet is AccessControlUpgradeable {
     function addChildAndFunds(
         uint256 ceiling,
         uint256 periodicity,
-        address child, 
-        uint256 amount ) external {
+        address child,
+        uint256 amount
+    ) external {
         addChild(ceiling, periodicity, child);
         if (amount != 0) addFunds(amount, child);
     }
@@ -134,7 +132,6 @@ contract PocketFaucet is AccessControlUpgradeable {
         );
 
         delete childToConfig[child];
-        // revoke child role ??
         emit ChildRemoved(childConfig.parent, child);
     }
 
@@ -143,8 +140,7 @@ contract PocketFaucet is AccessControlUpgradeable {
         public
         _areRelated(msg.sender, child)
     {
-
-        require(child != address(0), "!activateSwitch: null child address");
+        require(child != address(0), '!activateSwitch: null child address');
         Config storage conf = childToConfig[child];
         require(conf.parent != address(0), '!activateSwitch: child not set');
         conf.active = active;
@@ -160,7 +156,10 @@ contract PocketFaucet is AccessControlUpgradeable {
     ) public _areRelated(msg.sender, child) {
         Config storage conf = childToConfig[child];
         require(conf.parent != address(0), '!changeConfig: child not set');
-        require(conf.periodicity != 0, '!changeConfig: periodicity cannot be 0');
+        require(
+            conf.periodicity != 0,
+            '!changeConfig: periodicity cannot be 0'
+        );
         conf.ceiling = ceiling;
         conf.periodicity = periodicity;
         emit ConfigChanged(conf.active, conf.ceiling, child);
@@ -171,13 +170,10 @@ contract PocketFaucet is AccessControlUpgradeable {
         _areRelated(msg.sender, oldAddr)
     {
         Config memory conf = childToConfig[oldAddr];
-        require(
-            conf.parent != address(0),
-            "!changeAddr: child does not exist"
-        );
+        require(conf.parent != address(0), '!changeAddr: child does not exist');
         require(
             childToConfig[newAddr].parent == address(0),
-            "!changeChildAddress: child already exist"
+            '!changeChildAddress: child already exist'
         );
 
         childToConfig[newAddr] = conf;
