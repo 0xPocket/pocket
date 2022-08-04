@@ -1,5 +1,5 @@
 export interface CovalentReturn {
-	data: CovalentData
+  data: CovalentData;
 }
 export interface CovalentData {
   address: string;
@@ -19,7 +19,7 @@ export interface CovalentItem {
   logo_url: string;
   last_transferred_at: string;
   type: string;
-  balance: number;
+  balance: number; // TODO: number not a good idea, BigNumberish is better or string ?
   balance_24h: string;
   quote_rate: number;
   quote_rate_24h: number;

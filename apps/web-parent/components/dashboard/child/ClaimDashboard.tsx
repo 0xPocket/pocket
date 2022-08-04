@@ -41,7 +41,7 @@ const ClaimDashboard: React.FC = () => {
   }, [now, nextClaim]);
 
   return (
-    <div className="flex space-x-24">
+    <div className="flex space-x-32">
       <div>
         {data && (
           <div className="flex flex-col">

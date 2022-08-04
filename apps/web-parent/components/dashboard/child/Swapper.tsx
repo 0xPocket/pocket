@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import { useAccount, useSigner } from 'wagmi';
-import { BigNumberish, ethers } from 'ethers';
+import { BigNumber, BigNumberish, ethers } from 'ethers';
 import { useQuery } from 'react-query';
 import { useSmartContract } from '../../../contexts/contract';
 import axios from 'axios';
@@ -17,7 +17,24 @@ interface OneInchReturn {
   tokens: tokenId[];
 }
 
-// const usdc: tokenId
+const usdc: CovalentItem = {
+  balance: 0,
+  balance_24h: '0',
+  contract_address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+  contract_decimals: 6,
+  contract_name: 'USD Coin (PoS)',
+  contract_ticker_symbol: 'USDC',
+  last_transferred_at: '2022-08-03T10:48:32Z',
+  logo_url:
+    'https://logos.covalenthq.com/tokens/1/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png',
+  nft_data: [],
+  quote: 0,
+  quote_24h: 0,
+  quote_rate: 0.9997549,
+  quote_rate_24h: 1.0002348,
+  supports_erc: ['erc20'],
+  type: 'cryptocurrency',
+};
 
 interface tokenId {
   address: string;
@@ -29,51 +46,63 @@ interface tokenId {
 }
 
 const generateTx = async (
-  fromToken: string,
-  toToken: string,
+  fromTokenAddress: string,
+  toTokenAddress: string,
   amount: BigNumberish,
-  address: string,
+  userAddress: string,
 ) => {
+  if (fromTokenAddress === '0x0000000000000000000000000000000000001010')
+    fromTokenAddress = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
+
   const url =
     apiBaseUrl +
     '/swap?' +
     'fromTokenAddress=' +
-    fromToken +
+    fromTokenAddress +
     '&toTokenAddress=' +
-    toToken +
+    toTokenAddress +
     '&amount=' +
     amount.toString() +
     '&fromAddress=' +
-    address +
-    '&slippage=' +
+    userAddress +
+    '&slippage=' + // TODO : decide a slippage, default config ?
     '1' +
-    '&disableEstimate=true';
+    '&disableEstimate=true'; // TODO : take off, only usefull because of the forking
 
   const tx = (await axios.get(url)).data.tx;
   return tx;
 };
+
 const quote1Inch = async (
-  fromToken: string,
+  fromTokenAddress: string,
   toTokenAddress: string,
   amount: BigNumberish,
 ) => {
+  if (fromTokenAddress === '0x0000000000000000000000000000000000001010')
+    fromTokenAddress = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
+
   const url =
     apiBaseUrl +
     '/quote?' +
     'fromTokenAddress=' +
-    fromToken +
+    fromTokenAddress +
     '&toTokenAddress=' +
     toTokenAddress +
     '&amount=' +
     amount.toString();
 
   const res = await axios.get(url);
-  return ethers.utils.formatUnits(res.data.toTokenAmount, res.data.decimals);
+  console.log(res.data.toToken.decimals);
+  return ethers.utils.formatUnits(
+    res.data.toTokenAmount,
+    res.data.toToken.decimals,
+  );
 };
 
 const Swapper: React.FC = () => {
   const [amountToSwap, setAmountToSwap] = useState('');
   const [toToken, setToToken] = useState<tokenId>();
+  const [fromToken, setFromToken] = useState<CovalentItem>(usdc);
   const [quote, setQuote] = useState('');
   const { address } = useAccount();
   const { erc20 } = useSmartContract();
@@ -89,17 +118,17 @@ const Swapper: React.FC = () => {
     functionName: 'allowance',
   });
 
-  const swapUSDC = async () => {
+  const swap = async () => {
     quote1Inch(
-      erc20.data?.address!,
+      fromToken?.contract_address!,
       toToken?.address!,
-      ethers.utils.parseUnits(amountToSwap, erc20.data?.decimals),
+      ethers.utils.parseUnits(amountToSwap, fromToken?.contract_decimals),
     );
 
     const tx = await generateTx(
-      erc20.data?.address!,
+      fromToken?.contract_address!,
       toToken?.address!,
-      ethers.utils.parseUnits(amountToSwap, erc20.data?.decimals),
+      ethers.utils.parseUnits(amountToSwap, fromToken?.contract_decimals),
       address!,
     );
 
@@ -123,34 +152,25 @@ const Swapper: React.FC = () => {
     if (signer) await signer.sendTransaction(tx);
   };
 
-  const swap = () => {
-    console.log('swappaaah');
-  };
-
-  const handleChange = (event: {
+  const handleAmount = (event: {
     target: { value: React.SetStateAction<string> };
   }) => {
     setAmountToSwap(event.target.value);
   };
 
-  async function updateQuote() {
-    if (amountToSwap && toToken) {
-      const queryQuote = quote1Inch(
-        erc20.data?.address!,
-        toToken.address,
-        ethers.utils.parseUnits(amountToSwap, erc20.data?.decimals),
-      );
-      setQuote(await queryQuote);
-    }
-  }
-
   useEffect(() => {
+    async function updateQuote() {
+      if (amountToSwap && toToken && fromToken) {
+        const queryQuote = quote1Inch(
+          fromToken.contract_address,
+          toToken.address,
+          ethers.utils.parseUnits(amountToSwap, fromToken.contract_decimals),
+        );
+        setQuote(await queryQuote);
+      }
+    }
     updateQuote();
-  }, [amountToSwap, toToken]);
-
-  const handleToToken = async (event) => {
-    setToToken(event.value);
-  };
+  }, [amountToSwap, fromToken, toToken]);
 
   const fetchUsers = async (address: string) => {
     const APIKEY = 'ckey_d68ffbaf2bdf47b6b58e84fada7';
@@ -174,10 +194,12 @@ const Swapper: React.FC = () => {
       staleTime: 60 * 1000,
       onError: () => toast.error("Could not retrieve user's token"),
       select: (res) => {
-        return res.items.map((token: CovalentItem) => ({
-          value: token,
-          label: token.contract_ticker_symbol,
-        }));
+        return res.items
+          .map((token: CovalentItem) => ({
+            value: token,
+            label: token.contract_ticker_symbol,
+          }))
+          .concat({ value: usdc, label: usdc.contract_ticker_symbol });
       },
     },
   );
@@ -198,46 +220,53 @@ const Swapper: React.FC = () => {
   );
 
   return (
-    <div className="flex flex-row space-x-2">
-      <div>welcome to THE swapper :</div>
-      <div className="flex flex-col space-y-2">
-        <input
-          type="text"
-          placeholder="Amount"
-          value={amountToSwap}
-          onChange={handleChange}
-          className="text-dark"
-        />
-        {!isLoadingTokenChild && (
-          <Select
-            className="text-dark"
-            isSearchable={true}
-            options={tokenInWallet}
+    <div className="container-classic flex flex-col rounded-lg">
+      <p className="mx-auto my-4">Swapper</p>
+      <form className="flex flex-col space-y-4 px-4">
+        <div className="container-classic flex justify-between gap-2 rounded-md p-3">
+          {!isLoadingTokenChild && (
+            <Select
+              className="basis-1/3 text-dark"
+              isSearchable={true}
+              options={tokenInWallet}
+              defaultValue={{ label: usdc.contract_ticker_symbol, value: usdc }}
+              onChange={(event) => {
+                setFromToken(event?.value);
+              }}
+            />
+          )}
+          <input
+            type="text"
+            placeholder="Amount"
+            value={amountToSwap}
+            onChange={handleAmount}
+            className="basis-2/3 rounded-md text-right text-dark"
           />
-        )}{' '}
-        to
-        {!isLoading && (
-          <Select
-            className="text-dark"
-            isSearchable={true}
-            options={tokenList}
-            onChange={handleToToken}
-          />
-        )}
-        {quote ? (
-          <div>
-            You will get : {quote.slice(0, 6)} {toToken!.name}
-          </div>
-        ) : (
-          <div>loading</div>
-        )}
-        <Button className="bg-blue-700" action={swap}>
-          Swappah
-        </Button>
-        <Button className="bg-black" action={swapUSDC}>
-          Swap USDC
-        </Button>
-      </div>
+        </div>
+        <div className="container-classic flex gap-2 rounded-md p-3">
+          {!isLoading && (
+            <Select
+              className="basis-1/3 text-dark"
+              isSearchable={true}
+              options={tokenList}
+              onChange={(event) => {
+                setToToken(event?.value);
+              }}
+            />
+          )}
+          {quote ? (
+            <p className="basis-2/3">
+              You will get : {parseFloat(quote).toFixed(5)}
+              {toToken!.name}
+            </p>
+          ) : (
+            <p className="basis-2/3">choose an amount to swap</p>
+          )}
+        </div>
+      </form>
+      <Button className="m-4 mt-auto" action={swap}>
+        SWAP
+      </Button>
     </div>
   );
 };
