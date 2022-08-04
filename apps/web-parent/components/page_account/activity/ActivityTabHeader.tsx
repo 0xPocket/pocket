@@ -1,14 +1,14 @@
 import { Tab } from '@headlessui/react';
 
-function TransactionCategories() {
+function ActivityTabHeaders() {
   return (
-    <Tab.List className="space-x-8">
+    <Tab.List className="grid grid-cols-2 space-x-8">
       <Tab
         className={({ selected }) =>
           selected ? 'text-dark underline dark:text-white' : 'text-white-darker'
         }
       >
-        Activity
+        Transactions
       </Tab>
 
       <Tab
@@ -16,10 +16,10 @@ function TransactionCategories() {
           selected ? 'text-dark underline dark:text-white' : 'text-white-darker'
         }
       >
-        Top-ups
+        Your top-ups
       </Tab>
     </Tab.List>
   );
 }
 
-export default TransactionCategories;
+export default ActivityTabHeaders;

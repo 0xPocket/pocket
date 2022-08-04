@@ -16,7 +16,7 @@ function Balance({ value, setSelectedIndex, hideActions }: BalanceProps) {
   return (
     <>
       <div className="flex flex-col items-end">
-        <p>PiggyBank</p>
+        <p>Claimable</p>
         <span className="text-4xl">
           {value ? formatUnits(value, erc20.data?.decimals).toString() : '0'} $
         </span>

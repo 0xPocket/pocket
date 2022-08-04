@@ -19,7 +19,6 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
     functionName: 'childToConfig',
     args: [child.address!],
     enabled: !!child.address,
-    // watch: true,
   });
 
   return (
