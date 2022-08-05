@@ -11,6 +11,8 @@
     "env-check": "dotenv-checker --schema .env.example --env .env",
     "predev": "echo 'Checking env files'",
     "dev": "turbo run dev --parallel",
+    "dev-testnet": "turbo run dev-testnet --parallel",
+    "reset": "turbo run reset",
     "build": "turbo run build",
     "start": "turbo run start",
     "lint": "turbo run lint",

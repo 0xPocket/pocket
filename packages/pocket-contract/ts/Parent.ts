@@ -1,4 +1,3 @@
-import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 import { BigNumberish, Signer, Wallet } from 'ethers';
 import { PocketFaucet__factory, PocketFaucet } from '../typechain-types';
 
@@ -88,8 +87,8 @@ class ParentContract {
     return this.contract.changeChildAddress(oldAddr, newAddr);
   };
 
-  addFunds = async (amount: BigNumberish, childAddr: string) => {
-    return this.contract.addFunds(amount, childAddr);
+  addFunds = async (amountWithDecimals: BigNumberish, childAddr: string) => {
+    return this.contract.addFunds(amountWithDecimals, childAddr);
   };
 }
 

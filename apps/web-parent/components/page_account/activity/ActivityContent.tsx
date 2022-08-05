@@ -68,7 +68,7 @@ function ActivityContent({ child }: ActivityContentProps) {
   const { isLoading: isTxLoading, data: txList } = useQuery(
     ['child.transactions-content', child.id],
     () => {
-      return fetchTransactions(alchemy, child.address);
+      return fetchTransactions(alchemy, child.address!);
     },
     {
       staleTime: 60 * 1000,
@@ -109,7 +109,7 @@ function ActivityContent({ child }: ActivityContentProps) {
               ev.args[1].toString(),
               erc20.data?.decimals,
             ).toString(),
-            symbol: erc20.data?.symbol ? erc20.data.symbol : 'lol',
+            symbol: erc20.data!.symbol,
             timestamp: ev.args[3].toNumber(),
           });
         }

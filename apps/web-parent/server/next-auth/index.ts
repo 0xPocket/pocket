@@ -108,8 +108,6 @@ export const authOptions: NextAuthOptions = {
           const siwe = new SiweMessage(JSON.parse(message || '{}'));
           await siwe.validate(signature || '');
 
-          console.log('test1');
-
           const existingUser = await prisma.user.findUnique({
             where: { address: siwe.address },
           });
@@ -125,8 +123,6 @@ export const authOptions: NextAuthOptions = {
           //     `You must sign in with the ${existingUser.type} form.`,
           //   );
           // }
-
-          console.log('test3');
 
           if (!existingUser) {
             const newUser = await prisma.user.create({

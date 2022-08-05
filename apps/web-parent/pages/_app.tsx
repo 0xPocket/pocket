@@ -22,17 +22,17 @@ import { loggerLink } from '@trpc/client/links/loggerLink';
 import { splitLink } from '@trpc/client/links/splitLink';
 import { withTRPC } from '@trpc/next';
 import { SessionProvider } from 'next-auth/react';
+import * as dotenv from 'dotenv';
 
 const { chains, provider } = configureChains(
-  [chain.polygon],
+  [chain.polygon, chain.rinkeby, chain.polygonMumbai],
   [
-    // alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_KEY_ALCHEMY_MUMBAI! }),
+    // alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_KEY_ALCHEMY! }),
     jsonRpcProvider({
       rpc: () => ({
-        http: `http://localhost:8545`,
+        http: process.env.NEXT_PUBLIC_RPC_ENDPOINT!,
       }),
     }),
-    // publicProvider(),
   ],
 );
 
@@ -58,7 +58,7 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
             },
             additionalMagicOptions: {
               network: {
-                rpcUrl: 'http://localhost:8545',
+                rpcUrl: process.env.NEXT_PUBLIC_RPC_ENDPOINT!,
                 chainId: 137,
               },
             },

@@ -73,11 +73,11 @@ describe('Testing add Child and funds', function () {
         1,
         1,
         constants.RDM_ADDRESS[2],
-        50,
+        5,
         tokenAddr,
         null
       )
-    ).to.be.revertedWith('balance too low');
+    ).to.be.revertedWith(constants.CHOSEN_ERRORMSG);
   });
 
   it('Should add 1 child and give him money', async function () {
