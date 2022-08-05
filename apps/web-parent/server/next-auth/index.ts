@@ -139,6 +139,7 @@ export const authOptions: NextAuthOptions = {
               id: newUser.id,
               address: siwe.address,
               type: newUser.type,
+              emailVerified: false,
               isNewUser: newUser.newUser,
             };
           }
@@ -149,6 +150,7 @@ export const authOptions: NextAuthOptions = {
             address: siwe.address,
             name: existingUser.name,
             type: existingUser.type,
+            emailVerified: !!existingUser.emailVerified,
             isNewUser: existingUser.newUser,
           };
         } catch (e) {
@@ -164,16 +166,12 @@ export const authOptions: NextAuthOptions = {
     signIn: '/connect',
   },
   callbacks: {
-    session: async ({ session, token, user }) => {
-      // console.log("SESSION CALLBACK");
-      // console.log("session", session);
-      // console.log("token", token);
-      // console.log("user", user);
-      // console.log(token);
+    session: async ({ session, token }) => {
       const newSession: Session = {
         ...session,
         user: {
           ...session.user,
+          emailVerified: !!token.emailVerified,
           name: token.name,
           type: token.type,
           id: token.sub!,
@@ -187,7 +185,7 @@ export const authOptions: NextAuthOptions = {
       // console.log("account", account);
       // console.log("user", user); // user from return
 
-      if (token.isNewUser) {
+      if (token.isNewUser || !token.emailVerified) {
         const checkUser = await prisma.user.findUnique({
           where: {
             id: token.sub,
@@ -198,30 +196,25 @@ export const authOptions: NextAuthOptions = {
           return token;
         }
 
-        if (checkUser?.newUser) {
-          // console.log('New user, we keep the token', token);
-          return token;
-        } else {
-          // console.log('Wet set a new token');
-          token = {
-            ...token,
-            type: checkUser?.type,
-            name: checkUser?.name,
-            isNewUser: false,
-          };
-          return token;
-        }
+        return {
+          ...token,
+          type: checkUser.type,
+          name: checkUser.name,
+          isNewUser: checkUser.newUser,
+          emailVerified: !!checkUser.emailVerified,
+        };
       }
       // console.log("NO");
 
       if (user) {
         // console.log('Wet set a the user from scratch');
 
-        token = {
+        return {
           ...token,
           type: user.type,
           name: user.name,
           isNewUser: user.isNewUser,
+          emailVerified: !!user.emailVerified,
         };
       }
 

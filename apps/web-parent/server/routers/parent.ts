@@ -124,19 +124,25 @@ export const parentRouter = createProtectedRouter()
   })
   .middleware(async ({ ctx, next, rawInput }) => {
     const inputSchema = z.object({
-      id: z.string(),
+      address: z.string(),
     });
     const result = inputSchema.safeParse(rawInput);
 
     if (!result.success) throw new TRPCError({ code: 'BAD_REQUEST' });
 
-    const child = await prisma.child.findUnique({
+    const child = await prisma.user.findUnique({
       where: {
-        userId: result.data.id,
+        address: result.data.address,
+      },
+      include: {
+        child: true,
       },
     });
 
-    if (child?.parentUserId !== ctx.session.user.id) {
+    if (
+      child?.type === 'Child' &&
+      child?.child?.parentUserId !== ctx.session.user.id
+    ) {
       throw new TRPCError({
         code: 'BAD_REQUEST',
         message: 'You are not related to this child',
@@ -145,14 +151,14 @@ export const parentRouter = createProtectedRouter()
 
     return next();
   })
-  .query('childById', {
+  .query('childByAddress', {
     input: z.object({
-      id: z.string(),
+      address: z.string(),
     }),
     resolve: ({ input }) => {
       return prisma.user.findUnique({
         where: {
-          id: input.id,
+          address: input.address,
         },
         include: {
           child: true,

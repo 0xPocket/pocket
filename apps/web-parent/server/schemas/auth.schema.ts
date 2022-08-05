@@ -1,6 +1,6 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-export const UserSchema = {
+export const AuthSchema = {
   onboard: z.object({
     name: z.string(),
     email: z.string().email(),

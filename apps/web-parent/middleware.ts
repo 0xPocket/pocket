@@ -2,7 +2,7 @@ import { withAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
 
 const userRoutes = {
-  Parent: ['/', '/add-account', '/account/:path*', '/onboarding'],
+  Parent: ['/', '/onboarding', '/add-account', '/account/:path*'],
   Child: ['/', '/onboarding'],
 };
 
@@ -29,13 +29,21 @@ export default withAuth(
     }
 
     // New user go to onboarding !
-    if (token && token.isNewUser && req.nextUrl.pathname !== '/onboarding') {
+    if (token.isNewUser && req.nextUrl.pathname !== '/onboarding') {
       return NextResponse.redirect(new URL('/onboarding', req.url));
     }
 
     // Onboarding is locked for validated users
-    if (token && !token.isNewUser && req.nextUrl.pathname === '/onboarding') {
+    if (
+      !token.isNewUser &&
+      token.emailVerified &&
+      req.nextUrl.pathname === '/onboarding'
+    ) {
       return NextResponse.redirect(new URL('/', req.url));
+    }
+
+    if (!token.emailVerified && req.nextUrl.pathname !== '/onboarding') {
+      return NextResponse.redirect(new URL('/onboarding', req.url));
     }
 
     // Redirect if user type is not allowed
