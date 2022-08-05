@@ -12,6 +12,8 @@ async function main() {
     parent
   );
 
+  console.log(process.env.NEXT_PUBLIC_CONTRACT_ADDRESS);
+
   await faucet.addChild(
     parseUnits('100', tokenDecimals),
     1 * 1 * 5 * 6000,
@@ -22,6 +24,8 @@ async function main() {
     1 * 1 * 5 * 60,
     constants.DAMIAN_MUSK.address
   );
+
+  console.log(constants.CHOSEN_TOKEN);
 
   await setErc20Balance(
     constants.CHOSEN_TOKEN,

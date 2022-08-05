@@ -37,7 +37,7 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
             <a className="py-3">See on polygonscan</a>
           </Link>
         ) : (
-          <Link href={`/account/${child.id}`}>
+          <Link href={`/account/${child.address}`}>
             <a className="py-3">{`Go to ${child.name}'s profile`}</a>
           </Link>
         )}

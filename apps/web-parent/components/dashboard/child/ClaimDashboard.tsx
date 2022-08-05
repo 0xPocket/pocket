@@ -7,7 +7,6 @@ import moment from 'moment';
 import { useQuery } from 'react-query';
 import useContractRead from '../../../hooks/useContractRead';
 import { useSmartContract } from '../../../contexts/contract';
-import { strict } from 'assert';
 
 const ClaimDashboard: React.FC = () => {
   const { address } = useAccount();

@@ -1,61 +1,77 @@
-import { SiweMessage } from 'siwe';
-import { z } from 'zod';
-import { createRouter } from '../createRouter';
-import { getCsrfToken } from 'next-auth/react';
+import {
+  generateVerificationToken,
+  hashToken,
+  saveVerificationToken,
+} from '../services/jwt';
+import { sendEmail } from '../services/sendMail';
 import { TRPCError } from '@trpc/server';
-import { hashToken, useVerificationToken } from '../services/jwt';
+import { unstable_getServerSession } from 'next-auth';
+import { createProtectedRouter } from '../createRouter';
+import { authOptions } from '../next-auth';
 import { prisma } from '../prisma';
+import { AuthSchema } from '../schemas/auth.schema';
+import { User } from '@prisma/client';
 
-export const authRouter = createRouter().mutation('verifyChild', {
-  input: z.object({
-    email: z.string(),
-    token: z.string(),
-    signature: z.string(),
-    message: z.string(),
-  }),
+export const authRouter = createProtectedRouter().mutation('onboard', {
+  input: AuthSchema.onboard,
   resolve: async ({ ctx, input }) => {
-    try {
-      const siweMessage = new SiweMessage(JSON.parse(input.message || '{}'));
-      const fields = await siweMessage.validate(input.signature);
+    const user = await prisma.user.findUnique({
+      where: {
+        id: ctx.session.user.id,
+      },
+    });
 
-      if (fields.nonce !== (await getCsrfToken({ req: ctx.req }))) {
-        throw new Error('Invalid nonce.');
-      }
-
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const invite = await useVerificationToken({
-        token: hashToken(input.token),
-        identifier: input.email,
+    if (!user?.email && !input.email) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Email is required',
       });
-
-      const invalidInvite = !invite || invite.expires.valueOf() < Date.now();
-
-      if (invalidInvite) {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'Invalid invite.',
-        });
-      }
-
-      const user = await prisma.user.update({
-        where: {
-          email: input.email,
-        },
-        data: {
-          address: fields.address,
-          newUser: false,
-          child: {
-            update: {
-              status: 'ACTIVE',
-            },
-          },
-          emailVerified: new Date(),
-        },
-      });
-
-      return user;
-    } catch (e) {
-      throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invalid request.' });
     }
+
+    // ! Handle only user with email for now
+
+    const updatedUser: User = await prisma.user.update({
+      where: {
+        id: ctx.session.user.id,
+      },
+      data: {
+        name: input.name,
+        email: ctx.session.user.email || input.email,
+        newUser: false,
+      },
+    });
+
+    if (!updatedUser.emailVerified) {
+      const token = generateVerificationToken();
+
+      const ONE_DAY_IN_SECONDS = 86400;
+      const expires = new Date(Date.now() + ONE_DAY_IN_SECONDS * 1000);
+
+      await saveVerificationToken({
+        identifier: input.email,
+        expires,
+        token: hashToken(token),
+      });
+
+      const params = new URLSearchParams({ token, email: input.email });
+
+      await sendEmail({
+        to: updatedUser.email!,
+        subject: 'Verify your email',
+        template: 'email_verification',
+        context: {
+          name: updatedUser.name,
+          // TODO: Use correct URL from production
+          url: `http://localhost:3000/verify-email?${params}`,
+        },
+      });
+    }
+
+    // We force settings a new token
+    if (ctx.req && ctx.res) {
+      await unstable_getServerSession(ctx.req!, ctx.res!, authOptions);
+    }
+
+    return updatedUser;
   },
 });
