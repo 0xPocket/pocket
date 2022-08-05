@@ -46,6 +46,13 @@
       ],
       "cache": false
     },
+    "reset": {
+      "cache": false
+    },
+    "dev-testnet": {
+      "dependsOn": ["//#env-check", "@lib/prisma#push"],
+      "cache": false
+    },
     "start": {
       "cache": false
     },

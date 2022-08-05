@@ -94,20 +94,14 @@ Secondly, run the tests:
 If you want to change the base token/network, go to the constants.ts file in the utils
 and change the value of the CHOSEN variable.
 
-## Testing on mumbai TESTNET
+## Testing on a testnet
 
-1. Go to turbo.json and remove, in the pipeline, in dev this line :
-   "pocket-contract#deploy"
-
-2. Go to ./apps/web-parent/pages/\_app.tsx and edit ALL the configureChains parameters accordingly
-
-3. Go to ./env and change the NEXT_PUBLIC_CHOSEN_ERC20 variable value accordingly
-
-4. Still in ./env, change the NEXT_PUBLIC_CONTRACT_ADDRESS variable value accordingly
-
-5. Accounts to use on metamask can be found in ./packages/pocket-contract/scripts/deployOnMumbai.ts
-
-6. Think to change metamask network accordingly
+Go to ./env and modify following variable accordingly :
+NEXT_PUBLIC_KEY_ALCHEMY
+NEXT_PUBLIC_RPC_ENDPOINT
+NEXT_PUBLIC_CHOSEN
+NEXT_PUBLIC_CHOSEN_ERC20
+EXT_PUBLIC_CONTRACT_ADDRESS
 
 ## Useful commands
 

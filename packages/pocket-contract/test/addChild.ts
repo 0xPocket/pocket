@@ -10,12 +10,10 @@ describe('Testing add Child', function () {
   let child1: Wallet;
   let parent1: ParentTester;
   let PocketFaucet_factory: PocketFaucet__factory, pocketFaucet: PocketFaucet;
-  let provider: providers.JsonRpcProvider;
   let parent1Wallet: Wallet;
   const tokenAddr = constants.CHOSEN_TOKEN;
 
   before(async function () {
-    // provider = new providers.JsonRpcProvider(constants.RPC_URL.LOCAL);
     child1 = new Wallet(constants.FAMILY_ACCOUNT.child1, ethers.provider);
     PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
     pocketFaucet = (await upgrades.deployProxy(PocketFaucet_factory, [

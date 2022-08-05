@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { assert, expect } from 'chai';
 import { ethers, upgrades } from 'hardhat';
-import { providers, Wallet } from 'ethers';
+import { Wallet } from 'ethers';
 import ParentTester from '../helpers/ParentTester';
 import * as constants from '../utils/constants';
 import { PocketFaucet__factory, PocketFaucet } from '../typechain-types';
@@ -54,13 +54,13 @@ describe('Testing addr changement', function () {
   });
 
   it('Should test that new child2 can withdraw', async function () {
-    const toSend = ethers.utils.parseUnits('100', await getDecimals(tokenAddr));
+    const toSend = ethers.utils.parseUnits('10', await getDecimals(tokenAddr));
     const tokenBefore = await getERC20Balance(tokenAddr, child2.address);
     await goForwardNDays(21);
     await setErc20Balance(
       tokenAddr,
       parent1Wallet,
-      '100',
+      '10',
       constants.CHOSEN_WHALE
     );
     await setAllowance(

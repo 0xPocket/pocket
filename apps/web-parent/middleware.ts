@@ -2,8 +2,8 @@ import { withAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
 
 const userRoutes = {
-  Parent: ['/', '/add-account', '/account/:path*'],
-  Child: ['/'],
+  Parent: ['/', '/add-account', '/account/:path*', '/onboarding'],
+  Child: ['/', '/onboarding'],
 };
 
 function routeAuthorized(currentRoute: string, toMatch: string) {

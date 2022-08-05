@@ -2,8 +2,8 @@ import { Network, initializeAlchemy, Alchemy } from '@alch/alchemy-sdk';
 import { createContext, useContext, useState } from 'react';
 
 const settings = {
-  apiKey: process.env.NEXT_PUBLIC_KEY_ALCHEMY_POLYGON, // Replace with your Alchemy API Key.
-  network: Network.MATIC_MAINNET, // Replace with your network.
+  apiKey: process.env.NEXT_PUBLIC_KEY_ALCHEMY, // Replace with your Alchemy API Key.
+  network: process.env.NEXT_PUBLIC_CHOSEN as Network, // Replace with your network.
   maxRetries: 10,
 };
 

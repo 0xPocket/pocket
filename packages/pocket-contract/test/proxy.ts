@@ -55,6 +55,11 @@ describe('Deploy and tests on proxy functions', function () {
   });
 
   it('Should have set good admin for proxy + owner of proxyAdmin', async function () {
+    console.log('here');
+    console.log(
+      'proxyAdmin.connect(admin).owner()',
+      await proxyAdmin.connect(admin).owner()
+    );
     expect(await proxyAdmin.connect(admin).owner()).to.be.equal(admin.address);
     expect(
       await proxyAdmin.connect(admin).getProxyAdmin(pocketFaucet.address)
