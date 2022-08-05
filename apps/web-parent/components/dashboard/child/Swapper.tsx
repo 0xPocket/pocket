@@ -1,61 +1,52 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Select from 'react-select';
-import { useAccount, useSigner } from 'wagmi';
+import {
+  erc20ABI,
+  useAccount,
+  useBalance,
+  useContractRead,
+  useContractWrite,
+  useNetwork,
+  useSigner,
+  useToken,
+} from 'wagmi';
 import { BigNumber, BigNumberish, ethers } from 'ethers';
 import { useQuery } from 'react-query';
-import { useSmartContract } from '../../../contexts/contract';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { CovalentItem, CovalentReturn } from '@lib/types/interfaces';
-import useContractWrite from '../../../hooks/useContractWrite';
 import { Button } from '@lib/ui';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { constants } from 'buffer';
 
-const chainId = '137';
-const apiBaseUrl = 'https://api.1inch.io/v4.0/' + chainId;
-
-interface OneInchReturn {
-  tokens: tokenId[];
-}
-
-const usdc: CovalentItem = {
-  balance: 0,
-  balance_24h: '0',
-  contract_address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
-  contract_decimals: 6,
-  contract_name: 'USD Coin (PoS)',
-  contract_ticker_symbol: 'USDC',
-  last_transferred_at: '2022-08-03T10:48:32Z',
-  logo_url:
-    'https://logos.covalenthq.com/tokens/1/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png',
-  nft_data: [],
-  quote: 0,
-  quote_24h: 0,
-  quote_rate: 0.9997549,
-  quote_rate_24h: 1.0002348,
-  supports_erc: ['erc20'],
-  type: 'cryptocurrency',
+const fetchUsers = async (address: string) => {
+  const APIKEY = 'ckey_d68ffbaf2bdf47b6b58e84fada7';
+  const baseURL = 'https://api.covalenthq.com/v1';
+  const blockchainChainId = '137';
+  const res = axios.get<CovalentReturn>(
+    `${baseURL}/${blockchainChainId}/address/${address}/balances_v2/?key=${APIKEY}`,
+  );
+  return res.then((res) => res.data.data);
 };
 
-interface tokenId {
-  address: string;
-  decimals: number;
-  logoURI: string;
-  name: string;
-  symbol: string;
-  tags: string[];
-}
+const fetch1InchTokens = async (chainId: number) => {
+  const res = axios.get<OneInchReturn>(
+    apiBaseUrl + chainId.toString() + '/tokens',
+  );
+  return res.then((res) => res.data.tokens);
+};
 
 const generateTx = async (
   fromTokenAddress: string,
   toTokenAddress: string,
   amount: BigNumberish,
   userAddress: string,
+  chainId: number,
 ) => {
-  if (fromTokenAddress === '0x0000000000000000000000000000000000001010')
-    fromTokenAddress = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
-
   const url =
     apiBaseUrl +
+    chainId.toString() +
     '/swap?' +
     'fromTokenAddress=' +
     fromTokenAddress +
@@ -65,7 +56,7 @@ const generateTx = async (
     amount.toString() +
     '&fromAddress=' +
     userAddress +
-    '&slippage=' + // TODO : decide a slippage, default config ?
+    '&slippage=' + // TODO : choose slippage, default config ?
     '1' +
     '&disableEstimate=true'; // TODO : take off, only usefull because of the forking
 
@@ -77,12 +68,11 @@ const quote1Inch = async (
   fromTokenAddress: string,
   toTokenAddress: string,
   amount: BigNumberish,
+  chainId: number,
 ) => {
-  if (fromTokenAddress === '0x0000000000000000000000000000000000001010')
-    fromTokenAddress = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
-
   const url =
     apiBaseUrl +
+    chainId.toString() +
     '/quote?' +
     'fromTokenAddress=' +
     fromTokenAddress +
@@ -91,101 +81,138 @@ const quote1Inch = async (
     '&amount=' +
     amount.toString();
 
-  const res = await axios.get(url);
-  console.log(res.data.toToken.decimals);
-  return ethers.utils.formatUnits(
-    res.data.toTokenAmount,
-    res.data.toToken.decimals,
-  );
+  try {
+    const res = await axios.get(url);
+
+    return ethers.utils.formatUnits(
+      res.data.toTokenAmount,
+      res.data.toToken.decimals,
+    );
+  } catch (error: any) {
+    return error.response.data.description;
+  }
 };
 
 const Swapper: React.FC = () => {
   const [amountToSwap, setAmountToSwap] = useState('');
+  const [fromToken, setFromToken] = useState<CovalentItem>();
   const [toToken, setToToken] = useState<tokenId>();
-  const [fromToken, setFromToken] = useState<CovalentItem>(usdc);
-  const [quote, setQuote] = useState('');
+  const [quote, setQuote] = useState('0');
+
+  const { chain } = useNetwork();
   const { address } = useAccount();
-  const { erc20 } = useSmartContract();
   const { data: signer } = useSigner();
-
-  const { writeAsync: approve } = useContractWrite({
-    contract: erc20.contract,
-    functionName: 'approve',
+  const { data: tokenInfo } = useToken({
+    address: fromToken?.contract_address,
+    enabled: fromToken?.contract_address !== maticAddress,
   });
-
-  const { writeAsync: allowance } = useContractWrite({
-    contract: erc20.contract,
+  const { data: balanceTest } = useBalance({
+    addressOrName: tokenInfo?.address,
+    formatUnits: tokenInfo?.decimals,
+  });
+  const { data: allowance, refetch: callAllowance } = useContractRead({
+    addressOrName: fromToken?.contract_address!,
+    contractInterface: erc20ABI,
     functionName: 'allowance',
+    args: [address, oneInchContract],
+    enabled: false,
   });
+
+  const { data: approve, writeAsync: callApprove } = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    addressOrName: fromToken?.contract_address!,
+    contractInterface: erc20ABI,
+    functionName: 'approve',
+    args: [oneInchContract, ethers.constants.MaxUint256],
+  });
+
+  const handleAllowance = async () => {
+    await callAllowance();
+    console.log(' allo ', allowance?.toString());
+    console.log(
+      ethers.utils
+        .parseUnits(amountToSwap, fromToken?.contract_decimals)
+        .toString(),
+    );
+    if (
+      allowance?.lt(
+        ethers.utils.parseUnits(amountToSwap, fromToken?.contract_decimals),
+      )
+    ) {
+      await callApprove();
+      await approve?.wait();
+    } else console.log('Allowance is ok');
+  };
 
   const swap = async () => {
-    quote1Inch(
-      fromToken?.contract_address!,
-      toToken?.address!,
-      ethers.utils.parseUnits(amountToSwap, fromToken?.contract_decimals),
-    );
+    if (fromToken?.contract_address !== maticAddress) await handleAllowance();
+
+    console.log(fromToken?.contract_address);
 
     const tx = await generateTx(
       fromToken?.contract_address!,
       toToken?.address!,
       ethers.utils.parseUnits(amountToSwap, fromToken?.contract_decimals),
       address!,
+      chain?.id!,
     );
-
-    if (
-      (
-        await allowance({
-          args: [address, '0x1111111254fb6c44bAC0beD2854e76F90643097d'],
-        })
-      ).toString() === '0'
-    )
-      await approve({
-        args: [
-          '0x1111111254fb6c44bAC0beD2854e76F90643097d',
-          ethers.constants.MaxUint256,
-        ],
-      });
-    else console.log('Allowance is ok');
 
     delete tx.gas;
 
     if (signer) await signer.sendTransaction(tx);
   };
 
-  const handleAmount = (event: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setAmountToSwap(event.target.value);
-  };
+  const isValidConf: boolean = useMemo(() => {
+    if (
+      fromToken &&
+      toToken &&
+      amountToSwap &&
+      fromToken.contract_address !== toToken.address
+    )
+      return true;
+    else return false;
+  }, [amountToSwap, fromToken, toToken]);
+
+  const messageToDisplay: string = useMemo(() => {
+    if (fromToken && toToken && amountToSwap) {
+      if (fromToken.contract_address === toToken?.address)
+        return 'Cannot swap for the same token';
+      else {
+        if (quote === '-1') return 'You cannot swap those tokens';
+        else if (
+          balanceTest?.value.lt(
+            ethers.utils.parseUnits(amountToSwap, fromToken.contract_decimals),
+          )
+        ) {
+          return 'Not enough fund';
+        } else
+          return (
+            'you will have : ' +
+            parseFloat(quote).toFixed(5) +
+            ' ' +
+            toToken.name
+          );
+      }
+    } else return 'choose a token and a amount to swap';
+  }, [fromToken, toToken, amountToSwap, balanceTest?.value, quote]);
 
   useEffect(() => {
     async function updateQuote() {
       if (amountToSwap && toToken && fromToken) {
-        const queryQuote = quote1Inch(
+        setQuote('');
+        const queryQuote = await quote1Inch(
           fromToken.contract_address,
           toToken.address,
           ethers.utils.parseUnits(amountToSwap, fromToken.contract_decimals),
+          chain?.id!,
         );
-        setQuote(await queryQuote);
+        if (parseFloat(queryQuote)) setQuote(queryQuote);
+        else setQuote('-1');
       }
     }
-    updateQuote();
-  }, [amountToSwap, fromToken, toToken]);
 
-  const fetchUsers = async (address: string) => {
-    const APIKEY = 'ckey_d68ffbaf2bdf47b6b58e84fada7';
-    const baseURL = 'https://api.covalenthq.com/v1';
-    const blockchainChainId = '137';
-    const res = axios.get<CovalentReturn>(
-      `${baseURL}/${blockchainChainId}/address/${address}/balances_v2/?key=${APIKEY}`,
-    );
-    return res.then((res) => res.data.data);
-  };
-
-  const fetch1InchTokens = async () => {
-    const res = axios.get<OneInchReturn>(apiBaseUrl + '/tokens');
-    return res.then((res) => res.data.tokens);
-  };
+    if (isValidConf) updateQuote();
+  }, [amountToSwap, chain?.id, fromToken, isValidConf, toToken]);
 
   const { isLoading: isLoadingTokenChild, data: tokenInWallet } = useQuery(
     ['child.token-content'],
@@ -205,8 +232,8 @@ const Swapper: React.FC = () => {
   );
 
   const { isLoading, data: tokenList } = useQuery(
-    ['swapper.token_list'],
-    () => fetch1InchTokens(),
+    ['swapper.token-list'],
+    () => fetch1InchTokens(chain?.id!),
     {
       staleTime: 60 * 1000,
       onError: () => toast.error('Could not retrieve 1inch token list'),
@@ -226,12 +253,16 @@ const Swapper: React.FC = () => {
         <div className="container-classic flex justify-between gap-2 rounded-md p-3">
           {!isLoadingTokenChild && (
             <Select
-              className="basis-1/3 text-dark"
+              className="basis-1/2 text-dark"
               isSearchable={true}
               options={tokenInWallet}
-              defaultValue={{ label: usdc.contract_ticker_symbol, value: usdc }}
               onChange={(event) => {
-                setFromToken(event?.value);
+                if (
+                  event?.value.contract_address ===
+                  '0x0000000000000000000000000000000000001010'
+                )
+                  event.value.contract_address = maticAddress;
+                setFromToken(event?.value!);
               }}
             />
           )}
@@ -239,14 +270,16 @@ const Swapper: React.FC = () => {
             type="text"
             placeholder="Amount"
             value={amountToSwap}
-            onChange={handleAmount}
-            className="basis-2/3 rounded-md text-right text-dark"
+            onChange={(event) => {
+              setAmountToSwap(event.target.value);
+            }}
+            className="basis-1/2 rounded-md text-right text-dark"
           />
         </div>
         <div className="container-classic flex gap-2 rounded-md p-3">
           {!isLoading && (
             <Select
-              className="basis-1/3 text-dark"
+              className="basis-1/2 text-dark"
               isSearchable={true}
               options={tokenList}
               onChange={(event) => {
@@ -255,12 +288,9 @@ const Swapper: React.FC = () => {
             />
           )}
           {quote ? (
-            <p className="basis-2/3">
-              You will get : {parseFloat(quote).toFixed(5)}
-              {toToken!.name}
-            </p>
+            <p className="basis-1/2">{messageToDisplay}</p>
           ) : (
-            <p className="basis-2/3">choose an amount to swap</p>
+            <FontAwesomeIcon icon={faSpinner} spin />
           )}
         </div>
       </form>
@@ -272,3 +302,40 @@ const Swapper: React.FC = () => {
 };
 
 export default Swapper;
+
+const usdc: CovalentItem = {
+  // TODO : only usefull for testing
+  balance: 0,
+  balance_24h: '0',
+  contract_address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+  contract_decimals: 6,
+  contract_name: 'USD Coin (PoS)',
+  contract_ticker_symbol: 'USDC',
+  last_transferred_at: '2022-08-03T10:48:32Z',
+  logo_url:
+    'https://logos.covalenthq.com/tokens/1/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png',
+  nft_data: [],
+  quote: 0,
+  quote_24h: 0,
+  quote_rate: 0.9997549,
+  quote_rate_24h: 1.0002348,
+  supports_erc: ['erc20'],
+  type: 'cryptocurrency',
+};
+
+interface OneInchReturn {
+  tokens: tokenId[];
+}
+
+interface tokenId {
+  address: string;
+  decimals: number;
+  logoURI: string;
+  name: string;
+  symbol: string;
+  tags: string[];
+}
+
+const apiBaseUrl = 'https://api.1inch.io/v4.0/';
+const oneInchContract = '0x1111111254fb6c44bAC0beD2854e76F90643097d';
+const maticAddress = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
