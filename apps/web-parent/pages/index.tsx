@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { SectionContainer } from '@lib/ui';
 import ChildrenAccountPanel from '../components/page_dashboard/ChildrenAccountPanel';
 import { useSession } from 'next-auth/react';
-import ClaimDashboard from '../components/dashboard/child/ClaimDashboard';
+import ClaimDashboard from '../components/dashboard/child/ChildDashboard';
 
 export default function Web() {
   const { data } = useSession();

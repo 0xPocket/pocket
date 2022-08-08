@@ -1,4 +1,4 @@
-import ChildCard from '../card/ChildCard';
+import ChildCard from '../card/ChildCardParent';
 import { useRouter } from 'next/router';
 import { Button } from '@lib/ui';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

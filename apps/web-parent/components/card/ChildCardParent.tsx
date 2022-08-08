@@ -6,13 +6,13 @@ import RightTab from './RightTab';
 import { UserChild } from '@lib/types/interfaces';
 
 type ChildCardProps = {
-  childAddress: string;
+  child: UserChild;
   hasLink?: boolean;
   className?: string;
 };
 
-function ChildCardClaim({
-  childAddress,
+function ChildCardParent({
+  child,
   hasLink = false,
   className,
 }: ChildCardProps) {
@@ -21,8 +21,8 @@ function ChildCardClaim({
   const { data: config } = useContractRead({
     contract: pocketContract,
     functionName: 'childToConfig',
-    args: [childAddress],
-    enabled: !!childAddress,
+    args: [child.address!],
+    enabled: !!child.address,
   });
 
   return (
@@ -32,9 +32,19 @@ function ChildCardClaim({
       <div className="flex flex-col justify-between">
         <div className="space-y-2">
           <div className="flex space-x-4">
+            <h1>{child?.name}</h1>
             <AccountStatus child={child} />
           </div>
         </div>
+        {!hasLink ? (
+          <Link href={`https://polygonscan.com/address/${child.address}`}>
+            <a className="py-3">See on polygonscan</a>
+          </Link>
+        ) : (
+          <Link href={`/account/${child.id}`}>
+            <a className="py-3">{`Go to ${child.name}'s profile`}</a>
+          </Link>
+        )}
       </div>
 
       <RightTab child={child} config={config} />
@@ -42,4 +52,4 @@ function ChildCardClaim({
   );
 }
 
-export default ChildCardClaim;
+export default ChildCardParent;

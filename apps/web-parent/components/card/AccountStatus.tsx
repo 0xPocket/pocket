@@ -1,9 +1,5 @@
 import { ChildStatus } from '.prisma/client';
-import {
-  faCircleCheck,
-  faCross,
-  faEnvelope,
-} from '@fortawesome/free-solid-svg-icons';
+import { faCircleCheck, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { UserChild } from '@lib/types/interfaces';
 import { useState } from 'react';
@@ -18,7 +14,6 @@ function getIcon(status: ChildStatus) {
     case 'INVITED':
       return faEnvelope;
   }
-  return faCross;
 }
 
 function AccountStatus({ child }: AccountStatusProps) {
@@ -48,7 +43,7 @@ function AccountStatus({ child }: AccountStatusProps) {
           {...attributes.popper}
           className="rounded-md bg-primary p-1 text-sm"
         >
-          An email has been sent to {child!.child.email}
+          An email has been sent to {child!.child!.email}
         </div>
       )}
     </div>

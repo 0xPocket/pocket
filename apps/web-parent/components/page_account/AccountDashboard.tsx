@@ -2,7 +2,7 @@ import TokenContent from './token/TokenContent';
 import NftContent from './nft/NftContent';
 import ActivityContentParent from './activity/ActivityContentParent';
 import { UserChild } from '@lib/types/interfaces';
-import ChildCard from '../card/ChildCard';
+import ChildCard from '../card/ChildCardParent';
 
 type AccountDashboardProps = { child: UserChild };
 

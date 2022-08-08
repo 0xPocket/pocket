@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { CovalentReturn, UserChild } from '@lib/types/interfaces';
+import { CovalentReturn } from '@lib/types/interfaces';
 import axios from 'axios';
 import { useQuery } from 'react-query';
 import { toast } from 'react-toastify';

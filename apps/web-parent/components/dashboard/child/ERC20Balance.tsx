@@ -20,7 +20,8 @@ const ERC20Balance: React.FC = () => {
 
   return (
     <div>
-      USDC Balance : {data.formatted} {erc20.data?.symbol}
+      <p>Balance</p>
+      <span className="text-4xl"> {data.formatted} $</span>
     </div>
   );
 };
