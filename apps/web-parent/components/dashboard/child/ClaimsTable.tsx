@@ -7,37 +7,36 @@ import {
 } from '@tanstack/react-table';
 import moment from 'moment';
 import { useState } from 'react';
-import { PageSwitchers } from './PageSwitchers';
+import { PageSwitchers } from '../../page_account/activity/PageSwitchers';
+// import { PageSwitchers } from './PageSwitchers';
 
-type TopupsTableProps = {
-  logs: topup[];
+type ClaimsTableProps = {
+  logs: claim[];
 };
 
-type topup = {
+type claim = {
   symbol: string;
   value: string;
   timestamp: number;
 };
 
-const columnHelper = createColumnHelper<topup>();
+const columnHelper = createColumnHelper<claim>();
 
 const columns = [
   columnHelper.accessor('timestamp', {
     header: () => <span className="ml-1">Date</span>,
+    id: 'Date',
     cell: (info) => (
       <span className="ml-1">{moment(info.getValue()).format('D/MM')}</span>
     ),
-    id: 'Date',
   }),
 
   columnHelper.accessor((row) => `${row.value} ${row.symbol}`, {
-    cell: (info) => <span className="ml-1">{info.getValue()}</span>,
-
     id: 'Amount',
   }),
 ];
 
-export function TopupsTable({ logs }: TopupsTableProps) {
+export function ClaimsTable({ logs }: ClaimsTableProps) {
   const [data] = useState([...logs]);
 
   const table = useReactTable({
@@ -94,7 +93,7 @@ export function TopupsTable({ logs }: TopupsTableProps) {
           )}
         </>
       ) : (
-        <p className="w-full text-center">{'No top-ups for now.'}</p>
+        <p className="w-full text-center">{'No claim for now.'}</p>
       )}
     </div>
   );

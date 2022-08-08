@@ -9,16 +9,19 @@ type NftCardProps = {
 
 function NftCard({ nft, isLoading = false }: NftCardProps) {
   const [isOpen, setIsOpen] = useState(false);
-
   if (nft)
     return (
       <div className="container-classic col-span-4 flex flex-col overflow-hidden rounded-md">
-        {nft.media[0]?.gateway && (
+        {nft.media[0]?.gateway !== undefined ? (
           <img
             src={nft.media[0]?.gateway}
             alt={nft.title}
             className="aspect-square object-cover"
           />
+        ) : (
+          <p className="m-auto aspect-square object-cover">
+            No image for this nft
+          </p>
         )}
         <div className="flex flex-grow flex-col justify-between p-2">
           <div>
@@ -28,7 +31,7 @@ function NftCard({ nft, isLoading = false }: NftCardProps) {
             See more
           </a>
         </div>
-        <NftDialog nft={nft} isOpen={isOpen} setIsOpem={setIsOpen}></NftDialog>
+        <NftDialog nft={nft} isOpen={isOpen} setIsOpen={setIsOpen}></NftDialog>
       </div>
     );
 
@@ -43,7 +46,6 @@ function NftCard({ nft, isLoading = false }: NftCardProps) {
         <div
           className={`${isLoading && 'skeleton'} h-4 w-[50%] bg-white-darker`}
         ></div>
-
         <a
           className={`${
             isLoading && 'skeleton'

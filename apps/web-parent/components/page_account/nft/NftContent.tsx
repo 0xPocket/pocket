@@ -1,4 +1,3 @@
-import { UserChild } from '@lib/types/interfaces';
 import { useQuery } from 'react-query';
 import { toast } from 'react-toastify';
 import { useAlchemy } from '../../../contexts/alchemy';
@@ -6,18 +5,18 @@ import { getNftsForOwner } from '@alch/alchemy-sdk';
 import NftCard from './NftCard';
 
 type NftContentProps = {
-  child: UserChild;
+  childAddress: string;
   fill_nbr?: number;
 };
 
-function NftContent({ child, fill_nbr = 0 }: NftContentProps) {
+function NftContent({ childAddress, fill_nbr = 0 }: NftContentProps) {
   const { alchemy } = useAlchemy();
 
   const { isLoading, data: content } = useQuery(
-    ['child.nft-content', child.id],
-    () => getNftsForOwner(alchemy, child.address!),
+    ['child.nft-content', childAddress],
+    () => getNftsForOwner(alchemy, childAddress),
     {
-      enabled: !!child && !!child.address,
+      // enabled: !!child && !!child.address,
       staleTime: 60 * 1000,
       onError: () => toast.error("Could not retrieve user's token"),
     },

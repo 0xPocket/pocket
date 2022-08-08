@@ -7,7 +7,11 @@ import moment from 'moment';
 import { useQuery } from 'react-query';
 import useContractRead from '../../../hooks/useContractRead';
 import { useSmartContract } from '../../../contexts/contract';
-import { strict } from 'assert';
+import NftContent from '../../page_account/nft/NftContent';
+import TokenContent from '../../page_account/token/TokenContent';
+import ActivityChildContent from './ActivityChildContent';
+import ChildCardClaim from '../../card/ChildCardClaim';
+import { trpc } from '../../../utils/trpc';
 
 const ClaimDashboard: React.FC = () => {
   const { address } = useAccount();
@@ -15,6 +19,8 @@ const ClaimDashboard: React.FC = () => {
   const { data: now } = useQuery('now', () => moment(), {
     refetchInterval: 1000,
   });
+
+  // const { isLoading, data: children } = trpc.useQuery([]);
 
   const { data } = useContractRead({
     contract: pocketContract,
@@ -42,6 +48,13 @@ const ClaimDashboard: React.FC = () => {
 
   return (
     <div>
+      <div className="space-y-20">
+        <div className="grid grid-cols-6 gap-8">
+          {/* <ChildCardClaim child={child} className="col-span-3" /> */}
+        </div>
+
+        <TokenContent childAddress={address!} />
+      </div>
       {data && (
         <div className="flex flex-col">
           <div>Balance : {(data[1] as BigNumber).toString()}</div>
@@ -77,6 +90,11 @@ const ClaimDashboard: React.FC = () => {
             : 'Claim your money !'}
         </ClaimButton>
       )}
+      <div className="grid grid-cols-2 gap-8">
+        <NftContent childAddress={address!} fill_nbr={9} />
+        <ActivityChildContent childAddress={address!} />
+      </div>
+
       <ERC20Balance />
     </div>
   );

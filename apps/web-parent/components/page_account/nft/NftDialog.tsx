@@ -6,12 +6,12 @@ import { Dispatch, SetStateAction } from 'react';
 type NftDialogProps = {
   nft: OwnedNft;
   isOpen: boolean;
-  setIsOpem: Dispatch<SetStateAction<boolean>>;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-function NftDialog({ nft, isOpen, setIsOpem }: NftDialogProps) {
+function NftDialog({ nft, isOpen, setIsOpen }: NftDialogProps) {
   return (
-    <DialogPopupWrapper isOpen={isOpen} setIsOpen={setIsOpem}>
+    <DialogPopupWrapper isOpen={isOpen} setIsOpen={setIsOpen}>
       <div className="max-h-screen max-w-lg space-y-4">
         <img src={nft.media[0]?.gateway} alt={nft.title} className="w-full" />
         <h2>{nft.title}</h2>

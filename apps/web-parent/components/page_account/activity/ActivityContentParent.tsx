@@ -4,7 +4,6 @@ import { Tab } from '@headlessui/react';
 import {
   AssetTransfersResponseWithMetadata,
   AssetTransfersResultWithMetadata,
-  UserChild,
 } from '@lib/types/interfaces';
 import { useQuery } from 'react-query';
 import {
@@ -21,7 +20,7 @@ import { useSmartContract } from '../../../contexts/contract';
 import { TopupsTable } from './TopupsTable';
 
 type ActivityContentProps = {
-  child: UserChild;
+  childAddress: string;
 };
 
 const staticAssetTransfersParams = {
@@ -58,7 +57,7 @@ async function fetchTransactions(alchemy: Alchemy, fromAddress: string) {
   return tx;
 }
 
-function ActivityContent({ child }: ActivityContentProps) {
+function ActivityContentParent({ childAddress }: ActivityContentProps) {
   const { alchemy } = useAlchemy();
   const { erc20 } = useSmartContract();
   const provider = useProvider();
@@ -66,26 +65,25 @@ function ActivityContent({ child }: ActivityContentProps) {
   const { address } = useAccount();
 
   const { isLoading: isTxLoading, data: txList } = useQuery(
-    ['child.transactions-content', child.id],
+    ['child.transactions-content', childAddress],
     () => {
-      return fetchTransactions(alchemy, child.address!);
+      return fetchTransactions(alchemy, childAddress);
     },
     {
       staleTime: 60 * 1000,
-      enabled: !!child.address,
+      // enabled: !!child.address,
       select: (transfers) => {
         transfers.reverse();
         return transfers;
       },
     },
   );
-
   const eventFilter = pocketContract.filters[
     'FundsAdded(address,uint256,address,uint256)'
-  ](address, null, child.address, null);
+  ](address, null, childAddress, null);
 
   const { data: logs, isLoading: isLogLoading } = useQuery(
-    ['child-topups', child.id],
+    ['child-topups', childAddress],
     async () =>
       await provider.getLogs({
         fromBlock: 0x1a2848a,
@@ -95,7 +93,7 @@ function ActivityContent({ child }: ActivityContentProps) {
       }),
     {
       keepPreviousData: true,
-      enabled: !!child.address,
+      // enabled: !!child.address,
       staleTime: 10000,
       select: (extractedLogs) => {
         const parsed = [] as topup[];
@@ -123,11 +121,14 @@ function ActivityContent({ child }: ActivityContentProps) {
       <h2>Activity</h2>
 
       <Tab.Group>
-        <ActivityTabHeaders />
+        <ActivityTabHeaders
+          leftHeader="Transactions"
+          rightHeader="Your topups"
+        />
         <Tab.Panels>
           <Tab.Panel>
             {!isTxLoading && txList ? (
-              <TransactionsTable transactionsList={[]} />
+              <TransactionsTable transactionsList={txList} />
             ) : (
               <FontAwesomeIcon className="m-3 w-full" icon={faSpinner} spin />
             )}
@@ -135,7 +136,7 @@ function ActivityContent({ child }: ActivityContentProps) {
 
           <Tab.Panel>
             {!isLogLoading && logs ? (
-              <TopupsTable logs={logs} child={child} />
+              <TopupsTable logs={logs} />
             ) : (
               <FontAwesomeIcon className="m-3 w-full" icon={faSpinner} spin />
             )}
@@ -146,4 +147,4 @@ function ActivityContent({ child }: ActivityContentProps) {
   );
 }
 
-export default ActivityContent;
+export default ActivityContentParent;
