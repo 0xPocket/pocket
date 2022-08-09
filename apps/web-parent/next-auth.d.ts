@@ -7,6 +7,7 @@ declare module 'next-auth' {
     id: string;
     address: string | undefined;
     isNewUser: boolean;
+    emailVerified: boolean;
     type: 'Parent' | 'Child';
   };
   interface Session {
@@ -14,8 +15,9 @@ declare module 'next-auth' {
   }
 
   interface User {
-    type: existingUser.type;
-    isNewUser: existingUser.newUser;
+    type: 'Parent' | 'Child';
+    isNewUser: boolean;
+    emailVerified: boolean;
     address: string;
   }
 }
@@ -24,6 +26,7 @@ declare module 'next-auth/jwt' {
   /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
   interface JWT {
     isNewUser: boolean;
+    emailVerified: boolean;
     type: 'Parent' | 'Child';
   }
 }

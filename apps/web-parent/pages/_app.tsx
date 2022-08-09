@@ -9,7 +9,6 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { AlchemyProvider } from '../contexts/alchemy';
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
-import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { MagicAuthProvider } from '../contexts/auth';
 import { MagicConnector } from '../utils/MagicConnector';
@@ -22,7 +21,6 @@ import { loggerLink } from '@trpc/client/links/loggerLink';
 import { splitLink } from '@trpc/client/links/splitLink';
 import { withTRPC } from '@trpc/next';
 import { SessionProvider } from 'next-auth/react';
-import * as dotenv from 'dotenv';
 
 const { chains, provider } = configureChains(
   [chain.polygon, chain.rinkeby, chain.polygonMumbai],

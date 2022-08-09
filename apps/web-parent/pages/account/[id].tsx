@@ -12,17 +12,17 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   return {
     props: {
-      id,
+      address: id,
     },
   };
 }
 
 function Account({
-  id,
+  address,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { isLoading, data: child } = trpc.useQuery([
-    'parent.childById',
-    { id },
+    'parent.childByAddress',
+    { address },
   ]);
 
   return (

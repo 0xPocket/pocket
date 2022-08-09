@@ -3,7 +3,7 @@ import { FC, useEffect } from 'react';
 import { z } from 'zod';
 import { useZodForm } from '../../utils/useZodForm';
 import { trpc } from '../../utils/trpc';
-import { UserSchema } from '../../server/schemas';
+import { AuthSchema } from '../../server/schemas';
 
 const OnBoardingForm: FC = () => {
   const { data } = useSession();
@@ -11,12 +11,12 @@ const OnBoardingForm: FC = () => {
   const { register, handleSubmit, formState, setValue } = useZodForm({
     mode: 'all',
     reValidateMode: 'onChange',
-    schema: UserSchema.onboard,
+    schema: AuthSchema.onboard,
   });
 
-  const onboardUser = trpc.useMutation('user.onboard');
+  const onboardUser = trpc.useMutation('auth.onboard');
 
-  const onSubmit = async (data: z.infer<typeof UserSchema.onboard>) => {
+  const onSubmit = async (data: z.infer<typeof AuthSchema.onboard>) => {
     onboardUser.mutateAsync(data).then(() => {
       // router.push('/');
       window.location.href = '/';
