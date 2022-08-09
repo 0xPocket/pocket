@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BigNumber } from 'ethers';
 import { formatUnits } from 'ethers/lib/utils';
 import { Dispatch, SetStateAction } from 'react';
-import { useSmartContract } from '../../contexts/contract';
+import { useSmartContract } from '../../../contexts/contract';
 
 type BalanceProps = {
   value: BigNumber | undefined;

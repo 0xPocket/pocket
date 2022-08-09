@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
 import { toast } from 'react-toastify';
-import { useAlchemy } from '../../../contexts/alchemy';
+import { useAlchemy } from '../../../../contexts/alchemy';
 import { getNftsForOwner } from '@alch/alchemy-sdk';
 import NftCard from './NftCard';
 

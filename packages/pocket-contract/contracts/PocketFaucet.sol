@@ -20,9 +20,9 @@ contract PocketFaucet is AccessControlUpgradeable {
 
     event ChildAdded(address indexed parent, address indexed child);
     event ChildRemoved(address indexed parent, address indexed child);
-    event FundsAdded(address indexed parent, uint256 amount, address indexed child, uint256 timestamp);
+    event FundsAdded(uint256 timestamp, address indexed parent, uint256 amount, address indexed child);
     event FundsWithdrawn(address indexed parent, uint256 amount, address child);
-    event FundsClaimed(address indexed child, uint256 amount, uint256 timestamp);
+    event FundsClaimed(uint256 timestamp, address indexed child, uint256 amount);
     event TokenWithdrawed(address indexed token, uint256 amount);
     event CoinWithdrawed(uint256 amount);
     event ConfigChanged(bool active, uint256 ceiling, address indexed child);
@@ -245,7 +245,7 @@ contract PocketFaucet is AccessControlUpgradeable {
         );
         childToConfig[child].balance += amount;
 
-        emit FundsAdded(msg.sender, amount, child, block.timestamp);
+        emit FundsAdded( block.timestamp, msg.sender, amount, child);
     }
 
     function withdrawFundsFromChild(uint256 amount, address child)
@@ -292,9 +292,8 @@ contract PocketFaucet is AccessControlUpgradeable {
 
         uint256 claimable = _calculateClaimable(conf);
         conf.balance -= claimable;
-
         IERC20Upgradeable(baseToken).safeTransfer(msg.sender, claimable);
-        emit FundsClaimed(msg.sender, claimable, block.timestamp);
+        emit FundsClaimed( block.timestamp, msg.sender, claimable);
     }
 
     function changeParentAddr(address oldAddr, address newAddr) public {

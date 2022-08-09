@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { useSmartContract } from '../../contexts/contract';
-import useContractRead from '../../hooks/useContractRead';
+import { useSmartContract } from '../../../contexts/contract';
+import useContractRead from '../../../hooks/useContractRead';
 import AccountStatus from './AccountStatus';
 import RightTab from './RightTab';
 import { UserChild } from '@lib/types/interfaces';
@@ -11,11 +11,7 @@ type ChildCardProps = {
   className?: string;
 };
 
-function ChildCardParent({
-  child,
-  hasLink = false,
-  className,
-}: ChildCardProps) {
+function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
   const { pocketContract } = useSmartContract();
 
   const { data: config } = useContractRead({
@@ -23,6 +19,7 @@ function ChildCardParent({
     functionName: 'childToConfig',
     args: [child.address!],
     enabled: !!child.address,
+    watch: true,
   });
 
   return (
@@ -52,4 +49,4 @@ function ChildCardParent({
   );
 }
 
-export default ChildCardParent;
+export default ChildCard;

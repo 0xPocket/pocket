@@ -19,7 +19,6 @@ function replaceEnvInString(
 }
 
 async function main() {
-  console.log('oooooooooottrtttttt///////////////////////');
   const PocketFaucet = await ethers.getContractFactory('PocketFaucet');
   const pocketFaucet = await upgrades.deployProxy(PocketFaucet, [
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

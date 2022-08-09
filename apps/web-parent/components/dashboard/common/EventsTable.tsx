@@ -7,19 +7,19 @@ import {
 } from '@tanstack/react-table';
 import moment from 'moment';
 import { useState } from 'react';
-import { PageSwitchers } from './PageSwitchers';
+import { PageSwitchers } from 'web/components/dashboard/common/activity/PageSwitchers';
 
-type TopupsTableProps = {
-  logs: topup[];
+type EventTableProps = {
+  logs: Event[];
 };
 
-type topup = {
+type Event = {
   symbol: string;
   value: string;
   timestamp: number;
 };
 
-const columnHelper = createColumnHelper<topup>();
+const columnHelper = createColumnHelper<Event>();
 
 const columns = [
   columnHelper.accessor('timestamp', {
@@ -37,7 +37,7 @@ const columns = [
   }),
 ];
 
-export function TopupsTable({ logs }: TopupsTableProps) {
+function EventsTable({ logs }: EventTableProps) {
   const [data] = useState([...logs]);
 
   const table = useReactTable({
@@ -99,3 +99,5 @@ export function TopupsTable({ logs }: TopupsTableProps) {
     </div>
   );
 }
+
+export default EventsTable;

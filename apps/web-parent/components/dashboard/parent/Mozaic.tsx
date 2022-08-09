@@ -1,9 +1,9 @@
-import ChildCard from '../card/ChildCardParent';
+import ChildCard from '../../card/parent/ChildCard';
 import { useRouter } from 'next/router';
 import { Button } from '@lib/ui';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { trpc } from '../../utils/trpc';
+import { trpc } from '../../../utils/trpc';
 
 type ChildrenAccountPanelProps = {};
 

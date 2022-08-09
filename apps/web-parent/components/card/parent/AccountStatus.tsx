@@ -28,6 +28,7 @@ function AccountStatus({ child }: AccountStatusProps) {
     placement: 'top',
   });
 
+  if (child!.child!.status === 'ACTIVE') return <></>;
   return (
     <div
       className="cursor-pointer"
@@ -43,7 +44,7 @@ function AccountStatus({ child }: AccountStatusProps) {
           {...attributes.popper}
           className="rounded-md bg-primary p-1 text-sm"
         >
-          An email has been sent to {child!.child!.email}
+          An email has been sent to {child!.email}
         </div>
       )}
     </div>

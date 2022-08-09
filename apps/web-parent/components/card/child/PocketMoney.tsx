@@ -6,8 +6,9 @@ type BalanceProps = {
   value: BigNumber | undefined;
 };
 
-function BalanceChild({ value }: BalanceProps) {
+function PocketMoney({ value }: BalanceProps) {
   const { erc20 } = useSmartContract();
+
   return (
     <div>
       <p>In the PiggyBank</p>
@@ -18,4 +19,4 @@ function BalanceChild({ value }: BalanceProps) {
   );
 }
 
-export default BalanceChild;
+export default PocketMoney;

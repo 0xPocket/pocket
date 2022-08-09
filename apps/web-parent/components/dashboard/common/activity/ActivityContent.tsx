@@ -1,26 +1,34 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Tab } from '@headlessui/react';
-import {
-  AssetTransfersResponseWithMetadata,
-  AssetTransfersResultWithMetadata,
-} from '@lib/types/interfaces';
+
 import { useQuery } from 'react-query';
 import {
   Alchemy,
   AssetTransfersCategory,
   getAssetTransfers,
 } from '@alch/alchemy-sdk';
-import { useAlchemy } from '../../../contexts/alchemy';
-import ActivityTabHeaders from './ActivityTabHeader';
-import { TransactionsTable } from './TransactionsTable';
-import { useAccount, useProvider } from 'wagmi';
+import { useAlchemy } from '../../../../contexts/alchemy';
+import { useProvider } from 'wagmi';
 import { formatUnits } from 'ethers/lib/utils';
-import { useSmartContract } from '../../../contexts/contract';
-import { TopupsTable } from './TopupsTable';
+import { useSmartContract } from '../../../../contexts/contract';
+
+import ActivityTabHeaders from './ActivityTabHeader';
+import { TransactionsTable } from 'web/components/dashboard/common/activity/TransactionsTable';
+import {
+  AssetTransfersResponseWithMetadata,
+  AssetTransfersResultWithMetadata,
+} from '@lib/types/interfaces';
+import {
+  FundsAddedEventFilter,
+  FundsClaimedEventFilter,
+} from 'pocket-contract/typechain-types/contracts/PocketFaucet';
+import EventsTable from '../EventsTable';
 
 type ActivityContentProps = {
   childAddress: string;
+  eventFilter: FundsClaimedEventFilter | FundsAddedEventFilter;
+  rightHeader: string;
 };
 
 const staticAssetTransfersParams = {
@@ -33,9 +41,10 @@ const staticAssetTransfersParams = {
     AssetTransfersCategory.ERC1155,
     AssetTransfersCategory.SPECIALNFT,
   ],
+  // order: AssetTransfersOrder.ASCENDING,
 };
 
-type topup = {
+type Event = {
   symbol: string;
   value: string;
   timestamp: number;
@@ -50,19 +59,21 @@ async function fetchTransactions(alchemy: Alchemy, fromAddress: string) {
       ...staticAssetTransfersParams,
       pageKey,
     })) as AssetTransfersResponseWithMetadata;
-    console.log(ret.transfers.length);
     tx = tx.concat(ret.transfers);
     pageKey = ret.pageKey;
   } while (pageKey !== undefined);
   return tx;
 }
 
-function ActivityContentParent({ childAddress }: ActivityContentProps) {
+function ActivityContent({
+  childAddress,
+  eventFilter,
+  rightHeader,
+}: ActivityContentProps) {
   const { alchemy } = useAlchemy();
   const { erc20 } = useSmartContract();
   const provider = useProvider();
   const { pocketContract } = useSmartContract();
-  const { address } = useAccount();
 
   const { isLoading: isTxLoading, data: txList } = useQuery(
     ['child.transactions-content', childAddress],
@@ -78,15 +89,15 @@ function ActivityContentParent({ childAddress }: ActivityContentProps) {
       },
     },
   );
-  const eventFilter = pocketContract.filters[
-    'FundsAdded(address,uint256,address,uint256)'
-  ](address, null, childAddress, null);
+  // const eventFilter = pocketContract.filters[
+  //   'FundsClaimed(address,uint256,uint256)'
+  // ](childAddress, null, null);
 
   const { data: logs, isLoading: isLogLoading } = useQuery(
-    ['child-topups', childAddress],
+    ['child-claims', childAddress],
     async () =>
       await provider.getLogs({
-        fromBlock: 0x1a2848a,
+        fromBlock: 0x1a27777,
         toBlock: 'latest',
         address: pocketContract.address,
         topics: eventFilter.topics,
@@ -96,7 +107,7 @@ function ActivityContentParent({ childAddress }: ActivityContentProps) {
       // enabled: !!child.address,
       staleTime: 10000,
       select: (extractedLogs) => {
-        const parsed = [] as topup[];
+        const parsed = [] as Event[];
         for (const log of extractedLogs) {
           const ev = pocketContract.interface.parseLog({
             topics: log.topics as string[],
@@ -104,11 +115,11 @@ function ActivityContentParent({ childAddress }: ActivityContentProps) {
           });
           parsed.push({
             value: formatUnits(
-              ev.args[1].toString(),
+              ev.args[2].toString(),
               erc20.data?.decimals,
             ).toString(),
             symbol: erc20.data!.symbol,
-            timestamp: ev.args[3].toNumber(),
+            timestamp: ev.args[0].toNumber(),
           });
         }
         return parsed.reverse();
@@ -119,11 +130,10 @@ function ActivityContentParent({ childAddress }: ActivityContentProps) {
   return (
     <div className="space-y-8">
       <h2>Activity</h2>
-
       <Tab.Group>
         <ActivityTabHeaders
           leftHeader="Transactions"
-          rightHeader="Your topups"
+          rightHeader={rightHeader}
         />
         <Tab.Panels>
           <Tab.Panel>
@@ -136,7 +146,7 @@ function ActivityContentParent({ childAddress }: ActivityContentProps) {
 
           <Tab.Panel>
             {!isLogLoading && logs ? (
-              <TopupsTable logs={logs} />
+              <EventsTable logs={logs} />
             ) : (
               <FontAwesomeIcon className="m-3 w-full" icon={faSpinner} spin />
             )}
@@ -147,4 +157,4 @@ function ActivityContentParent({ childAddress }: ActivityContentProps) {
   );
 }
 
-export default ActivityContentParent;
+export default ActivityContent;
