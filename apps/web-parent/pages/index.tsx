@@ -9,6 +9,10 @@ import ClaimDashboard from '../components/dashboard/child/ClaimDashboard';
 export default function Web() {
   const { data } = useSession();
 
+  if (!data) {
+    return null;
+  }
+
   return (
     <MainWrapper>
       <SectionContainer>

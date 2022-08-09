@@ -1,5 +1,4 @@
 import { ethers, upgrades } from 'hardhat';
-import * as constants from '../utils/constants';
 import { readFileSync, writeFileSync } from 'fs';
 
 function replaceEnvInString(
@@ -7,13 +6,20 @@ function replaceEnvInString(
   newEnvContent: string,
   content: string
 ) {
-  const envPositionStart = content.indexOf(envName);
+  let index = 0;
+  while (1) {
+    const tmp = content.indexOf('# ' + envName, index);
+    if (tmp === -1) break;
+    index = tmp + 3;
+  }
+  const envPositionStart = content.indexOf(envName, index);
   const envPositionEnd = content.indexOf('\n', envPositionStart);
   const toReplace = content.substring(envPositionStart, envPositionEnd);
   return content.replace(toReplace, `${envName}=${newEnvContent}`);
 }
 
 async function main() {
+  console.log('oooooooooottrtttttt///////////////////////');
   const PocketFaucet = await ethers.getContractFactory('PocketFaucet');
   const pocketFaucet = await upgrades.deployProxy(PocketFaucet, [
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

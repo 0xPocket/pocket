@@ -15,9 +15,9 @@ function NftContent({ child, fill_nbr = 0 }: NftContentProps) {
 
   const { isLoading, data: content } = useQuery(
     ['child.nft-content', child.id],
-    () => getNftsForOwner(alchemy, child.address),
+    () => getNftsForOwner(alchemy, child.address!),
     {
-      enabled: !!child,
+      enabled: !!child && !!child.address,
       staleTime: 60 * 1000,
       onError: () => toast.error("Could not retrieve user's token"),
     },
@@ -33,11 +33,14 @@ function NftContent({ child, fill_nbr = 0 }: NftContentProps) {
           ))}
         {content &&
           fill_nbr > content.ownedNfts.length &&
-          [...Array(fill_nbr - content.ownedNfts.length)].map(() => (
-            <NftCard />
+          [...Array(fill_nbr - content.ownedNfts.length)].map((_, index) => (
+            <NftCard key={index} />
           ))}
 
-        {isLoading && [...Array(fill_nbr)].map(() => <NftCard isLoading />)}
+        {isLoading &&
+          [...Array(fill_nbr)].map((_, index) => (
+            <NftCard key={index} isLoading />
+          ))}
       </div>
     </div>
   );

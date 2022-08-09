@@ -24,9 +24,9 @@ const fetchUsers = async (address: string) => {
 function TokenContent({ child }: TokenContentProps) {
   const { isLoading, data } = useQuery(
     ['child.token-content', child.id],
-    () => fetchUsers(child.address),
+    () => fetchUsers(child.address!),
     {
-      enabled: !!child,
+      enabled: !!child && !!child.address,
       staleTime: 60 * 1000,
       onError: () => toast.error("Could not retrieve user's token"),
     },
@@ -43,7 +43,7 @@ function TokenContent({ child }: TokenContentProps) {
             <FontAwesomeIcon icon={faSpinner} spin />
           )}
         </div>
-        <div className="col-span-8 flex items-center">
+        <div className="col-span-8 flex items-start">
           {!isLoading && data?.items ? (
             <TokenTable tokenList={data.items} />
           ) : (

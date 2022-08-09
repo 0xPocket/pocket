@@ -1,9 +1,5 @@
-import { OAuthExtension, OAuthProvider } from '@magic-ext/oauth';
-import {
-  InstanceWithExtensions,
-  MagicSDKAdditionalConfiguration,
-  SDKBase,
-} from '@magic-sdk/provider';
+import { OAuthProvider } from '@magic-ext/oauth';
+import { MagicSDKAdditionalConfiguration } from '@magic-sdk/provider';
 import { normalizeChainId } from '@wagmi/core';
 import { ethers, Signer } from 'ethers';
 import { getAddress } from 'ethers/lib/utils';
@@ -92,7 +88,6 @@ export class MagicConnector extends Connector {
         };
       }
 
-      console.log('conenctor !');
       if (!this.userDetails) {
         throw new UserRejectedRequestError('Something went wrong');
       }
@@ -149,6 +144,7 @@ export class MagicConnector extends Connector {
     if (this.provider) {
       return this.provider;
     }
+
     const magic = this.getMagicSDK();
     this.provider = magic.rpcProvider;
     return this.provider;

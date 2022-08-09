@@ -10,8 +10,6 @@ type NftDialogProps = {
 };
 
 function NftDialog({ nft, isOpen, setIsOpem }: NftDialogProps) {
-  console.log(nft);
-
   return (
     <DialogPopupWrapper isOpen={isOpen} setIsOpen={setIsOpem}>
       <div className="max-h-screen max-w-lg space-y-4">

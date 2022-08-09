@@ -34,9 +34,6 @@
       "dependsOn": ["^clean"],
       "cache": false
     },
-    "landing-page#build": {
-      "dependsOn": ["@lib/prisma#deploy"]
-    },
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"]
@@ -47,6 +44,13 @@
         "@lib/prisma#push",
         "pocket-contract#deploy"
       ],
+      "cache": false
+    },
+    "reset": {
+      "cache": false
+    },
+    "dev-testnet": {
+      "dependsOn": ["//#env-check", "@lib/prisma#push"],
       "cache": false
     },
     "start": {

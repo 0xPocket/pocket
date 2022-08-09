@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { assert, expect } from 'chai';
 import { ethers, upgrades } from 'hardhat';
-import { providers, Wallet } from 'ethers';
+import { Wallet } from 'ethers';
 import ParentTester from '../helpers/ParentTester';
 import * as constants from '../utils/constants';
 import { PocketFaucet__factory, PocketFaucet } from '../typechain-types';
@@ -59,3 +59,9 @@ describe('Testing active param change', function () {
     );
   });
 });
+
+// claim
+// changeAddr
+// proxy
+// upgrade contract
+// withdraw from child

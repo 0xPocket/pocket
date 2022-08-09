@@ -17,8 +17,8 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
   const { data: config } = useContractRead({
     contract: pocketContract,
     functionName: 'childToConfig',
-    args: [child.address],
-    watch: true,
+    args: [child.address!],
+    enabled: !!child.address,
   });
 
   return (
@@ -31,14 +31,13 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
             <h1>{child?.name}</h1>
             <AccountStatus child={child} />
           </div>
-          <h3>{child.email}</h3>
         </div>
         {!hasLink ? (
           <Link href={`https://polygonscan.com/address/${child.address}`}>
             <a className="py-3">See on polygonscan</a>
           </Link>
         ) : (
-          <Link href={`/account/${child.id}`}>
+          <Link href={`/account/${child.address}`}>
             <a className="py-3">{`Go to ${child.name}'s profile`}</a>
           </Link>
         )}

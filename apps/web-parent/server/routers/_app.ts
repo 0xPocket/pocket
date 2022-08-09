@@ -5,8 +5,8 @@ import superjson from 'superjson';
 
 import { createRouter } from '../createRouter';
 import { authRouter } from './auth';
+import { emailRouter } from './email';
 import { parentRouter } from './parent';
-import { userRouter } from './user';
 
 /**
  * Create your application's root router
@@ -25,8 +25,8 @@ export const appRouter = createRouter()
    * @link https://trpc.io/docs/error-formatting
    */
   // .formatError(({ shape, error }) => { })
+  .merge('email.', emailRouter)
   .merge('auth.', authRouter)
-  .merge('user.', userRouter)
   .merge('parent.', parentRouter);
 
 export type AppRouter = typeof appRouter;

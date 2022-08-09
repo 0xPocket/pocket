@@ -4,6 +4,7 @@ import { useMagic } from '../contexts/auth';
 import { Tab } from '@headlessui/react';
 import ParentSignin from '../components/auth/ParentSignin';
 import ChildSignin from '../components/auth/ChildSignin';
+import { Fragment } from 'react';
 
 function Connect() {
   const { loading } = useMagic();
@@ -23,8 +24,28 @@ function Connect() {
       <div className="mx-auto flex w-72 flex-col items-center justify-center gap-8">
         <Tab.Group>
           <Tab.List className="flex gap-4">
-            <Tab className="container-classic px-4 py-2">Parent</Tab>
-            <Tab className="container-classic px-4 py-2">Child</Tab>
+            <Tab as={Fragment}>
+              {({ selected }) => (
+                <button
+                  className={`container-classic without-ring px-4 py-2 ${
+                    !selected && 'opacity-40'
+                  }`}
+                >
+                  Parent
+                </button>
+              )}
+            </Tab>
+            <Tab as={Fragment}>
+              {({ selected }) => (
+                <button
+                  className={`container-classic without-ring px-4 py-2 ${
+                    !selected && 'opacity-40'
+                  }`}
+                >
+                  Child
+                </button>
+              )}
+            </Tab>
           </Tab.List>
           <Tab.Panels>
             <Tab.Panel className="mx-auto flex w-72 flex-col items-center justify-center gap-8">

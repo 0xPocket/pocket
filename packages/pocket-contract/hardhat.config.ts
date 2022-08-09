@@ -39,8 +39,16 @@ const config: HardhatUserConfig = {
     polygon: {
       url:
         'https://polygon-mainnet.g.alchemy.com/v2/' +
-        process.env.NEXT_PUBLIC_KEY_ALCHEMY_POLYGON,
+        process.env.NEXT_PUBLIC_KEY_ALCHEMY,
       chainId: 137,
+    },
+    mumbai: {
+      url:
+        'https://polygon-mumbai.g.alchemy.com/v2/' +
+        process.env.NEXT_PUBLIC_KEY_ALCHEMY,
+      chainId: 80001,
+      gasPrice: 40000000000,
+      gas: 3000000,
     },
   },
 

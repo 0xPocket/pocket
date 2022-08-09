@@ -28,6 +28,7 @@ function ChildSettingsForm({
   config,
   returnFn,
 }: ChildSettingsFormProps) {
+  const { erc20, pocketContract } = useSmartContract();
   const {
     register,
     handleSubmit,
@@ -36,25 +37,37 @@ function ChildSettingsForm({
     schema: ChildSettingsSchema,
     defaultValues: {
       periodicity: formatUnits(config?.periodicity!, 0).toString(),
-      ceiling: formatUnits(config?.[2]!, 6).toString(),
+      ceiling: formatUnits(config?.[2]!, erc20.data?.decimals).toString(),
     },
   });
-
-  const { erc20, pocketContract } = useSmartContract();
 
   const { writeAsync: changeConfig } = useContractWrite({
     contract: pocketContract,
     functionName: 'changeConfig',
   });
 
+  const { writeAsync: addChild } = useContractWrite({
+    contract: pocketContract,
+    functionName: 'addChild',
+  });
+
   const onSubmit = async (data: FormValues) => {
-    await changeConfig({
-      args: [
-        parseUnits(data.ceiling, erc20.data?.decimals),
-        data.periodicity,
-        child.address,
-      ],
-    });
+    if (config?.lastClaim.isZero())
+      await addChild({
+        args: [
+          parseUnits(data.ceiling, erc20.data?.decimals),
+          data.periodicity,
+          child.address,
+        ],
+      });
+    else
+      await changeConfig({
+        args: [
+          parseUnits(data.ceiling, erc20.data?.decimals),
+          data.periodicity,
+          child.address,
+        ],
+      });
     returnFn();
   };
 

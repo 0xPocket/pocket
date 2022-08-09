@@ -57,36 +57,64 @@ export const FAMILY_ACCOUNT = {
 };
 
 export const TOKENS = {
-  RINKEBY: '0x47da6c0b7f3fada850898d1e61ae546fc7b603f9',
-  POLYGON: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
+  'eth-rinkeby': '0x47da6c0b7f3fada850898d1e61ae546fc7b603f9',
+  'polygon-mainnet': '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+  'polygon-mumbai': '0xe11a86849d99f524cac3e7a0ec1241828e332c62',
 };
 
 export const WHALES = {
-  RINKEBY: '0xe2e0256d6785d49ec7badcd1d44adbd3f6b0ab58',
-  POLYGON: '0xf977814e90da44bfa03b6295a0616a897441acec',
+  'eth-rinkeby': '0xe2e0256d6785d49ec7badcd1d44adbd3f6b0ab58',
+  'polygon-mainnet': '0xf977814e90da44bfa03b6295a0616a897441acec',
+  'polygon-mumbai': '0xe41c53eb9fce0ac9d204d4f361e28a8f28559d54',
 };
 
 const NETWORK = {
-  RINKEBY: {
+  'eth-rinkeby': {
     url:
-      // 'https://eth-rinkeby.alchemyapi.io/v2/' +
-      'https://rinkeby.infura.io/v3/' +
-      process.env.NEXT_PUBLIC_KEY_INFURA_RINKEBY,
+      'https://eth-rinkeby.alchemyapi.io/v2/' +
+      process.env.NEXT_PUBLIC_KEY_ALCHEMY,
     chainId: 4,
   },
-  POLYGON: {
+  'polygon-mainnet': {
     url:
       'https://polygon-mainnet.g.alchemy.com/v2/' +
-      process.env.NEXT_PUBLIC_KEY_ALCHEMY_POLYGON,
+      process.env.NEXT_PUBLIC_KEY_ALCHEMY,
     chainId: 137,
+  },
+  'polygon-mumbai': {
+    url:
+      'https://polygon-mumbai.g.alchemy.com/v2/' +
+      process.env.NEXT_PUBLIC_KEY_ALCHEMY,
+    chainId: 80001,
   },
 };
 
-const CHOSEN = 'POLYGON';
+export enum Network {
+  // ETH_MAINNET = 'eth-mainnet',
+  // ETH_ROPSTEN = 'eth-ropsten',
+  // ETH_GOERLI = 'eth-goerli',
+  // ETH_KOVAN = 'eth-kovan',
+  ETH_RINKEBY = 'eth-rinkeby',
+  // OPT_MAINNET = 'opt-mainnet',
+  // OPT_KOVAN = 'opt-kovan',
+  // ARB_MAINNET = 'arb-mainnet',
+  // ARB_RINKEBY = 'arb-rinkeby',
+  MATIC_MAINNET = 'polygon-mainnet',
+  MATIC_MUMBAI = 'polygon-mumbai',
+}
+
+export const ERROR_MSG = {
+  'eth-rinkeby': 'balance too low',
+  'polygon-mainnet': 'ERC20: transfer amount exceeds balance',
+  'polygon-mumbai': 'ERC20: transfer amount exceeds balance',
+};
+
+export const CHOSEN = process.env.NEXT_PUBLIC_CHOSEN as Network;
 
 export const CHOSEN_NETWORK = NETWORK[CHOSEN];
 export const CHOSEN_TOKEN = TOKENS[CHOSEN];
 export const CHOSEN_WHALE = WHALES[CHOSEN];
+export const CHOSEN_ERRORMSG = ERROR_MSG[CHOSEN];
 
 export const RDM_ADDRESS = [
   '0xf977814e90da44bfa01b6295a0616a897441acec',
@@ -113,11 +141,36 @@ export const RDM_ADDRESS = [
   '0xf977814e90da44bfa01b6495a0616a897441acec',
 ];
 
-export const RPC_URL = {
-  LOCAL: 'http://localhost:8545',
-};
-
 export const TIME = {
   WEEK: 604800,
   DAY: 86400,
+};
+
+export const DAMIAN_MUSK = {
+  address: '0x1CBd3b2770909D4e10f157cABC84C7264073C9Ec',
+  privateKey:
+    '0x47c99abed3324a2707c28affff1267e45918ec8c3f20b8aa892e8b065d2942dd',
+};
+
+export const XAVIER_MUSK = {
+  address: '0xdF3e18d64BC6A983f673Ab319CCaE4f1a57C7097',
+  privateKey:
+    '0xc526ee95bf44d8fc405a158bb884d9d1238d99f0612e9f33d006bb0789009aaa',
+};
+
+export const LOLA_MUSK = {
+  address: '0xcd3B766CCDd6AE721141F452C550Ca635964ce71',
+  privateKey:
+    '0x8166f546bab6da521a8369cab06c5d2b9e46670292d85c875ee9ec20e84ffb61',
+};
+
+export const ELON_MUSK = {
+  address: '0xBcd4042DE499D14e55001CcbB24a551F3b954096',
+  privateKey:
+    '0xf214f2b2cd398c806f84e317254e0f0b801d0643303237d97a22a48e01628897',
+};
+
+export const CONTRACT_OWNER = {
+  privateKey:
+    '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80',
 };

@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BigNumber } from 'ethers';
 import { formatUnits } from 'ethers/lib/utils';
 import { Dispatch, SetStateAction } from 'react';
+import { useSmartContract } from '../../contexts/contract';
 
 type BalanceProps = {
   value: BigNumber | undefined;
@@ -11,14 +12,14 @@ type BalanceProps = {
 };
 
 function Balance({ value, setSelectedIndex, hideActions }: BalanceProps) {
+  const { erc20 } = useSmartContract();
   return (
     <>
       <div className="flex flex-col items-end">
-        {/* <p>Balance</p> */}
+        <p>Claimable</p>
         <span className="text-4xl">
-          {value ? formatUnits(value, 6).toString() : '0'} $
+          {value ? formatUnits(value, erc20.data?.decimals).toString() : '0'} $
         </span>
-        <p>usdc</p>
       </div>
       {!hideActions && (
         <div className="flex space-x-4">

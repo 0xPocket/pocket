@@ -36,12 +36,12 @@ export const SmartContractProvider = ({
   const { isConnected } = useAccount();
 
   const { data: erc20Data } = useToken({
-    address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+    address: process.env.NEXT_PUBLIC_CHOSEN_ERC20,
     enabled: isConnected,
   });
 
   const erc20Contract = useContract<IERC20>({
-    addressOrName: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+    addressOrName: process.env.NEXT_PUBLIC_CHOSEN_ERC20!,
     contractInterface: erc20ABI,
   });
 

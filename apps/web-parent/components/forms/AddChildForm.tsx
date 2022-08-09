@@ -26,9 +26,9 @@ function AddChildForm({}: AddChildFormProps) {
     schema: AddChildSchema,
   });
 
-  const addChild = trpc.useMutation(['parent.children'], {
+  const addChild = trpc.useMutation(['parent.createChild'], {
     onSuccess: () => {
-      queryClient.invalidateQueries(['parent.children']);
+      queryClient.invalidateQueries('parent.children');
       router.push('/');
       toast.success(`Account created !`);
     },
@@ -62,6 +62,7 @@ function AddChildForm({}: AddChildFormProps) {
       <input
         type="submit"
         value="Submit"
+        disabled={addChild.isLoading}
         className="rounded-md bg-dark  px-4 py-3 text-bright"
       />
     </form>

@@ -91,24 +91,21 @@ class ParentTester extends ParentContract {
     token: string,
     whale: string | null
   ) => {
-    const amountWithDeci = await stringToDecimalsVersion(
-      token,
-      amount.toString()
-    );
     if (whale != null) {
-      await setErc20Balance(
-        token,
-        this.signer,
-        amountWithDeci.toString(),
-        whale
-      );
+      await setErc20Balance(token, this.signer, amount.toString(), whale);
+
       await setAllowance(
         token,
         this.signer,
         this.contract.address,
-        amountWithDeci.toString()
+        amount.toString()
       );
     }
+
+    const amountWithDeci = await stringToDecimalsVersion(
+      token,
+      amount.toString()
+    );
     await this.contract
       .connect(this.signer)
       .addChildAndFunds(ceiling, periodicity, childAddr, amountWithDeci);
@@ -128,15 +125,13 @@ class ParentTester extends ParentContract {
     token: string,
     whale: string
   ) => {
-    const amountWithDeci = await stringToDecimalsVersion(token, amount);
     await setErc20Balance(token, this.signer, amount, whale);
-    await setAllowance(
-      token,
-      this.signer,
-      this.contract.address,
-      amountWithDeci.toString()
+    await setAllowance(token, this.signer, this.contract.address, amount);
+
+    await this.addFunds(
+      await stringToDecimalsVersion(token, amount),
+      childAddress
     );
-    await this.addFunds(amountWithDeci.toString(), childAddress);
   };
 
   calculateClaimable = async (childAddr: string) => {

@@ -10,6 +10,7 @@ const ERC20Balance: React.FC = () => {
     addressOrName: address,
     token: erc20.data?.address,
     formatUnits: erc20.data?.decimals,
+    enabled: !!erc20.data,
     watch: true,
   });
 

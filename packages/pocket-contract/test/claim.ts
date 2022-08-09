@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { assert, expect } from 'chai';
 import { ethers, upgrades } from 'hardhat';
-import { providers, Wallet } from 'ethers';
+import { Wallet } from 'ethers';
 import ParentTester from '../helpers/ParentTester';
 import * as constants from '../utils/constants';
 import { PocketFaucet__factory, PocketFaucet } from '../typechain-types';
@@ -14,10 +14,8 @@ describe('Testing to claim funds as child', function () {
   let child1: ChildContract;
   let parent1: ParentTester;
   let PocketFaucet_factory: PocketFaucet__factory, pocketFaucet: PocketFaucet;
-  let provider: providers.JsonRpcProvider;
   let parent1Wallet: Wallet;
   const tokenAddr = constants.CHOSEN_TOKEN;
-  const URL = constants.RPC_URL.LOCAL;
 
   before(async function () {
     PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');

@@ -29,8 +29,8 @@ const ClaimDashboard: React.FC = () => {
     }
     const lastClaim = data[3];
     const periodicity = data[4];
-    return moment(lastClaim.toNumber() * 1000).add(
-      periodicity.toNumber(),
+    return moment(BigNumber.from(lastClaim).mul(1000).toNumber()).add(
+      BigNumber.from(periodicity).toNumber(),
       'seconds',
     );
   }, [data]);
@@ -41,6 +41,7 @@ const ClaimDashboard: React.FC = () => {
   }, [now, nextClaim]);
 
   return (
+
     <div className="flex space-x-32">
       <div>
         {data && (
@@ -91,6 +92,7 @@ const ClaimDashboard: React.FC = () => {
         <ERC20Balance />
       </div>
       <Swapper />
+
     </div>
   );
 };
