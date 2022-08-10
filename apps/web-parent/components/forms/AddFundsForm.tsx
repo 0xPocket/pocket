@@ -4,12 +4,14 @@ import { UserChild } from '@lib/types/interfaces';
 import { FormErrorMessage } from '@lib/ui';
 import { ethers } from 'ethers';
 import { parseUnits, Result } from 'ethers/lib/utils';
-import { PocketFaucet } from 'pocket-contract/typechain-types';
+import { IERC20, PocketFaucet } from 'pocket-contract/typechain-types';
 import { useForm } from 'react-hook-form';
-import { useAccount } from 'wagmi';
+import { useAccount, useContractWrite, usePrepareContractWrite } from 'wagmi';
 import { useSmartContract } from '../../contexts/contract';
 import { ContractMethodReturn } from '../../hooks/useContractRead';
-import useContractWrite from '../../hooks/useContractWrite';
+import { toast } from 'react-toastify';
+
+// import useContractWrite from '../../hooks/useContractWrite';
 
 type AddFundsFormProps = {
   child: UserChild;
@@ -21,6 +23,37 @@ type AddFundsFormProps = {
 type FormValues = {
   topup: number;
 };
+
+function stdApprove(contract: IERC20) {
+  return {
+    addressOrName: contract.address,
+    contractInterface: contract.interface,
+    functionName: 'approve',
+    args: [
+      process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+      ethers.constants.MaxUint256,
+    ],
+  };
+}
+const stdConfig = ['5000000000000000000', '604800'];
+
+function toastSuccess(action: string) {
+  toast.success(`Your ${action} is a success !`, {
+    autoClose: 4000,
+  });
+}
+
+function toastError(description: string) {
+  toast.error(description, {
+    autoClose: 4000,
+  });
+}
+
+function toastOngoing(action: string) {
+  toast.info(`Your ${action} is ongoing !`, {
+    autoClose: 4000,
+  });
+}
 
 function AddFundsForm({
   allowance,
@@ -36,57 +69,76 @@ function AddFundsForm({
   const { address } = useAccount();
   const { pocketContract, erc20 } = useSmartContract();
 
-  const { writeAsync: approve } = useContractWrite({
-    contract: erc20.contract,
-    functionName: 'approve',
+  const { config: configApprove } = usePrepareContractWrite({
+    ...stdApprove(erc20.contract),
+  });
+  const { config: addChildAndFundsConfig } = usePrepareContractWrite({
+    addressOrName: pocketContract.address,
+    contractInterface: pocketContract.interface,
+    functionName: 'addChildAndFunds',
+    args: [...stdConfig, child.address, 0],
+    // overrides: { gasLimit: 3000000 },
+  });
+  const { config: addFundsConfig } = usePrepareContractWrite({
+    addressOrName: pocketContract.address,
+    contractInterface: pocketContract.interface,
+    functionName: 'addFunds',
+    args: [0, child.address],
+
+    // overrides: { gasLimit: 3000000 },
   });
 
-  const { writeAsync: addChildAndFunds } = useContractWrite({
-    contract: pocketContract,
-    functionName: 'addChildAndFunds',
+  const { writeAsync: approve } = useContractWrite({
+    ...configApprove,
+    onSuccess() {
+      toastSuccess('approve');
+    },
+    onError() {
+      toastSuccess('An error occured while doing your approve transaction');
+    },
   });
+
+  const { writeAsync: addChildAndFunds } = useContractWrite(
+    addChildAndFundsConfig,
+  );
 
   const { writeAsync: addFunds } = useContractWrite({
-    contract: pocketContract,
-    functionName: 'addFunds',
+    ...addFundsConfig,
+    onError: () => {
+      toastError('An error occured while doing your deposit transaction');
+    },
+    onSuccess() {
+      toastSuccess('funds deposit');
+    },
   });
 
-  console.log(allowance);
   const onSubmit = async (data: FormValues) => {
-    if (!address) {
-      return;
-    }
-
+    if (!address || !data || !data.topup) return;
     if (
-      allowance?.lt(parseUnits(data.topup.toString(), erc20.data?.decimals))
+      allowance?.lt(parseUnits(data.topup.toString(), erc20.data?.decimals)) &&
+      approve
     ) {
-      await approve({
-        args: [
-          process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
-          parseUnits(data.topup.toString(), erc20.data?.decimals),
-        ],
-      });
+      await approve();
+      toastOngoing('approve');
     }
 
-    if (config?.lastClaim.isZero())
+    if (config?.lastClaim.isZero() && addChildAndFunds) {
       await addChildAndFunds({
-        args: [
-          '5000000000000000000',
-          '604800',
+        recklesslySetUnpreparedArgs: [
+          ...stdConfig,
           child.address,
           ethers.utils.parseUnits(data.topup.toString(), erc20.data?.decimals),
         ],
-        overrides: { gasLimit: 3000000 },
       });
-    else
+    } else if (addFunds) {
       await addFunds({
-        args: [
+        recklesslySetUnpreparedArgs: [
           ethers.utils.parseUnits(data.topup.toString(), erc20.data?.decimals),
           child.address,
         ],
-        overrides: { gasLimit: 3000000 },
       });
-
+    } else return toastError('An error occured, please try again');
+    toastOngoing('deposit');
     returnFn();
   };
 

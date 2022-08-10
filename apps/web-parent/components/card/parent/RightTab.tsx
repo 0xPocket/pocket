@@ -1,7 +1,7 @@
 import { Tab } from '@headlessui/react';
 import { UserChild } from '@lib/types/interfaces';
 import { PocketFaucet } from 'pocket-contract/typechain-types';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { useSmartContract } from '../../../contexts/contract';
 import useContractRead, {
