@@ -1,11 +1,14 @@
-import { setAllowance, setErc20Balance } from '../utils/ERC20';
+import { getDecimals, setAllowance, setErc20Balance } from '../utils/ERC20';
 import * as constants from '../utils/constants';
 import { parseUnits } from 'ethers/lib/utils';
 import { ethers } from 'hardhat';
 import { PocketFaucet__factory } from '../typechain-types';
 
 async function main() {
-  const tokenDecimals = 6;
+  const tokenDecimals = await getDecimals(
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    process.env.NEXT_PUBLIC_CHOSEN_ERC20!
+  );
   const parent = await ethers.getSigner(constants.ELON_MUSK.address);
   const faucet = PocketFaucet__factory.connect(
     process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string,

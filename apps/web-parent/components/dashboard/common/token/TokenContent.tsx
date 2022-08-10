@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { CovalentReturn, UserChild } from '@lib/types/interfaces';
+import { CovalentReturn } from '@lib/types/interfaces';
 import axios from 'axios';
 import { useQuery } from 'react-query';
 import { toast } from 'react-toastify';
@@ -8,7 +8,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PieChartComp from './PieChart';
 
 type TokenContentProps = {
-  child: UserChild;
+  childAddress: string;
 };
 
 const fetchUsers = async (address: string) => {
@@ -21,12 +21,12 @@ const fetchUsers = async (address: string) => {
   return res.then((res) => res.data.data);
 };
 
-function TokenContent({ child }: TokenContentProps) {
+function TokenContent({ childAddress }: TokenContentProps) {
   const { isLoading, data } = useQuery(
-    ['child.token-content', child.id],
-    () => fetchUsers(child.address!),
+    ['child.token-content', childAddress],
+    () => fetchUsers(childAddress),
     {
-      enabled: !!child && !!child.address,
+      // enabled: !!child && !!child.address,
       staleTime: 60 * 1000,
       onError: () => toast.error("Could not retrieve user's token"),
     },

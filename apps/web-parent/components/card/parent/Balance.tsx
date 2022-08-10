@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BigNumber } from 'ethers';
 import { formatUnits } from 'ethers/lib/utils';
 import { Dispatch, SetStateAction } from 'react';
-import { useSmartContract } from '../../contexts/contract';
+import { useSmartContract } from '../../../contexts/contract';
 
 type BalanceProps = {
   value: BigNumber | undefined;
@@ -24,13 +24,19 @@ function Balance({ value, setSelectedIndex, hideActions }: BalanceProps) {
       {!hideActions && (
         <div className="flex space-x-4">
           <button onClick={() => setSelectedIndex(2)} className="text-primary">
-            settings
+            Settings
           </button>
           <button onClick={() => setSelectedIndex(1)} className="success-btn">
             <FontAwesomeIcon icon={faCircleDollarToSlot} className="mr-2" />
-            add funds
+            Add funds
           </button>
         </div>
+      )}
+      {hideActions && (
+        <button onClick={() => setSelectedIndex(1)} className="success-btn">
+          <FontAwesomeIcon icon={faCircleDollarToSlot} className="mr-2" />
+          Claim
+        </button>
       )}
     </>
   );

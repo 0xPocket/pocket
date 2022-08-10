@@ -1,11 +1,10 @@
 import React from 'react';
 import { useAccount, useBalance } from 'wagmi';
-import { useSmartContract } from '../../../contexts/contract';
+import { useSmartContract } from '../../contexts/contract';
 
-const ERC20Balance: React.FC = () => {
+const BaseTokenBalance: React.FC = () => {
   const { address } = useAccount();
   const { erc20 } = useSmartContract();
-
   const { data } = useBalance({
     addressOrName: address,
     token: erc20.data?.address,
@@ -20,9 +19,10 @@ const ERC20Balance: React.FC = () => {
 
   return (
     <div>
-      USDC Balance : {data.formatted} {erc20.data?.symbol}
+      <p>Balance</p>
+      <span className="text-4xl"> {data.formatted} $</span>
     </div>
   );
 };
 
-export default ERC20Balance;
+export default BaseTokenBalance;

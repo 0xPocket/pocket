@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { useSmartContract } from '../../contexts/contract';
-import useContractRead from '../../hooks/useContractRead';
+import { useSmartContract } from '../../../contexts/contract';
+import useContractRead from '../../../hooks/useContractRead';
 import AccountStatus from './AccountStatus';
 import RightTab from './RightTab';
 import { UserChild } from '@lib/types/interfaces';
@@ -19,6 +19,7 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
     functionName: 'childToConfig',
     args: [child.address!],
     enabled: !!child.address,
+    watch: true,
   });
 
   return (

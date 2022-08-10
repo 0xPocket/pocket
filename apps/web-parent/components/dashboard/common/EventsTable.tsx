@@ -5,36 +5,39 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { UserChild } from '@lib/types/interfaces';
+import moment from 'moment';
 import { useState } from 'react';
-import { PageSwitchers } from './PageSwitchers';
+import { PageSwitchers } from 'web/components/dashboard/common/activity/PageSwitchers';
 
-type TopupsTableProps = {
-  child: UserChild;
-  logs: topup[];
+type EventTableProps = {
+  logs: Event[];
 };
 
-type topup = {
+type Event = {
   symbol: string;
   value: string;
   timestamp: number;
 };
 
-const columnHelper = createColumnHelper<topup>();
+const columnHelper = createColumnHelper<Event>();
 
 const columns = [
   columnHelper.accessor('timestamp', {
-    cell: (info) => <span className="ml-1">{info.getValue()}</span>,
     header: () => <span className="ml-1">Date</span>,
+    cell: (info) => (
+      <span className="ml-1">{moment(info.getValue()).format('D/MM')}</span>
+    ),
     id: 'Date',
   }),
 
   columnHelper.accessor((row) => `${row.value} ${row.symbol}`, {
+    cell: (info) => <span className="ml-1">{info.getValue()}</span>,
+
     id: 'Amount',
   }),
 ];
 
-export function TopupsTable({ logs }: TopupsTableProps) {
+function EventsTable({ logs }: EventTableProps) {
   const [data] = useState([...logs]);
 
   const table = useReactTable({
@@ -81,12 +84,14 @@ export function TopupsTable({ logs }: TopupsTableProps) {
               ))}
             </tbody>
           </table>
-          <PageSwitchers
-            previousPage={table.previousPage}
-            getCanPreviousPage={table.getCanPreviousPage}
-            nextPage={table.nextPage}
-            getCanNextPage={table.getCanNextPage}
-          />
+          {logs.length > 10 && (
+            <PageSwitchers
+              previousPage={table.previousPage}
+              getCanPreviousPage={table.getCanPreviousPage}
+              nextPage={table.nextPage}
+              getCanNextPage={table.getCanNextPage}
+            />
+          )}
         </>
       ) : (
         <p className="w-full text-center">{'No top-ups for now.'}</p>
@@ -94,3 +99,5 @@ export function TopupsTable({ logs }: TopupsTableProps) {
     </div>
   );
 }
+
+export default EventsTable;
