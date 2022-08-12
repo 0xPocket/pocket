@@ -1,7 +1,7 @@
 import { Tab } from '@headlessui/react';
 import { UserChild } from '@lib/types/interfaces';
 import { PocketFaucet } from 'pocket-contract/typechain-types';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useAccount } from 'wagmi';
 import { useSmartContract } from '../../../contexts/contract';
 import useContractRead, {
@@ -30,6 +30,13 @@ function RightTab({ child, config, hideActions = false }: RightTabProps) {
     enabled: !!address,
   });
 
+  const { data: balance } = useContractRead({
+    contract: erc20.contract,
+    functionName: 'balanceOf',
+    args: [address!],
+    enabled: !!address,
+  });
+
   return (
     <Tab.Group
       defaultIndex={1}
@@ -54,6 +61,7 @@ function RightTab({ child, config, hideActions = false }: RightTabProps) {
             child={child}
             config={config}
             returnFn={() => setSelectedIndex(0)}
+            balance={balance}
           />
           <ChildSettingsForm
             child={child}

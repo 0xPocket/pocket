@@ -2,7 +2,7 @@ import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { UserChild } from '@lib/types/interfaces';
 import { FormErrorMessage } from '@lib/ui';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { parseUnits, Result } from 'ethers/lib/utils';
 import { IERC20, PocketFaucet } from 'pocket-contract/typechain-types';
 import { useForm } from 'react-hook-form';
@@ -11,13 +11,12 @@ import { useSmartContract } from '../../contexts/contract';
 import { ContractMethodReturn } from '../../hooks/useContractRead';
 import { toast } from 'react-toastify';
 
-// import useContractWrite from '../../hooks/useContractWrite';
-
 type AddFundsFormProps = {
   child: UserChild;
   returnFn: () => void;
   allowance: Result | undefined;
   config: ContractMethodReturn<PocketFaucet, 'childToConfig'> | undefined;
+  balance: (Result & [BigNumber]) | undefined;
 };
 
 type FormValues = {
@@ -37,29 +36,12 @@ function stdApprove(contract: IERC20) {
 }
 const stdConfig = ['5000000000000000000', '604800'];
 
-function toastSuccess(action: string) {
-  toast.success(`Your ${action} is a success !`, {
-    autoClose: 4000,
-  });
-}
-
-function toastError(description: string) {
-  toast.error(description, {
-    autoClose: 4000,
-  });
-}
-
-function toastOngoing(action: string) {
-  toast.info(`Your ${action} is ongoing !`, {
-    autoClose: 4000,
-  });
-}
-
 function AddFundsForm({
   allowance,
   child,
   config,
   returnFn,
+  balance,
 }: AddFundsFormProps) {
   const {
     register,
@@ -77,24 +59,24 @@ function AddFundsForm({
     contractInterface: pocketContract.interface,
     functionName: 'addChildAndFunds',
     args: [...stdConfig, child.address, 0],
-    // overrides: { gasLimit: 3000000 },
   });
   const { config: addFundsConfig } = usePrepareContractWrite({
     addressOrName: pocketContract.address,
     contractInterface: pocketContract.interface,
     functionName: 'addFunds',
     args: [0, child.address],
-
-    // overrides: { gasLimit: 3000000 },
   });
 
   const { writeAsync: approve } = useContractWrite({
     ...configApprove,
     onSuccess() {
-      toastSuccess('approve');
+      toast.success(
+        `First transaction validated, please validate the second one`,
+      );
     },
-    onError() {
-      toastSuccess('An error occured while doing your approve transaction');
+    onError(e) {
+      console.log(e.message);
+      toast.error(`An error occured while doing your approve transaction`);
     },
   });
 
@@ -104,41 +86,35 @@ function AddFundsForm({
 
   const { writeAsync: addFunds } = useContractWrite({
     ...addFundsConfig,
-    onError: () => {
-      toastError('An error occured while doing your deposit transaction');
+    onError(e) {
+      toast.error(`An error occured while doing your deposit: ${e.message}`);
     },
     onSuccess() {
-      toastSuccess('funds deposit');
+      toast.success(`Deposit is a success`);
     },
   });
 
   const onSubmit = async (data: FormValues) => {
-    if (!address || !data || !data.topup) return;
-    if (
-      allowance?.lt(parseUnits(data.topup.toString(), erc20.data?.decimals)) &&
-      approve
-    ) {
-      await approve();
-      toastOngoing('approve');
+    const amount = parseUnits(data.topup.toString(), erc20.data?.decimals);
+    if (!address || !data?.topup) return;
+    if (balance?.lt(amount))
+      return toast.error("You don't have enough usdc...");
+    if (allowance?.lt(amount) && approve) {
+      const ret = await approve();
+      toast.info(`Network is validating your transaction`);
+      await ret.wait();
     }
 
     if (config?.lastClaim.isZero() && addChildAndFunds) {
       await addChildAndFunds({
-        recklesslySetUnpreparedArgs: [
-          ...stdConfig,
-          child.address,
-          ethers.utils.parseUnits(data.topup.toString(), erc20.data?.decimals),
-        ],
+        recklesslySetUnpreparedArgs: [...stdConfig, child.address, amount],
       });
     } else if (addFunds) {
       await addFunds({
-        recklesslySetUnpreparedArgs: [
-          ethers.utils.parseUnits(data.topup.toString(), erc20.data?.decimals),
-          child.address,
-        ],
+        recklesslySetUnpreparedArgs: [amount, child.address],
       });
-    } else return toastError('An error occured, please try again');
-    toastOngoing('deposit');
+    } else return toast.error(`An error occured, please try again`);
+    toast.info(`We are waiting for the network to validate your transfer`);
     returnFn();
   };
 
