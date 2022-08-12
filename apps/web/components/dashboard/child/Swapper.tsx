@@ -34,7 +34,33 @@ const fetchWalletContent = async (address: string) => {
   return res.then((res) => res.data.data);
 };
 
-const Swapper: React.FC = () => {
+const usdc: CovalentItem = {
+  balance: 0,
+  balance_24h: '0',
+  contract_address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+  contract_decimals: 6,
+  contract_name: 'USD Coin (PoS)',
+  contract_ticker_symbol: 'USDC',
+  last_transferred_at: '2022-08-03T10:48:32Z',
+  logo_url:
+    'https://logos.covalenthq.com/tokens/1/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png',
+  nft_data: [],
+  quote: 0,
+  quote_24h: 0,
+  quote_rate: 0.9997549,
+  quote_rate_24h: 1.0002348,
+  supports_erc: ['erc20'],
+  type: 'cryptocurrency',
+};
+
+const oneInchContract = '0x1111111254fb6c44bAC0beD2854e76F90643097d';
+const maticAddress = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
+
+type SwapperProps = {
+  className?: string;
+};
+
+const Swapper: React.FC = ({ className }: SwapperProps) => {
   const [amountToSwap, setAmountToSwap] = useState('');
   const [fromToken, setFromToken] = useState<CovalentItem>();
   const [toToken, setToToken] = useState<tokenId>();
@@ -129,7 +155,7 @@ const Swapper: React.FC = () => {
             toToken.name
           );
       }
-    } else return 'choose a token and an amount to swap';
+    } else return '';
   }, [fromToken, toToken, amountToSwap, balanceMatic, balanceToken, quote]);
 
   useEffect(() => {
@@ -167,7 +193,7 @@ const Swapper: React.FC = () => {
     },
   );
 
-  const { isLoading, data: tokenList } = useQuery(
+  const { isLoading: isLoading1inch, data: tokenList } = useQuery(
     ['swapper.token-list'],
     () => fetch1InchTokens(chain?.id!),
     {
@@ -183,77 +209,91 @@ const Swapper: React.FC = () => {
   );
 
   return (
-    <div className="container-classic flex flex-col rounded-lg">
-      <p className="mx-auto my-4">Swapper</p>
-      <form className="flex flex-col space-y-4 px-4">
-        <div className="container-classic flex justify-between gap-2 rounded-md p-3">
-          {!isLoadingTokenChild && (
-            <Select
-              className="basis-2/5 text-dark"
-              isSearchable={true}
-              options={tokenInWallet}
+    <div className="space-y-4">
+      <h2>Swapper</h2>
+      <div
+        className={`${className} container-classic h-4/5 min-h-[260px] rounded-lg p-8`}
+      >
+        <form className="flex flex-col space-y-4 px-4">
+          <h3 className="mx-auto">What swap do you want to do ?</h3>
+          <div className="container-classic flex justify-between gap-2 rounded-md p-3">
+            <p className="my-auto">From</p>
+            {!isLoadingTokenChild && (
+              <Select
+                className="my-auto basis-2/5 text-dark"
+                isSearchable={true}
+                options={tokenInWallet}
+                onChange={(event) => {
+                  setAmountToSwap('1');
+                  if (
+                    event?.value.contract_address ===
+                    '0x0000000000000000000000000000000000001010'
+                  )
+                    event.value.contract_address = maticAddress;
+                  setFromToken(event?.value!);
+                }}
+              />
+            )}
+            <input
+              type="number"
+              placeholder="Amount"
+              value={amountToSwap}
               onChange={(event) => {
-                setAmountToSwap('1');
-                if (
-                  event?.value.contract_address ===
-                  '0x0000000000000000000000000000000000001010'
-                )
-                  event.value.contract_address = maticAddress;
-                setFromToken(event?.value!);
+                const point = event.target.value.indexOf('.');
+                if (point === -1) setAmountToSwap(event.target.value);
+                else
+                  setAmountToSwap(
+                    event.target.value.slice(
+                      0,
+                      point + fromToken?.contract_decimals! + 1,
+                    ),
+                  );
               }}
+              className="basis-2/5 rounded-md text-right text-dark"
             />
-          )}
-          <Button
-            className="basis-1/5"
-            action={() => {
-              let balance;
-              fromToken?.contract_address === maticAddress
-                ? (balance = balanceMatic)
-                : (balance = balanceToken);
-              setAmountToSwap(balance?.formatted!);
-            }}
-          >
-            MAX
-          </Button>
-          <input
-            type="number"
-            placeholder="Amount"
-            value={amountToSwap}
-            onChange={(event) => {
-              const point = event.target.value.indexOf('.');
-              if (point === -1) setAmountToSwap(event.target.value);
-              else
-                setAmountToSwap(
-                  event.target.value.slice(
-                    0,
-                    point + fromToken?.contract_decimals! + 1,
-                  ),
-                );
-            }}
-            className="basis-2/5 rounded-md text-right text-dark"
-          />
-        </div>
-        <div className="container-classic flex gap-2 rounded-md p-3">
-          {!isLoading && (
-            <Select
-              className="basis-1/2 text-dark"
-              isSearchable={true}
-              options={tokenList}
-              onChange={(event) => {
-                setToToken(event?.value);
+
+            <Button
+              light
+              className="text-s pl-0 pb-0"
+              action={() => {
+                let balance;
+                fromToken?.contract_address === maticAddress
+                  ? (balance = balanceMatic)
+                  : (balance = balanceToken);
+                if (fromToken?.contract_address === undefined)
+                  balance!.formatted = '0';
+                setAmountToSwap(balance?.formatted!);
               }}
-            />
-          )}
-          {quote ? (
-            <p className="basis-1/2">{messageToDisplay}</p>
-          ) : (
-            <FontAwesomeIcon icon={faSpinner} spin />
-          )}
-        </div>
-      </form>
-      <Button className="m-4 mt-auto" action={swap}>
-        SWAP
-      </Button>
+            >
+              Max
+            </Button>
+          </div>
+          <div className="container-classic flex gap-2 rounded-md p-3">
+            <p className="my-auto">To</p>
+
+            {!isLoading1inch ? (
+              <Select
+                className="basis-1/2 text-dark"
+                isSearchable={true}
+                options={tokenList}
+                onChange={(event) => {
+                  setToToken(event?.value);
+                }}
+              />
+            ) : (
+              <p>Loading...</p>
+            )}
+            {quote ? (
+              <p className="basis-1/2">{messageToDisplay}</p>
+            ) : (
+              <FontAwesomeIcon icon={faSpinner} spin />
+            )}
+          </div>
+        </form>
+        <Button className="mx-auto mt-4" action={swap}>
+          SWAP
+        </Button>
+      </div>
     </div>
   );
 };
@@ -261,24 +301,3 @@ const Swapper: React.FC = () => {
 export default Swapper;
 
 // TODO : take off, only usefull for testing
-const usdc: CovalentItem = {
-  balance: 0,
-  balance_24h: '0',
-  contract_address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
-  contract_decimals: 6,
-  contract_name: 'USD Coin (PoS)',
-  contract_ticker_symbol: 'USDC',
-  last_transferred_at: '2022-08-03T10:48:32Z',
-  logo_url:
-    'https://logos.covalenthq.com/tokens/1/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png',
-  nft_data: [],
-  quote: 0,
-  quote_24h: 0,
-  quote_rate: 0.9997549,
-  quote_rate_24h: 1.0002348,
-  supports_erc: ['erc20'],
-  type: 'cryptocurrency',
-};
-
-const oneInchContract = '0x1111111254fb6c44bAC0beD2854e76F90643097d';
-const maticAddress = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';

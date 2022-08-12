@@ -5,8 +5,9 @@ import NftContent from '../common/nft/NftContent';
 import TokenContent from '../common/token/TokenContent';
 import ActivityContent from '../common/activity/ActivityContent';
 import ChildCard from '../../card/child/ChildCard';
+import Swapper from './Swapper';
 
-const ClaimDashboard: React.FC = () => {
+const ChildDashboard: React.FC = () => {
   const { address } = useAccount();
   const { pocketContract } = useSmartContract();
 
@@ -18,7 +19,8 @@ const ClaimDashboard: React.FC = () => {
     <div className="space-y-20">
       <div className="grid grid-cols-2 gap-8">
         <ChildCard childAddress={address} className="col-span-1" />
-        <ChildCard childAddress={address} className="col-span-1" />
+        <Swapper />
+        {/* <ChildCard childAddress={address} className="col-span-1" /> */}
       </div>
       <div className="grid grid-cols-2 gap-8">
         <TokenContent childAddress={address!} />
@@ -35,4 +37,4 @@ const ClaimDashboard: React.FC = () => {
   );
 };
 
-export default ClaimDashboard;
+export default ChildDashboard;
