@@ -5,9 +5,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { trpc } from '../../../utils/trpc';
 
-type ChildrenAccountPanelProps = {};
+type ChildrenMozaicProps = {};
 
-function ChildrenAccountPanel({}: ChildrenAccountPanelProps) {
+function ChildrenMozaic({}: ChildrenMozaicProps) {
   const router = useRouter();
 
   const { isLoading, data } = trpc.useQuery(['parent.children']);
@@ -37,4 +37,4 @@ function ChildrenAccountPanel({}: ChildrenAccountPanelProps) {
   );
 }
 
-export default ChildrenAccountPanel;
+export default ChildrenMozaic;
