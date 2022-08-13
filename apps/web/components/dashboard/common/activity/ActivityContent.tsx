@@ -14,7 +14,6 @@ import { formatUnits } from 'ethers/lib/utils';
 import { useSmartContract } from '../../../../contexts/contract';
 
 import ActivityTabHeaders from './ActivityTabHeader';
-import { TransactionsTable } from 'web/components/dashboard/common/activity/TransactionsTable';
 import {
   AssetTransfersResponseWithMetadata,
   AssetTransfersResultWithMetadata,
@@ -24,6 +23,7 @@ import {
   FundsClaimedEventFilter,
 } from 'pocket-contract/typechain-types/contracts/PocketFaucet';
 import EventsTable from '../EventsTable';
+import { TransactionsTable } from './TransactionsTable';
 
 type ActivityContentProps = {
   childAddress: string;

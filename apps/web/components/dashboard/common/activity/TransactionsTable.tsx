@@ -9,7 +9,7 @@ import { AssetTransfersResultWithMetadata } from '@lib/types/interfaces';
 import { AssetTransfersCategory } from '@alch/alchemy-sdk';
 import moment from 'moment';
 import { useState } from 'react';
-import { PageSwitchers } from 'web/components/dashboard/common/activity/PageSwitchers';
+import { PageSwitchers } from './PageSwitchers';
 
 type TransactionsTableProps = {
   transactionsList: AssetTransfersResultWithMetadata[];

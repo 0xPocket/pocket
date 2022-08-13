@@ -16,7 +16,7 @@ function OnBoardingStepper({ token, email }: OnBoardingStepperProps) {
   const { isConnected, address } = useAccount();
   const { disconnectAsync } = useDisconnect();
 
-  const mutation = trpc.useMutation(['auth.verifyChild']);
+  const mutation = trpc.useMutation(['email.verifyChild']);
 
   useEffect(() => {
     if (isConnected) {
