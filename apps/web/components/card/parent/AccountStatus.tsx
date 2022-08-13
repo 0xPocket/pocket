@@ -28,7 +28,7 @@ function AccountStatus({ child }: AccountStatusProps) {
     placement: 'top',
   });
 
-  if (child!.child!.status === 'ACTIVE') return <></>;
+  if (child!.child!.status === 'ACTIVE') return null;
   return (
     <div
       className="cursor-pointer"
