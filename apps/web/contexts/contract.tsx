@@ -1,7 +1,7 @@
 import { createContext, useContext, useMemo } from 'react';
 import PocketFaucetJson from 'pocket-contract/artifacts/contracts/PocketFaucet.sol/PocketFaucet.json';
 import { erc20ABI, useAccount, useContract, useToken } from 'wagmi';
-import { IERC20, PocketFaucet } from 'pocket-contract/typechain-types';
+import type { IERC20, PocketFaucet } from 'pocket-contract/typechain-types';
 
 interface SmartContractProviderProps {
   children: React.ReactNode;

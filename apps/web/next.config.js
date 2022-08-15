@@ -2,10 +2,16 @@ const dotenv = require('dotenv');
 
 dotenv.config({ path: '../../.env' });
 
+const withPlugins = require('next-compose-plugins');
+
 const withTM = require('next-transpile-modules')([
   '@lib/ui',
   'pocket-contract',
 ]);
+
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -16,14 +22,6 @@ const nextConfig = {
   images: {
     domains: ['logos.covalenthq.com'],
   },
-  async rewrites() {
-    return [
-      {
-        source: '/api-nest/:path*',
-        destination: 'http://localhost:5000/:path*', // The :path parameter is used here so will not be automatically passed in the query
-      },
-    ];
-  },
 };
 
-module.exports = withTM(nextConfig);
+module.exports = withPlugins([withTM, withBundleAnalyzer], nextConfig);

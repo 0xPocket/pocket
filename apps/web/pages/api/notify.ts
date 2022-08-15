@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import * as crypto from 'crypto';
-import { AlchemyAddressActivity } from '@lib/types/interfaces';
+import type { AlchemyAddressActivity } from '@lib/types/interfaces';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default (req: NextApiRequest, res: NextApiResponse) => {
