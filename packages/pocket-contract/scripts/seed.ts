@@ -42,7 +42,15 @@ async function main() {
     parent,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
-    parseUnits('100000', tokenDecimals).toString()
+    parseUnits('10', tokenDecimals).toString()
+  );
+
+  await setAllowance(
+    constants.CHOSEN_TOKEN,
+    parent,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+    '0'
   );
 
   await faucet.addFunds(
@@ -50,6 +58,13 @@ async function main() {
     constants.LOLA_MUSK.address
   );
 
+  await setAllowance(
+    constants.CHOSEN_TOKEN,
+    parent,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+    '0'
+  );
   console.log('Contract seeding complete !');
 }
 

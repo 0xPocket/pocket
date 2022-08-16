@@ -4,10 +4,13 @@ import { UserChild } from '@lib/types/interfaces';
 import { FormErrorMessage } from '@lib/ui';
 import { formatUnits, parseUnits } from 'ethers/lib/utils';
 import { PocketFaucet } from 'pocket-contract/typechain-types';
+import { toast } from 'react-toastify';
+import { useContractWrite, usePrepareContractWrite } from 'wagmi';
+
 import { z } from 'zod';
 import { useSmartContract } from '../../contexts/contract';
 import { ContractMethodReturn } from '../../hooks/useContractRead';
-import useContractWrite from '../../hooks/useContractWrite';
+
 import { useZodForm } from '../../utils/useZodForm';
 
 type ChildSettingsFormProps = {
@@ -40,34 +43,61 @@ function ChildSettingsForm({
       ceiling: formatUnits(config?.[2]!, erc20.data?.decimals).toString(),
     },
   });
+  const { config: changeConfigConfig } = usePrepareContractWrite({
+    addressOrName: pocketContract.address,
+    contractInterface: pocketContract.interface,
+    functionName: 'changeConfig',
+    args: [0, 1, child.address],
+  });
 
   const { writeAsync: changeConfig } = useContractWrite({
-    contract: pocketContract,
-    functionName: 'changeConfig',
+    ...changeConfigConfig,
+    onSuccess() {
+      toast.success(`Configuration changed successfully`);
+    },
+    onError(e) {
+      console.log(e.message);
+      toast.error(`An error occured while changing your child configuration`);
+    },
+  });
+
+  const { config: addChildConfig } = usePrepareContractWrite({
+    addressOrName: pocketContract.address,
+    contractInterface: pocketContract.interface,
+    functionName: 'addChild',
+    args: [0, 1, child.address],
   });
 
   const { writeAsync: addChild } = useContractWrite({
-    contract: pocketContract,
-    functionName: 'addChild',
+    ...addChildConfig,
+    onSuccess() {
+      toast.success(`Configuration changed successfully`);
+    },
+    onError(e) {
+      console.log(e.message);
+      toast.error(`An error occured while changing your child configuration`);
+    },
   });
 
   const onSubmit = async (data: FormValues) => {
-    if (config?.lastClaim.isZero())
+    if (config?.lastClaim.isZero() && addChild)
       await addChild({
-        args: [
+        recklesslySetUnpreparedArgs: [
           parseUnits(data.ceiling, erc20.data?.decimals),
           data.periodicity,
           child.address,
         ],
       });
-    else
+    else if (changeConfig)
       await changeConfig({
-        args: [
+        recklesslySetUnpreparedArgs: [
           parseUnits(data.ceiling, erc20.data?.decimals),
           data.periodicity,
           child.address,
         ],
       });
+    else return;
+    toast.info(`We are waiting for the network to validate your transfer`);
     returnFn();
   };
 
