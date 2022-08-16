@@ -2,31 +2,46 @@ import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { UserChild } from '@lib/types/interfaces';
 import { FormErrorMessage } from '@lib/ui';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { parseUnits, Result } from 'ethers/lib/utils';
-import { PocketFaucet } from 'pocket-contract/typechain-types';
+import { IERC20, PocketFaucet } from 'pocket-contract/typechain-types';
 import { useForm } from 'react-hook-form';
-import { useAccount } from 'wagmi';
+import { useAccount, useContractWrite, usePrepareContractWrite } from 'wagmi';
 import { useSmartContract } from '../../contexts/contract';
 import { ContractMethodReturn } from '../../hooks/useContractRead';
-import useContractWrite from '../../hooks/useContractWrite';
+import { toast } from 'react-toastify';
 
 type AddFundsFormProps = {
   child: UserChild;
   returnFn: () => void;
   allowance: Result | undefined;
   config: ContractMethodReturn<PocketFaucet, 'childToConfig'> | undefined;
+  balance: (Result & [BigNumber]) | undefined;
 };
 
 type FormValues = {
   topup: number;
 };
 
+function stdApprove(contract: IERC20) {
+  return {
+    addressOrName: contract.address,
+    contractInterface: contract.interface,
+    functionName: 'approve',
+    args: [
+      process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+      ethers.constants.MaxUint256,
+    ],
+  };
+}
+const stdConfig = ['5000000000000000000', '604800'];
+
 function AddFundsForm({
   allowance,
   child,
   config,
   returnFn,
+  balance,
 }: AddFundsFormProps) {
   const {
     register,
@@ -36,57 +51,70 @@ function AddFundsForm({
   const { address } = useAccount();
   const { pocketContract, erc20 } = useSmartContract();
 
-  const { writeAsync: approve } = useContractWrite({
-    contract: erc20.contract,
-    functionName: 'approve',
+  const { config: configApprove } = usePrepareContractWrite({
+    ...stdApprove(erc20.contract),
+  });
+  const { config: addChildAndFundsConfig } = usePrepareContractWrite({
+    addressOrName: pocketContract.address,
+    contractInterface: pocketContract.interface,
+    functionName: 'addChildAndFunds',
+    args: [...stdConfig, child.address, 0],
+  });
+  const { config: addFundsConfig } = usePrepareContractWrite({
+    addressOrName: pocketContract.address,
+    contractInterface: pocketContract.interface,
+    functionName: 'addFunds',
+    args: [0, child.address],
   });
 
-  const { writeAsync: addChildAndFunds } = useContractWrite({
-    contract: pocketContract,
-    functionName: 'addChildAndFunds',
+  const { writeAsync: approve } = useContractWrite({
+    ...configApprove,
+    onSuccess() {
+      toast.success(
+        `First transaction validated, please validate the second one`,
+      );
+    },
+    onError(e) {
+      console.log(e.message);
+      toast.error(`An error occured while doing your approve transaction`);
+    },
   });
+
+  const { writeAsync: addChildAndFunds } = useContractWrite(
+    addChildAndFundsConfig,
+  );
 
   const { writeAsync: addFunds } = useContractWrite({
-    contract: pocketContract,
-    functionName: 'addFunds',
+    ...addFundsConfig,
+    onError(e) {
+      toast.error(`An error occured while doing your deposit: ${e.message}`);
+    },
+    onSuccess() {
+      toast.success(`Deposit is a success`);
+    },
   });
 
-  console.log(allowance);
   const onSubmit = async (data: FormValues) => {
-    if (!address) {
-      return;
+    const amount = parseUnits(data.topup.toString(), erc20.data?.decimals);
+    if (!address || !data?.topup) return;
+    if (balance?.lt(amount))
+      return toast.error("You don't have enough usdc...");
+    if (allowance?.lt(amount) && approve) {
+      const ret = await approve();
+      toast.info(`Network is validating your transaction`);
+      await ret.wait();
     }
 
-    if (
-      allowance?.lt(parseUnits(data.topup.toString(), erc20.data?.decimals))
-    ) {
-      await approve({
-        args: [
-          process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
-          parseUnits(data.topup.toString(), erc20.data?.decimals),
-        ],
-      });
-    }
-
-    if (config?.lastClaim.isZero())
+    if (config?.lastClaim.isZero() && addChildAndFunds) {
       await addChildAndFunds({
-        args: [
-          '5000000000000000000',
-          '604800',
-          child.address,
-          ethers.utils.parseUnits(data.topup.toString(), erc20.data?.decimals),
-        ],
-        overrides: { gasLimit: 3000000 },
+        recklesslySetUnpreparedArgs: [...stdConfig, child.address, amount],
       });
-    else
+    } else if (addFunds) {
       await addFunds({
-        args: [
-          ethers.utils.parseUnits(data.topup.toString(), erc20.data?.decimals),
-          child.address,
-        ],
-        overrides: { gasLimit: 3000000 },
+        recklesslySetUnpreparedArgs: [amount, child.address],
       });
-
+    } else return toast.error(`An error occured, please try again`);
+    toast.info(`We are waiting for the network to validate your transfer`);
     returnFn();
   };
 
