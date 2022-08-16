@@ -84,4 +84,10 @@ describe('Testing conf changement', function () {
       'Periodicity value is wrong: ' + periodicityAfter.toString()
     );
   });
+
+  it('Should revert because periodicity is 0', async function () {
+    await expect(
+      parent1.changeConfigAndSend(10, 0, child1.address)
+    ).to.be.revertedWith('!addChild: periodicity cannot be 0');
+  });
 });
