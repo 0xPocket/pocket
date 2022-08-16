@@ -5,12 +5,13 @@ import { Magic } from '@magic-sdk/admin';
 import { SiweMessage } from 'siwe';
 import { UserType } from '@prisma/client';
 import { prisma } from '../prisma';
+import { env } from '../env';
 
 const mAdmin = new Magic('sk_live_8185E1937878AC9A');
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
       name: 'Magic',

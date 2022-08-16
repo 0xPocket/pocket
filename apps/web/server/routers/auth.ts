@@ -11,6 +11,7 @@ import { authOptions } from '../next-auth';
 import { prisma } from '../prisma';
 import { AuthSchema } from '../schemas/auth.schema';
 import { User } from '@prisma/client';
+import { env } from '../env';
 
 export const authRouter = createProtectedRouter().mutation('onboard', {
   input: AuthSchema.onboard,
@@ -41,7 +42,7 @@ export const authRouter = createProtectedRouter().mutation('onboard', {
       },
     });
 
-    if (!updatedUser.emailVerified) {
+    if (!updatedUser.emailVerified && updatedUser.email && updatedUser.name) {
       const token = generateVerificationToken();
 
       const ONE_DAY_IN_SECONDS = 86400;
@@ -56,13 +57,13 @@ export const authRouter = createProtectedRouter().mutation('onboard', {
       const params = new URLSearchParams({ token, email: input.email });
 
       await sendEmail({
-        to: updatedUser.email!,
+        to: updatedUser.email,
         template: 'email_verification',
         context: {
           name: updatedUser.name,
           // TODO: Use correct URL from production
-          url: process.env.VERCEL_URL
-            ? `https://${process.env.VERCEL_URL}/verify-email?${params}`
+          url: env.VERCEL_URL
+            ? `https://${env.VERCEL_URL}/verify-email?${params}`
             : `http://localhost:3000/verify-email?${params}`,
         },
       });

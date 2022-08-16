@@ -13,6 +13,7 @@ import { prisma } from '../prisma';
 import { z } from 'zod';
 import { SiweMessage } from 'siwe';
 import { getCsrfToken } from 'next-auth/react';
+import { env } from '../env';
 
 export const emailRouter = createRouter()
   .mutation('verifyChild', {
@@ -137,7 +138,7 @@ export const emailRouter = createRouter()
         },
       });
 
-      if (!user || !user.email) {
+      if (!user || !user.email || !user.name) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
         });
@@ -169,8 +170,8 @@ export const emailRouter = createRouter()
         context: {
           name: user.name,
           // TODO: Use correct URL from production
-          url: process.env.VERCEL_URL
-            ? `https://${process.env.VERCEL_URL}/verify-email?${params}`
+          url: env.VERCEL_URL
+            ? `https://${env.VERCEL_URL}/verify-email?${params}`
             : `http://localhost:3000/verify-email?${params}`,
         },
       });

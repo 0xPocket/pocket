@@ -2,6 +2,7 @@ import type { User } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { createProtectedRouter } from '../createRouter';
+import { env } from '../env';
 import { prisma } from '../prisma';
 import {
   generateVerificationToken,
@@ -111,8 +112,8 @@ export const parentRouter = createProtectedRouter()
           context: {
             name: child.name!,
             // TODO: Use correct URL from production
-            url: process.env.VERCEL_URL
-              ? `https://${process.env.VERCEL_URL}/verify-email?${params}`
+            url: env.VERCEL_URL
+              ? `https://${env.VERCEL_URL}/verify-email?${params}`
               : `http://localhost:3000/verify-email?${params}`,
           },
         });
