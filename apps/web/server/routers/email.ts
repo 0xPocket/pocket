@@ -165,7 +165,6 @@ export const emailRouter = createRouter()
 
       await sendEmail({
         to: user.email,
-        subject: 'Verify your email',
         template: 'email_verification',
         context: {
           name: user.name,

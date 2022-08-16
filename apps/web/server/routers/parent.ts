@@ -107,7 +107,6 @@ export const parentRouter = createProtectedRouter()
 
         await sendEmail({
           to: child.email!,
-          subject: 'Welcome to the family',
           template: 'child_invitation',
           context: {
             name: child.name!,

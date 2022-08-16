@@ -57,7 +57,6 @@ export const authRouter = createProtectedRouter().mutation('onboard', {
 
       await sendEmail({
         to: updatedUser.email!,
-        subject: 'Verify your email',
         template: 'email_verification',
         context: {
           name: updatedUser.name,
