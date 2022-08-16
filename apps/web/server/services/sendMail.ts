@@ -3,6 +3,7 @@ import * as handlebars from 'handlebars';
 import { google } from 'googleapis';
 import { env } from '../env';
 
+// https://dev.to/chandrapantachhetri/sending-emails-securely-using-node-js-nodemailer-smtp-gmail-and-oauth2-g3a
 const oauth2Client = new google.auth.OAuth2(
   env.GOOGLE_CLIENT_ID,
   env.GOOGLE_CLIENT_SECRET,

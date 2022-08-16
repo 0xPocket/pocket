@@ -15,7 +15,7 @@ const envSchema = z.object({
   JWT_EMAIL_SECRET: z.string().optional(),
   MAIL_USER: z.string().email(),
   NEXTAUTH_SECRET: z.string(),
-  NEXTAUTH_URL: z.string().url(),
+  NEXTAUTH_URL: z.string().url().optional(),
   NODE_ENV: z.enum(['development', 'test', 'production']),
   QUERY_DEBUG: z.string().optional(),
   VERCEL_URL: z.string().optional(),
