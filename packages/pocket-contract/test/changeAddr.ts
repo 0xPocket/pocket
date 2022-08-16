@@ -97,7 +97,7 @@ describe('Testing addr changement', function () {
   it('Should reverse because trying to change to same address is not possible', async function () {
     await expect(
       parent1.changeParentAddress(parent1.address)
-    ).to.be.revertedWith('!changeParentAddr : can not change to same addr');
+    ).to.be.revertedWith('!changeParentAddr : cannot change to same addr');
   });
 
   it('Should change parent2 to parent1', async function () {
