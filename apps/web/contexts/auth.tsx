@@ -4,7 +4,7 @@ import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { createCtx } from '../utils/createContext';
 import type { MagicConnector } from '../utils/MagicConnector';
 import { signIn as signInNextAuth, signOut, useSession } from 'next-auth/react';
-import { CustomSessionUser } from 'next-auth';
+import type { CustomSessionUser } from 'next-auth';
 
 interface MagicAuthProviderProps {
   children: React.ReactNode;

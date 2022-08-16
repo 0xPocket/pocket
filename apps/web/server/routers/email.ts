@@ -170,7 +170,9 @@ export const emailRouter = createRouter()
         context: {
           name: user.name,
           // TODO: Use correct URL from production
-          url: `http://localhost:3000/verify-email?${params}`,
+          url: process.env.VERCEL_URL
+            ? `https://${process.env.VERCEL_URL}/verify-email?${params}`
+            : `http://localhost:3000/verify-email?${params}`,
         },
       });
     },

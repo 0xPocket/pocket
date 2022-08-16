@@ -7,6 +7,7 @@ module.exports = {
     },
   },
   rules: {
+    "@next/next/no-img-element": "off",
     "@typescript-eslint/no-var-requires": "off",
     "@next/next/no-html-link-for-pages": "off",
     "@typescript-eslint/no-non-null-asserted-optional-chain": "off",

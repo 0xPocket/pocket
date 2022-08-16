@@ -7,7 +7,7 @@ import {
 } from '@tanstack/react-table';
 import moment from 'moment';
 import { useState } from 'react';
-import { PageSwitchers } from 'web/components/dashboard/common/activity/PageSwitchers';
+import { PageSwitchers } from './activity/PageSwitchers';
 
 type EventTableProps = {
   logs: Event[];

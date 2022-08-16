@@ -15,3 +15,5 @@ export interface UserChild extends User {
 export * from "./Alchemy.interface";
 export * from "./Covalent.interface";
 export * from "./AlchemyWebhook.interface";
+export * from "./Ramp.interface";
+export * from "./1inch.interface";
