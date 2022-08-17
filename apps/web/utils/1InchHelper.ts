@@ -62,7 +62,8 @@ const quote1Inch = async (
       res.data.toToken.decimals,
     );
   } catch (error: any) {
-    return error.response.data.description;
+    console.log(error);
+    return '0';
   }
 };
 

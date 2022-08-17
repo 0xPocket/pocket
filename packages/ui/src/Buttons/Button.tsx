@@ -10,6 +10,7 @@ type ButtonProps = {
   light?: boolean;
   className?: string;
   web3action?: boolean;
+  disabled?: boolean;
 };
 
 export function Button({
@@ -20,6 +21,7 @@ export function Button({
   isOpen,
   className,
   web3action,
+  disabled,
 }: ButtonProps) {
   const handleClick: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
@@ -29,6 +31,7 @@ export function Button({
   return (
     <button
       onClick={handleClick}
+      disabled={disabled}
       className={`${className}
         ${
           light

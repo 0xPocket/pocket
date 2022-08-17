@@ -7,8 +7,9 @@ import { toast } from 'react-toastify';
 import { CovalentItem, CovalentReturn } from '@lib/types/interfaces';
 import { Button } from '@lib/ui';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faArrowDown, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import {
+  Chain,
   erc20ABI,
   useAccount,
   useBalance,
@@ -23,15 +24,31 @@ import {
   quote1Inch,
 } from '../../../utils/1InchHelper';
 import { tokenId } from '@lib/types/interfaces/1inch.interface';
+import { from } from 'form-data';
 
-const fetchWalletContent = async (address: string) => {
+const fetchWalletContent = async (address: string, chain: Chain) => {
   const APIKEY = 'ckey_d68ffbaf2bdf47b6b58e84fada7';
   const baseURL = 'https://api.covalenthq.com/v1';
-  const blockchainChainId = '137';
   const res = axios.get<CovalentReturn>(
-    `${baseURL}/${blockchainChainId}/address/${address}/balances_v2/?key=${APIKEY}`,
+    `${baseURL}/${chain.id.toString()}/address/${address}/balances_v2/?key=${APIKEY}`,
   );
   return res.then((res) => res.data.data);
+};
+
+const customStyles = {
+  option: (provided: any, state: any) => ({
+    ...provided,
+    borderBottom: '1px dotted grey',
+    color: state.isSelected ? '' : 'blue',
+    backgroundColor: '@apply background',
+  }),
+
+  singleValue: (provided: any, state: any) => {
+    const opacity = state.isDisabled ? 0.5 : 1;
+    const transition = 'opacity 300ms';
+
+    return { ...provided, opacity, transition };
+  },
 };
 
 const usdc: CovalentItem = {
@@ -61,10 +78,11 @@ type SwapperProps = {
 };
 
 const Swapper: React.FC = ({ className }: SwapperProps) => {
-  const [amountToSwap, setAmountToSwap] = useState('');
+  // const { chains } = useNetwork();
+  const [amountToSwap, setAmountToSwap] = useState('0');
   const [fromToken, setFromToken] = useState<CovalentItem>();
   const [toToken, setToToken] = useState<tokenId>();
-  const [quote, setQuote] = useState('0');
+  const [quote, setQuote] = useState('');
   const { chain } = useNetwork();
   const { address } = useAccount();
   const { data: signer } = useSigner();
@@ -123,62 +141,68 @@ const Swapper: React.FC = ({ className }: SwapperProps) => {
     if (
       fromToken &&
       toToken &&
-      amountToSwap &&
+      amountToSwap != '0' &&
       fromToken.contract_address !== toToken.address
     )
       return true;
     else return false;
   }, [amountToSwap, fromToken, toToken]);
 
-  const messageToDisplay: string = useMemo(() => {
-    if (fromToken && toToken && amountToSwap) {
-      if (fromToken.contract_address === toToken?.address)
-        return 'Cannot swap for the same token';
-      else {
-        let balance;
-        fromToken.contract_address === maticAddress
-          ? (balance = balanceMatic)
-          : (balance = balanceToken);
-        if (quote === '-1')
-          return 'You cannot swap those tokens'; // TODO : handle all error
-        else if (
-          balance?.value.lt(
-            ethers.utils.parseUnits(amountToSwap, fromToken.contract_decimals),
-          )
-        ) {
-          return 'Not enough fund';
-        } else
-          return (
-            'you will have : ' +
-            parseFloat(quote).toFixed(5) +
-            ' ' +
-            toToken.name
-          );
-      }
-    } else return '';
-  }, [fromToken, toToken, amountToSwap, balanceMatic, balanceToken, quote]);
+  // const messageToDisplay: string = useMemo(() => {
+  //   if (fromToken && toToken && amountToSwap != '0') {
+  //     if (fromToken.contract_address === toToken?.address)
+  //       return 'Cannot swap for the same token';
+  //     else {
+  //       let balance;
+  //       fromToken.contract_address === maticAddress
+  //         ? (balance = balanceMatic)
+  //         : (balance = balanceToken);
+  //       if (quote === '-1')
+  //         return 'You cannot swap those tokens'; // TODO : handle all error
+  //       else if (
+  //         balance?.value.lt(
+  //           ethers.utils.parseUnits(amountToSwap, fromToken.contract_decimals),
+  //         )
+  //       ) {
+  //         return 'Not enough fund';
+  //       } else
+  //         return (
+  //           'you will have : ' +
+  //           parseFloat(quote).toFixed(5) +
+  //           ' ' +
+  //           toToken.name
+  //         );
+  //     }
+  //   } else return '';
+  // }, [fromToken, toToken, amountToSwap, balanceMatic, balanceToken, quote]);
 
   useEffect(() => {
     async function updateQuote() {
-      if (amountToSwap && toToken && fromToken) {
-        setQuote('');
+      if (
+        parseFloat(amountToSwap) &&
+        amountToSwap != '' &&
+        toToken &&
+        fromToken
+      ) {
+        setQuote('0');
         const queryQuote = await quote1Inch(
           fromToken.contract_address,
           toToken.address,
           ethers.utils.parseUnits(amountToSwap, fromToken.contract_decimals),
           chain?.id!,
         );
-        if (parseFloat(queryQuote)) setQuote(queryQuote);
-        else setQuote('-1');
+        if (queryQuote === '-1') setAmountToSwap(amountToSwap);
+        else if (parseFloat(queryQuote)) setQuote(queryQuote);
+        // else setQuote('0');
       }
     }
-
     if (isValidConf) updateQuote();
+    else setQuote('0');
   }, [amountToSwap, chain?.id, fromToken, isValidConf, toToken]);
 
   const { isLoading: isLoadingTokenChild, data: tokenInWallet } = useQuery(
     ['child.token-content'],
-    () => fetchWalletContent(address!),
+    () => fetchWalletContent(address!, chain!),
     {
       staleTime: 60 * 1000,
       onError: () => toast.error("Could not retrieve user's token"),
@@ -209,95 +233,103 @@ const Swapper: React.FC = ({ className }: SwapperProps) => {
   );
 
   return (
-    <div className="space-y-4">
+    <div className=" space-y-4   ">
       <h2>Swapper</h2>
-      <div
-        className={`${className} container-classic h-4/5 min-h-[260px] rounded-lg p-8`}
-      >
-        <form className="flex flex-col space-y-4 px-4">
-          <h3 className="mx-auto">What swap do you want to do ?</h3>
-          <div className="container-classic flex justify-between gap-2 rounded-md p-3">
-            <p className="my-auto">From</p>
-            {!isLoadingTokenChild && (
-              <Select
-                className="my-auto basis-2/5 text-dark"
-                isSearchable={true}
-                options={tokenInWallet}
-                onChange={(event) => {
-                  setAmountToSwap('1');
-                  if (
-                    event?.value.contract_address ===
-                    '0x0000000000000000000000000000000000001010'
-                  )
-                    event.value.contract_address = maticAddress;
-                  setFromToken(event?.value!);
-                }}
-              />
-            )}
-            <input
-              type="number"
-              placeholder="Amount"
-              value={amountToSwap}
+      <form className=" container-classic flex h-4/5 min-h-[260px] flex-col justify-between space-y-4 rounded-lg p-5">
+        <div className="container-classic flex  gap-2 rounded-2xl p-1">
+          <input
+            className="container-classic text-large w-3/5 appearance-none rounded-2xl border-0 text-left"
+            type="number"
+            placeholder="0.0"
+            value={amountToSwap}
+            onChange={(event) => {
+              const point = event.target.value.indexOf('.');
+              if (point === -1) setAmountToSwap(event.target.value);
+              else
+                setAmountToSwap(
+                  event.target.value.slice(
+                    0,
+                    point + fromToken?.contract_decimals! + 1,
+                  ),
+                );
+            }}
+          />
+
+          <Button
+            light
+            className="ml-0 w-1/5 pb-0 text-right dark:text-gray"
+            action={() => {
+              let balance;
+              fromToken?.contract_address === maticAddress
+                ? (balance = balanceMatic)
+                : (balance = balanceToken);
+              if (fromToken?.contract_address === undefined)
+                balance!.formatted = '0';
+              setAmountToSwap(balance?.formatted!);
+            }}
+          >
+            Max
+          </Button>
+          {!isLoadingTokenChild ? (
+            <Select
+              className="m-auto  w-4/5 rounded-2xl"
+              styles={customStyles}
+              isSearchable={true}
+              options={tokenInWallet}
               onChange={(event) => {
-                const point = event.target.value.indexOf('.');
-                if (point === -1) setAmountToSwap(event.target.value);
-                else
-                  setAmountToSwap(
-                    event.target.value.slice(
-                      0,
-                      point + fromToken?.contract_decimals! + 1,
-                    ),
-                  );
+                // setAmountToSwap('1');
+                if (
+                  event?.value.contract_address ===
+                  '0x0000000000000000000000000000000000001010'
+                )
+                  event.value.contract_address = maticAddress;
+                setFromToken(event?.value!);
               }}
-              className="basis-2/5 rounded-md text-right text-dark"
             />
+          ) : (
+            <FontAwesomeIcon icon={faSpinner} spin className="m-auto w-4/5" />
+          )}
+        </div>
+        <FontAwesomeIcon icon={faArrowDown} />
+        {!isLoading1inch ? (
+          <Select
+            isSearchable={true}
+            options={tokenList}
+            onChange={(event) => {
+              setToToken(event?.value);
+            }}
+          />
+        ) : (
+          <p>Loading...</p>
+        )}
 
-            <Button
-              light
-              className="text-s pl-0 pb-0"
-              action={() => {
-                let balance;
-                fromToken?.contract_address === maticAddress
-                  ? (balance = balanceMatic)
-                  : (balance = balanceToken);
-                if (fromToken?.contract_address === undefined)
-                  balance!.formatted = '0';
-                setAmountToSwap(balance?.formatted!);
-              }}
-            >
-              Max
-            </Button>
-          </div>
-          <div className="container-classic flex gap-2 rounded-md p-3">
-            <p className="my-auto">To</p>
-
-            {!isLoading1inch ? (
-              <Select
-                className="basis-1/2 text-dark"
-                isSearchable={true}
-                options={tokenList}
-                onChange={(event) => {
-                  setToToken(event?.value);
-                }}
-              />
+        <Button
+          // disabled={!fromToken || !toToken || parseInt(amountToSwap) == 0}
+          className="text-s m-auto my-4"
+          action={swap}
+        >
+          <p>
+            {fromToken && toToken && parseFloat(amountToSwap) ? (
+              parseFloat(quote) !== 0 ? (
+                `Get ${parseFloat(quote).toFixed(3)} ${toToken.symbol}`
+              ) : fromToken.contract_address !== toToken.address ? (
+                <>
+                  {'Loading '}
+                  <FontAwesomeIcon icon={faSpinner} spin />
+                </>
+              ) : (
+                <>{"You can't swap a token with itself"}</>
+              )
+            ) : !parseFloat(amountToSwap) ? (
+              'Select an amount'
             ) : (
-              <p>Loading...</p>
+              'Select a token'
             )}
-            {quote ? (
-              <p className="basis-1/2">{messageToDisplay}</p>
-            ) : (
-              <FontAwesomeIcon icon={faSpinner} spin />
-            )}
-          </div>
-        </form>
-        <Button className="mx-auto mt-4" action={swap}>
-          SWAP
+          </p>
         </Button>
-      </div>
+      </form>
     </div>
   );
 };
 
 export default Swapper;
-
-// TODO : take off, only usefull for testing
