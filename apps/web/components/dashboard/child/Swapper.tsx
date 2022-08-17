@@ -35,21 +35,21 @@ const fetchWalletContent = async (address: string, chain: Chain) => {
   return res.then((res) => res.data.data);
 };
 
-const customStyles = {
-  option: (provided: any, state: any) => ({
-    ...provided,
-    borderBottom: '1px dotted grey',
-    color: state.isSelected ? '' : 'blue',
-    backgroundColor: '@apply background',
-  }),
+// const customStyles = {
+//   option: (provided: any, state: any) => ({
+//     ...provided,
+//     borderBottom: '1px dotted grey',
+//     // color: state.isSelected ? '' : 'blue',
+//     backgroundColor: '@apply bg-dark',
+//   }),
 
-  singleValue: (provided: any, state: any) => {
-    const opacity = state.isDisabled ? 0.5 : 1;
-    const transition = 'opacity 300ms';
+//   singleValue: (provided: any, state: any) => {
+//     const opacity = state.isDisabled ? 0.5 : 1;
+//     const transition = 'opacity 300ms';
 
-    return { ...provided, opacity, transition };
-  },
-};
+//     return { ...provided, opacity, transition };
+//   },
+// };
 
 const usdc: CovalentItem = {
   balance: 0,
@@ -272,12 +272,11 @@ const Swapper: React.FC = ({ className }: SwapperProps) => {
           </Button>
           {!isLoadingTokenChild ? (
             <Select
-              className="m-auto  w-4/5 rounded-2xl"
-              styles={customStyles}
+              className="m-auto  w-4/5 rounded-2xl text-dark"
+              // styles={customStyles}
               isSearchable={true}
               options={tokenInWallet}
               onChange={(event) => {
-                // setAmountToSwap('1');
                 if (
                   event?.value.contract_address ===
                   '0x0000000000000000000000000000000000001010'
@@ -293,6 +292,7 @@ const Swapper: React.FC = ({ className }: SwapperProps) => {
         <FontAwesomeIcon icon={faArrowDown} />
         {!isLoading1inch ? (
           <Select
+            className="text-dark"
             isSearchable={true}
             options={tokenList}
             onChange={(event) => {
