@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilePen } from "@fortawesome/free-solid-svg-icons";
 
 type ButtonProps = {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   action?: () => void;
   setIsOpen?: Dispatch<SetStateAction<boolean>>;
   isOpen?: boolean;
