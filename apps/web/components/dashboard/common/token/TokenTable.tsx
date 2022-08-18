@@ -26,7 +26,7 @@ function TokenTable({ tokenList }: TokenTableProps) {
         accessorKey: 'logo_url',
         cell: ({ getValue }) => (
           <div className="flex w-8 items-center justify-center">
-            <img src={getValue() as string} alt="" />
+            {getValue() ? <img src={getValue() as string} alt="" /> : <>lol</>}
           </div>
         ),
       },

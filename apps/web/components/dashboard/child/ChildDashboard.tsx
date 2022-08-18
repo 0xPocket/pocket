@@ -23,8 +23,8 @@ const ChildDashboard: React.FC = () => {
         {/* <ChildCard childAddress={address} className="col-span-1" /> */}
       </div>
       <div className="grid grid-cols-2 gap-8">
-        <TokenContent childAddress={address!} />
-        <NftContent childAddress={address!} fill_nbr={9} />
+        {/* <TokenContent childAddress={address!} /> */}
+        {/* <NftContent childAddress={address!} fill_nbr={9} /> */}
         <ActivityContent
           childAddress={address!}
           eventFilter={eventFilter}
