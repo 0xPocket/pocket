@@ -10,6 +10,12 @@ jobs:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
       DATABASE_URL: postgresql://postgres:@localhost:5432/pocket-test
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+      GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+      MAIL_USER: hello@gopocket.fr
+      NEXTAUTH_SECRET: supersecret
+      NODE_ENV: test
     strategy:
       matrix:
         node: ["16.x"]

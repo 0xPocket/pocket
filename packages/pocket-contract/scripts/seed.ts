@@ -41,13 +41,13 @@ async function main() {
     parseUnits('10', tokenDecimals).toString()
   );
 
-  await setAllowance(
-    constants.CHOSEN_TOKEN,
-    parent,
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
-    '0'
-  );
+  // await setAllowance(
+  //   constants.CHOSEN_TOKEN,
+  //   parent,
+  //   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  //   process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+  //   '0'
+  // );
 
   await faucet.addFunds(
     parseUnits('10', tokenDecimals),
