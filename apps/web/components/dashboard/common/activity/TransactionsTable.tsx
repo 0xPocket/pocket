@@ -42,9 +42,12 @@ const columns = [
     header: () => <span className="ml-1">Date</span>,
     id: 'Date',
   }),
-  columnHelper.accessor((row) => `${formatValue(row.value)} ${row.asset}`, {
-    id: 'Amount',
-  }),
+  columnHelper.accessor(
+    (row) => `${formatValue(row.value)} ${row.asset ? row.asset : ''}`,
+    {
+      id: 'Amount',
+    },
+  ),
   columnHelper.accessor('category', {
     cell: (info) => <span>{transformCategory(info.getValue())}</span>,
     id: 'Category',

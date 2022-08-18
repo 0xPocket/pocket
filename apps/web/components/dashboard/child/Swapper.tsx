@@ -30,7 +30,7 @@ import { Tooltip } from '@mui/material';
 const fetchWalletContent = async (address: string, chain: Chain) => {
   const APIKEY = 'ckey_d68ffbaf2bdf47b6b58e84fada7';
   const baseURL = 'https://api.covalenthq.com/v1';
-  // TODO : hackaton
+  // TODO : hackathon
   // const res = axios.get<CovalentReturn>(
   //   `${baseURL}/${chain.id.toString()}/address/${address}/balances_v2/?key=${APIKEY}`,
   // );
@@ -195,7 +195,7 @@ const Swapper: React.FC = ({ className }: SwapperProps) => {
           toToken.address,
           ethers.utils.parseUnits(amountToSwap, fromToken.contract_decimals),
           137,
-          // TODO : hackaton
+          // TODO : hackathon
           // chain?.id!,
         );
         if (queryQuote === '-1') setAmountToSwap(amountToSwap);
@@ -227,7 +227,7 @@ const Swapper: React.FC = ({ className }: SwapperProps) => {
   const { isLoading: isLoading1inch, data: tokenList } = useQuery(
     ['swapper.token-list'],
     () => fetch1InchTokens(137),
-    // TODO : hackaton
+    // TODO : hackathon
     // () => fetch1InchTokens(chain?.id!),
     {
       staleTime: 60 * 1000,
@@ -348,5 +348,5 @@ const Swapper: React.FC = ({ className }: SwapperProps) => {
 
 export default Swapper;
 
-// TODO : only for the hackaton version
+// TODO : only for the hackathon version
 const title = 'The swapper only works for polygon mainnet, not mumbai.';
