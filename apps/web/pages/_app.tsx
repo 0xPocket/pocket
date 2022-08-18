@@ -57,7 +57,7 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
             additionalMagicOptions: {
               network: {
                 rpcUrl: process.env.NEXT_PUBLIC_RPC_ENDPOINT!,
-                chainId: 137,
+                chainId: 80001,
               },
             },
           },
