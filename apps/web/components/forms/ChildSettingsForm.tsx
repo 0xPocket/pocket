@@ -113,6 +113,7 @@ function ChildSettingsForm({
             type="radio"
             id="weekly"
             value="604800"
+            defaultChecked={true}
             {...register('periodicity')}
           />
           <label htmlFor="huey">Weekly</label>
