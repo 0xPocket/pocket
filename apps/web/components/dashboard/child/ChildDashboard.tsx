@@ -1,11 +1,12 @@
 import React from 'react';
 import { useAccount } from 'wagmi';
+import { useSmartContract } from '../../../contexts/contract';
+import NftContent from '../common/nft/NftContent';
+import TokenContent from '../common/token/TokenContent';
+import ActivityContent from '../common/activity/ActivityContent';
+import ChildCard from '../../card/child/ChildCard';
 import Swapper from './Swapper';
-import { useSmartContract } from 'web/contexts/contract';
-// import NftContent from 'web/components/dashboard/common/nft/NftContent';
-// import TokenContent from 'web/components/dashboard/common/token/TokenContent';
-import ActivityContent from 'web/components/dashboard/common/activity/ActivityContent';
-import ChildCard from 'web/components/card/child/ChildCard';
+
 
 const ChildDashboard: React.FC = () => {
   const { address } = useAccount();

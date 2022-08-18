@@ -15,13 +15,13 @@ class AdminContract {
   // Helper functions
 
   // Admin functions
-  changeParentAddr = (oldAddr: string, newAddr: string) => {
-    return this.contract.changeParentAddr(oldAddr, newAddr);
+  changeParentAddr = (newAddr: string) => {
+    return this.contract.changeParentAddr(newAddr);
   };
 
-  withdrawToken = (token: string, amount: string) => {
-    return this.contract.withdrawToken(token, amount);
-  };
+  // withdrawToken = (token: string, amount: string) => {
+  //   return this.contract.withdrawToken(token, amount);
+  // };
 
   withdrawCoin = (amount: string) => {
     return this.contract.withdrawCoin(amount);

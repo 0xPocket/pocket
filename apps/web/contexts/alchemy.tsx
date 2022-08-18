@@ -1,4 +1,5 @@
-import { Network, initializeAlchemy, Alchemy } from '@alch/alchemy-sdk';
+import type { Network, Alchemy } from '@alch/alchemy-sdk';
+import { initializeAlchemy } from '@alch/alchemy-sdk';
 import { createContext, useContext, useState } from 'react';
 
 const settings = {
