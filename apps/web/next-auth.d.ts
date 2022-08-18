@@ -1,5 +1,5 @@
+import type { UserType } from '@prisma/client';
 import type { DefaultSession } from 'next-auth';
-import { JWT } from 'next-auth/jwt';
 
 declare module 'next-auth' {
   type DefaultSessionUser = NonNullable<DefaultSession['user']>;
@@ -8,14 +8,14 @@ declare module 'next-auth' {
     address: string | undefined;
     isNewUser: boolean;
     emailVerified: boolean;
-    type: 'Parent' | 'Child';
+    type: UserType;
   };
   interface Session {
     user: CustomSessionUser;
   }
 
   interface User {
-    type: 'Parent' | 'Child';
+    type: UserType;
     isNewUser: boolean;
     emailVerified: boolean;
     address: string;
@@ -27,6 +27,6 @@ declare module 'next-auth/jwt' {
   interface JWT {
     isNewUser: boolean;
     emailVerified: boolean;
-    type: 'Parent' | 'Child';
+    type: UserType;
   }
 }

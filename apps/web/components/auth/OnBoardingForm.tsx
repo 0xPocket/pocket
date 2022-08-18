@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { useZodForm } from '../../utils/useZodForm';
 import { trpc } from '../../utils/trpc';
 import { AuthSchema } from '../../server/schemas';
+import { Spinner } from '../common/Spinner';
 
 const OnBoardingForm: FC = () => {
   const { data } = useSession();
@@ -28,6 +29,10 @@ const OnBoardingForm: FC = () => {
       setValue('email', data?.user.email);
     }
   }, [data, setValue]);
+
+  if (onboardUser.isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <form
