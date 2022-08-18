@@ -38,7 +38,9 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
             //TODO : change mumbai to mainet
             href={`https://mumbai.polygonscan.com/address/${child.address}`}
           >
-            <a className="py-3">See on polygonscan</a>
+            <a className="py-3" target="_blank" rel="noopener noreferrer">
+              See on polygonscan
+            </a>
           </Link>
         ) : (
           <Link href={`/account/${child.address}`}>
