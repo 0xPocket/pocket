@@ -2,8 +2,8 @@ import React from 'react';
 import { useAccount } from 'wagmi';
 import Swapper from './Swapper';
 import { useSmartContract } from 'web/contexts/contract';
-import NftContent from 'web/components/dashboard/common/nft/NftContent';
-import TokenContent from 'web/components/dashboard/common/token/TokenContent';
+// import NftContent from 'web/components/dashboard/common/nft/NftContent';
+// import TokenContent from 'web/components/dashboard/common/token/TokenContent';
 import ActivityContent from 'web/components/dashboard/common/activity/ActivityContent';
 import ChildCard from 'web/components/card/child/ChildCard';
 

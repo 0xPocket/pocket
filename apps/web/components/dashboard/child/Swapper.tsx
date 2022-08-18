@@ -24,7 +24,7 @@ import {
   quote1Inch,
 } from '../../../utils/1InchHelper';
 import { tokenId } from '@lib/types/interfaces/1inch.interface';
-import { from } from 'form-data';
+// import { from } from 'form-data';
 
 const fetchWalletContent = async (address: string, chain: Chain) => {
   const APIKEY = 'ckey_d68ffbaf2bdf47b6b58e84fada7';
@@ -235,7 +235,9 @@ const Swapper: React.FC = ({ className }: SwapperProps) => {
   return (
     <div className=" space-y-4   ">
       <h2>Swapper</h2>
-      <form className=" container-classic flex h-4/5 min-h-[260px] flex-col justify-between space-y-4 rounded-lg p-5">
+      <form
+        className={`container-classic flex h-4/5 min-h-[260px] flex-col justify-between space-y-4 rounded-lg p-5`}
+      >
         <div className="container-classic flex  gap-2 rounded-2xl p-1">
           <input
             className="container-classic text-large w-3/5 appearance-none rounded-2xl border-0 text-left"
