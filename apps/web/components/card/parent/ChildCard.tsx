@@ -34,7 +34,10 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
           </div>
         </div>
         {!hasLink ? (
-          <Link href={`https://polygonscan.com/address/${child.address}`}>
+          <Link
+            //TODO : change mumbai to mainet
+            href={`https://mumbai.polygonscan.com/address/${child.address}`}
+          >
             <a className="py-3">See on polygonscan</a>
           </Link>
         ) : (
