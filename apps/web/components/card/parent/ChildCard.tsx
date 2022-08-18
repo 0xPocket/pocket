@@ -33,7 +33,9 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
             <AccountStatus child={child} />
           </div>
         </div>
-        {!hasLink ? (
+        {child?.child?.status !== 'ACTIVE' ? (
+          <p>You child has received an email to validate his account</p>
+        ) : !hasLink ? (
           <Link
             //TODO : change mumbai to mainet
             href={`https://mumbai.polygonscan.com/address/${child.address}`}
@@ -48,8 +50,9 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
           </Link>
         )}
       </div>
-
-      <RightTab child={child} config={config} />
+      {child?.child?.status === 'ACTIVE' && (
+        <RightTab child={child} config={config} />
+      )}
     </div>
   );
 }

@@ -113,8 +113,8 @@ export const parentRouter = createProtectedRouter()
             name: child.name!,
             // TODO: Use correct URL from production
             url: process.env.VERCEL_URL
-              ? `https://${process.env.VERCEL_URL}/verify-email?${params}`
-              : `http://localhost:3000/verify-email?${params}`,
+              ? `https://${process.env.VERCEL_URL}/verify-child?${params}`
+              : `http://localhost:3000/verify-child?${params}`,
           },
         });
       }
