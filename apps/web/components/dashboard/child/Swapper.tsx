@@ -24,13 +24,18 @@ import {
   quote1Inch,
 } from '../../../utils/1InchHelper';
 import { tokenId } from '@lib/types/interfaces/1inch.interface';
+import { Tooltip } from '@mui/material';
 // import { from } from 'form-data';
 
 const fetchWalletContent = async (address: string, chain: Chain) => {
   const APIKEY = 'ckey_d68ffbaf2bdf47b6b58e84fada7';
   const baseURL = 'https://api.covalenthq.com/v1';
+  // TODO : hackaton
+  // const res = axios.get<CovalentReturn>(
+  //   `${baseURL}/${chain.id.toString()}/address/${address}/balances_v2/?key=${APIKEY}`,
+  // );
   const res = axios.get<CovalentReturn>(
-    `${baseURL}/${chain.id.toString()}/address/${address}/balances_v2/?key=${APIKEY}`,
+    `${baseURL}/137/address/${address}/balances_v2/?key=${APIKEY}`,
   );
   return res.then((res) => res.data.data);
 };
@@ -189,7 +194,9 @@ const Swapper: React.FC = ({ className }: SwapperProps) => {
           fromToken.contract_address,
           toToken.address,
           ethers.utils.parseUnits(amountToSwap, fromToken.contract_decimals),
-          chain?.id!,
+          137,
+          // TODO : hackaton
+          // chain?.id!,
         );
         if (queryQuote === '-1') setAmountToSwap(amountToSwap);
         else if (parseFloat(queryQuote)) setQuote(queryQuote);
@@ -219,7 +226,9 @@ const Swapper: React.FC = ({ className }: SwapperProps) => {
 
   const { isLoading: isLoading1inch, data: tokenList } = useQuery(
     ['swapper.token-list'],
-    () => fetch1InchTokens(chain?.id!),
+    () => fetch1InchTokens(137),
+    // TODO : hackaton
+    // () => fetch1InchTokens(chain?.id!),
     {
       staleTime: 60 * 1000,
       onError: () => toast.error('Could not retrieve 1inch token list'),
@@ -279,6 +288,7 @@ const Swapper: React.FC = ({ className }: SwapperProps) => {
               isSearchable={true}
               options={tokenInWallet}
               onChange={(event) => {
+                setAmountToSwap('1');
                 if (
                   event?.value.contract_address ===
                   '0x0000000000000000000000000000000000001010'
@@ -304,30 +314,32 @@ const Swapper: React.FC = ({ className }: SwapperProps) => {
         ) : (
           <p>Loading...</p>
         )}
-
         <Button
           // disabled={!fromToken || !toToken || parseInt(amountToSwap) == 0}
+          disabled={true}
           className="text-s m-auto my-4"
           action={swap}
         >
-          <p>
-            {fromToken && toToken && parseFloat(amountToSwap) ? (
-              parseFloat(quote) !== 0 ? (
-                `Get ${parseFloat(quote).toFixed(3)} ${toToken.symbol}`
-              ) : fromToken.contract_address !== toToken.address ? (
-                <>
-                  {'Loading '}
-                  <FontAwesomeIcon icon={faSpinner} spin />
-                </>
+          <Tooltip title={title}>
+            <p>
+              {fromToken && toToken && parseFloat(amountToSwap) ? (
+                parseFloat(quote) !== 0 ? (
+                  `Get ${parseFloat(quote).toFixed(3)} ${toToken.symbol}`
+                ) : fromToken.contract_address !== toToken.address ? (
+                  <>
+                    {'Loading '}
+                    <FontAwesomeIcon icon={faSpinner} spin />
+                  </>
+                ) : (
+                  <>{"You can't swap a token with itself"}</>
+                )
+              ) : !parseFloat(amountToSwap) ? (
+                'Select an amount'
               ) : (
-                <>{"You can't swap a token with itself"}</>
-              )
-            ) : !parseFloat(amountToSwap) ? (
-              'Select an amount'
-            ) : (
-              'Select a token'
-            )}
-          </p>
+                'Select a token'
+              )}
+            </p>
+          </Tooltip>
         </Button>
       </form>
     </div>
@@ -335,3 +347,6 @@ const Swapper: React.FC = ({ className }: SwapperProps) => {
 };
 
 export default Swapper;
+
+// TODO : only for the hackaton version
+const title = 'The swapper only works for polygon mainnet, not mumbai.';
