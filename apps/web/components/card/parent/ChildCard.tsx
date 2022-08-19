@@ -33,9 +33,16 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
             <AccountStatus child={child} />
           </div>
         </div>
-        {!hasLink ? (
-          <Link href={`https://polygonscan.com/address/${child.address}`}>
-            <a className="py-3">See on polygonscan</a>
+        {child?.child?.status !== 'ACTIVE' ? (
+          <p>You child has received an email to validate his account</p>
+        ) : !hasLink ? (
+          <Link
+            //TODO : change mumbai to mainet
+            href={`https://mumbai.polygonscan.com/address/${child.address}`}
+          >
+            <a className="py-3" target="_blank" rel="noopener noreferrer">
+              See on polygonscan
+            </a>
           </Link>
         ) : (
           <Link href={`/account/${child.address}`}>
@@ -43,8 +50,9 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
           </Link>
         )}
       </div>
-
-      <RightTab child={child} config={config} />
+      {child?.child?.status === 'ACTIVE' && (
+        <RightTab child={child} config={config} />
+      )}
     </div>
   );
 }

@@ -11,7 +11,7 @@ function PocketMoney({ value }: BalanceProps) {
 
   return (
     <div>
-      <p>In the PiggyBank</p>
+      <p>In my PiggyBank</p>
       <span className="text-4xl">
         {value ? formatUnits(value, erc20.data?.decimals).toString() : '0'} $
       </span>

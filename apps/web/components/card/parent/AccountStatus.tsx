@@ -44,7 +44,7 @@ function AccountStatus({ child }: AccountStatusProps) {
           {...attributes.popper}
           className="rounded-md bg-primary p-1 text-sm"
         >
-          An email has been sent to {child!.email}
+          A set-up email has been sent to {child!.email}
         </div>
       )}
     </div>

@@ -13,7 +13,7 @@ function useRamp({}: RampProps) {
       hostAppName: 'Pocket',
       fiatCurrency: 'EUR',
       fiatValue: '15',
-      // swapAsset: 'MUMBAI_USDC',
+      swapAsset: 'USDC',
       userAddress: address,
       userEmailAddress: 'test@gmail.com',
       hostApiKey: 'fukzkzsk5wfybdp6d6rspmuq54utvo37wsd9uk9h',

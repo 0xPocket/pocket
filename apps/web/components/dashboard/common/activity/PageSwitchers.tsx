@@ -15,16 +15,16 @@ export function PageSwitchers({
   getCanPreviousPage,
 }: pageSwitcherProps) {
   return (
-    <div className="center m-auto flex gap-2">
+    <div className="center m-auto flex gap-1">
       <button
-        className="m-auto rounded border p-1"
+        className="m-auto w-1/2 rounded border p-1"
         onClick={() => previousPage()}
         disabled={!getCanPreviousPage()}
       >
         {<FontAwesomeIcon className="w-full" icon={faArrowLeft} />}
       </button>
       <button
-        className="m-auto rounded border p-1"
+        className="m-auto w-1/2 rounded border p-1"
         onClick={() => nextPage()}
         disabled={!getCanNextPage()}
       >

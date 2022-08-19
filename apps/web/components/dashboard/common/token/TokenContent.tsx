@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import TokenTable from './TokenTable';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PieChartComp from './PieChart';
+// import PieChartComp from './PieChart';
 
 type TokenContentProps = {
   childAddress: string;
@@ -35,19 +36,19 @@ function TokenContent({ childAddress }: TokenContentProps) {
   return (
     <div className="space-y-8">
       <h2>Token Balance</h2>
-      <div className="container-classic grid grid-cols-12 rounded-lg px-8 ">
-        <div className="col-span-4 aspect-square">
+      <div className="container-classic flex rounded-lg px-8">
+        <div className="col-span-4 aspect-square w-1/5">
           {!isLoading && data?.items ? (
             <PieChartComp tokenList={data.items} />
           ) : (
             <FontAwesomeIcon icon={faSpinner} spin />
           )}
         </div>
-        <div className="col-span-8 flex items-start">
+        <div className="col-span-8 flex w-4/5 items-start">
           {!isLoading && data?.items ? (
-            <TokenTable tokenList={data.items} />
+            <TokenTable tokenList={data!.items} />
           ) : (
-            <FontAwesomeIcon icon={faSpinner} spin />
+            <FontAwesomeIcon icon={faSpinner} spin className="m-auto" />
           )}
         </div>
       </div>
