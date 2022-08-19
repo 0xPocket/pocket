@@ -13,7 +13,6 @@
     "reset": "yarn hardhat run ./scripts/reset.ts --network localhost",
     "seed": "yarn hardhat run ./scripts/seed.ts --network localhost",
     "lint": "eslint \"{test,utils,helpers}/**/*.ts\" --fix",
-    "showNetwork": "yarn hardhat run ./scripts/displayNetwork.ts",
     "test": "FORCECOLOR=1 yarn hardhat test"
   },
   "dependencies": {

@@ -2,6 +2,7 @@ import type { User } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { createProtectedRouter } from '../createRouter';
+import { env } from '../env';
 import { prisma } from '../prisma';
 import {
   generateVerificationToken,
@@ -107,7 +108,6 @@ export const parentRouter = createProtectedRouter()
 
         await sendEmail({
           to: child.email!,
-          subject: 'Welcome to the family',
           template: 'child_invitation',
           context: {
             name: child.name!,

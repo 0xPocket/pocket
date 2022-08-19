@@ -1,6 +1,11 @@
+// @ts-check
+/* eslint-disable @typescript-eslint/no-var-requires */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const dotenv = require('dotenv');
 
 dotenv.config({ path: '../../.env' });
+
+const { env } = require('./server/env');
 
 // const withPlugins = require('next-compose-plugins');
 

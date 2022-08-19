@@ -1,10 +1,11 @@
 import { Prisma } from '@prisma/client';
 import { createHash, randomBytes } from 'crypto';
+import { env } from '../env';
 import { prisma } from '../prisma';
 
 export function hashToken(token: string) {
   return createHash('sha256')
-    .update(`${token}${process.env.JWT_EMAIL_SECRET}`)
+    .update(`${token}${env.JWT_EMAIL_SECRET}`)
     .digest('hex');
 }
 
