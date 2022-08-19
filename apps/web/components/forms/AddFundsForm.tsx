@@ -80,9 +80,15 @@ function AddFundsForm({
     },
   });
 
-  const { writeAsync: addChildAndFunds } = useContractWrite(
-    addChildAndFundsConfig,
-  );
+  const { writeAsync: addChildAndFunds } = useContractWrite({
+    ...addChildAndFundsConfig,
+    onError(e) {
+      toast.error(`An error occured while doing your deposit: ${e.message}`);
+    },
+    onSuccess() {
+      toast.success(`Deposit is a success`);
+    },
+  });
 
   const { writeAsync: addFunds } = useContractWrite({
     ...addFundsConfig,

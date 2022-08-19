@@ -1,6 +1,8 @@
 import { Button } from '@lib/ui';
 import React, { ReactNode } from 'react';
-import useContractWrite from '../../../hooks/useContractWrite';
+import { toast } from 'react-toastify';
+import { useContractWrite, usePrepareContractWrite } from 'wagmi';
+// import useContractWrite from '../../../hooks/useContractWrite';
 import { useSmartContract } from '../../../contexts/contract';
 
 type ClaimButtonProps = {
@@ -10,9 +12,20 @@ type ClaimButtonProps = {
 
 const ClaimButton: React.FC<ClaimButtonProps> = ({ disabled, children }) => {
   const { pocketContract } = useSmartContract();
-  const { write } = useContractWrite({
-    contract: pocketContract,
+  const { config: claimConfig } = usePrepareContractWrite({
+    addressOrName: pocketContract.address,
+    contractInterface: pocketContract.interface,
     functionName: 'claim',
+  });
+  const { writeAsync: claim } = useContractWrite({
+    ...claimConfig,
+    onSuccess() {
+      toast.success(`Claim worked perfectly`);
+    },
+    onError(e) {
+      console.log(e.message);
+      toast.error(`An error occured while claiming your money`);
+    },
   });
 
   if (disabled) {
@@ -26,7 +39,15 @@ const ClaimButton: React.FC<ClaimButtonProps> = ({ disabled, children }) => {
     );
   }
 
-  return <Button action={() => write()}>{children}</Button>;
+  return (
+    <Button
+      action={() => {
+        if (claim) claim();
+      }}
+    >
+      {children}
+    </Button>
+  );
 };
 
 export default ClaimButton;
