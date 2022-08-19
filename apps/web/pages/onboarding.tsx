@@ -1,13 +1,12 @@
 import MainWrapper from '../components/wrappers/MainWrapper';
 import OnBoardingForm from '../components/auth/OnBoardingForm';
-import { useSession } from 'next-auth/react';
 import { Spinner } from '../components/common/Spinner';
 import { trpc } from '../utils/trpc';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 function OnBoarding() {
-  const { data } = useSession();
+  const { data } = trpc.useQuery(['auth.me']);
   const router = useRouter();
 
   const resendEmail = trpc.useMutation(['email.resendVerificationEmail']);

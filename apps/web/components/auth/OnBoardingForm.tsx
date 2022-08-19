@@ -1,4 +1,3 @@
-import { useSession } from 'next-auth/react';
 import { FC, useEffect } from 'react';
 import { z } from 'zod';
 import { useZodForm } from '../../utils/useZodForm';
@@ -7,7 +6,7 @@ import { AuthSchema } from '../../server/schemas';
 import { Spinner } from '../common/Spinner';
 
 const OnBoardingForm: FC = () => {
-  const { data } = useSession();
+  const { data } = trpc.useQuery(['auth.me']);
 
   const { register, handleSubmit, formState, setValue } = useZodForm({
     mode: 'all',

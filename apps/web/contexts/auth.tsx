@@ -3,8 +3,9 @@ import { useMutation, useQueryClient } from 'react-query';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { createCtx } from '../utils/createContext';
 import type { MagicConnector } from '../utils/MagicConnector';
-import { signIn as signInNextAuth, signOut, useSession } from 'next-auth/react';
+import { signIn as signInNextAuth, signOut } from 'next-auth/react';
 import type { CustomSessionUser } from 'next-auth';
+import { trpc } from '../utils/trpc';
 
 interface MagicAuthProviderProps {
   children: React.ReactNode;
@@ -27,7 +28,12 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
   const queryClient = useQueryClient();
   const [magic, setMagic] = useState<MagicConnector>();
   const { connectors, connectAsync } = useConnect();
-  const { data, status } = useSession();
+  const { data, status } = trpc.useQuery(['auth.me'], {
+    cacheTime: 60000,
+    staleTime: 0,
+    enabled: isConnected,
+    retry: false,
+  });
   const [reconnect, setReconnect] = useState(false);
 
   const signInWithEmail = useMutation(
@@ -71,7 +77,7 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
   return (
     <MagicAuthContextProvider
       value={{
-        loggedIn: status === 'authenticated' && isConnected,
+        loggedIn: status === 'success' && data.user && isConnected,
         loading:
           logout.isLoading || signInWithEmail.isLoading || logout.isLoading,
         signInWithEmail: async (email: string) => {
