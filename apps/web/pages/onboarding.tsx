@@ -6,18 +6,23 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 function OnBoarding() {
-  const { data } = trpc.useQuery(['auth.me']);
+  const { data, isLoading, isFetching } = trpc.useQuery(['auth.me']);
   const router = useRouter();
 
   const resendEmail = trpc.useMutation(['email.resendVerificationEmail']);
 
   useEffect(() => {
-    if (data?.user.emailVerified && !data?.user.isNewUser) {
+    if (data?.user && data.user.emailVerified && !data?.user.isNewUser) {
       router.push('/');
     }
   }, [data, router]);
 
-  if (!data || (data?.user.emailVerified && !data?.user.isNewUser)) {
+  if (
+    !data ||
+    isLoading ||
+    isFetching ||
+    (data?.user.emailVerified && !data?.user.isNewUser)
+  ) {
     return (
       <MainWrapper>
         <section className="relative grid min-h-[85vh] grid-cols-1">

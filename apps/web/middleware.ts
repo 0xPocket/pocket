@@ -28,8 +28,11 @@ export default withAuth(
       return NextResponse.next();
     }
 
-    // New user go to onboarding !
-    if (token.isNewUser && req.nextUrl.pathname !== '/onboarding') {
+    // New users or unverified users go to onboarding !
+    if (
+      (token.isNewUser || !token.emailVerified) &&
+      req.nextUrl.pathname !== '/onboarding'
+    ) {
       return NextResponse.redirect(new URL('/onboarding', req.url));
     }
 
@@ -42,9 +45,9 @@ export default withAuth(
       return NextResponse.redirect(new URL('/', req.url));
     }
 
-    if (!token.emailVerified && req.nextUrl.pathname !== '/onboarding') {
-      return NextResponse.redirect(new URL('/onboarding', req.url));
-    }
+    // if (!token.emailVerified && req.nextUrl.pathname !== '/onboarding') {
+    //   return NextResponse.redirect(new URL('/onboarding', req.url));
+    // }
 
     // Redirect if user type is not allowed
 

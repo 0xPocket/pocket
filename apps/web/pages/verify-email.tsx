@@ -16,7 +16,7 @@ const VerifyChild: FC = () => {
       router.query.email &&
       mutation.status === 'idle'
     ) {
-      mutation.mutateAsync({
+      mutation.mutate({
         token: router.query.token as string,
         email: router.query.email as string,
       });
@@ -26,8 +26,19 @@ const VerifyChild: FC = () => {
   if (mutation.status === 'success') {
     return (
       <MainWrapper noHeader>
-        <div className="flex flex-col items-center justify-center gap-8">
-          Email Verified !
+        <div className="flex h-screen flex-col items-center justify-center gap-2 text-3xl font-bold">
+          Your email is now verified !
+          <p className="text-sm font-thin">You can safely close this window.</p>
+        </div>
+      </MainWrapper>
+    );
+  }
+
+  if (mutation.isError) {
+    return (
+      <MainWrapper noHeader>
+        <div className="flex h-screen flex-col items-center justify-center gap-8 font-bold text-danger">
+          {mutation.error.message}
         </div>
       </MainWrapper>
     );
@@ -35,7 +46,7 @@ const VerifyChild: FC = () => {
 
   return (
     <MainWrapper noHeader>
-      <div className="flex flex-col items-center justify-center gap-8">
+      <div className="flex h-screen flex-col items-center justify-center gap-8">
         <Spinner />
       </div>
     </MainWrapper>
