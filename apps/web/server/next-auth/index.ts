@@ -136,7 +136,7 @@ export const authOptions: NextAuthOptions = {
             data: {
               address: siwe.address,
               type: 'Parent',
-              accountType: 'Magic',
+              accountType: 'Ethereum',
               parent: {
                 create: {},
               },
