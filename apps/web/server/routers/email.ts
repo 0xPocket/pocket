@@ -118,18 +118,6 @@ export const emailRouter = createRouter()
       }
     },
   })
-  .middleware(({ ctx, next }) => {
-    if (!ctx.session) {
-      throw new TRPCError({ code: 'UNAUTHORIZED' });
-    }
-    return next({
-      ctx: {
-        ...ctx,
-        // infers that `user` and `session` are non-nullable to downstream procedures
-        session: ctx.session,
-      },
-    });
-  })
   .mutation('verifyEmail', {
     input: z.object({
       email: z.string(),
@@ -175,6 +163,18 @@ export const emailRouter = createRouter()
         });
       }
     },
+  })
+  .middleware(({ ctx, next }) => {
+    if (!ctx.session) {
+      throw new TRPCError({ code: 'UNAUTHORIZED' });
+    }
+    return next({
+      ctx: {
+        ...ctx,
+        // infers that `user` and `session` are non-nullable to downstream procedures
+        session: ctx.session,
+      },
+    });
   })
   .mutation('resendVerificationEmail', {
     resolve: async ({ ctx }) => {
