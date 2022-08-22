@@ -15,7 +15,13 @@ const EthereumProviders: FC<EthereumProvidersProps> = ({ callback }) => {
 
   const handleConnect = useCallback(
     (connector: Connector) => {
-      if (isConnected && address && callback && chain) {
+      if (
+        isConnected &&
+        address &&
+        callback &&
+        chain &&
+        connector.id === activeConnector?.id
+      ) {
         callback(address, chain?.id);
       } else {
         connectAsync({ connector }).then((res) => {
@@ -25,7 +31,7 @@ const EthereumProviders: FC<EthereumProvidersProps> = ({ callback }) => {
         });
       }
     },
-    [callback, connectAsync, isConnected, address, chain],
+    [callback, connectAsync, isConnected, address, chain, activeConnector],
   );
 
   return (

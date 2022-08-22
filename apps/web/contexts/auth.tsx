@@ -52,7 +52,7 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
         }).then(async (res) => {
           if (res?.ok) {
             await refetch();
-            router.push('/');
+            router.push('/onboarding');
           } else {
             toast.error(res?.error);
             disconnectAsync();
@@ -65,7 +65,9 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
   const logout = useMutation(() => disconnectAsync(), {
     onSuccess: async () => {
       queryClient.removeQueries();
-      signOut({ callbackUrl: '/connect' });
+      signOut({ callbackUrl: '/connect', redirect: false }).then(() => {
+        router.push('/connect');
+      });
     },
   });
 

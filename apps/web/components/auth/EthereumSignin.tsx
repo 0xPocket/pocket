@@ -8,6 +8,7 @@ import { Spinner } from '../common/Spinner';
 import { useIsMounted } from '../../hooks/useIsMounted';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
+import { trpc } from '../../utils/trpc';
 
 type EthereumSigninProps = {
   type: 'Parent' | 'Child';
@@ -24,6 +25,7 @@ const EthereumSignin: FC<EthereumSigninProps> = ({ type }) => {
   const [isLoadingGlobal, setIsLoadingGlobal] = useState(false);
   const mounted = useIsMounted();
   const router = useRouter();
+  const utils = trpc.useContext();
 
   const isLoading = useMemo(
     () => isLoadingSignMessage || isLoadingGlobal,
@@ -48,14 +50,15 @@ const EthereumSignin: FC<EthereumSigninProps> = ({ type }) => {
           message: message.prepareMessage(),
         });
 
-        await signIn('ethereum', {
+        signIn('ethereum', {
           message: JSON.stringify(message),
           signature,
           type: type,
           redirect: false,
         }).then(async (res) => {
           if (res?.ok) {
-            router.push('/');
+            await utils.invalidateQueries(['auth.me']);
+            router.push('/onboarding');
           } else {
             toast.error(res?.error);
             setIsLoadingGlobal(false);
@@ -65,7 +68,7 @@ const EthereumSignin: FC<EthereumSigninProps> = ({ type }) => {
         setIsLoadingGlobal(false);
       }
     },
-    [type, signMessageAsync, router],
+    [type, signMessageAsync, router, utils],
   );
 
   if (!mounted) {
@@ -97,7 +100,14 @@ const EthereumSignin: FC<EthereumSigninProps> = ({ type }) => {
               message,
               signature,
               type: type,
-              callbackUrl: '/',
+              redirect: false,
+            }).then(async (res) => {
+              if (res?.ok) {
+                router.push('/onboarding');
+              } else {
+                toast.error(res?.error);
+                setIsLoadingGlobal(false);
+              }
             })
           }
         />
