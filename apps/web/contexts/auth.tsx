@@ -3,9 +3,11 @@ import { useMutation, useQueryClient } from 'react-query';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { createCtx } from '../utils/createContext';
 import type { MagicConnector } from '../utils/MagicConnector';
-import { signIn as signInNextAuth, signOut } from 'next-auth/react';
+import { signIn, signOut } from 'next-auth/react';
 import type { CustomSessionUser } from 'next-auth';
 import { trpc } from '../utils/trpc';
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 
 interface MagicAuthProviderProps {
   children: React.ReactNode;
@@ -14,7 +16,7 @@ interface MagicAuthProviderProps {
 interface IMagicAuthContext {
   loggedIn: boolean;
   loading: boolean;
-  signInWithEmail: (email: string) => Promise<unknown>;
+  signInWithEmail: (email: string) => Promise<string | undefined>;
   signOut: () => Promise<void>;
   user: CustomSessionUser | undefined;
 }
@@ -28,26 +30,34 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
   const queryClient = useQueryClient();
   const [magic, setMagic] = useState<MagicConnector>();
   const { connectors, connectAsync } = useConnect();
-  const { data, status } = trpc.useQuery(['auth.me'], {
+  const { data, status, refetch } = trpc.useQuery(['auth.me'], {
     cacheTime: 60000,
     staleTime: 0,
     enabled: isConnected,
     retry: false,
   });
+  const router = useRouter();
   const [reconnect, setReconnect] = useState(false);
 
   const signInWithEmail = useMutation(
-    () => connectAsync({ connector: magic }).catch(),
+    async () => {
+      await connectAsync({ connector: magic });
+      return magic?.getDidToken();
+    },
     {
-      onSettled: async () => {
-        const token = await magic?.getDidToken();
-        if (token) {
-          return signInNextAuth('magic', {
-            token,
-            callbackUrl: '/onboarding',
-            redirect: true,
-          });
-        }
+      onSuccess: (token) => {
+        signIn('magic', {
+          token,
+          redirect: false,
+        }).then(async (res) => {
+          if (res?.ok) {
+            await refetch();
+            router.push('/');
+          } else {
+            toast.error(res?.error);
+            disconnectAsync();
+          }
+        });
       },
     },
   );
@@ -91,7 +101,7 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
           magic?.setUserDetails({ email });
           return signInWithEmail.mutateAsync();
         },
-        signOut: async () => logout.mutateAsync(),
+        signOut: async () => logout.mutate(),
         user: data?.user,
       }}
     >

@@ -190,7 +190,7 @@ export const emailRouter = createRouter()
         });
       }
 
-      if (!!user.emailVerified) {
+      if (user.emailVerified) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'Email is already verified',
@@ -220,6 +220,11 @@ export const emailRouter = createRouter()
             ? `https://${env.VERCEL_URL}/verify-email?${params}`
             : `http://localhost:3000/verify-email?${params}`,
         },
+      }).catch(() => {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Server error.',
+        });
       });
     },
   });

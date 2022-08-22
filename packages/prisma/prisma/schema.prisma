@@ -18,6 +18,11 @@ enum UserType {
   Child
 }
 
+enum AccountType {
+  Magic
+  Ethereum
+}
+
 model User {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -25,6 +30,7 @@ model User {
   address   String?  @unique
   newUser   Boolean  @default(true)
 
+  accountType   AccountType @default(Ethereum)
   email         String?   @unique
   emailVerified DateTime?
 
