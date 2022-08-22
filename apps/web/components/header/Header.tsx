@@ -24,7 +24,7 @@ function GlobalHeader({}: GlobalHeaderProps) {
         {user && (
           <>
             {/* {address ? `${connector?.name} : ${address}` : 'Not Connected'} */}
-            {chain?.id === 80001 ? (
+            {Number(chain?.id) === 80001 ? (
               <p>Connected to Mumbai via {connector?.name} </p>
             ) : (
               <div>

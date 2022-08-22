@@ -1,20 +1,30 @@
 {
   "manifestVersion": "3.2",
   "admin": {
-    "address": "0x13C3dD01C0A3aD8C219Ca2052B994aF301bd0B7d",
-    "txHash": "0x44f0c31cd6d5c1573549835dbc3912d34facffc0c3328d18fb580c15beb2d945"
+    "address": "0x649eBAD65415dd0eA415D33861581998Dc7c044B",
+    "txHash": "0x7bd9ae6d218d555dc00004b8e6b1a925ba44d3dfdd7fb112cb854ea2525b38e2"
   },
   "proxies": [
     {
       "address": "0x1890ABC69BCC820689D005546721d87cD371bd98",
       "txHash": "0x30b733020840ba06971f0f237576da90c753103f6c9a85b7d0df19cb86cd76ab",
       "kind": "transparent"
+    },
+    {
+      "address": "0xF062404D970cAcDD167355ad44aA2CB79479CB63",
+      "txHash": "0x7bef175477f4c32829d8a65fac5a134a943a2ec4ed5840b742a6526a45a3d377",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x3eEC404b6AC043011a29ECFF1b860A0a4E288162",
+      "txHash": "0xbedee58daaba26fea159845482364a8edd8e4406685dee3c7a63333904aa6620",
+      "kind": "transparent"
     }
   ],
   "impls": {
     "e3a76c0a745d2d58bb97e2a7905193a5816dae95b8259ce62a86a578a3189c87": {
-      "address": "0x2663289347aAc5D627a25A299739621a7a843b62",
-      "txHash": "0xcc973777a341c6b7b8a3a7795aea9971613edf10756be3522e8725a8b367753d",
+      "address": "0x9bf79A99d18073C772B78341433c8C0575bb5d7E",
+      "txHash": "0x89c97fd71d7782a5156ecac6839771b59765ce20d68a795a634303b2feec07a5",
       "layout": {
         "storage": [
           {
@@ -86,7 +96,7 @@
             "label": "childToConfig",
             "offset": 0,
             "slot": "153",
-            "type": "t_mapping(t_address,t_struct(Config)1635_storage)",
+            "type": "t_mapping(t_address,t_struct(Config)3550_storage)",
             "contract": "PocketFaucet",
             "src": "contracts/PocketFaucet.sol:19"
           }
@@ -124,7 +134,7 @@
             "label": "mapping(address => bool)",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_address,t_struct(Config)1635_storage)": {
+          "t_mapping(t_address,t_struct(Config)3550_storage)": {
             "label": "mapping(address => struct PocketFaucet.Config)",
             "numberOfBytes": "32"
           },
@@ -132,7 +142,7 @@
             "label": "mapping(bytes32 => struct AccessControlUpgradeable.RoleData)",
             "numberOfBytes": "32"
           },
-          "t_struct(Config)1635_storage": {
+          "t_struct(Config)3550_storage": {
             "label": "struct PocketFaucet.Config",
             "members": [
               {
