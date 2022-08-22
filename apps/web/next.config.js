@@ -2,10 +2,11 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const dotenv = require('dotenv');
+const { withAxiom } = require('next-axiom');
 
 dotenv.config({ path: '../../.env' });
 
-const { env } = require('./server/env');
+require('./server/env');
 
 // const withPlugins = require('next-compose-plugins');
 
@@ -29,4 +30,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withTM(withBundleAnalyzer(nextConfig));
+module.exports = withTM(withBundleAnalyzer(withAxiom(nextConfig)));
