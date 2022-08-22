@@ -20,7 +20,7 @@ import { httpLink } from '@trpc/client/links/httpLink';
 import { loggerLink } from '@trpc/client/links/loggerLink';
 import { splitLink } from '@trpc/client/links/splitLink';
 import { withTRPC } from '@trpc/next';
-import { SessionProvider } from 'next-auth/react';
+// import { SessionProvider } from 'next-auth/react';
 
 const { chains, provider } = configureChains(
   [chain.polygon, chain.rinkeby, chain.polygonMumbai],
@@ -69,19 +69,19 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 
   return (
     <WagmiConfig client={wagmiClient}>
-      <SessionProvider session={session}>
-        <MagicAuthProvider>
-          <AlchemyProvider>
-            <ThemeProvider>
-              <SmartContractProvider>
-                <Component {...pageProps} />
-                <ToastContainer position="bottom-right" autoClose={3000} />
-              </SmartContractProvider>
-            </ThemeProvider>
-          </AlchemyProvider>
-          <ReactQueryDevtools />
-        </MagicAuthProvider>
-      </SessionProvider>
+      {/* <SessionProvider session={session}> */}
+      <MagicAuthProvider>
+        <AlchemyProvider>
+          <ThemeProvider>
+            <SmartContractProvider>
+              <Component {...pageProps} />
+              <ToastContainer position="bottom-right" autoClose={3000} />
+              <ReactQueryDevtools />
+            </SmartContractProvider>
+          </ThemeProvider>
+        </AlchemyProvider>
+      </MagicAuthProvider>
+      {/* </SessionProvider> */}
     </WagmiConfig>
   );
 }

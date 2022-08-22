@@ -1,4 +1,3 @@
-import { useSession } from 'next-auth/react';
 import { FC, useEffect } from 'react';
 import { z } from 'zod';
 import { useZodForm } from '../../utils/useZodForm';
@@ -7,7 +6,8 @@ import { AuthSchema } from '../../server/schemas';
 import { Spinner } from '../common/Spinner';
 
 const OnBoardingForm: FC = () => {
-  const { data } = useSession();
+  const { data } = trpc.useQuery(['auth.me']);
+  const utils = trpc.useContext();
 
   const { register, handleSubmit, formState, setValue } = useZodForm({
     mode: 'all',
@@ -20,7 +20,7 @@ const OnBoardingForm: FC = () => {
   const onSubmit = async (data: z.infer<typeof AuthSchema.onboard>) => {
     onboardUser.mutateAsync(data).then(() => {
       // router.push('/');
-      window.location.href = '/';
+      utils.invalidateQueries(['auth.me']);
     });
   };
 
@@ -52,7 +52,7 @@ const OnBoardingForm: FC = () => {
           {...register('email')}
           className={`without-ring container-classic w-full border border-dark-lightest/50 p-2 px-4 font-thin shadow dark:border-white-darker dark:bg-dark ${
             !data?.user.email
-              ? 'cursor-pointer opacity-100 dark:hover:bg-dark-light'
+              ? 'cursor-auto opacity-100 dark:hover:bg-dark-light'
               : 'cursor-not-allowed opacity-50'
           }`}
           autoComplete="email"

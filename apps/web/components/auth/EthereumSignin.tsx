@@ -1,4 +1,4 @@
-import { FC, useCallback } from 'react';
+import { FC, useCallback, useMemo, useState } from 'react';
 import { useAccount, useDisconnect, useSignMessage } from 'wagmi';
 import { getCsrfToken, signIn } from 'next-auth/react';
 import SignMessage from '../onboarding/SignMessage';
@@ -14,11 +14,22 @@ type EthereumSigninProps = {
 const EthereumSignin: FC<EthereumSigninProps> = ({ type }) => {
   const { isConnected, address } = useAccount();
   const { disconnect } = useDisconnect();
-  const { signMessageAsync, isLoading, error } = useSignMessage();
+  const {
+    signMessageAsync,
+    isLoading: isLoadingSignMessage,
+    error,
+  } = useSignMessage();
+  const [isLoadingGlobal, setIsLoadingGlobal] = useState(false);
   const mounted = useIsMounted();
+
+  const isLoading = useMemo(
+    () => isLoadingSignMessage || isLoadingGlobal,
+    [isLoadingSignMessage, isLoadingGlobal],
+  );
 
   const siweSignMessage = useCallback(
     async (address: string, chainId: number) => {
+      setIsLoadingGlobal(true);
       const message = new SiweMessage({
         domain: window.location.host,
         address,
@@ -42,6 +53,7 @@ const EthereumSignin: FC<EthereumSigninProps> = ({ type }) => {
         });
       } catch (e) {
         console.log(e);
+        setIsLoadingGlobal(false);
       }
     },
     [type, signMessageAsync],

@@ -25,11 +25,41 @@ export const emailRouter = createRouter()
     }),
     resolve: async ({ ctx, input }) => {
       try {
+        const existingUser = await prisma.user.findUnique({
+          where: {
+            email: input.email,
+          },
+        });
+
+        if (!existingUser) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'User not found.',
+          });
+        }
+
+        if (existingUser.type === 'Parent') {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'User is a parent.',
+          });
+        }
+
+        if (existingUser.emailVerified || existingUser.newUser === false) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'User already verified.',
+          });
+        }
+
         const siweMessage = new SiweMessage(JSON.parse(input.message || '{}'));
         const fields = await siweMessage.validate(input.signature);
 
         if (fields.nonce !== (await getCsrfToken({ req: ctx.req }))) {
-          throw new Error('Invalid nonce.');
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Invalid nonce.',
+          });
         }
 
         // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -47,27 +77,43 @@ export const emailRouter = createRouter()
           });
         }
 
-        const user = await prisma.user.update({
-          where: {
-            email: input.email,
-          },
-          data: {
-            address: fields.address,
-            newUser: false,
-            child: {
-              update: {
-                status: 'ACTIVE',
-              },
+        const user = await prisma.user
+          .update({
+            where: {
+              email: input.email,
             },
-            emailVerified: new Date(),
-          },
-        });
+            data: {
+              address: fields.address,
+              newUser: false,
+              child: {
+                update: {
+                  status: 'ACTIVE',
+                },
+              },
+              emailVerified: new Date(),
+            },
+          })
+          .catch(() => {
+            throw new TRPCError({
+              code: 'BAD_REQUEST',
+              message: 'This wallet is already associated with an account.',
+            });
+          });
 
         return user;
       } catch (e) {
+        if (e instanceof TRPCError) {
+          throw e;
+        }
+        if (e instanceof Error) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: e.message,
+          });
+        }
         throw new TRPCError({
           code: 'BAD_REQUEST',
-          message: 'Invalid request.',
+          message: 'Invalid invite.',
         });
       }
     },
