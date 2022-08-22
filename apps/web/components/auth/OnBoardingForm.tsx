@@ -5,6 +5,7 @@ import { trpc } from '../../utils/trpc';
 import { AuthSchema } from '../../server/schemas';
 import { Spinner } from '../common/Spinner';
 import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 
 const OnBoardingForm: FC = () => {
   const { data } = trpc.useQuery(['auth.me']);
@@ -17,14 +18,15 @@ const OnBoardingForm: FC = () => {
     schema: AuthSchema.onboard,
   });
 
-  const onboardUser = trpc.useMutation('auth.onboard');
-
-  const onSubmit = async (data: z.infer<typeof AuthSchema.onboard>) => {
-    onboardUser.mutateAsync(data).then(async () => {
+  const onboardUser = trpc.useMutation('auth.onboard', {
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onSuccess: async () => {
       await utils.invalidateQueries(['auth.me']);
       router.push('/');
-    });
-  };
+    },
+  });
 
   useEffect(() => {
     if (data?.user.email) {
@@ -39,7 +41,7 @@ const OnBoardingForm: FC = () => {
   return (
     <form
       className="flex w-full flex-col items-center justify-center gap-4"
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit((data) => onboardUser.mutate(data))}
     >
       <div className={`flex w-full flex-col items-center justify-center gap-4`}>
         <label>We need some more infos !</label>

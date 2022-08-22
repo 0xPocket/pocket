@@ -49,6 +49,7 @@ export const authOptions: NextAuthOptions = {
               emailVerified: new Date(),
               address: userAddress,
               type: 'Parent',
+              accountType: 'Magic',
               parent: {
                 create: {},
               },
@@ -62,6 +63,12 @@ export const authOptions: NextAuthOptions = {
             type: newUser.type,
             isNewUser: newUser.newUser,
           };
+        }
+
+        if (existingUser.accountType !== 'Magic') {
+          throw new Error(
+            'Your email is already linked to an Ethereum Wallet.',
+          );
         }
 
         return {
@@ -95,68 +102,69 @@ export const authOptions: NextAuthOptions = {
         },
       },
       async authorize(credentials) {
-        try {
-          if (!credentials) {
-            throw new Error('no credentials');
-          }
+        if (!credentials) {
+          throw new Error('no credentials');
+        }
 
-          const { message, signature, type } = credentials;
+        const { message, signature, type } = credentials;
 
-          if (type !== UserType.Parent && type !== UserType.Child) {
-            throw new Error('invalid type');
-          }
+        if (type !== UserType.Parent && type !== UserType.Child) {
+          throw new Error('Invalid User Type');
+        }
 
-          const siwe = new SiweMessage(JSON.parse(message || '{}'));
-          await siwe.validate(signature || '');
+        const siwe = new SiweMessage(JSON.parse(message || '{}'));
+        await siwe.validate(signature || '');
 
-          const existingUser = await prisma.user.findUnique({
-            where: { address: siwe.address },
+        const existingUser = await prisma.user.findUnique({
+          where: { address: siwe.address },
+        });
+
+        if (!existingUser && type === UserType.Child) {
+          throw new Error('Your parent must create your account.');
+        }
+
+        // console.log('test2');
+
+        // if (existingUser && existingUser.type !== type) {
+        //   throw new Error(
+        //     `You must sign in with the ${existingUser.type} form.`,
+        //   );
+        // }
+
+        if (!existingUser) {
+          const newUser = await prisma.user.create({
+            data: {
+              address: siwe.address,
+              type: 'Parent',
+              accountType: 'Ethereum',
+              parent: {
+                create: {},
+              },
+            },
           });
 
-          if (!existingUser && type === UserType.Child) {
-            throw new Error('Your parent must create your account.');
-          }
-
-          // console.log('test2');
-
-          // if (existingUser && existingUser.type !== type) {
-          //   throw new Error(
-          //     `You must sign in with the ${existingUser.type} form.`,
-          //   );
-          // }
-
-          if (!existingUser) {
-            const newUser = await prisma.user.create({
-              data: {
-                address: siwe.address,
-                type: 'Parent',
-                parent: {
-                  create: {},
-                },
-              },
-            });
-
-            return {
-              id: newUser.id,
-              address: siwe.address,
-              type: newUser.type,
-              emailVerified: false,
-              isNewUser: newUser.newUser,
-            };
-          }
-
           return {
-            id: existingUser.id,
-            email: existingUser.email,
+            id: newUser.id,
             address: siwe.address,
-            name: existingUser.name,
-            type: existingUser.type,
-            emailVerified: !!existingUser.emailVerified,
-            isNewUser: existingUser.newUser,
+            type: newUser.type,
+            emailVerified: false,
+            isNewUser: newUser.newUser,
           };
-        } catch (e) {
-          return null;
         }
+
+        if (existingUser?.accountType !== 'Ethereum') {
+          throw new Error('Your email is linked to a Magic Wallet.');
+        }
+
+        return {
+          id: existingUser.id,
+          email: existingUser.email,
+          address: siwe.address,
+          name: existingUser.name,
+          type: existingUser.type,
+          emailVerified: !!existingUser.emailVerified,
+          isNewUser: existingUser.newUser,
+        };
       },
     }),
   ],

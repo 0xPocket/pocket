@@ -6,13 +6,16 @@ import EthereumProviders from './EthereumProviders';
 import { SiweMessage } from 'siwe';
 import { Spinner } from '../common/Spinner';
 import { useIsMounted } from '../../hooks/useIsMounted';
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
+import { trpc } from '../../utils/trpc';
 
 type EthereumSigninProps = {
   type: 'Parent' | 'Child';
 };
 
 const EthereumSignin: FC<EthereumSigninProps> = ({ type }) => {
-  const { isConnected, address } = useAccount();
+  const { isConnected, address, connector: activeConnector } = useAccount();
   const { disconnect } = useDisconnect();
   const {
     signMessageAsync,
@@ -21,6 +24,8 @@ const EthereumSignin: FC<EthereumSigninProps> = ({ type }) => {
   } = useSignMessage();
   const [isLoadingGlobal, setIsLoadingGlobal] = useState(false);
   const mounted = useIsMounted();
+  const router = useRouter();
+  const utils = trpc.useContext();
 
   const isLoading = useMemo(
     () => isLoadingSignMessage || isLoadingGlobal,
@@ -49,14 +54,21 @@ const EthereumSignin: FC<EthereumSigninProps> = ({ type }) => {
           message: JSON.stringify(message),
           signature,
           type: type,
-          callbackUrl: '/',
+          redirect: false,
+        }).then(async (res) => {
+          if (res?.ok) {
+            await utils.invalidateQueries(['auth.me']);
+            router.push('/onboarding');
+          } else {
+            toast.error(res?.error);
+            setIsLoadingGlobal(false);
+          }
         });
       } catch (e) {
-        console.log(e);
         setIsLoadingGlobal(false);
       }
     },
-    [type, signMessageAsync],
+    [type, signMessageAsync, router, utils],
   );
 
   if (!mounted) {
@@ -68,7 +80,7 @@ const EthereumSignin: FC<EthereumSigninProps> = ({ type }) => {
       <EthereumProviders callback={siweSignMessage} />
       {isLoading && <Spinner />}
       {error && <div className="text-sm text-danger">{error.message}</div>}
-      {isConnected && !isLoading && (
+      {isConnected && !isLoading && activeConnector?.id !== 'magic' && (
         <>
           <button
             onClick={(e) => {
@@ -81,14 +93,21 @@ const EthereumSignin: FC<EthereumSigninProps> = ({ type }) => {
           <span>Connected with {address}</span>
         </>
       )}
-      {isConnected && !isLoading && (
+      {isConnected && !isLoading && activeConnector?.id !== 'magic' && (
         <SignMessage
           callback={(message, signature) =>
             signIn('ethereum', {
               message,
               signature,
               type: type,
-              callbackUrl: '/',
+              redirect: false,
+            }).then(async (res) => {
+              if (res?.ok) {
+                router.push('/onboarding');
+              } else {
+                toast.error(res?.error);
+                setIsLoadingGlobal(false);
+              }
             })
           }
         />

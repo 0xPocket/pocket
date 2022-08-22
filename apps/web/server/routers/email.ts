@@ -118,18 +118,6 @@ export const emailRouter = createRouter()
       }
     },
   })
-  .middleware(({ ctx, next }) => {
-    if (!ctx.session) {
-      throw new TRPCError({ code: 'UNAUTHORIZED' });
-    }
-    return next({
-      ctx: {
-        ...ctx,
-        // infers that `user` and `session` are non-nullable to downstream procedures
-        session: ctx.session,
-      },
-    });
-  })
   .mutation('verifyEmail', {
     input: z.object({
       email: z.string(),
@@ -176,6 +164,18 @@ export const emailRouter = createRouter()
       }
     },
   })
+  .middleware(({ ctx, next }) => {
+    if (!ctx.session) {
+      throw new TRPCError({ code: 'UNAUTHORIZED' });
+    }
+    return next({
+      ctx: {
+        ...ctx,
+        // infers that `user` and `session` are non-nullable to downstream procedures
+        session: ctx.session,
+      },
+    });
+  })
   .mutation('resendVerificationEmail', {
     resolve: async ({ ctx }) => {
       const user = await prisma.user.findUnique({
@@ -190,7 +190,7 @@ export const emailRouter = createRouter()
         });
       }
 
-      if (!!user.emailVerified) {
+      if (user.emailVerified) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'Email is already verified',
@@ -220,6 +220,11 @@ export const emailRouter = createRouter()
             ? `https://${env.VERCEL_URL}/verify-email?${params}`
             : `http://localhost:3000/verify-email?${params}`,
         },
+      }).catch(() => {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Server error.',
+        });
       });
     },
   });
