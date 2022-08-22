@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import type { FC } from 'react';
 import { z } from 'zod';
 import { useMagic } from '../../contexts/auth';
+import { trpc } from '../../utils/trpc';
 import { useZodForm } from '../../utils/useZodForm';
 
 const EmailSchema = z.object({
@@ -17,8 +18,11 @@ const EmailSignin: FC = () => {
     schema: EmailSchema,
   });
 
+  const utils = trpc.useContext();
+
   const onSubmit = async (data: z.infer<typeof EmailSchema>) => {
-    await signInWithEmail(data.email).then(() => {
+    await signInWithEmail(data.email).then(async () => {
+      await utils.invalidateQueries(['auth.me']);
       router.push('/');
     });
   };

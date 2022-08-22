@@ -4,10 +4,12 @@ import { useZodForm } from '../../utils/useZodForm';
 import { trpc } from '../../utils/trpc';
 import { AuthSchema } from '../../server/schemas';
 import { Spinner } from '../common/Spinner';
+import { useRouter } from 'next/router';
 
 const OnBoardingForm: FC = () => {
   const { data } = trpc.useQuery(['auth.me']);
   const utils = trpc.useContext();
+  const router = useRouter();
 
   const { register, handleSubmit, formState, setValue } = useZodForm({
     mode: 'all',
@@ -18,9 +20,9 @@ const OnBoardingForm: FC = () => {
   const onboardUser = trpc.useMutation('auth.onboard');
 
   const onSubmit = async (data: z.infer<typeof AuthSchema.onboard>) => {
-    onboardUser.mutateAsync(data).then(() => {
-      // router.push('/');
-      utils.invalidateQueries(['auth.me']);
+    onboardUser.mutateAsync(data).then(async () => {
+      await utils.invalidateQueries(['auth.me']);
+      router.push('/');
     });
   };
 
