@@ -42,7 +42,11 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
       onSettled: async () => {
         const token = await magic?.getDidToken();
         if (token) {
-          return signInNextAuth('magic', { token, callbackUrl: '/' });
+          return signInNextAuth('magic', {
+            token,
+            callbackUrl: '/onboarding',
+            redirect: true,
+          });
         }
       },
     },

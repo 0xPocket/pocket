@@ -37,6 +37,7 @@ const createTransporter = async () => {
     },
     {
       from: `"Pocket" <${env.MAIL_USER}>`,
+      replyTo: env.MAIL_USER,
     },
   );
 
