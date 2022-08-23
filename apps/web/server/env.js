@@ -16,7 +16,10 @@ const envSchema = z.object({
   MAIL_USER: z.string().email(),
   NEXTAUTH_SECRET: z.string(),
   NEXTAUTH_URL: z.string().url().optional(),
+  NEXT_PUBLIC_CONTRACT_ADDRESS: z.string(),
+  NEXT_PUBLIC_RPC_ENDPOINT: z.string().url(),
   NODE_ENV: z.enum(['development', 'test', 'production']),
+  POCKET_PRIVATE_KEY: z.string(),
   QUERY_DEBUG: z.string().optional(),
   VERCEL_URL: z.string().optional(),
 });

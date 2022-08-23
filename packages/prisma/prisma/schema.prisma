@@ -56,8 +56,9 @@ model Child {
   user   User   @relation(fields: [userId], references: [id])
   userId String @id @unique
 
-  status     ChildStatus @default(INVITED)
-  activities Activity[]
+  status       ChildStatus @default(INVITED)
+  activities   Activity[]
+  maticClaimed Boolean @default(false)
 
   parent       Parent @relation(fields: [parentUserId], references: [userId])
   parentUserId String

@@ -6,6 +6,7 @@ import { useQuery } from 'wagmi';
 import ClaimButton from '../../dashboard/child/ClaimButton';
 import BaseTokenBalance from '../../common/BaseTokenBalance';
 import PocketMoney from './PocketMoney';
+import ClaimMaticButton from '../../dashboard/child/ClaimMaticButton';
 
 type ChildCardProps = {
   childAddress: string;
@@ -54,6 +55,7 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
             <BaseTokenBalance />
             <PocketMoney value={config?.balance} />
           </div>
+          <ClaimMaticButton />
           {config && (
             <ClaimButton disabled={!canClaim || config[1].isZero()}>
               {!canClaim || config[1].isZero()
