@@ -1,6 +1,6 @@
 import Image from 'next/image';
-import type { FC } from 'react';
-import { Connector, useAccount, useConnect } from 'wagmi';
+import { FC, useCallback } from 'react';
+import { Connector, useAccount, useConnect, useNetwork } from 'wagmi';
 import { Spinner } from '../common/Spinner';
 
 type EthereumProvidersProps = {
@@ -8,16 +8,31 @@ type EthereumProvidersProps = {
 };
 
 const EthereumProviders: FC<EthereumProvidersProps> = ({ callback }) => {
-  const { connectors, connectAsync, isLoading } = useConnect();
-  const { isConnected } = useAccount();
+  const { connectors, connectAsync, error, isLoading } = useConnect();
+  const { isConnected, connector: activeConnector, address } = useAccount();
 
-  const handleConnect = (connector: Connector) => {
-    connectAsync({ connector }).then((res) => {
-      if (callback) {
-        callback(res.account, res.chain.id);
+  const { chain } = useNetwork();
+
+  const handleConnect = useCallback(
+    (connector: Connector) => {
+      if (
+        isConnected &&
+        address &&
+        callback &&
+        chain &&
+        connector.id === activeConnector?.id
+      ) {
+        callback(address, chain?.id);
+      } else {
+        connectAsync({ connector }).then((res) => {
+          if (callback) {
+            callback(res.account, res.chain.id);
+          }
+        });
       }
-    });
-  };
+    },
+    [callback, connectAsync, isConnected, address, chain, activeConnector],
+  );
 
   return (
     <>

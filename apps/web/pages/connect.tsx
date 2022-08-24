@@ -4,10 +4,18 @@ import { useMagic } from '../contexts/auth';
 import { Tab } from '@headlessui/react';
 import ParentSignin from '../components/auth/ParentSignin';
 import ChildSignin from '../components/auth/ChildSignin';
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 function Connect() {
-  const { loading } = useMagic();
+  const { loading, loggedIn } = useMagic();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && loggedIn) {
+      router.push('/');
+    }
+  }, [loading, loggedIn, router]);
 
   if (loading) {
     return (

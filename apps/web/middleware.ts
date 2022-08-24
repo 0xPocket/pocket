@@ -1,4 +1,5 @@
 import { withAuth } from 'next-auth/middleware';
+import type { NextRequestWithAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
 
 const userRoutes = {
@@ -19,58 +20,64 @@ function routeAuthorized(currentRoute: string, toMatch: string) {
   return routeToMatch === pathToMatch;
 }
 
-export default withAuth(
-  // `withAuth` augments your `Request` with the user's token.
-  function middleware(req) {
-    const token = req.nextauth.token;
+const handler = (req: NextRequestWithAuth) => {
+  const token = req.nextauth.token;
 
-    if (!token) {
-      return NextResponse.next();
-    }
-
-    // New users or unverified users go to onboarding !
-    if (
-      (token.isNewUser || !token.emailVerified) &&
-      req.nextUrl.pathname !== '/onboarding'
-    ) {
-      return NextResponse.redirect(new URL('/onboarding', req.url));
-    }
-
-    // Onboarding is locked for validated users
-    if (
-      !token.isNewUser &&
-      token.emailVerified &&
-      req.nextUrl.pathname === '/onboarding'
-    ) {
-      return NextResponse.redirect(new URL('/', req.url));
-    }
-
-    // if (!token.emailVerified && req.nextUrl.pathname !== '/onboarding') {
-    //   return NextResponse.redirect(new URL('/onboarding', req.url));
-    // }
-
-    // Redirect if user type is not allowed
-
-    const userType = token.type;
-    const authorized =
-      userRoutes[userType].findIndex((route) => {
-        return routeAuthorized(req.nextUrl.pathname, route);
-      }) !== -1;
-
-    if (!authorized) {
-      return NextResponse.redirect(new URL('/', req.url));
-    }
-
+  if (!token) {
     return NextResponse.next();
-  },
-  {
-    callbacks: {
-      authorized: ({ token }) => {
-        return !!token;
-      },
+  }
+
+  // New users or unverified users go to onboarding !
+  if (
+    (token.isNewUser || !token.emailVerified) &&
+    req.nextUrl.pathname !== '/onboarding'
+  ) {
+    return NextResponse.redirect(new URL('/onboarding', req.url));
+  }
+
+  // Onboarding is locked for validated users
+  if (
+    !token.isNewUser &&
+    token.emailVerified &&
+    req.nextUrl.pathname === '/onboarding'
+  ) {
+    return NextResponse.redirect(new URL('/', req.url));
+  }
+
+  // if (!token.emailVerified && req.nextUrl.pathname !== '/onboarding') {
+  //   return NextResponse.redirect(new URL('/onboarding', req.url));
+  // }
+
+  // Redirect if user type is not allowed
+
+  const userType = token.type;
+
+  // User is not parent or child, allowed for anything
+  if (!userRoutes[userType]) {
+    return NextResponse.next();
+  }
+
+  const authorized =
+    userRoutes[userType].findIndex((route) => {
+      return routeAuthorized(req.nextUrl.pathname, route);
+    }) !== -1;
+
+  if (!authorized) {
+    return NextResponse.redirect(new URL('/', req.url));
+  }
+
+  return NextResponse.next();
+};
+
+const middleware = withAuth(handler, {
+  callbacks: {
+    authorized: ({ token }) => {
+      return !!token;
     },
   },
-);
+});
+
+export default middleware;
 
 export const config = {
   matcher: ['/', '/onboarding', '/add-account', '/account/:path*'],
