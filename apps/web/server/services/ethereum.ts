@@ -18,7 +18,7 @@ const AMOUNT_TO_SEND = parseEther('20');
 export async function grantMaticToChild(child: UserChild) {
   const config = await pocketContract.childToConfig(child.address!);
 
-  if (config.balance.eq(0)) {
+  if (config.balance.isZero()) {
     throw new TRPCError({
       code: 'BAD_REQUEST',
       message: 'You must have a balance in your pocket to claim your Matic',
@@ -51,6 +51,24 @@ export async function grantMaticToChild(child: UserChild) {
     });
   }
 
+  await prisma.parent.update({
+    where: {
+      userId: child.parentUserId,
+    },
+    data: {
+      maticGrants: {
+        decrement: 1,
+      },
+    },
+  });
+
+  const maticGrant = await prisma.maticGrant.create({
+    data: {
+      userId: child.id,
+      amount: AMOUNT_TO_SEND.toHexString(),
+    },
+  });
+
   const tx = await wallet
     .sendTransaction({
       to: child.address!,
@@ -63,35 +81,15 @@ export async function grantMaticToChild(child: UserChild) {
       });
     });
 
-  await prisma
-    .$transaction([
-      prisma.parent.update({
-        where: {
-          userId: child.parentUserId,
-        },
-        data: {
-          maticGrants: {
-            decrement: 1,
-          },
-        },
-      }),
-      prisma.maticGrant.create({
-        data: {
-          userId: child.id,
-          amount: tx.value.toHexString(),
-          hash: tx.hash,
-        },
-      }),
-    ])
-    .catch(() => {
-      throw new TRPCError({
-        code: 'INTERNAL_SERVER_ERROR',
-        message: 'Server error',
-      });
-    });
-
   tx.wait().then(async () => {
-    // ?
+    await prisma.maticGrant.update({
+      where: {
+        id: maticGrant.id,
+      },
+      data: {
+        hash: tx.hash,
+      },
+    });
   });
 
   return tx;

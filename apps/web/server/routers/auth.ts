@@ -12,11 +12,25 @@ import { prisma } from '../prisma';
 import { AuthSchema } from '../schemas/auth.schema';
 import { User } from '@prisma/client';
 import { env } from '../env';
+import { z } from 'zod';
 
 export const authRouter = createProtectedRouter()
-  .query('me', {
+  .query('session', {
     resolve: ({ ctx }) => {
       return ctx.session;
+    },
+  })
+  .query('me', {
+    resolve: ({ ctx }) => {
+      return prisma.user.findUnique({
+        where: {
+          id: ctx.session.user.id,
+        },
+        include: {
+          child: true,
+          parent: true,
+        },
+      });
     },
   })
   .mutation('onboard', {

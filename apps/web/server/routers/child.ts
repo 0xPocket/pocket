@@ -26,6 +26,33 @@ export const childRouter = createProtectedRouter()
       },
     });
   })
+  .query('canClaimMatic', {
+    resolve: async ({ ctx }) => {
+      const grant = await prisma.child.findUnique({
+        where: {
+          userId: ctx.session.user.id,
+        },
+        select: {
+          user: {
+            select: {
+              maticGrants: true,
+            },
+          },
+          parent: true,
+        },
+      });
+
+      if (
+        grant &&
+        grant.parent &&
+        grant.parent.maticGrants > 0 &&
+        grant.user.maticGrants.length === 0
+      )
+        return true;
+
+      return false;
+    },
+  })
   .mutation('claimMatic', {
     resolve: async ({ ctx }) => {
       const child = sanitizeChild(

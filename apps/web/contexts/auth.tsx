@@ -30,7 +30,7 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
   const queryClient = useQueryClient();
   const [magic, setMagic] = useState<MagicConnector>();
   const { connectors, connectAsync } = useConnect();
-  const { data, status, refetch } = trpc.useQuery(['auth.me'], {
+  const { data, status, refetch } = trpc.useQuery(['auth.session'], {
     cacheTime: 60000,
     staleTime: 0,
     enabled: isConnected,

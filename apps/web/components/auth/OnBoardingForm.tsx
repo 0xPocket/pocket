@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 
 const OnBoardingForm: FC = () => {
-  const { data } = trpc.useQuery(['auth.me']);
+  const { data } = trpc.useQuery(['auth.session']);
   const utils = trpc.useContext();
   const router = useRouter();
 
@@ -23,7 +23,7 @@ const OnBoardingForm: FC = () => {
       toast.error(error.message);
     },
     onSuccess: async () => {
-      await utils.invalidateQueries(['auth.me']);
+      await utils.invalidateQueries(['auth.session']);
       router.push('/');
     },
   });

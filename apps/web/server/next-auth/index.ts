@@ -56,13 +56,7 @@ export const authOptions: NextAuthOptions = {
             },
           });
 
-          return {
-            id: newUser.id,
-            email: userMetadata.email,
-            address: userAddress,
-            type: newUser.type,
-            isNewUser: newUser.newUser,
-          };
+          return newUser;
         }
 
         if (existingUser.accountType !== 'Magic') {
@@ -71,14 +65,7 @@ export const authOptions: NextAuthOptions = {
           );
         }
 
-        return {
-          id: existingUser.id,
-          email: userMetadata.email,
-          address: userAddress,
-          name: existingUser.name,
-          type: existingUser.type,
-          isNewUser: existingUser.newUser,
-        };
+        return existingUser;
       },
     }),
     CredentialsProvider({
@@ -123,14 +110,6 @@ export const authOptions: NextAuthOptions = {
           throw new Error('Your parent must create your account.');
         }
 
-        // console.log('test2');
-
-        // if (existingUser && existingUser.type !== type) {
-        //   throw new Error(
-        //     `You must sign in with the ${existingUser.type} form.`,
-        //   );
-        // }
-
         if (!existingUser) {
           const newUser = await prisma.user.create({
             data: {
@@ -143,28 +122,14 @@ export const authOptions: NextAuthOptions = {
             },
           });
 
-          return {
-            id: newUser.id,
-            address: siwe.address,
-            type: newUser.type,
-            emailVerified: false,
-            isNewUser: newUser.newUser,
-          };
+          return newUser;
         }
 
         if (existingUser?.accountType !== 'Ethereum') {
           throw new Error('Your email is linked to a Magic Wallet.');
         }
 
-        return {
-          id: existingUser.id,
-          email: existingUser.email,
-          address: siwe.address,
-          name: existingUser.name,
-          type: existingUser.type,
-          emailVerified: !!existingUser.emailVerified,
-          isNewUser: existingUser.newUser,
-        };
+        return existingUser;
       },
     }),
   ],
@@ -181,8 +146,7 @@ export const authOptions: NextAuthOptions = {
         user: {
           ...session.user,
           emailVerified: !!token.emailVerified,
-          isNewUser: token.isNewUser,
-          name: token.name,
+          newUser: token.newUser,
           type: token.type,
           id: token.sub!,
         },
@@ -193,9 +157,8 @@ export const authOptions: NextAuthOptions = {
       // console.log('==== JWT CALLBACK ====');
       // console.log("token", token); //name, email, picture, sub (id)
       // console.log("account", account);
-      // console.log("user", user); // user from return
-
-      if (token.isNewUser || !token.emailVerified) {
+      // console.log('user', user); // user from return
+      if (token.newUser || !token.emailVerified) {
         const checkUser = await prisma.user.findUnique({
           where: {
             id: token.sub,
@@ -210,7 +173,7 @@ export const authOptions: NextAuthOptions = {
           ...token,
           type: checkUser.type,
           name: checkUser.name,
-          isNewUser: checkUser.newUser,
+          newUser: checkUser.newUser,
           emailVerified: !!checkUser.emailVerified,
         };
       }
@@ -223,7 +186,7 @@ export const authOptions: NextAuthOptions = {
           ...token,
           type: user.type,
           name: user.name,
-          isNewUser: user.isNewUser,
+          newUser: user.newUser,
           emailVerified: !!user.emailVerified,
         };
       }

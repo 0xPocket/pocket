@@ -29,7 +29,7 @@ const handler = (req: NextRequestWithAuth) => {
 
   // New users or unverified users go to onboarding !
   if (
-    (token.isNewUser || !token.emailVerified) &&
+    (token.newUser || !token.emailVerified) &&
     req.nextUrl.pathname !== '/onboarding'
   ) {
     return NextResponse.redirect(new URL('/onboarding', req.url));
@@ -37,7 +37,7 @@ const handler = (req: NextRequestWithAuth) => {
 
   // Onboarding is locked for validated users
   if (
-    !token.isNewUser &&
+    !token.newUser &&
     token.emailVerified &&
     req.nextUrl.pathname === '/onboarding'
   ) {
