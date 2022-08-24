@@ -33,11 +33,7 @@ const EthereumProviders: FC<EthereumProvidersProps> = ({ callback }) => {
               key={connector.id}
               onClick={() => handleConnect(connector)}
               disabled={!connector.ready}
-              className={`container-classic relative flex items-center justify-center gap-4 p-4 transition-all dark:bg-dark-light/50 dark:hover:bg-dark-light ${
-                activeConnector?.id === connector.id
-                  ? 'border-2 border-primary'
-                  : 'border-white-darker'
-              } bg-[#161515]/25 p-4 font-sans font-bold hover:bg-[#161515]/75`}
+              className={`relative flex items-center justify-center gap-4 p-4 transition-all hover:scale-110`}
             >
               <div className="relative h-8 w-8">
                 <Image
@@ -51,7 +47,6 @@ const EthereumProviders: FC<EthereumProvidersProps> = ({ callback }) => {
           ))}
       </div>
       {isLoading && <Spinner />}
-      {error && <div className="text-sm text-danger">{error.message}</div>}
     </>
   );
 };

@@ -21,33 +21,26 @@ function Connect() {
 
   return (
     <MainWrapper>
-      <div className="mx-auto flex w-72 flex-col items-center justify-center gap-8">
+      <div className="mx-auto flex max-w-sm flex-col items-center justify-center gap-8 text-center">
+        <h1 className="mb-4">Welcome to Pocket !</h1>
         <Tab.Group>
-          <Tab.List className="flex gap-4">
+          <Tab.List className="flex gap-8">
             <Tab as={Fragment}>
               {({ selected }) => (
-                <button
-                  className={`container-classic without-ring px-4 py-2 ${
-                    !selected && 'opacity-40'
-                  }`}
-                >
-                  Parent
+                <button className={` ${!selected && 'opacity-40'}`}>
+                  {`I'm a parent`}
                 </button>
               )}
             </Tab>
             <Tab as={Fragment}>
               {({ selected }) => (
-                <button
-                  className={`container-classic without-ring px-4 py-2 ${
-                    !selected && 'opacity-40'
-                  }`}
-                >
-                  Child
+                <button className={`${!selected && 'opacity-40'}`}>
+                  {`I'm a child`}
                 </button>
               )}
             </Tab>
           </Tab.List>
-          <Tab.Panels>
+          <Tab.Panels className="container-classic rounded-lg p-8">
             <Tab.Panel className="mx-auto flex w-72 flex-col items-center justify-center gap-8">
               <ParentSignin />
             </Tab.Panel>

@@ -36,6 +36,18 @@
     @apply flex  items-center rounded-md bg-primary px-4 py-3 text-bright;
   }
 
+	.action-btn {
+    @apply flex  items-center rounded-md bg-primary px-4 py-3 text-bright;
+	}
+
+	.disabled-btn {
+    @apply action-btn cursor-not-allowed opacity-25;
+	}
+
+	.dismiss-btn {
+    @apply flex  items-center rounded-md px-4 py-3 ;
+	}
+
   .skeleton {
     position: relative;
     overflow: hidden;

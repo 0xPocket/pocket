@@ -1,7 +1,7 @@
 import { FC, useCallback, useMemo, useState } from 'react';
 import { useAccount, useDisconnect, useSignMessage } from 'wagmi';
 import { getCsrfToken, signIn } from 'next-auth/react';
-import SignMessage from '../onboarding/SignMessage';
+import SignMessage from './SignMessage';
 import EthereumProviders from './EthereumProviders';
 import { SiweMessage } from 'siwe';
 import { Spinner } from '../common/Spinner';
@@ -19,6 +19,7 @@ const EthereumSignin: FC<EthereumSigninProps> = ({ type }) => {
     isLoading: isLoadingSignMessage,
     error,
   } = useSignMessage();
+
   const [isLoadingGlobal, setIsLoadingGlobal] = useState(false);
   const mounted = useIsMounted();
 
@@ -65,12 +66,13 @@ const EthereumSignin: FC<EthereumSigninProps> = ({ type }) => {
 
   return (
     <>
-      <EthereumProviders callback={siweSignMessage} />
+      <p>Connect with your favorite wallet</p>
+      {!isConnected && <EthereumProviders callback={siweSignMessage} />}
       {isLoading && <Spinner />}
-      {error && <div className="text-sm text-danger">{error.message}</div>}
       {isConnected && !isLoading && (
-        <>
+        <div className="flex gap-4">
           <button
+            className="dismiss-btn"
             onClick={(e) => {
               e.preventDefault();
               disconnect();
@@ -78,20 +80,17 @@ const EthereumSignin: FC<EthereumSigninProps> = ({ type }) => {
           >
             Disconnect
           </button>
-          <span>Connected with {address}</span>
-        </>
-      )}
-      {isConnected && !isLoading && (
-        <SignMessage
-          callback={(message, signature) =>
-            signIn('ethereum', {
-              message,
-              signature,
-              type: type,
-              callbackUrl: '/',
-            })
-          }
-        />
+          <SignMessage
+            callback={(message, signature) =>
+              signIn('ethereum', {
+                message,
+                signature,
+                type: type,
+                callbackUrl: '/',
+              })
+            }
+          />
+        </div>
       )}
     </>
   );
