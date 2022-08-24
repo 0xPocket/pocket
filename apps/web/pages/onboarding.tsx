@@ -1,5 +1,5 @@
 import MainWrapper from '../components/wrappers/MainWrapper';
-import OnBoardingForm from '../components/auth/OnBoardingForm';
+import OnBoardingForm from '../components/onboarding/OnBoardingForm';
 import { Spinner } from '../components/common/Spinner';
 import { trpc } from '../utils/trpc';
 import { useEffect } from 'react';

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAccount, useDisconnect } from 'wagmi';
 import { trpc } from '../../utils/trpc';
 import Providers from './Providers';
-import SignMessage from './SignMessage';
+import SignMessage from '../auth/SignMessage';
 import Step from './Step';
 
 type OnBoardingStepperProps = {

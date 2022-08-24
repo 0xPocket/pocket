@@ -1,7 +1,7 @@
 import { FC, useCallback, useMemo, useState } from 'react';
 import { useAccount, useDisconnect, useSignMessage } from 'wagmi';
 import { getCsrfToken, signIn } from 'next-auth/react';
-import SignMessage from '../onboarding/SignMessage';
+import SignMessage from './SignMessage';
 import EthereumProviders from './EthereumProviders';
 import { SiweMessage } from 'siwe';
 import { Spinner } from '../common/Spinner';
@@ -17,11 +17,8 @@ type EthereumSigninProps = {
 const EthereumSignin: FC<EthereumSigninProps> = ({ type }) => {
   const { isConnected, address, connector: activeConnector } = useAccount();
   const { disconnect } = useDisconnect();
-  const {
-    signMessageAsync,
-    isLoading: isLoadingSignMessage,
-    error,
-  } = useSignMessage();
+  const { signMessageAsync, isLoading: isLoadingSignMessage } =
+    useSignMessage();
   const [isLoadingGlobal, setIsLoadingGlobal] = useState(false);
   const mounted = useIsMounted();
   const router = useRouter();
@@ -77,12 +74,13 @@ const EthereumSignin: FC<EthereumSigninProps> = ({ type }) => {
 
   return (
     <>
-      <EthereumProviders callback={siweSignMessage} />
+      <p>Connect with your favorite wallet</p>
+      {!isConnected && <EthereumProviders callback={siweSignMessage} />}
       {isLoading && <Spinner />}
-      {error && <div className="text-sm text-danger">{error.message}</div>}
       {isConnected && !isLoading && activeConnector?.id !== 'magic' && (
-        <>
+        <div className="flex gap-4">
           <button
+            className="dismiss-btn"
             onClick={(e) => {
               e.preventDefault();
               disconnect();
@@ -90,27 +88,24 @@ const EthereumSignin: FC<EthereumSigninProps> = ({ type }) => {
           >
             Disconnect
           </button>
-          <span>Connected with {address}</span>
-        </>
-      )}
-      {isConnected && !isLoading && activeConnector?.id !== 'magic' && (
-        <SignMessage
-          callback={(message, signature) =>
-            signIn('ethereum', {
-              message,
-              signature,
-              type: type,
-              redirect: false,
-            }).then(async (res) => {
-              if (res?.ok) {
-                router.push('/onboarding');
-              } else {
-                toast.error(res?.error);
-                setIsLoadingGlobal(false);
-              }
-            })
-          }
-        />
+          <SignMessage
+            callback={(message, signature) =>
+              signIn('ethereum', {
+                message,
+                signature,
+                type: type,
+                redirect: false,
+              }).then(async (res) => {
+                if (res?.ok) {
+                  router.push('/onboarding');
+                } else {
+                  toast.error(res?.error);
+                  setIsLoadingGlobal(false);
+                }
+              })
+            }
+          />
+        </div>
       )}
     </>
   );
