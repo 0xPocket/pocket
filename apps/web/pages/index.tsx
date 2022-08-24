@@ -7,7 +7,7 @@ import ChildDashboard from '../components/dashboard/child/ChildDashboard';
 import { trpc } from '../utils/trpc';
 
 export default function Web() {
-  const { data } = trpc.useQuery(['auth.me']);
+  const { data } = trpc.useQuery(['auth.session']);
 
   return (
     <MainWrapper>

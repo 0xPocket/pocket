@@ -26,12 +26,11 @@ export const [useMagic, MagicAuthContextProvider] =
 
 export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
   const { isConnected, status: wagmiStatus } = useAccount();
-  const { disconnectAsync } = useDisconnect();
+  const { disconnectAsync, disconnect } = useDisconnect();
   const queryClient = useQueryClient();
   const [magic, setMagic] = useState<MagicConnector>();
   const { connectors, connectAsync } = useConnect();
-  const { data, status, refetch } = trpc.useQuery(['auth.me'], {
-    cacheTime: 60000,
+  const { data, status, refetch } = trpc.useQuery(['auth.session'], {
     staleTime: 0,
     enabled: isConnected,
     retry: false,
@@ -51,11 +50,11 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
           redirect: false,
         }).then(async (res) => {
           if (res?.ok) {
-            await refetch();
+            // await refetch();
             router.push('/onboarding');
           } else {
             toast.error(res?.error);
-            disconnectAsync();
+            disconnect();
           }
         });
       },
@@ -65,7 +64,7 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
   const logout = useMutation(() => disconnectAsync(), {
     onSuccess: async () => {
       queryClient.removeQueries();
-      signOut({ callbackUrl: '/connect', redirect: false }).then(() => {
+      signOut({ redirect: false }).then(() => {
         router.push('/connect');
       });
     },
@@ -97,7 +96,7 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
         loading:
           logout.isLoading || signInWithEmail.isLoading || logout.isLoading,
         signInWithEmail: async (email: string) => {
-          if (!isConnected) {
+          if (isConnected) {
             await disconnectAsync();
           }
           magic?.setUserDetails({ email });

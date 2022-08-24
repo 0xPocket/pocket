@@ -2,19 +2,19 @@
   "$schema": "https://turborepo.org/schema.json",
   "globalDependencies": [".env", "./packages/prisma/.env"],
   "pipeline": {
-    "@lib/prisma#generate": {
+    "@lib/prisma#build": {
       "inputs": ["./prisma/schema.prisma", ".env"],
       "dependsOn": ["$DATABASE_URL"],
       "outputs": ["./../../node_modules/@prisma/client"]
     },
     "@lib/prisma#deploy": {
-      "dependsOn": ["generate"],
+      "dependsOn": ["build"],
       "inputs": ["./prisma/migrations/**/*.sql"],
       "cache": false,
       "outputs": []
     },
     "@lib/prisma#push": {
-      "dependsOn": ["generate"],
+      "dependsOn": ["build"],
       "inputs": ["./prisma/migrations/**/*.sql"],
       "cache": false,
       "outputs": []
@@ -33,6 +33,10 @@
     "clean": {
       "dependsOn": ["^clean"],
       "cache": false
+    },
+    "web#build": {
+      "dependsOn": ["@lib/prisma#deploy"],
+      "outputs": ["dist/**", ".next/**"]
     },
     "build": {
       "dependsOn": ["^build"],

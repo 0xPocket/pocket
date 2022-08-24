@@ -6,7 +6,7 @@ declare module 'next-auth' {
   type CustomSessionUser = DefaultSessionUser & {
     id: string;
     address: string | undefined;
-    isNewUser: boolean;
+    newUser: boolean;
     emailVerified: boolean;
     type: UserType;
   };
@@ -16,7 +16,7 @@ declare module 'next-auth' {
 
   interface User {
     type: UserType;
-    isNewUser: boolean;
+    newUser: boolean;
     emailVerified: boolean;
     address: string;
   }
@@ -25,7 +25,7 @@ declare module 'next-auth' {
 declare module 'next-auth/jwt' {
   /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
   interface JWT {
-    isNewUser: boolean;
+    newUser: boolean;
     emailVerified: boolean;
     type: UserType;
   }

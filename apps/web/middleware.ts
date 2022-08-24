@@ -3,8 +3,9 @@ import type { NextRequestWithAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
 
 const userRoutes = {
-  Parent: ['/', '/onboarding', '/add-account', '/account/:path*'],
-  Child: ['/', '/onboarding'],
+  ALL: ['/', '/onboarding'],
+  Parent: ['/add-account', '/account/:path*'],
+  Child: [],
 };
 
 function routeAuthorized(currentRoute: string, toMatch: string) {
@@ -29,7 +30,7 @@ const handler = (req: NextRequestWithAuth) => {
 
   // New users or unverified users go to onboarding !
   if (
-    (token.isNewUser || !token.emailVerified) &&
+    (token.newUser || !token.emailVerified) &&
     req.nextUrl.pathname !== '/onboarding'
   ) {
     return NextResponse.redirect(new URL('/onboarding', req.url));
@@ -37,7 +38,7 @@ const handler = (req: NextRequestWithAuth) => {
 
   // Onboarding is locked for validated users
   if (
-    !token.isNewUser &&
+    !token.newUser &&
     token.emailVerified &&
     req.nextUrl.pathname === '/onboarding'
   ) {
@@ -58,6 +59,9 @@ const handler = (req: NextRequestWithAuth) => {
   }
 
   const authorized =
+    userRoutes['ALL'].findIndex((route) => {
+      return routeAuthorized(req.nextUrl.pathname, route);
+    }) !== -1 ||
     userRoutes[userType].findIndex((route) => {
       return routeAuthorized(req.nextUrl.pathname, route);
     }) !== -1;

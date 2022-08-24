@@ -1,14 +1,14 @@
 import { FC, useEffect } from 'react';
-import { z } from 'zod';
 import { useZodForm } from '../../utils/useZodForm';
 import { trpc } from '../../utils/trpc';
 import { AuthSchema } from '../../server/schemas';
 import { Spinner } from '../common/Spinner';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
+import { useMagic } from '../../contexts/auth';
 
 const OnBoardingForm: FC = () => {
-  const { data } = trpc.useQuery(['auth.me']);
+  const { user } = useMagic();
   const utils = trpc.useContext();
   const router = useRouter();
 
@@ -22,17 +22,23 @@ const OnBoardingForm: FC = () => {
     onError: (error) => {
       toast.error(error.message);
     },
-    onSuccess: async () => {
-      await utils.invalidateQueries(['auth.me']);
-      router.push('/');
+    onSuccess: async (data) => {
+      console.log('data', data);
+      if (data.emailVerified) {
+        console.log('redirect to /');
+        router.push('/');
+      } else {
+        console.log('invalidate query');
+        await utils.invalidateQueries(['auth.session']);
+      }
     },
   });
 
   useEffect(() => {
-    if (data?.user.email) {
-      setValue('email', data?.user.email);
+    if (user?.email) {
+      setValue('email', user.email);
     }
-  }, [data, setValue]);
+  }, [user?.email, setValue]);
 
   if (onboardUser.isLoading) {
     return <Spinner />;
@@ -55,12 +61,12 @@ const OnBoardingForm: FC = () => {
         <input
           {...register('email')}
           className={`without-ring container-classic w-full border border-dark-lightest/50 p-2 px-4 font-thin shadow dark:border-white-darker dark:bg-dark ${
-            !data?.user.email
+            !user?.email
               ? 'cursor-auto opacity-100 dark:hover:bg-dark-light'
               : 'cursor-not-allowed opacity-50'
           }`}
           autoComplete="email"
-          disabled={!!data?.user.email}
+          disabled={!!user?.email}
           placeholder="Email"
         />
         <input
