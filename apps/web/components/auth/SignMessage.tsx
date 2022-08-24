@@ -38,23 +38,17 @@ const SignMessage: React.FC<SignMessageProps> = ({
   };
 
   return (
-    <div className="flex w-96 flex-col items-center justify-center gap-2">
+    <>
       {isLoading ? (
-        <div className="flex w-48 justify-center">
-          <Spinner />
-        </div>
+        <Spinner />
       ) : (
         <>
-          <button
-            className="relative flex w-48 flex-col items-center justify-center gap-4 rounded-lg border border-white-darker bg-[#161515]/25 p-4 font-sans font-bold hover:bg-[#161515]/75"
-            disabled={isLoading}
-            onClick={() => siweSignMessage()}
-          >
+          <button className="action-btn" onClick={() => siweSignMessage()}>
             {register ? 'Link wallet' : 'Sign Message'}
           </button>
         </>
       )}
-    </div>
+    </>
   );
 };
 
