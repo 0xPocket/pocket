@@ -2,26 +2,24 @@ import MainWrapper from '../components/wrappers/MainWrapper';
 import OnBoardingForm from '../components/onboarding/OnBoardingForm';
 import { Spinner } from '../components/common/Spinner';
 import { trpc } from '../utils/trpc';
-import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import EmailVerification from '../components/auth/EmailVerification';
 
 function OnBoarding() {
-  const { data, isLoading, isFetching } = trpc.useQuery(['auth.me']);
   const router = useRouter();
-
-  const resendEmail = trpc.useMutation(['email.resendVerificationEmail']);
-
-  useEffect(() => {
-    if (data?.user && data.user.emailVerified && !data?.user.isNewUser) {
-      router.push('/');
-    }
-  }, [data, router]);
+  const { data, isLoading, isFetching } = trpc.useQuery(['auth.session'], {
+    onSuccess: (data) => {
+      if (data.user.emailVerified && !data.user.newUser) {
+        router.push('/');
+      }
+    },
+  });
 
   if (
     !data ||
     isLoading ||
     isFetching ||
-    (data?.user.emailVerified && !data?.user.isNewUser)
+    (data?.user.emailVerified && !data?.user.newUser)
   ) {
     return (
       <MainWrapper>
@@ -38,26 +36,7 @@ function OnBoarding() {
     return (
       <MainWrapper>
         <section className="relative grid min-h-[85vh] grid-cols-1">
-          <div className="mx-auto flex flex-col items-center justify-center gap-4">
-            <p className="text-xl font-bold">
-              Please verify your email with the link we sent you.
-            </p>
-            {resendEmail.status === 'idle' && (
-              <a
-                className="cursor-pointer"
-                onClick={(e) => {
-                  e.preventDefault();
-                  resendEmail.mutateAsync();
-                }}
-              >
-                {"Didn't received any email? Click here to resend a new one."}
-              </a>
-            )}
-            {resendEmail.status === 'loading' && <Spinner />}
-            {resendEmail.status === 'success' && (
-              <p className="text-success">New email sent !</p>
-            )}
-          </div>
+          <EmailVerification />
         </section>
       </MainWrapper>
     );
