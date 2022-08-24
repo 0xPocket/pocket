@@ -29,23 +29,26 @@ const EmailSignin: FC = () => {
 
   return (
     <form
-      className="flex w-full flex-col items-center justify-center gap-4"
+      className="flex flex-col items-center justify-center gap-4"
       onSubmit={handleSubmit(onSubmit)}
     >
       <p>Connect with your email</p>
-
-      <input
-        {...register('email')}
-        className=""
-        autoComplete="email"
-        placeholder="Email"
-      />
-      <button
-        type="submit"
-        className={` ${formState.isValid ? 'action-btn' : 'disabled-btn'}`}
-      >
-        Sign in with email
-      </button>
+      <div className="flex gap-2">
+        <input
+          {...register('email')}
+          className="input-text"
+          autoComplete="email"
+          placeholder="my@email.com"
+        />
+        <button
+          type="submit"
+          className={` ${
+            formState.isValid ? 'action-btn' : 'disabled-btn'
+          } flex-none`}
+        >
+          Sign In
+        </button>
+      </div>
     </form>
   );
 };

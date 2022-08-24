@@ -12,14 +12,10 @@ type EthereumSigninProps = {
 };
 
 const EthereumSignin: FC<EthereumSigninProps> = ({ type }) => {
-  const { isConnected, address } = useAccount();
+  const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
-  const {
-    signMessageAsync,
-    isLoading: isLoadingSignMessage,
-    error,
-  } = useSignMessage();
-
+  const { signMessageAsync, isLoading: isLoadingSignMessage } =
+    useSignMessage();
   const [isLoadingGlobal, setIsLoadingGlobal] = useState(false);
   const mounted = useIsMounted();
 

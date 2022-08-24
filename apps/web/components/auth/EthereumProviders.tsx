@@ -8,8 +8,8 @@ type EthereumProvidersProps = {
 };
 
 const EthereumProviders: FC<EthereumProvidersProps> = ({ callback }) => {
-  const { connectors, connectAsync, error, isLoading } = useConnect();
-  const { isConnected, connector: activeConnector } = useAccount();
+  const { connectors, connectAsync, isLoading } = useConnect();
+  const { isConnected } = useAccount();
 
   const handleConnect = (connector: Connector) => {
     connectAsync({ connector }).then((res) => {
@@ -33,7 +33,7 @@ const EthereumProviders: FC<EthereumProvidersProps> = ({ callback }) => {
               key={connector.id}
               onClick={() => handleConnect(connector)}
               disabled={!connector.ready}
-              className={`relative flex items-center justify-center gap-4 p-4 transition-all hover:scale-110`}
+              className="relative flex flex-col items-center justify-center gap-4 transition-all hover:scale-110"
             >
               <div className="relative h-8 w-8">
                 <Image
@@ -43,6 +43,7 @@ const EthereumProviders: FC<EthereumProvidersProps> = ({ callback }) => {
                   alt={connector.name}
                 />
               </div>
+              <p className="text-sm">{connector.name}</p>
             </button>
           ))}
       </div>

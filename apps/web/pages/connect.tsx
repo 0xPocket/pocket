@@ -27,7 +27,7 @@ function Connect() {
           <Tab.List className="flex gap-8">
             <Tab as={Fragment}>
               {({ selected }) => (
-                <button className={` ${!selected && 'opacity-40'}`}>
+                <button className={`${!selected && 'opacity-40'}`}>
                   {`I'm a parent`}
                 </button>
               )}

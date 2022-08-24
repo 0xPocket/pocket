@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @layer base {
+	/* global */
   body {
     @apply background font-raleway;
   }
@@ -20,10 +21,11 @@
     @apply text-primary;
   }
 
-  .without-ring {
-    @apply focus:outline-0;
-  }
+	button {
+		@apply without-ring;
+	}
 
+	/* generics */
   .background {
     @apply bg-bright-bg text-dark-lightest dark:bg-dark dark:text-white;
   }
@@ -32,6 +34,12 @@
     @apply border border-dark border-opacity-10 bg-bright-dark dark:border-white-darker dark:bg-dark-light dark:shadow-lg;
   }
 
+	.border-classic {
+		@apply border border-dark border-opacity-10 dark:border-white-darker;
+	}
+
+
+	/* btn */
   .success-btn {
     @apply flex  items-center rounded-md bg-primary px-4 py-3 text-bright;
   }
@@ -48,6 +56,17 @@
     @apply flex  items-center rounded-md px-4 py-3 ;
 	}
 
+	/* inputs */
+	.input-text {
+		@apply px-4 py-3 rounded-md text-dark-light border-classic without-ring ;
+	}
+
+	/* helpers */
+  .without-ring {
+    @apply focus:outline-0;
+  }
+
+	/* skeleton */
   .skeleton {
     position: relative;
     overflow: hidden;
