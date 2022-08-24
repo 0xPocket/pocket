@@ -25,20 +25,73 @@ export async function grantMaticToChild(child: UserChild) {
     });
   }
 
-  const tx = await wallet.sendTransaction({
-    to: child.address!,
-    value: AMOUNT_TO_SEND,
+  const grant = await prisma.maticGrant.findFirst({
+    where: {
+      userId: child.id,
+    },
   });
 
-  tx.wait().then(async () => {
-    await prisma.child.update({
-      where: {
-        userId: child.id,
-      },
-      data: {
-        maticClaimed: true,
-      },
+  if (grant) {
+    throw new TRPCError({
+      code: 'BAD_REQUEST',
+      message: 'Matic already claimed',
     });
+  }
+
+  const parent = await prisma.parent.findUnique({
+    where: {
+      userId: child.parentUserId,
+    },
+  });
+
+  if (parent?.maticGrants === 0) {
+    throw new TRPCError({
+      code: 'BAD_REQUEST',
+      message: "You can't claim Matic because your parent have no grants",
+    });
+  }
+
+  const tx = await wallet
+    .sendTransaction({
+      to: child.address!,
+      value: AMOUNT_TO_SEND,
+    })
+    .catch(() => {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Server error',
+      });
+    });
+
+  await prisma
+    .$transaction([
+      prisma.parent.update({
+        where: {
+          userId: child.parentUserId,
+        },
+        data: {
+          maticGrants: {
+            decrement: 1,
+          },
+        },
+      }),
+      prisma.maticGrant.create({
+        data: {
+          userId: child.id,
+          amount: tx.value.toHexString(),
+          hash: tx.hash,
+        },
+      }),
+    ])
+    .catch(() => {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Server error',
+      });
+    });
+
+  tx.wait().then(async () => {
+    // ?
   });
 
   return tx;

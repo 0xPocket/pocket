@@ -1,14 +1,8 @@
 import { TRPCError } from '@trpc/server';
-import { providers, Wallet } from 'ethers';
-import { parseEther } from 'ethers/lib/utils';
 import { createProtectedRouter } from '../createRouter';
-import { env } from '../env';
 import { prisma } from '../prisma';
 import { grantMaticToChild } from '../services/ethereum';
 import { sanitizeChild } from '../utils/sanitizeUser';
-
-const provider = new providers.JsonRpcProvider(env.NEXT_PUBLIC_RPC_ENDPOINT);
-const wallet = new Wallet(env.POCKET_PRIVATE_KEY, provider);
 
 export const childRouter = createProtectedRouter()
   .middleware(({ ctx, next }) => {
@@ -52,19 +46,7 @@ export const childRouter = createProtectedRouter()
         });
       }
 
-      if (child.maticClaimed) {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'Matic already claimed',
-        });
-      }
-
-      const tx = await grantMaticToChild(child).catch(() => {
-        throw new TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'Server error',
-        });
-      });
+      const tx = await grantMaticToChild(child);
 
       return tx.hash as `0x${string}`;
     },
