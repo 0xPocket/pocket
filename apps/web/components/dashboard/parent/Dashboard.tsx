@@ -3,19 +3,10 @@ import NftContent from '../common/nft/NftContent';
 import { UserChild } from '@lib/types/interfaces';
 import ChildCard from '../../card/parent/ChildCard';
 import ActivityContent from '../common/activity/ActivityContent';
-import { useSmartContract } from '../../../contexts/contract';
-import { useAccount } from 'wagmi';
 
 type AccountDashboardProps = { child: UserChild };
 
 function AccountDashboard({ child }: AccountDashboardProps) {
-  const { pocketContract } = useSmartContract();
-  const { address } = useAccount();
-
-  const eventFilter = pocketContract.filters[
-    'FundsAdded(uint256,address,uint256,address)'
-  ](null, address, null, child.address);
-
   return child.address ? (
     <div className="space-y-20">
       <div className="grid grid-cols-6 gap-8">
@@ -26,7 +17,6 @@ function AccountDashboard({ child }: AccountDashboardProps) {
 
         <ActivityContent
           childAddress={child.address!}
-          eventFilter={eventFilter}
           rightHeader="Your Topups"
         />
       </div>

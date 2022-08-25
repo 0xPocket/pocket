@@ -1,9 +1,5 @@
-import {
-  FundsAddedEventFilter,
-  FundsClaimedEventFilter,
-} from 'pocket-contract/typechain-types/contracts/PocketFaucet';
 import { useQuery } from 'react-query';
-import { useProvider } from 'wagmi';
+import { useAccount, useProvider } from 'wagmi';
 import { useSmartContract } from '../contexts/contract';
 import { formatUnits } from 'ethers/lib/utils';
 
@@ -13,13 +9,15 @@ type Event = {
   timestamp: number;
 };
 
-export const useGetClaimsQuery = (
-  address: string,
-  eventFilter: FundsClaimedEventFilter | FundsAddedEventFilter,
-) => {
+export const useGetClaimsQuery = (address: string) => {
   const provider = useProvider();
   const { pocketContract } = useSmartContract();
   const { erc20 } = useSmartContract();
+  const { address: requesterAddress } = useAccount();
+
+  const eventFilter = pocketContract.filters[
+    'FundsAdded(uint256,address,uint256,address)'
+  ](null, requesterAddress, null, address);
 
   return useQuery(
     ['child-claims', address],
