@@ -9,15 +9,13 @@ const { z } = require('zod');
 /*eslint sort-keys: "error"*/
 const envSchema = z.object({
   // DATABASE_URL: z.string().url(),
-  GOOGLE_CLIENT_ID: z.string(),
-  GOOGLE_CLIENT_SECRET: z.string(),
-  GOOGLE_REFRESH_TOKEN: z.string(),
   JWT_EMAIL_SECRET: z.string().optional(),
   MAIL_USER: z.string().email(),
   NEXTAUTH_SECRET: z.string(),
   NEXTAUTH_URL: z.string().url().optional(),
   NODE_ENV: z.enum(['development', 'test', 'production']),
   QUERY_DEBUG: z.string().optional(),
+  SENDGRID_API_KEY: z.string(),
   VERCEL_URL: z.string().optional(),
 });
 

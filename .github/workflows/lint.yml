@@ -16,6 +16,7 @@ jobs:
       MAIL_USER: hello@gopocket.fr
       NEXTAUTH_SECRET: supersecret
       NODE_ENV: test
+      SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
     strategy:
       matrix:
         node: ["16.x"]
