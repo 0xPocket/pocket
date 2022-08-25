@@ -22,7 +22,7 @@ function AccountDashboard({ child }: AccountDashboardProps) {
         <ChildCard child={child} className="col-span-3" />
       </div>
       <div className="grid grid-cols-2 gap-8">
-        <NftContent childAddress={child.address} fill_nbr={9} />
+        <NftContent childAddress={child.address} fill_nbr={6} />
 
         <ActivityContent
           childAddress={child.address!}

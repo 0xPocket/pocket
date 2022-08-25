@@ -10,7 +10,7 @@ function ActivityTabHeaders({
   rightHeader,
 }: ActivityTabHeadersProps) {
   return (
-    <Tab.List className="grid grid-cols-2 space-x-8">
+    <Tab.List className="flex items-center space-x-8">
       <Tab
         className={({ selected }) =>
           selected ? 'text-dark underline dark:text-white' : 'text-white-darker'

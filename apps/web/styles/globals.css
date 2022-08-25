@@ -18,7 +18,7 @@
   }
 
   a {
-    @apply text-primary;
+    @apply text-primary without-ring;
   }
 
 	button {
@@ -53,12 +53,31 @@
 	}
 
 	.dismiss-btn {
-    @apply flex  items-center rounded-md px-4 py-3 ;
+    @apply flex items-center rounded-md px-4 py-3 ;
 	}
 
 	/* inputs */
 	.input-text {
 		@apply px-4 py-3 rounded-md text-dark-light border-classic without-ring ;
+	}
+
+	/* badge */
+	.nft-cat-badge {
+		@apply rounded-full px-2 py-1 text-sm font-bold;
+	}
+
+	/* table */
+	.table-head
+	{
+		@apply mb-2 flex items-center text-xl;
+	}
+
+	.table-row {
+		@apply border-b border-dark border-opacity-10 font-light dark:border-bright-bg dark:border-opacity-10;
+	}
+
+	.table-cell {
+		@apply py-2;
 	}
 
 	/* helpers */

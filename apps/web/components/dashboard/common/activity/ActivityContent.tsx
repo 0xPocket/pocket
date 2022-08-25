@@ -22,7 +22,7 @@ import {
   FundsAddedEventFilter,
   FundsClaimedEventFilter,
 } from 'pocket-contract/typechain-types/contracts/PocketFaucet';
-import EventsTable from '../EventsTable';
+import EventsTable from './EventsTable';
 import { TransactionsTable } from './TransactionsTable';
 
 type ActivityContentProps = {
@@ -51,7 +51,7 @@ type Event = {
 };
 
 async function fetchTransactions(alchemy: Alchemy, fromAddress: string) {
-  let tx = [] as AssetTransfersResultWithMetadata[];
+  let tx: AssetTransfersResultWithMetadata[] = [];
   let pageKey = undefined;
   do {
     const ret = (await getAssetTransfers(alchemy, {
@@ -82,16 +82,12 @@ function ActivityContent({
     },
     {
       staleTime: 60 * 1000,
-      // enabled: !!child.address,
       select: (transfers) => {
         transfers.reverse();
         return transfers;
       },
     },
   );
-  // const eventFilter = pocketContract.filters[
-  //   'FundsClaimed(address,uint256,uint256)'
-  // ](childAddress, null, null);
 
   const { data: logs, isLoading: isLogLoading } = useQuery(
     ['child-claims', childAddress],
@@ -104,13 +100,12 @@ function ActivityContent({
       }),
     {
       keepPreviousData: true,
-      // enabled: !!child.address,
       staleTime: 10000,
       select: (extractedLogs) => {
-        const parsed = [] as Event[];
+        const parsed: Event[] = [];
         for (const log of extractedLogs) {
           const ev = pocketContract.interface.parseLog({
-            topics: log.topics as string[],
+            topics: log.topics,
             data: log.data,
           });
           parsed.push({
@@ -128,14 +123,16 @@ function ActivityContent({
   );
 
   return (
-    <div className="space-y-8">
-      <h2>Activity</h2>
+    <div className="flex flex-col space-y-8">
       <Tab.Group>
-        <ActivityTabHeaders
-          leftHeader="Transactions"
-          rightHeader={rightHeader}
-        />
-        <Tab.Panels>
+        <div className="flex justify-between">
+          <h2>Activity</h2>
+          <ActivityTabHeaders
+            leftHeader="Transactions"
+            rightHeader={rightHeader}
+          />
+        </div>
+        <Tab.Panels className="container-classic max-h-[538px] w-full overflow-scroll rounded-lg px-8 py-4">
           <Tab.Panel>
             {!isTxLoading && txList ? (
               <TransactionsTable transactionsList={txList} />

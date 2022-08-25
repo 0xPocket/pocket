@@ -2,29 +2,41 @@ import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table';
 import { AssetTransfersResultWithMetadata } from '@lib/types/interfaces';
 import { AssetTransfersCategory } from '@alch/alchemy-sdk';
 import moment from 'moment';
-import { useState } from 'react';
-import { PageSwitchers } from './PageSwitchers';
 
 type TransactionsTableProps = {
   transactionsList: AssetTransfersResultWithMetadata[];
 };
 
 function transformCategory(category: AssetTransfersCategory) {
-  if (category === 'erc20') return 'Crypto';
-  if (
-    category === 'erc721' ||
-    category === 'erc1155' ||
-    category === 'specialnft'
-  )
-    return 'NFT';
-  return category;
+  switch (category) {
+    case 'erc20':
+      return 'Crypto';
+    case 'erc721':
+    case 'erc1155':
+    case 'specialnft':
+      return 'NFT';
+    default:
+      return category;
+  }
 }
+
+const colorCat = (category: string) => {
+  switch (category) {
+    case 'erc20':
+      return '#fff';
+    case 'erc721':
+    case 'erc1155':
+    case 'specialnft':
+      return '#abd';
+    default:
+      return '#CCC';
+  }
+};
 
 function formatValue(value: number | null) {
   let format = value?.toFixed(2) === '0.00' ? '0' : value?.toFixed(2);
@@ -36,20 +48,30 @@ const columnHelper = createColumnHelper<AssetTransfersResultWithMetadata>();
 
 const columns = [
   columnHelper.accessor('metadata.blockTimestamp', {
-    cell: (info) => (
-      <span className="ml-1">{moment(info.getValue()).format('D/MM')}</span>
-    ),
-    header: () => <span className="ml-1">Date</span>,
+    cell: (info) => moment(info.getValue()).format('DD/MM'),
+    header: () => <span>Date</span>,
     id: 'Date',
   }),
   columnHelper.accessor(
-    (row) => `${formatValue(row.value)} ${row.asset ? row.asset : ''}`,
+    (row) => `${formatValue(row.value)} ${row.asset ?? ''}`,
     {
+      cell: (info) => <div className=" text-right">{info.getValue()}</div>,
+      header: () => <span>Amount</span>,
       id: 'Amount',
     },
   ),
   columnHelper.accessor('category', {
-    cell: (info) => <span>{transformCategory(info.getValue())}</span>,
+    cell: (info) => (
+      <div className=" text-right">
+        <span
+          className="nft-cat-badge"
+          style={{ backgroundColor: colorCat(info.getValue()) }}
+        >
+          {transformCategory(info.getValue())}
+        </span>
+      </div>
+    ),
+    header: () => <span>Category</span>,
     id: 'Category',
   }),
 ];
@@ -57,42 +79,42 @@ const columns = [
 export function TransactionsTable({
   transactionsList,
 }: TransactionsTableProps) {
-  const [data] = useState([...transactionsList]);
-
   const table = useReactTable({
-    data,
+    data: transactionsList,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
   });
 
   return (
-    <div className="container-classic rounded-lg">
+    <>
       {transactionsList.length ? (
         <>
-          <table className="w-full">
+          <table className="w-full overflow-y-scroll">
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
-                <tr
-                  className="mt-1 grid grid-cols-3 gap-4"
-                  key={headerGroup.id}
-                >
+                <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
-                    <td key={header.id}>
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
-                    </td>
+                    <th key={header.id}>
+                      <div
+                        className={` table-head ${
+                          header.index !== 0 && 'justify-end'
+                        } `}
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                      </div>
+                    </th>
                   ))}
                 </tr>
               ))}
             </thead>
-            <tbody>
+            <tbody className="font-thin tracking-wide">
               {table.getRowModel().rows.map((row) => (
-                <tr className="grid grid-cols-3 gap-4" key={row.id}>
+                <tr key={row.id} className="table-row">
                   {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id}>
+                    <td key={cell.id} className="table-cell text-sm">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
@@ -103,16 +125,10 @@ export function TransactionsTable({
               ))}
             </tbody>
           </table>
-          <PageSwitchers
-            previousPage={table.previousPage}
-            getCanPreviousPage={table.getCanPreviousPage}
-            nextPage={table.nextPage}
-            getCanNextPage={table.getCanNextPage}
-          />
         </>
       ) : (
-        <p className="w-full text-center">{'No transactions for now.'}</p>
+        <p className="w-full text-center">{'No transactions to display.'}</p>
       )}
-    </div>
+    </>
   );
 }

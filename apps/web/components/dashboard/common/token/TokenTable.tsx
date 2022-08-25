@@ -108,9 +108,7 @@ function TokenTable({ tokenList }: TokenTableProps) {
                       className={`${
                         header.column.getCanSort() &&
                         'cursor-pointer select-none'
-                      } mb-2 flex items-center text-xl ${
-                        header.index !== 1 && 'justify-end'
-                      } `}
+                      } table-head ${header.index !== 1 && 'justify-end'} `}
                       onClick={header.column.getToggleSortingHandler()}
                     >
                       {flexRender(
@@ -139,12 +137,9 @@ function TokenTable({ tokenList }: TokenTableProps) {
       <tbody>
         {table.getRowModel().rows.map((row) => {
           return (
-            <tr
-              key={row.id}
-              className={`border-b border-dark border-opacity-10 font-light dark:border-bright-bg dark:border-opacity-10`}
-            >
+            <tr key={row.id} className="table-row">
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className={`py-2`}>
+                <td key={cell.id} className="table-cell">
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
