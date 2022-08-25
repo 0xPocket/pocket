@@ -9,9 +9,9 @@ import { useRouter } from 'next/router';
 import { Spinner } from '../common/Spinner';
 import { useIsMounted } from '../../hooks/useIsMounted';
 
-type GlobalHeaderProps = {};
+type StatusProps = {};
 
-function Status({}: GlobalHeaderProps) {
+function Status({}: StatusProps) {
   const { signOut } = useMagic();
   const { connector, status } = useAccount();
   const { chain } = useNetwork();
@@ -20,14 +20,12 @@ function Status({}: GlobalHeaderProps) {
 
   const mounted = useIsMounted();
 
-  console.log(mounted, status);
   if (!mounted) return <Spinner />;
 
-  if (asPath.includes('/connect') || asPath.includes('/onbaording'))
+  if (asPath.includes('/connect') || asPath.includes('/onboarding'))
     return null;
 
   if (status === 'connecting' || status === 'reconnecting') return <Spinner />;
-  else console.log('status is ', status);
   if (connector?.id === 'magic')
     return (
       <>
@@ -35,7 +33,6 @@ function Status({}: GlobalHeaderProps) {
         <Button action={signOut}>Logout</Button>
       </>
     );
-  console.log(chain?.id);
 
   if (status === 'connected')
     return (

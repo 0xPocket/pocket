@@ -1,12 +1,5 @@
 // import Link from 'next/link';
-import { Button, Header, ThemeToggler } from '@lib/ui';
-import WalletPopover from '../wallet/WalletPopover';
-import { useMagic } from '../../contexts/auth';
-import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import { useRouter } from 'next/router';
-import { Spinner } from '../common/Spinner';
+import { Header, ThemeToggler } from '@lib/ui';
 import Status from './Status';
 
 type GlobalHeaderProps = {};
@@ -19,7 +12,6 @@ function GlobalHeader({}: GlobalHeaderProps) {
       </Header.BlockLeft>
       <Header.BlockRight>
         <Status />
-
         <ThemeToggler />
       </Header.BlockRight>
     </Header>
