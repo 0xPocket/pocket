@@ -4,6 +4,7 @@ import { Button } from '@lib/ui';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { trpc } from '../../../utils/trpc';
+import { useNetwork } from 'wagmi';
 
 type ChildrenMozaicProps = {};
 

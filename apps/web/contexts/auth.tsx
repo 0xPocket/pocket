@@ -30,17 +30,19 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
   const queryClient = useQueryClient();
   const [magic, setMagic] = useState<MagicConnector>();
   const { connectors, connectAsync } = useConnect();
-  const { data, status, refetch } = trpc.useQuery(['auth.session'], {
+  const { data, status } = trpc.useQuery(['auth.session'], {
     staleTime: 0,
     enabled: isConnected,
     retry: false,
   });
   const router = useRouter();
   const [reconnect, setReconnect] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const signInWithEmail = useMutation(
     async () => {
       await connectAsync({ connector: magic });
+      setLoading(true);
       return magic?.getDidToken();
     },
     {
@@ -50,12 +52,12 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
           redirect: false,
         }).then(async (res) => {
           if (res?.ok) {
-            // await refetch();
-            router.push('/onboarding');
+            await router.push('/onboarding');
           } else {
             toast.error(res?.error);
             disconnect();
           }
+          setLoading(false);
         });
       },
     },
@@ -94,7 +96,10 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
       value={{
         loggedIn: status === 'success' && data.user && isConnected,
         loading:
-          logout.isLoading || signInWithEmail.isLoading || logout.isLoading,
+          logout.isLoading ||
+          signInWithEmail.isLoading ||
+          logout.isLoading ||
+          loading,
         signInWithEmail: async (email: string) => {
           if (isConnected) {
             await disconnectAsync();
