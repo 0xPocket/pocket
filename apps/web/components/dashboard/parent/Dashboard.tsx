@@ -34,7 +34,7 @@ function AccountDashboard({ child }: AccountDashboardProps) {
       <TokenContent childAddress={child.address} />
     </div>
   ) : (
-    <>You child has not validated his account ! He should check his email...</>
+    <>Your child has not validated his account ! He should check his email...</>
   );
 }
 

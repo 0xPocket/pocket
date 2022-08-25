@@ -27,7 +27,7 @@ const columns = [
 
   columnHelper.accessor((row) => `${row.value} ${row.symbol}`, {
     header: () => <span>Amount</span>,
-    cell: (info) => <span>{info.getValue()}</span>,
+    cell: (info) => <div className="text-right">{info.getValue()}</div>,
     id: 'Amount',
   }),
 ];
@@ -43,29 +43,32 @@ function EventsTable({ logs }: EventTableProps) {
     <>
       {logs.length ? (
         <>
-          <table className="w-full">
+          <table className="w-full overflow-y-scroll">
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
-                <tr
-                  className="mt-1 grid grid-cols-2 gap-4"
-                  key={headerGroup.id}
-                >
+                <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
                     <td key={header.id}>
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
+                      <div
+                        className={` table-head ${
+                          header.index !== 0 && 'justify-end'
+                        } `}
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                      </div>
                     </td>
                   ))}
                 </tr>
               ))}
             </thead>
-            <tbody>
+            <tbody className="font-thin tracking-wide">
               {table.getRowModel().rows.map((row) => (
-                <tr className="grid grid-cols-2 gap-4" key={row.id}>
+                <tr className="table-row" key={row.id}>
                   {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id}>
+                    <td key={cell.id} className="table-cell text-sm">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
