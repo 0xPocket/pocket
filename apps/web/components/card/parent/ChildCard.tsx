@@ -24,19 +24,17 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
     watch: true,
   });
 
-  const { refetch } = trpc.useQuery(
-    ['parent.resendChildVerificationEmail', { userId: child!.id }],
+  const { mutate: resendEmail } = trpc.useMutation(
+    'parent.resendChildVerificationEmail',
     {
-      refetchOnWindowFocus: false,
-      enabled: false,
+      onError: () => {
+        toast.error(`An error occured, please reach out the pocket team`);
+      },
+      onSuccess: () => {
+        toast.success(`Email sent to ${child.email}`);
+      },
     },
   );
-
-  const resendEmail = async () => {
-    if ((await refetch()).status === 'success')
-      toast.success(`Email sent to ${child.email}`);
-    else toast.error(`An error occured, please reach out the pocket team`);
-  };
 
   return (
     <div
@@ -54,7 +52,7 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
             {'We sent an email to validate your child account. '}
             <span
               className="cursor-pointer underline"
-              onClick={() => resendEmail()}
+              onClick={() => resendEmail({ userId: child.id })}
             >
               Send a new one.
             </span>

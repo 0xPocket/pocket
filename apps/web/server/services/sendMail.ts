@@ -96,7 +96,6 @@ export async function sendEmail(opts: EmailOptions) {
 
   const template = handlebars.compile(emailTemplate.body);
   const htmlToSend = template(opts.context);
-
   return transporter.sendMail({
     to: opts.to,
     subject: emailTemplate.subject,

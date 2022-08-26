@@ -47,7 +47,7 @@ export const parentRouter = createProtectedRouter()
       });
     },
   })
-  .query('resendChildVerificationEmail', {
+  .mutation('resendChildVerificationEmail', {
     input: z.object({
       userId: z.string(),
     }),
@@ -63,9 +63,7 @@ export const parentRouter = createProtectedRouter()
       if (!child || !child.email) {
         throw new TRPCError({ code: 'NOT_FOUND' });
       }
-      console.log(child.email);
       const token = generateVerificationToken();
-
       const ONE_DAY_IN_SECONDS = 86400;
       const expires = new Date(Date.now() + ONE_DAY_IN_SECONDS * 1000);
 
@@ -88,7 +86,6 @@ export const parentRouter = createProtectedRouter()
             : `http://localhost:3000/verify-child?${params}`,
         },
       });
-      return 'OK';
     },
   })
   .mutation('createChild', {

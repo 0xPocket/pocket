@@ -40,22 +40,6 @@ const fetchWalletContent = async (address: string, chain: Chain) => {
   return res.then((res) => res.data.data);
 };
 
-// const customStyles = {
-//   option: (provided: any, state: any) => ({
-//     ...provided,
-//     borderBottom: '1px dotted grey',
-//     // color: state.isSelected ? '' : 'blue',
-//     backgroundColor: '@apply bg-dark',
-//   }),
-
-//   singleValue: (provided: any, state: any) => {
-//     const opacity = state.isDisabled ? 0.5 : 1;
-//     const transition = 'opacity 300ms';
-
-//     return { ...provided, opacity, transition };
-//   },
-// };
-
 const usdc: CovalentItem = {
   balance: 0,
   balance_24h: '0',
@@ -83,7 +67,6 @@ type SwapperProps = {
 };
 
 const Swapper: React.FC = ({ className }: SwapperProps) => {
-  // const { chains } = useNetwork();
   const [amountToSwap, setAmountToSwap] = useState('0');
   const [fromToken, setFromToken] = useState<CovalentItem>();
   const [toToken, setToToken] = useState<tokenId>();
