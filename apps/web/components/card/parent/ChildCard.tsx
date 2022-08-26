@@ -4,6 +4,8 @@ import useContractRead from '../../../hooks/useContractRead';
 import AccountStatus from './AccountStatus';
 import RightTab from './RightTab';
 import { UserChild } from '@lib/types/interfaces';
+import { trpc } from '../../../utils/trpc';
+import { toast } from 'react-toastify';
 
 type ChildCardProps = {
   child: UserChild;
@@ -22,6 +24,20 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
     watch: true,
   });
 
+  const { refetch } = trpc.useQuery(
+    ['parent.resendChildVerificationEmail', { userId: child!.id }],
+    {
+      refetchOnWindowFocus: false,
+      enabled: false,
+    },
+  );
+
+  const resendEmail = async () => {
+    if ((await refetch()).status === 'success')
+      toast.success(`Email sent to ${child.email}`);
+    else toast.error(`An error occured, please reach out the pocket team`);
+  };
+
   return (
     <div
       className={`${className} container-classic grid min-h-[260px] grid-cols-2 rounded-lg p-8`}
@@ -34,7 +50,15 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
           </div>
         </div>
         {child?.child?.status !== 'ACTIVE' ? (
-          <p>You child has received an email to validate his account</p>
+          <p>
+            {'We sent an email to validate your child account. '}
+            <span
+              className="cursor-pointer underline"
+              onClick={() => resendEmail()}
+            >
+              Send a new one.
+            </span>
+          </p>
         ) : !hasLink ? (
           <Link
             //TODO : change mumbai to mainet

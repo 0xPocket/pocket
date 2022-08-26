@@ -59,12 +59,14 @@ const EMAIL_TEMPLATES = {
   email_verification: {
     subject: 'Verify your Pocket email address',
     body: `<p>Hey {{name}},</p>
-  <p>Please use the link below to verify your email</p>
+  <p>Please use the link below to verify your email.</p>
   <p>
     <a href='{{url}}'>Verify email</a>
   </p>
 
-  <p>If you did not request this email you can safely ignore it.</p>`,
+  <p>If you did not request this email you can safely ignore it.</p>
+  <p style="font-style:italic;">The Pocket Team.</p>
+  `,
   },
 };
 

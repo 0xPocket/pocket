@@ -47,6 +47,50 @@ export const parentRouter = createProtectedRouter()
       });
     },
   })
+  .query('resendChildVerificationEmail', {
+    input: z.object({
+      userId: z.string(),
+    }),
+    resolve: async ({ input }) => {
+      const child = await prisma.user.findUnique({
+        where: {
+          id: input.userId,
+        },
+        include: {
+          child: true,
+        },
+      });
+      if (!child || !child.email) {
+        throw new TRPCError({ code: 'NOT_FOUND' });
+      }
+      console.log(child.email);
+      const token = generateVerificationToken();
+
+      const ONE_DAY_IN_SECONDS = 86400;
+      const expires = new Date(Date.now() + ONE_DAY_IN_SECONDS * 1000);
+
+      await saveVerificationToken({
+        identifier: child.email,
+        expires,
+        token: hashToken(token),
+      });
+
+      const params = new URLSearchParams({ token, email: child.email });
+
+      await sendEmail({
+        to: child.email!,
+        template: 'child_invitation',
+        context: {
+          name: child.name!,
+          // TODO: Use correct URL from production
+          url: process.env.VERCEL_URL
+            ? `https://${process.env.VERCEL_URL}/verify-child?${params}`
+            : `http://localhost:3000/verify-child?${params}`,
+        },
+      });
+      return 'OK';
+    },
+  })
   .mutation('createChild', {
     input: z.object({
       name: z.string(),

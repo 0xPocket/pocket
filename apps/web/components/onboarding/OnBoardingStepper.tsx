@@ -35,7 +35,9 @@ function OnBoardingStepper({ token, email }: OnBoardingStepperProps) {
       >
         <Providers />
       </Step>
-      <button onClick={() => disconnectAsync()}>Disconnect</button>
+      {isConnected && (
+        <button onClick={() => disconnectAsync()}>Disconnect</button>
+      )}
       <Step
         active={step === 1}
         title="2. Link your account"
