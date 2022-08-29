@@ -36,7 +36,7 @@ function TokenContent({ childAddress }: TokenContentProps) {
   return (
     <div className="space-y-8">
       <h2>Token Balance</h2>
-      <div className="container-classic flex rounded-lg px-8">
+      <div className="container-classic flex rounded-lg p-8">
         <div className="col-span-4 aspect-square w-1/5">
           {!isLoading && data?.items ? (
             <PieChartComp tokenList={data.items} />

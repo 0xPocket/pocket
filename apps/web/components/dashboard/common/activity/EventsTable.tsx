@@ -2,12 +2,9 @@ import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table';
 import moment from 'moment';
-import { useState } from 'react';
-import { PageSwitchers } from './activity/PageSwitchers';
 
 type EventTableProps = {
   logs: Event[];
@@ -23,57 +20,55 @@ const columnHelper = createColumnHelper<Event>();
 
 const columns = [
   columnHelper.accessor('timestamp', {
-    header: () => <span className="ml-1">Date</span>,
-    cell: (info) => (
-      <span className="ml-1">{moment(info.getValue()).format('D/MM')}</span>
-    ),
+    header: () => <span>Date</span>,
+    cell: (info) => <span>{moment(info.getValue()).format('D/MM')}</span>,
     id: 'Date',
   }),
 
   columnHelper.accessor((row) => `${row.value} ${row.symbol}`, {
-    cell: (info) => <span className="ml-1">{info.getValue()}</span>,
-
+    header: () => <span>Amount</span>,
+    cell: (info) => <div className="text-right">{info.getValue()}</div>,
     id: 'Amount',
   }),
 ];
 
 function EventsTable({ logs }: EventTableProps) {
-  const [data] = useState([...logs]);
-
   const table = useReactTable({
-    data,
+    data: logs,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
   });
 
   return (
-    <div className="container-classic rounded-lg">
+    <>
       {logs.length ? (
-        <>
-          <table className="w-full">
-            <thead>
+        <div className="table-container">
+          <table className="table">
+            <thead className="table-head">
               {table.getHeaderGroups().map((headerGroup) => (
-                <tr
-                  className="mt-1 grid grid-cols-2 gap-4"
-                  key={headerGroup.id}
-                >
+                <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
-                    <td key={header.id}>
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
-                    </td>
+                    <th key={header.id}>
+                      <div
+                        className={`table-header ${
+                          header.index !== 0 && 'justify-end'
+                        } `}
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                      </div>
+                    </th>
                   ))}
                 </tr>
               ))}
             </thead>
-            <tbody>
+            <tbody className="table-body">
               {table.getRowModel().rows.map((row) => (
-                <tr className="grid grid-cols-2 gap-4" key={row.id}>
+                <tr className="table-row" key={row.id}>
                   {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id}>
+                    <td key={cell.id} className="table-cell text-sm">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
@@ -84,19 +79,11 @@ function EventsTable({ logs }: EventTableProps) {
               ))}
             </tbody>
           </table>
-          {logs.length > 10 && (
-            <PageSwitchers
-              previousPage={table.previousPage}
-              getCanPreviousPage={table.getCanPreviousPage}
-              nextPage={table.nextPage}
-              getCanNextPage={table.getCanNextPage}
-            />
-          )}
-        </>
+        </div>
       ) : (
         <p className="w-full text-center">{'No top-ups for now.'}</p>
       )}
-    </div>
+    </>
   );
 }
 

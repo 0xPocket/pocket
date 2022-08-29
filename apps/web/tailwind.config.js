@@ -45,6 +45,14 @@ module.exports = {
         lightest: '#f1f5f9',
         DEFAULT: '#64748b',
       },
+			badges: {
+				bgblue : 'rgb(195 221 253)',
+				textblue: 'rgb(30 66 159)',
+				bggreen : 'rgb(188 240 218)',
+				textgreen: 'rgb(1 71 55)',
+				bgdark: 'rgb(55 65 81)',
+				textdark: 'rgb(209 213 219)',
+			},
       transparent: 'transparent',
     },
     extend: {
