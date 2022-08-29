@@ -9,15 +9,25 @@ type Event = {
   timestamp: number;
 };
 
-export const useGetClaimsQuery = (address: string) => {
+export const useGetClaimsQuery = (address: string, userType: string) => {
   const provider = useProvider();
   const { pocketContract } = useSmartContract();
   const { erc20 } = useSmartContract();
   const { address: requesterAddress } = useAccount();
 
-  const eventFilter = pocketContract.filters[
-    'FundsAdded(uint256,address,uint256,address)'
-  ](null, requesterAddress, null, address);
+  const eventFilter =
+    userType === 'Parent'
+      ? pocketContract.filters['FundsAdded(uint256,address,uint256,address)'](
+          null,
+          requesterAddress,
+          null,
+          address,
+        )
+      : pocketContract.filters['FundsClaimed(uint256,address,uint256)'](
+          null,
+          address,
+          null,
+        );
 
   return useQuery(
     ['child-claims', address],

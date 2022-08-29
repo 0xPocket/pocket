@@ -12,33 +12,7 @@ type TransactionsTableProps = {
   transactionsList: AssetTransfersResultWithMetadata[];
 };
 
-function transformCategory(category: AssetTransfersCategory) {
-  switch (category) {
-    case 'erc20':
-      return 'Crypto';
-    case 'erc721':
-    case 'erc1155':
-    case 'specialnft':
-      return 'NFT';
-    default:
-      return category;
-  }
-}
-
-const colorCat = (category: string) => {
-  switch (category) {
-    case 'erc20':
-      return '#fff';
-    case 'erc721':
-    case 'erc1155':
-    case 'specialnft':
-      return '#abd';
-    default:
-      return '#CCC';
-  }
-};
-
-const getBadge = (category: string) => {
+const getBadge = (category: AssetTransfersCategory) => {
   switch (category) {
     case 'erc20':
       return <span className="cat-badge-green">Crypto</span>;
@@ -75,15 +49,7 @@ const columns = [
   ),
   columnHelper.accessor('category', {
     cell: (info) => (
-      <div className="text-right">
-        {getBadge(info.getValue())}
-        {/* <span
-          className="nft-cat-badge"
-          style={{ backgroundColor: colorCat(info.getValue()) }}
-        >
-          {transformCategory(info.getValue())}
-        </span> */}
-      </div>
+      <div className="text-right">{getBadge(info.getValue())}</div>
     ),
     header: () => <span>Category</span>,
     id: 'Category',

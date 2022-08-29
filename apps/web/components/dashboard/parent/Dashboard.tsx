@@ -15,10 +15,7 @@ function AccountDashboard({ child }: AccountDashboardProps) {
       <div className="grid grid-cols-2 gap-8">
         <NftContent childAddress={child.address} fill_nbr={6} />
 
-        <ActivityContent
-          childAddress={child.address!}
-          rightHeader="Your Topups"
-        />
+        <ActivityContent childAddress={child.address!} userType="Parent" />
       </div>
 
       <TokenContent childAddress={child.address} />

@@ -9,14 +9,16 @@ import { useTransactionsQuery } from '../../../../hooks/useTransactionsQuery';
 
 type ActivityContentProps = {
   childAddress: string;
-  rightHeader: string;
+  userType: string;
 };
 
-function ActivityContent({ childAddress, rightHeader }: ActivityContentProps) {
+function ActivityContent({ childAddress, userType }: ActivityContentProps) {
   const { isLoading: isTxLoading, data: txList } =
     useTransactionsQuery(childAddress);
-  const { data: logs, isLoading: isLogLoading } =
-    useGetClaimsQuery(childAddress);
+  const { data: logs, isLoading: isLogLoading } = useGetClaimsQuery(
+    childAddress,
+    userType,
+  );
 
   return (
     <div className="flex flex-col space-y-8">
@@ -25,7 +27,7 @@ function ActivityContent({ childAddress, rightHeader }: ActivityContentProps) {
           <h2>Activity</h2>
           <ActivityTabHeaders
             leftHeader="Transactions"
-            rightHeader={rightHeader}
+            rightHeader={userType === 'Parent' ? 'Your Topups' : 'Your Claims'}
           />
         </div>
         <Tab.Panels className="container-classic relative flex-grow overflow-scroll rounded-lg px-8">
