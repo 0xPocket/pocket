@@ -21,7 +21,7 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
     functionName: 'childToConfig',
     args: [childAddress],
     enabled: !!childAddress,
-    watch: true,
+    // watch: true,
   });
 
   const { data: now } = useQuery(['now'], () => moment(), {

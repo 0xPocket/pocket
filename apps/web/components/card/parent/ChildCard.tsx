@@ -14,13 +14,19 @@ type ChildCardProps = {
 function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
   const { pocketContract } = useSmartContract();
 
-  const { data: config } = useContractRead({
+  const {
+    data: config,
+    refetch: refetchConfig,
+    error,
+  } = useContractRead({
     contract: pocketContract,
     functionName: 'childToConfig',
     args: [child.address!],
     enabled: !!child.address,
-    watch: true,
   });
+
+  console.log('CHILD ADDRESS', child.address);
+  console.log('CHILD config', config, 'error:', error);
 
   return (
     <div
@@ -51,7 +57,11 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
         )}
       </div>
       {child?.child?.status === 'ACTIVE' && (
-        <RightTab child={child} config={config} />
+        <RightTab
+          child={child}
+          config={config}
+          refetchConfig={refetchConfig as any}
+        />
       )}
     </div>
   );

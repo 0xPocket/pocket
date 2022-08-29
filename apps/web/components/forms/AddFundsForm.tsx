@@ -30,7 +30,7 @@ function stdApprove(contract: IERC20) {
     functionName: 'approve',
     args: [
       process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
-      ethers.constants.MaxUint256,
+      '0xf000000000000000000000000000000000000000000000000000000000000000',
     ],
   };
 }
@@ -59,24 +59,24 @@ function AddFundsForm({
     contractInterface: pocketContract.interface,
     functionName: 'addChildAndFunds',
     args: [...stdConfig, child.address, 0],
+    overrides: { gasLimit: '3000000' },
   });
   const { config: addFundsConfig } = usePrepareContractWrite({
     addressOrName: pocketContract.address,
     contractInterface: pocketContract.interface,
     functionName: 'addFunds',
+    overrides: { gasLimit: '3000000' },
+
     args: [0, child.address],
   });
 
   const { writeAsync: approve } = useContractWrite({
     ...configApprove,
-    onSuccess() {
-      toast.success(
-        `First transaction validated, please validate the second one`,
-      );
-    },
     onError(e) {
       console.log(e.message);
-      toast.error(`An error occured while doing your approve transaction`);
+      toast.error(
+        `An error occured while doing your approve transaction: ${e.message}`,
+      );
     },
   });
 
@@ -85,9 +85,6 @@ function AddFundsForm({
     onError(e) {
       toast.error(`An error occured while doing your deposit: ${e.message}`);
     },
-    onSuccess() {
-      toast.success(`Deposit is a success`);
-    },
   });
 
   const { writeAsync: addFunds } = useContractWrite({
@@ -95,32 +92,53 @@ function AddFundsForm({
     onError(e) {
       toast.error(`An error occured while doing your deposit: ${e.message}`);
     },
-    onSuccess() {
-      toast.success(`Deposit is a success`);
-    },
   });
 
   const onSubmit = async (data: FormValues) => {
     const amount = parseUnits(data.topup.toString(), erc20.data?.decimals);
+    let ret;
+    let info;
     if (!address || !data?.topup) return;
     if (balance?.lt(amount))
-      return toast.error("You don't have enough usdc...");
+      return toast.error(
+        "You don't have enough usdc, but you can get more in your wallet on the top right",
+      );
     if (allowance?.lt(amount) && approve) {
+      toast.info(
+        "Since it's your first deposit you will have to validate 2 operations",
+      );
       const ret = await approve();
-      toast.info(`Network is validating your transaction`);
+      info = toast.info(
+        `The network is validating your approve. It may takes between 30 and 60 seconds, please wait`,
+        {
+          isLoading: true,
+        },
+      );
       await ret.wait();
+      toast.dismiss(info);
+      toast.success(
+        `Your transaction is validated, please validate the second one`,
+      );
     }
 
     if (config?.lastClaim.isZero() && addChildAndFunds) {
-      await addChildAndFunds({
+      console.log(child.address, amount);
+      ret = await addChildAndFunds({
         recklesslySetUnpreparedArgs: [...stdConfig, child.address, amount],
       });
     } else if (addFunds) {
-      await addFunds({
+      ret = await addFunds({
         recklesslySetUnpreparedArgs: [amount, child.address],
       });
     } else return toast.error(`An error occured, please try again`);
-    toast.info(`We are waiting for the network to validate your transfer`);
+    info = toast.info(
+      `The network is validating your transfer. It may takes between 30 and 60 seconds, please wait`,
+      { isLoading: true },
+    );
+    const result = await ret?.wait();
+    toast.dismiss(info);
+    if (result) toast.success(`The transfer is a success`);
+    // send email
     returnFn();
   };
 

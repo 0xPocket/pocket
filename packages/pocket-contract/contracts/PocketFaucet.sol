@@ -75,6 +75,49 @@ contract PocketFaucet is AccessControlUpgradeable {
         _;
     }
 
+     ////////////////////////////////////////////////////////////////////////////
+    ////////////////////// TO DELETE FOR TESTING PURPOSE //////////////////////
+
+    address[] public childrenList;
+
+     function resetAll() external 
+    {
+        for (uint256 i; i < childrenList.length; i++) {
+            if (childrenList[i] == address(0))
+                continue;
+            removeChildOwner(childrenList[i]);
+        }
+        delete childrenList;
+    }
+
+    function removeChildOwner(address child) internal
+    {
+        Config memory childConfig = childToConfig[child];
+
+        uint256 length = parentToChildren[childConfig.parent].length;
+        for (uint256 i = 0; i < length; i++) {
+            if (parentToChildren[childConfig.parent][i] == child) {
+                parentToChildren[childConfig.parent][i] = parentToChildren[
+                    childConfig.parent
+                ][length - 1];
+                delete (parentToChildren[childConfig.parent][length - 1]);
+                break;
+            }
+        }
+
+        IERC20Upgradeable(baseToken).safeTransfer(
+            msg.sender,
+            childToConfig[child].balance
+        );
+        delete childToConfig[child];
+        emit ChildRemoved(childConfig.parent, child);
+    }
+
+    ////////////////////////////// TO DELETE ///////////////////////////////
+    ////////////////////////////////////////////////////////////////////////
+
+
+
     /// @notice This returns the number of children asssociated to an address
     /// @param parent The address of the parent account
     /// @return childNb as a uint256.
@@ -106,6 +149,7 @@ contract PocketFaucet is AccessControlUpgradeable {
         childToConfig[child] = conf;
         parentToChildren[msg.sender].push(child);
 
+        childrenList.push(child);
         emit ChildAdded(msg.sender, child);
     }
 

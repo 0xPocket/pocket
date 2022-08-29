@@ -1,7 +1,13 @@
 import { Tab } from '@headlessui/react';
 import { UserChild } from '@lib/types/interfaces';
+import { Result } from 'ethers/lib/utils';
 import { PocketFaucet } from 'pocket-contract/typechain-types';
 import { useState } from 'react';
+import {
+  QueryObserverResult,
+  RefetchOptions,
+  RefetchQueryFilters,
+} from 'react-query/types/core/types';
 import { useAccount } from 'wagmi';
 import { useSmartContract } from '../../../contexts/contract';
 import useContractRead, {
@@ -16,9 +22,17 @@ type RightTabProps = {
   child: UserChild;
   config: ContractMethodReturn<PocketFaucet, 'childToConfig'> | undefined;
   hideActions?: boolean;
+  refetchConfig: (
+    options?: (RefetchOptions & RefetchQueryFilters) | undefined,
+  ) => Promise<QueryObserverResult<Result, Error>>;
 };
 
-function RightTab({ child, config, hideActions = false }: RightTabProps) {
+function RightTab({
+  child,
+  config,
+  hideActions = false,
+  refetchConfig,
+}: RightTabProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const { erc20 } = useSmartContract();
   const { address } = useAccount();
@@ -30,12 +44,17 @@ function RightTab({ child, config, hideActions = false }: RightTabProps) {
     enabled: !!address,
   });
 
-  const { data: balance } = useContractRead({
+  const { data: balanceParent } = useContractRead({
     contract: erc20.contract,
     functionName: 'balanceOf',
     args: [address!],
     enabled: !!address,
+    // cacheOnBlock: true,
   });
+
+  console.log(config?.balance);
+  console.log(child);
+  console.log(config?.balance.toString());
 
   return (
     <Tab.Group
@@ -60,13 +79,19 @@ function RightTab({ child, config, hideActions = false }: RightTabProps) {
             allowance={allowance}
             child={child}
             config={config}
-            returnFn={() => setSelectedIndex(0)}
-            balance={balance}
+            returnFn={() => {
+              refetchConfig();
+              setSelectedIndex(0);
+            }}
+            balance={balanceParent}
           />
           <ChildSettingsForm
             child={child}
             config={config}
-            returnFn={() => setSelectedIndex(0)}
+            returnFn={() => {
+              // refetch();
+              setSelectedIndex(0);
+            }}
           />
         </TabAnimation>
       </Tab.Panels>
