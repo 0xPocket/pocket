@@ -88,8 +88,8 @@ export function TransactionsTable({
   return (
     <>
       {transactionsList.length ? (
-        <>
-          <table className="w-full overflow-y-scroll">
+        <div className="table-container">
+          <table className="table">
             <thead className="table-head">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
@@ -114,7 +114,7 @@ export function TransactionsTable({
               {table.getRowModel().rows.map((row) => (
                 <tr key={row.id} className="table-row">
                   {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id} className="table-cell text-sm">
+                    <td key={cell.id} className="table-cell">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
@@ -125,7 +125,7 @@ export function TransactionsTable({
               ))}
             </tbody>
           </table>
-        </>
+        </div>
       ) : (
         <p className="w-full text-center">{'No transactions to display.'}</p>
       )}

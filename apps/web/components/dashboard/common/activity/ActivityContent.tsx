@@ -19,7 +19,7 @@ function ActivityContent({ childAddress, rightHeader }: ActivityContentProps) {
     useGetClaimsQuery(childAddress);
 
   return (
-    <div className="flex flex-grow-0 flex-col space-y-8">
+    <div className="flex flex-col space-y-8">
       <Tab.Group>
         <div className="flex justify-between">
           <h2>Activity</h2>
@@ -28,7 +28,7 @@ function ActivityContent({ childAddress, rightHeader }: ActivityContentProps) {
             rightHeader={rightHeader}
           />
         </div>
-        <Tab.Panels className="container-classic max-h-[600px] w-full overflow-scroll rounded-lg px-8 py-4">
+        <Tab.Panels className="container-classic relative flex-grow overflow-scroll rounded-lg px-8">
           <Tab.Panel>
             {!isTxLoading && txList ? (
               <TransactionsTable transactionsList={txList} />

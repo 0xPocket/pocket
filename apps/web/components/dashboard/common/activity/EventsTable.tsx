@@ -42,8 +42,8 @@ function EventsTable({ logs }: EventTableProps) {
   return (
     <>
       {logs.length ? (
-        <>
-          <table className="w-full overflow-y-scroll">
+        <div className="table-container">
+          <table className="table">
             <thead className="table-head">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
@@ -79,7 +79,7 @@ function EventsTable({ logs }: EventTableProps) {
               ))}
             </tbody>
           </table>
-        </>
+        </div>
       ) : (
         <p className="w-full text-center">{'No top-ups for now.'}</p>
       )}
