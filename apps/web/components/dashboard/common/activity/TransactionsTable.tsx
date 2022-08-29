@@ -38,6 +38,19 @@ const colorCat = (category: string) => {
   }
 };
 
+const getBadge = (category: string) => {
+  switch (category) {
+    case 'erc20':
+      return <span className="cat-badge-green">Crypto</span>;
+    case 'erc721':
+    case 'erc1155':
+    case 'specialnft':
+      return <span className="cat-badge-blue">NFT</span>;
+    default:
+      return <span className="cat-badge-dark">{category}</span>;
+  }
+};
+
 function formatValue(value: number | null) {
   let format = value?.toFixed(2) === '0.00' ? '0' : value?.toFixed(2);
   if (format === undefined) format = '1';
@@ -62,13 +75,14 @@ const columns = [
   ),
   columnHelper.accessor('category', {
     cell: (info) => (
-      <div className=" text-right">
-        <span
+      <div className="text-right">
+        {getBadge(info.getValue())}
+        {/* <span
           className="nft-cat-badge"
           style={{ backgroundColor: colorCat(info.getValue()) }}
         >
           {transformCategory(info.getValue())}
-        </span>
+        </span> */}
       </div>
     ),
     header: () => <span>Category</span>,

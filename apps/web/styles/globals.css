@@ -62,10 +62,22 @@
 	}
 
 	/* badge */
-	.nft-cat-badge {
-		@apply rounded-full px-2 py-1 text-sm font-bold;
+	.cat-badge {
+		@apply rounded px-2 py-1 text-sm font-bold;
 	}
 
+	.cat-badge-green {
+		@apply cat-badge bg-badges-bggreen text-badges-textgreen;
+	}
+
+	.cat-badge-blue {
+		@apply cat-badge bg-badges-bgblue text-badges-textblue;
+	}
+
+	.cat-bage-dark {
+		@apply cat-badge bg-badges-bgdark text-badges-textdark;
+
+	}
 	/* table */
 
 	.table-container {
