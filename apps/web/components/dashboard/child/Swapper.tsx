@@ -40,22 +40,6 @@ const fetchWalletContent = async (address: string, chain: Chain) => {
   return res.then((res) => res.data.data);
 };
 
-// const customStyles = {
-//   option: (provided: any, state: any) => ({
-//     ...provided,
-//     borderBottom: '1px dotted grey',
-//     // color: state.isSelected ? '' : 'blue',
-//     backgroundColor: '@apply bg-dark',
-//   }),
-
-//   singleValue: (provided: any, state: any) => {
-//     const opacity = state.isDisabled ? 0.5 : 1;
-//     const transition = 'opacity 300ms';
-
-//     return { ...provided, opacity, transition };
-//   },
-// };
-
 const usdc: CovalentItem = {
   balance: 0,
   balance_24h: '0',
@@ -83,7 +67,6 @@ type SwapperProps = {
 };
 
 const Swapper: React.FC = ({ className }: SwapperProps) => {
-  // const { chains } = useNetwork();
   const [amountToSwap, setAmountToSwap] = useState('0');
   const [fromToken, setFromToken] = useState<CovalentItem>();
   const [toToken, setToToken] = useState<tokenId>();
@@ -153,34 +136,6 @@ const Swapper: React.FC = ({ className }: SwapperProps) => {
     else return false;
   }, [amountToSwap, fromToken, toToken]);
 
-  // const messageToDisplay: string = useMemo(() => {
-  //   if (fromToken && toToken && amountToSwap != '0') {
-  //     if (fromToken.contract_address === toToken?.address)
-  //       return 'Cannot swap for the same token';
-  //     else {
-  //       let balance;
-  //       fromToken.contract_address === maticAddress
-  //         ? (balance = balanceMatic)
-  //         : (balance = balanceToken);
-  //       if (quote === '-1')
-  //         return 'You cannot swap those tokens'; // TODO : handle all error
-  //       else if (
-  //         balance?.value.lt(
-  //           ethers.utils.parseUnits(amountToSwap, fromToken.contract_decimals),
-  //         )
-  //       ) {
-  //         return 'Not enough fund';
-  //       } else
-  //         return (
-  //           'you will have : ' +
-  //           parseFloat(quote).toFixed(5) +
-  //           ' ' +
-  //           toToken.name
-  //         );
-  //     }
-  //   } else return '';
-  // }, [fromToken, toToken, amountToSwap, balanceMatic, balanceToken, quote]);
-
   useEffect(() => {
     async function updateQuote() {
       if (
@@ -242,7 +197,7 @@ const Swapper: React.FC = ({ className }: SwapperProps) => {
   );
 
   return (
-    <div className=" space-y-4   ">
+    <div className="space-y-4">
       <h2>Swapper</h2>
       <form
         className={`container-classic flex h-4/5 min-h-[260px] flex-col justify-between space-y-4 rounded-lg p-5`}

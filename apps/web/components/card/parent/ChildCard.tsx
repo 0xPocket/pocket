@@ -4,6 +4,8 @@ import useContractRead from '../../../hooks/useContractRead';
 import AccountStatus from './AccountStatus';
 import RightTab from './RightTab';
 import { UserChild } from '@lib/types/interfaces';
+import { trpc } from '../../../utils/trpc';
+import { toast } from 'react-toastify';
 
 type ChildCardProps = {
   child: UserChild;
@@ -25,8 +27,17 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
     enabled: !!child.address,
   });
 
-  console.log('CHILD ADDRESS', child.address);
-  console.log('CHILD config', config, 'error:', error);
+  const { mutate: resendEmail } = trpc.useMutation(
+    'parent.resendChildVerificationEmail',
+    {
+      onError: () => {
+        toast.error(`An error occured, please reach out the pocket team`);
+      },
+      onSuccess: () => {
+        toast.success(`Email sent to ${child.email}`);
+      },
+    },
+  );
 
   return (
     <div
@@ -40,7 +51,15 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
           </div>
         </div>
         {child?.child?.status !== 'ACTIVE' ? (
-          <p>You child has received an email to validate his account</p>
+          <p>
+            {'We sent an email to validate your child account. '}
+            <span
+              className="cursor-pointer underline"
+              onClick={() => resendEmail({ userId: child.id })}
+            >
+              Send a new one.
+            </span>
+          </p>
         ) : !hasLink ? (
           <Link
             //TODO : change mumbai to mainet
