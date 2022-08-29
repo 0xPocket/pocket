@@ -52,10 +52,6 @@ function RightTab({
     // cacheOnBlock: true,
   });
 
-  console.log(config?.balance);
-  console.log(child);
-  console.log(config?.balance.toString());
-
   return (
     <Tab.Group
       defaultIndex={1}
@@ -89,7 +85,6 @@ function RightTab({
             child={child}
             config={config}
             returnFn={() => {
-              // refetch();
               setSelectedIndex(0);
             }}
           />

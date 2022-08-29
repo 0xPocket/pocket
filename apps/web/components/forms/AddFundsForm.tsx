@@ -59,13 +59,13 @@ function AddFundsForm({
     contractInterface: pocketContract.interface,
     functionName: 'addChildAndFunds',
     args: [...stdConfig, child.address, 0],
-    overrides: { gasLimit: '3000000' },
+    overrides: { gasLimit: '3000000' }, // TEMPORARY. necessary on testnet
   });
   const { config: addFundsConfig } = usePrepareContractWrite({
     addressOrName: pocketContract.address,
     contractInterface: pocketContract.interface,
     functionName: 'addFunds',
-    overrides: { gasLimit: '3000000' },
+    overrides: { gasLimit: '3000000' }, // TEMPORARY. necessary on testnet
 
     args: [0, child.address],
   });
@@ -73,7 +73,6 @@ function AddFundsForm({
   const { writeAsync: approve } = useContractWrite({
     ...configApprove,
     onError(e) {
-      console.log(e.message);
       toast.error(
         `An error occured while doing your approve transaction: ${e.message}`,
       );
@@ -122,7 +121,6 @@ function AddFundsForm({
     }
 
     if (config?.lastClaim.isZero() && addChildAndFunds) {
-      console.log(child.address, amount);
       ret = await addChildAndFunds({
         recklesslySetUnpreparedArgs: [...stdConfig, child.address, amount],
       });
@@ -138,7 +136,7 @@ function AddFundsForm({
     const result = await ret?.wait();
     toast.dismiss(info);
     if (result) toast.success(`The transfer is a success`);
-    // send email
+    // TO DO send email saying it's a success
     returnFn();
   };
 

@@ -16,11 +16,7 @@ type ChildCardProps = {
 function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
   const { pocketContract } = useSmartContract();
 
-  const {
-    data: config,
-    refetch: refetchConfig,
-    error,
-  } = useContractRead({
+  const { data: config, refetch: refetchConfig } = useContractRead({
     contract: pocketContract,
     functionName: 'childToConfig',
     args: [child.address!],
