@@ -67,12 +67,20 @@
 	}
 
 	/* table */
-	.table-head
+	.table-head {
+		@apply sticky top-0 bg-bright-dark dark:bg-dark-light ;
+	}
+
+	.table-header
 	{
 		@apply mb-2 flex items-center text-xl;
 	}
 
-	.table-row {
+	.table-body {
+		@apply font-thin tracking-wide;
+	}
+
+	.table-row:not(:last-child) {
 		@apply border-b border-dark border-opacity-10 font-light dark:border-bright-bg dark:border-opacity-10;
 	}
 

@@ -44,13 +44,13 @@ function EventsTable({ logs }: EventTableProps) {
       {logs.length ? (
         <>
           <table className="w-full overflow-y-scroll">
-            <thead>
+            <thead className="table-head">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
-                    <td key={header.id}>
+                    <th key={header.id}>
                       <div
-                        className={` table-head ${
+                        className={`table-header ${
                           header.index !== 0 && 'justify-end'
                         } `}
                       >
@@ -59,12 +59,12 @@ function EventsTable({ logs }: EventTableProps) {
                           header.getContext(),
                         )}
                       </div>
-                    </td>
+                    </th>
                   ))}
                 </tr>
               ))}
             </thead>
-            <tbody className="font-thin tracking-wide">
+            <tbody className="table-body">
               {table.getRowModel().rows.map((row) => (
                 <tr className="table-row" key={row.id}>
                   {row.getVisibleCells().map((cell) => (

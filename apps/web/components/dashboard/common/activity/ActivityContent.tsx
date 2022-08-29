@@ -28,7 +28,7 @@ function ActivityContent({ childAddress, rightHeader }: ActivityContentProps) {
             rightHeader={rightHeader}
           />
         </div>
-        <Tab.Panels className="container-classic max-h-full w-full overflow-scroll rounded-lg px-8 py-4">
+        <Tab.Panels className="container-classic max-h-[600px] w-full overflow-scroll rounded-lg px-8 py-4">
           <Tab.Panel>
             {!isTxLoading && txList ? (
               <TransactionsTable transactionsList={txList} />
