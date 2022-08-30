@@ -112,7 +112,7 @@ export class MagicConnector extends Connector {
         return {
           account,
           chain: {
-            id: 0,
+            id: await this.getChainId(),
             unsupported: false,
           },
           provider,

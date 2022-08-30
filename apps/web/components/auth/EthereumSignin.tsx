@@ -15,7 +15,7 @@ type EthereumSigninProps = {
 };
 
 const EthereumSignin: FC<EthereumSigninProps> = ({ type }) => {
-  const { isConnected, address, connector: activeConnector } = useAccount();
+  const { isConnected, connector: activeConnector } = useAccount();
   const { disconnect } = useDisconnect();
   const { signMessageAsync, isLoading: isLoadingSignMessage } =
     useSignMessage();

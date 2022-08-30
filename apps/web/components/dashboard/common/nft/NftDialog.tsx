@@ -12,7 +12,7 @@ type NftDialogProps = {
 function NftDialog({ nft, isOpen, setIsOpen }: NftDialogProps) {
   return (
     <DialogPopupWrapper isOpen={isOpen} setIsOpen={setIsOpen}>
-      <div className="max-h-screen max-w-lg space-y-4">
+      <div className="max-h-[90vh] max-w-lg space-y-4 overflow-scroll">
         <img src={nft.media[0]?.gateway} alt={nft.title} className="w-full" />
         <h2>{nft.title}</h2>
         <p className="max-h-52 overflow-scroll">{nft.description}</p>

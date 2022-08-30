@@ -18,7 +18,7 @@
   }
 
   a {
-    @apply text-primary;
+    @apply text-primary without-ring;
   }
 
 	button {
@@ -53,12 +53,58 @@
 	}
 
 	.dismiss-btn {
-    @apply flex  items-center rounded-md px-4 py-3 ;
+    @apply flex items-center rounded-md px-4 py-3 ;
 	}
 
 	/* inputs */
 	.input-text {
 		@apply px-4 py-3 rounded-md text-dark-light border-classic without-ring ;
+	}
+
+	/* badge */
+	.cat-badge {
+		@apply rounded px-2 py-1 text-sm font-bold;
+	}
+
+	.cat-badge-green {
+		@apply cat-badge bg-badges-bggreen text-badges-textgreen;
+	}
+
+	.cat-badge-blue {
+		@apply cat-badge bg-badges-bgblue text-badges-textblue;
+	}
+
+	.cat-bage-dark {
+		@apply cat-badge bg-badges-bgdark text-badges-textdark;
+
+	}
+	/* table */
+
+	.table-container {
+		@apply relative w-full h-full;
+	}
+	.table {
+		@apply absolute w-full overflow-y-scroll overflow-hidden;
+	}
+	.table-head {
+		@apply sticky top-0 bg-bright-dark dark:bg-dark-light ;
+	}
+
+	.table-header
+	{
+		@apply mb-2 mt-4 flex items-center text-xl;
+	}
+
+	.table-body {
+		@apply font-thin tracking-wide;
+	}
+
+	.table-row:not(:last-child) {
+		@apply border-b border-dark border-opacity-10 font-light dark:border-bright-bg dark:border-opacity-10;
+	}
+
+	.table-cell {
+		@apply py-2 text-sm;
 	}
 
 	/* helpers */

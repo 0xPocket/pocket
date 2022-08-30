@@ -63,7 +63,7 @@ function AddChildForm({}: AddChildFormProps) {
         type="submit"
         value="Submit"
         disabled={addChild.isLoading}
-        className="rounded-md bg-dark  px-4 py-3 text-bright"
+        className="rounded-md bg-dark  px-4 py-3 text-bright cursor-pointer  "
       />
     </form>
   );

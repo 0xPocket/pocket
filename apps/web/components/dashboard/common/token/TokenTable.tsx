@@ -96,63 +96,63 @@ function TokenTable({ tokenList }: TokenTableProps) {
   });
 
   return (
-    <table className="w-full">
-      <thead>
-        {table.getHeaderGroups().map((headerGroup) => (
-          <tr key={headerGroup.id}>
-            {headerGroup.headers.map((header) => {
-              return (
-                <th key={header.id} colSpan={header.colSpan}>
-                  {header.isPlaceholder ? null : (
-                    <div
-                      className={`${
-                        header.column.getCanSort() &&
-                        'cursor-pointer select-none'
-                      } mb-2 flex items-center text-xl ${
-                        header.index !== 1 && 'justify-end'
-                      } `}
-                      onClick={header.column.getToggleSortingHandler()}
-                    >
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
-                      {{
-                        asc: (
-                          <FontAwesomeIcon icon={faArrowUp} className="ml-2" />
-                        ),
-                        desc: (
-                          <FontAwesomeIcon
-                            icon={faArrowDown}
-                            className="ml-2"
-                          />
-                        ),
-                      }[header.column.getIsSorted() as string] ?? null}
-                    </div>
-                  )}
-                </th>
-              );
-            })}
-          </tr>
-        ))}
-      </thead>
-      <tbody>
-        {table.getRowModel().rows.map((row) => {
-          return (
-            <tr
-              key={row.id}
-              className={`border-b border-dark border-opacity-10 font-light dark:border-bright-bg dark:border-opacity-10`}
-            >
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className={`py-2`}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
+    <div className="table-container">
+      <table className="table">
+        <thead className="table-head">
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
+                return (
+                  <th key={header.id} colSpan={header.colSpan}>
+                    {header.isPlaceholder ? null : (
+                      <div
+                        className={`${
+                          header.column.getCanSort() &&
+                          'cursor-pointer select-none'
+                        } table-header ${header.index !== 1 && 'justify-end'} `}
+                        onClick={header.column.getToggleSortingHandler()}
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                        {{
+                          asc: (
+                            <FontAwesomeIcon
+                              icon={faArrowUp}
+                              className="ml-2"
+                            />
+                          ),
+                          desc: (
+                            <FontAwesomeIcon
+                              icon={faArrowDown}
+                              className="ml-2"
+                            />
+                          ),
+                        }[header.column.getIsSorted() as string] ?? null}
+                      </div>
+                    )}
+                  </th>
+                );
+              })}
             </tr>
-          );
-        })}
-      </tbody>
-    </table>
+          ))}
+        </thead>
+        <tbody className="table-body">
+          {table.getRowModel().rows.map((row) => {
+            return (
+              <tr key={row.id} className="table-row">
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id} className="table-cell">
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
   );
 }
 

@@ -7,14 +7,8 @@ import ActivityContent from '../common/activity/ActivityContent';
 import ChildCard from '../../card/child/ChildCard';
 import Swapper from './Swapper';
 
-
 const ChildDashboard: React.FC = () => {
   const { address } = useAccount();
-  const { pocketContract } = useSmartContract();
-
-  const eventFilter = pocketContract.filters[
-    'FundsClaimed(uint256,address,uint256)'
-  ](null, address, null);
 
   return address ? (
     <div className="space-y-20">
@@ -26,11 +20,7 @@ const ChildDashboard: React.FC = () => {
       <div className="grid grid-cols-2 gap-8">
         {/* <TokenContent childAddress={address!} /> */}
         {/* <NftContent childAddress={address!} fill_nbr={9} /> */}
-        <ActivityContent
-          childAddress={address!}
-          eventFilter={eventFilter}
-          rightHeader="Your claims"
-        />
+        <ActivityContent childAddress={address!} userType="Child" />
       </div>
     </div>
   ) : (
