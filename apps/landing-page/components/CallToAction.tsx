@@ -22,7 +22,7 @@ const CallToAction: React.FC = () => {
 
   const router = useRouter();
   const intl = useIntl();
-  const email_placeholder = intl.formatMessage({ id: 'calltoaction.eamil' });
+  const email_placeholder = intl.formatMessage({ id: 'calltoaction.email' });
 
   const mutation = useMutation(
     (data: FormValues) =>
