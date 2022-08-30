@@ -1,12 +1,7 @@
 import type { BigNumber } from 'ethers';
 import { useCallback } from 'react';
 import { toast } from 'react-toastify';
-import {
-  useAccount,
-  useContractWrite,
-  usePrepareContractWrite,
-  useWaitForTransaction,
-} from 'wagmi';
+import { useAccount, useContractWrite, useWaitForTransaction } from 'wagmi';
 import { useSmartContract } from '../contexts/contract';
 import { useApprove } from './useApprove';
 import useContractRead from './useContractRead';
@@ -46,18 +41,12 @@ export function useAddFundsForm(
     },
   });
 
-  const { config: addChildAndFundsConfig } = usePrepareContractWrite({
+  const addChildAndFunds = useContractWrite({
+    mode: 'recklesslyUnprepared',
     addressOrName: pocketContract.address,
     contractInterface: pocketContract.interface,
     functionName: addChild ? 'addChildAndFunds' : 'addFunds',
     overrides: { gasLimit: '3000000' }, // TEMPORARY. necessary on testnet
-    args: addChild
-      ? ['5000000000000000000', '604800', childAddress, '0']
-      : ['0', childAddress],
-  });
-
-  const addChildAndFunds = useContractWrite({
-    ...addChildAndFundsConfig,
     onError: (e) => {
       toast.error(`An error occured while doing your deposit: ${e.message}`);
     },
