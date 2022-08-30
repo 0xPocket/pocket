@@ -11,11 +11,13 @@ function ChildrenMozaic({}: ChildrenMozaicProps) {
   const router = useRouter();
 
   const { isLoading, data } = trpc.useQuery(['parent.children']);
+  const testwebhookramp = trpc.useMutation(['parent.testWebhookRamp']);
 
   return (
     <div className="flex flex-col space-y-12">
       <div className="flex items-center justify-between">
         <h1>My children</h1>
+        <button onClick={() => testwebhookramp.mutate()}> Test webhook</button>
         <Button
           action={() => router.push('/add-account')}
           className="space-x-2"
