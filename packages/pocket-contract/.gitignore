@@ -8,4 +8,3 @@ typechain-types
 
 # OpenZeppelin version control for proxies
 .openzeppelin
-.openzeppelin/unknown-*.json
