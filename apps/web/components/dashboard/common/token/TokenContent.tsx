@@ -15,7 +15,7 @@ type TokenContentProps = {
 
 const fetchUsers = async (address: string) => {
   const res = axios.get<CovalentReturn>(
-    `'https://api.covalenthq.com/v1'/${env.CHAIN_ID}/address/${address}/balances_v2/?key=${env.NEXT_PUBLIC_COVALENT_KEY}`,
+    `https://api.covalenthq.com/v1/${env.CHAIN_ID}/address/${address}/balances_v2/?key=${env.NEXT_PUBLIC_COVALENT_KEY}`,
   );
   return res.then((res) => res.data.data);
 };
