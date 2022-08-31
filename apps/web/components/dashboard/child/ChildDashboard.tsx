@@ -5,12 +5,10 @@ import TokenContent from '../common/token/TokenContent';
 import ActivityContent from '../common/activity/ActivityContent';
 import ChildCard from '../../card/child/ChildCard';
 import dynamic from 'next/dynamic';
-import { SwapWidgetProps } from '@uniswap/widgets';
+import { SwapWidgetProps, Theme } from '@uniswap/widgets';
+import { useTheme } from '@lib/ui/src/Theme/ThemeContext';
+import Swapper from './Swapper';
 
-const SwapWidget = dynamic<SwapWidgetProps>(
-  () => import('@uniswap/widgets').then((mod) => mod.SwapWidget),
-  { ssr: false },
-);
 const ChildDashboard: React.FC = () => {
   const { address } = useAccount();
 
@@ -19,7 +17,7 @@ const ChildDashboard: React.FC = () => {
       <div className="grid grid-cols-2 gap-8">
         <ChildCard childAddress={address} className="col-span-1" />
         <div className="flex justify-center">
-          <SwapWidget />
+          <Swapper />
         </div>
       </div>
       <div className="grid grid-cols-2 gap-8">
