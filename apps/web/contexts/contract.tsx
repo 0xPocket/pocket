@@ -2,6 +2,7 @@ import { createContext, useContext, useMemo } from 'react';
 import PocketFaucetJson from 'pocket-contract/artifacts/contracts/PocketFaucet.sol/PocketFaucet.json';
 import { erc20ABI, useAccount, useContract, useToken } from 'wagmi';
 import type { IERC20, PocketFaucet } from 'pocket-contract/typechain-types';
+import { env } from 'config/env/client';
 
 interface SmartContractProviderProps {
   children: React.ReactNode;
@@ -36,17 +37,17 @@ export const SmartContractProvider = ({
   const { isConnected } = useAccount();
 
   const { data: erc20Data } = useToken({
-    address: process.env.NEXT_PUBLIC_CHOSEN_ERC20,
+    address: env.ERC20_ADDRESS,
     enabled: isConnected,
   });
 
   const erc20Contract = useContract<IERC20>({
-    addressOrName: process.env.NEXT_PUBLIC_CHOSEN_ERC20!,
+    addressOrName: env.ERC20_ADDRESS,
     contractInterface: erc20ABI,
   });
 
   const pocketContract = useContract<PocketFaucet>({
-    addressOrName: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+    addressOrName: env.NEXT_PUBLIC_CONTRACT_ADDRESS,
     contractInterface: PocketFaucetJson.abi,
   });
 

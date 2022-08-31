@@ -8,16 +8,12 @@
   ],
   "scripts": {
     "clean": "turbo run clean && rm -rf node_modules && rm -rf .turbo",
-    "env-check": "dotenv-checker --schema .env.example --env .env",
-    "predev": "echo 'Checking env files'",
     "dev": "turbo run dev --parallel",
-    "dev-testnet": "turbo run dev-testnet --parallel",
     "reset": "turbo run reset",
     "build": "turbo run build",
     "start": "turbo run start",
     "lint": "turbo run lint",
     "test": "turbo run test",
-    "test:e2e": "turbo run test:e2e",
     "c": "yarn workspace pocket-contract",
     "p": "yarn workspace @lib/prisma",
     "fork": "turbo run fork"
@@ -29,7 +25,6 @@
   "devDependencies": {
     "commitizen": "^4.2.5",
     "cz-conventional-changelog": "^3.3.0",
-    "dotenv-checker": "^1.1.5",
     "prettier": "^2.7.1"
   },
   "config": {

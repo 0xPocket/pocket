@@ -13,7 +13,7 @@ import { prisma } from '../prisma';
 import { z } from 'zod';
 import { SiweMessage } from 'siwe';
 import { getCsrfToken } from 'next-auth/react';
-import { env } from '../env';
+import { env } from 'config/env/server';
 
 export const emailRouter = createRouter()
   .mutation('verifyChild', {

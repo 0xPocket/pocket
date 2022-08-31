@@ -1,6 +1,6 @@
 import { ethers, upgrades } from 'hardhat';
 import { readFileSync, writeFileSync } from 'fs';
-import * as constants from '../utils/constants';
+import { env } from 'config/env/server';
 
 function replaceEnvInString(
   envName: string,
@@ -20,12 +20,11 @@ function replaceEnvInString(
 }
 
 async function main() {
-  console.log('Network selected :', constants.CHOSEN);
+  console.log('Network selected :', env.NEXT_PUBLIC_NETWORK);
 
   const PocketFaucet = await ethers.getContractFactory('PocketFaucet');
   const pocketFaucet = await upgrades.deployProxy(PocketFaucet, [
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    process.env.NEXT_PUBLIC_CHOSEN_ERC20!,
+    env.ERC20_ADDRESS,
   ]);
   await pocketFaucet.deployed();
 

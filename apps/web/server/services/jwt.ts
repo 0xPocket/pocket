@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { createHash, randomBytes } from 'crypto';
-import { env } from '../env';
+import { env } from 'config/env/server';
 import { prisma } from '../prisma';
 
 export function hashToken(token: string) {

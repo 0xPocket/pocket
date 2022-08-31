@@ -1,3 +1,4 @@
+import { env } from 'config/env/client';
 import type { BigNumber } from 'ethers';
 import { useCallback } from 'react';
 import { toast } from 'react-toastify';
@@ -17,7 +18,7 @@ export function useAddFundsForm(
   const { data: allowance } = useContractRead({
     contract: erc20.contract,
     functionName: 'allowance',
-    args: [address!, process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!],
+    args: [address!, env.NEXT_PUBLIC_CONTRACT_ADDRESS],
     enabled: !!address,
   });
 

@@ -3,15 +3,13 @@ import * as constants from '../utils/constants';
 import { parseUnits } from 'ethers/lib/utils';
 import { ethers } from 'hardhat';
 import { PocketFaucet__factory } from '../typechain-types';
+import { env } from 'config/env/server';
 
 async function main() {
-  const tokenDecimals = await getDecimals(
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    process.env.NEXT_PUBLIC_CHOSEN_ERC20!
-  );
+  const tokenDecimals = await getDecimals(env.ERC20_ADDRESS);
   const parent = await ethers.getSigner(constants.ELON_MUSK.address);
   const faucet = PocketFaucet__factory.connect(
-    process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string,
+    env.NEXT_PUBLIC_CONTRACT_ADDRESS,
     parent
   );
 
@@ -36,18 +34,9 @@ async function main() {
   await setAllowance(
     constants.CHOSEN_TOKEN,
     parent,
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+    env.NEXT_PUBLIC_CONTRACT_ADDRESS,
     parseUnits('10', tokenDecimals).toString()
   );
-
-  // await setAllowance(
-  //   constants.CHOSEN_TOKEN,
-  //   parent,
-  //   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  //   process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
-  //   '0'
-  // );
 
   await faucet.addFunds(
     parseUnits('10', tokenDecimals),
@@ -57,8 +46,7 @@ async function main() {
   await setAllowance(
     constants.CHOSEN_TOKEN,
     parent,
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+    env.NEXT_PUBLIC_CONTRACT_ADDRESS,
     '0'
   );
   console.log('Contract seeding complete !');

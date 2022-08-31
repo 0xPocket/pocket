@@ -1,5 +1,6 @@
 import type { User } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
+import { env } from 'config/env/server';
 import { z } from 'zod';
 import { createProtectedRouter } from '../createRouter';
 import { prisma } from '../prisma';
@@ -81,8 +82,8 @@ export const parentRouter = createProtectedRouter()
         context: {
           name: child.name!,
           // TODO: Use correct URL from production
-          url: process.env.VERCEL_URL
-            ? `https://${process.env.VERCEL_URL}/verify-child?${params}`
+          url: env.VERCEL_URL
+            ? `https://${env.VERCEL_URL}/verify-child?${params}`
             : `http://localhost:3000/verify-child?${params}`,
         },
       });
@@ -152,8 +153,8 @@ export const parentRouter = createProtectedRouter()
           context: {
             name: child.name!,
             // TODO: Use correct URL from production
-            url: process.env.VERCEL_URL
-              ? `https://${process.env.VERCEL_URL}/verify-child?${params}`
+            url: env.VERCEL_URL
+              ? `https://${env.VERCEL_URL}/verify-child?${params}`
               : `http://localhost:3000/verify-child?${params}`,
           },
         });

@@ -14,7 +14,6 @@ import type { ContractMethodReturn } from '../../../hooks/useContractRead';
 import AddFundsForm from '../../forms/AddFundsForm';
 import ChildSettingsForm from '../../forms/ChildSettingsForm';
 import Balance from './Balance';
-import TabAnimation from './TabAnimation';
 
 type RightTabProps = {
   child: UserChild;

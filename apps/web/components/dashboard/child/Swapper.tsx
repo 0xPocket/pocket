@@ -1,5 +1,6 @@
 import { useTheme } from '@lib/ui/src/Theme/ThemeContext';
 import { SwapWidgetProps, Theme } from '@uniswap/widgets';
+import { env } from 'config/env/client';
 import dynamic from 'next/dynamic';
 const SwapWidget = dynamic<SwapWidgetProps>(
   () => import('@uniswap/widgets').then((mod) => mod.SwapWidget),
@@ -35,8 +36,9 @@ function Swapper({}: SwapperProps) {
         borderRadius: 0.5,
       };
 
-  // TODO : put erc20 address in defaultInputTokenAddress
-  return <SwapWidget theme={theme} defaultInputTokenAddress="" />;
+  return (
+    <SwapWidget theme={theme} defaultInputTokenAddress={env.ERC20_ADDRESS} />
+  );
 }
 
 export default Swapper;
