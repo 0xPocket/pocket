@@ -27,7 +27,7 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
     'parent.resendChildVerificationEmail',
     {
       onError: () => {
-        toast.error(`An error occured, please reach out the pocket team`);
+        toast.error(`An error occured, if the problem persits contact us`);
       },
       onSuccess: () => {
         toast.success(`Email sent to ${child.email}`);

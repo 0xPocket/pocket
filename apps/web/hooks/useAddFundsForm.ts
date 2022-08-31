@@ -28,16 +28,13 @@ export function useAddFundsForm(
       '0xf000000000000000000000000000000000000000000000000000000000000000',
     onError: (e) => {
       toast.error(
-        `An error occured while doing your approve transaction: ${e.message}`,
+        `Approval failed : ${e.message}. If the problem persits, contact us.`,
       );
     },
     onSuccess: () => {
-      toast.info(
-        `The network is validating your approve. It may takes between 30 and 60 seconds, please wait`,
-        {
-          isLoading: true,
-        },
-      );
+      toast.info(`Transaction pending, please hang on !`, {
+        isLoading: true,
+      });
     },
   });
 
@@ -46,17 +43,17 @@ export function useAddFundsForm(
     addressOrName: pocketContract.address,
     contractInterface: pocketContract.interface,
     functionName: addChild ? 'addChildAndFunds' : 'addFunds',
-    overrides: { gasLimit: '3000000' }, // TEMPORARY. necessary on testnet
+    // ! TEMPORARY. necessary on testnet
+    overrides: { gasLimit: '3000000' },
     onError: (e) => {
-      toast.error(`An error occured while doing your deposit: ${e.message}`);
+      toast.error(
+        `Deposit failed : ${e.message}. If the problem persits, contact us.`,
+      );
     },
     onSuccess: () => {
-      toast.info(
-        `The network is validating your approve. It may takes between 30 and 60 seconds, please wait`,
-        {
-          isLoading: true,
-        },
-      );
+      toast.info(`Transaction pending, please hang on !`, {
+        isLoading: true,
+      });
       returnFn();
     },
   });
@@ -65,9 +62,6 @@ export function useAddFundsForm(
     hash: approve.data?.hash,
     onSuccess: () => {
       toast.dismiss();
-      toast.success(
-        `Your transaction is validated, please validate the second one`,
-      );
     },
   });
 
@@ -75,13 +69,13 @@ export function useAddFundsForm(
     hash: addChildAndFunds.data?.hash,
     onError: (e) => {
       toast.dismiss();
-      toast.error(`An error occured while doing your deposit: ${e.message}`);
+      toast.error(
+        `Deposit failed: ${e.message}. If the problem persits, contact us.`,
+      );
     },
     onSuccess: () => {
       toast.dismiss();
-      toast.success(
-        `Your transaction is validated, the funds are now available`,
-      );
+      toast.success(`Successfull deposit !`);
     },
   });
 
