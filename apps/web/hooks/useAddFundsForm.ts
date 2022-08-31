@@ -87,17 +87,19 @@ export function useAddFundsForm(
 
   const approveAndAddChild = useCallback(
     async (amount: BigNumber) => {
-      if (allowance?.lt(amount) && approve.write) {
-        return approve.write();
-      }
+      try {
+        if (allowance?.lt(amount) && approve.writeAsync) {
+          await approve.writeAsync();
+        }
 
-      if (addChildAndFunds.write) {
-        return addChildAndFunds.write({
-          recklesslySetUnpreparedArgs: addChild
-            ? ['5000000000000000000', '604800', childAddress, amount]
-            : [amount, childAddress],
-        });
-      } else return toast.error(`An error occured, please try again`);
+        if (addChildAndFunds.writeAsync) {
+          await addChildAndFunds.writeAsync({
+            recklesslySetUnpreparedArgs: addChild
+              ? ['5000000000000000000', '604800', childAddress, amount]
+              : [amount, childAddress],
+          });
+        }
+      } catch (e) {}
     },
     [addChildAndFunds, approve, allowance, childAddress, addChild],
   );

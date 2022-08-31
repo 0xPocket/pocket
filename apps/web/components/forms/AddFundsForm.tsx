@@ -11,7 +11,7 @@ import type { BigNumber } from 'ethers';
 
 type AddFundsFormProps = {
   child: UserChild;
-  addFunds: (amount: BigNumber) => void;
+  addFunds: (amount: BigNumber) => Promise<void>;
   returnFn: () => void;
 };
 
