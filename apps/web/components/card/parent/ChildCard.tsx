@@ -16,19 +16,18 @@ type ChildCardProps = {
 function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
   const { pocketContract } = useSmartContract();
 
-  const { data: config } = useContractRead({
+  const { data: config, refetch: refetchConfig } = useContractRead({
     contract: pocketContract,
     functionName: 'childToConfig',
     args: [child.address!],
     enabled: !!child.address,
-    watch: true,
   });
 
   const { mutate: resendEmail } = trpc.useMutation(
     'parent.resendChildVerificationEmail',
     {
       onError: () => {
-        toast.error(`An error occured, please reach out the pocket team`);
+        toast.error(`An error occured, if the problem persits contact us`);
       },
       onSuccess: () => {
         toast.success(`Email sent to ${child.email}`);
@@ -73,7 +72,11 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
         )}
       </div>
       {child?.child?.status === 'ACTIVE' && (
-        <RightTab child={child} config={config} />
+        <RightTab
+          child={child}
+          config={config}
+          refetchConfig={refetchConfig as any}
+        />
       )}
     </div>
   );
