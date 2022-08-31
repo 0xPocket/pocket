@@ -35,7 +35,7 @@ const columnHelper = createColumnHelper<AssetTransfersResultWithMetadata>();
 
 const columns = [
   columnHelper.accessor('metadata.blockTimestamp', {
-    cell: (info) => moment(info.getValue()).format('DD/MM'),
+    cell: (info) => moment(info.getValue()).fromNow(),
     header: () => <span>Date</span>,
     id: 'Date',
   }),

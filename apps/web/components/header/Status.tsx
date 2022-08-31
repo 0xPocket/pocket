@@ -26,6 +26,7 @@ function Status({}: StatusProps) {
     return null;
 
   if (status === 'connecting' || status === 'reconnecting') return <Spinner />;
+
   if (connector?.id === 'magic')
     return (
       <>

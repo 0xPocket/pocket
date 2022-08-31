@@ -1,6 +1,5 @@
 import React from 'react';
 import { useAccount } from 'wagmi';
-import { useSmartContract } from '../../../contexts/contract';
 import NftContent from '../common/nft/NftContent';
 import TokenContent from '../common/token/TokenContent';
 import ActivityContent from '../common/activity/ActivityContent';
@@ -14,14 +13,15 @@ const ChildDashboard: React.FC = () => {
     <div className="space-y-20">
       <div className="grid grid-cols-2 gap-8">
         <ChildCard childAddress={address} className="col-span-1" />
-        <Swapper />
-        {/* <ChildCard childAddress={address} className="col-span-1" /> */}
+        <div className="flex justify-center">
+          <Swapper />
+        </div>
       </div>
       <div className="grid grid-cols-2 gap-8">
-        {/* <TokenContent childAddress={address!} /> */}
-        {/* <NftContent childAddress={address!} fill_nbr={9} /> */}
+        <NftContent childAddress={address!} fill_nbr={6} />
         <ActivityContent childAddress={address!} userType="Child" />
       </div>
+      <TokenContent childAddress={address!} />
     </div>
   ) : (
     <div></div>

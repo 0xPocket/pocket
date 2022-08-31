@@ -43,6 +43,9 @@ const config: HardhatUserConfig = {
       chainId: NETWORK_CONFIG['polygon-mumbai'].CHAIN_ID,
       gasPrice: 40000000000,
       gas: 3000000,
+      accounts: [
+        '0x8a08140e5dd7eb70af23b28f53fe24a133b708d18368361cd3d55ddfc7cc9ee7',
+      ],
     },
   },
 };
