@@ -34,7 +34,9 @@ function Swapper({}: SwapperProps) {
         fontFamily: 'Raleway',
         borderRadius: 0.5,
       };
-  return <SwapWidget theme={theme} />;
+
+  // TODO : put erc20 address in defaultInputTokenAddress
+  return <SwapWidget theme={theme} defaultInputTokenAddress="" />;
 }
 
 export default Swapper;
