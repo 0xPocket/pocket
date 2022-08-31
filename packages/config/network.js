@@ -17,7 +17,7 @@ const NETWORK_CONFIG = {
     WAGMI_CHAIN: chain.polygon,
   },
   "polygon-mumbai": {
-    ERC20_ADDRESS: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+    ERC20_ADDRESS: "0xe6b8a5CF854791412c1f6EFC7CAf629f5Df1c747",
     CHAIN_ID: 80001,
     ALCHEMY_KEY: "BabbJEHqMsfVRZT86Wd-S2hhlvteU79q",
     RPC_URL:
