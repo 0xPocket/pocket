@@ -1,10 +1,11 @@
-import type { Network, Alchemy } from '@alch/alchemy-sdk';
+import type { Alchemy } from '@alch/alchemy-sdk';
 import { initializeAlchemy } from '@alch/alchemy-sdk';
+import { env } from 'config/env/client';
 import { createContext, useContext, useState } from 'react';
 
 const settings = {
-  apiKey: process.env.NEXT_PUBLIC_KEY_ALCHEMY, // Replace with your Alchemy API Key.
-  network: process.env.NEXT_PUBLIC_CHOSEN as Network, // Replace with your network.
+  apiKey: env.ALCHEMY_KEY, // Replace with your Alchemy API Key.
+  network: env.NETWORK_KEY, // Replace with your network.
   maxRetries: 10,
 };
 

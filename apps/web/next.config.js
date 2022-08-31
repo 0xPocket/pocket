@@ -6,7 +6,7 @@ const { withAxiom } = require('next-axiom');
 
 dotenv.config({ path: '../../.env' });
 
-require('./server/env');
+const { env } = require('config/env/server');
 
 // const withPlugins = require('next-compose-plugins');
 

@@ -2,7 +2,7 @@
   "compilerOptions": {
     "strictNullChecks": true,
     "lib": ["ES2018"],
-    "allowJs": false,
+    "allowJs": true,
     "strict": true,
     "module": "commonjs",
     "moduleResolution": "node",
@@ -15,10 +15,17 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
-    "rootDir": ".",
+    "noEmit": true,
     "baseUrl": ".",
     "outDir": "dist"
   },
-  "include": ["./ts", "./typechain-types", "./test", "./scripts", "./utils"],
+  "include": [
+    "./ts",
+    "./typechain-types",
+    "./test",
+    "./scripts",
+    "./utils",
+    "../../packages/config/**/*.js"
+  ],
   "files": ["./hardhat.config.ts"]
 }

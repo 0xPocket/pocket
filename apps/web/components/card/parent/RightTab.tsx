@@ -1,5 +1,6 @@
 import { Tab } from '@headlessui/react';
 import { UserChild } from '@lib/types/interfaces';
+import { env } from 'config/env/client';
 import { PocketFaucet } from 'pocket-contract/typechain-types';
 import { useState } from 'react';
 import { useAccount } from 'wagmi';
@@ -26,7 +27,7 @@ function RightTab({ child, config, hideActions = false }: RightTabProps) {
   const { data: allowance } = useContractRead({
     contract: erc20.contract,
     functionName: 'allowance',
-    args: [address!, process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!],
+    args: [address!, env.NEXT_PUBLIC_CONTRACT_ADDRESS],
     enabled: !!address,
   });
 

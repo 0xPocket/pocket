@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ThemeProvider } from '@lib/ui';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { AlchemyProvider } from '../contexts/alchemy';
-import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
+import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { MagicAuthProvider } from '../contexts/auth';
@@ -20,15 +20,15 @@ import { httpLink } from '@trpc/client/links/httpLink';
 import { loggerLink } from '@trpc/client/links/loggerLink';
 import { splitLink } from '@trpc/client/links/splitLink';
 import { withTRPC } from '@trpc/next';
+import { env } from 'config/env/client';
 // import { SessionProvider } from 'next-auth/react';
 
 const { chains, provider } = configureChains(
-  [chain.polygon, chain.rinkeby, chain.polygonMumbai],
+  [env.WAGMI_CHAIN],
   [
-    // alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_KEY_ALCHEMY! }),
     jsonRpcProvider({
       rpc: () => ({
-        http: process.env.NEXT_PUBLIC_RPC_ENDPOINT!,
+        http: env.RPC_URL,
       }),
     }),
   ],
@@ -50,14 +50,14 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
         }),
         new MagicConnector({
           options: {
-            apiKey: 'pk_live_4752F69D8DDF4CF5',
+            apiKey: env.NEXT_PUBLIC_MAGIC_LINK_PUBLIC_KEY,
             oauthOptions: {
               providers: ['facebook', 'google'],
             },
             additionalMagicOptions: {
               network: {
-                rpcUrl: process.env.NEXT_PUBLIC_RPC_ENDPOINT!,
-                chainId: 80001,
+                rpcUrl: env.RPC_URL,
+                chainId: env.CHAIN_ID,
               },
             },
           },
@@ -107,7 +107,7 @@ export default withTRPC<AppRouter>({
         // adds pretty logs to your console in development and logs errors in production
         loggerLink({
           enabled: (opts) =>
-            !!process.env.NEXT_PUBLIC_DEBUG ||
+            !!env.NEXT_PUBLIC_DEBUG ||
             (opts.direction === 'down' && opts.result instanceof Error),
         }),
         splitLink({

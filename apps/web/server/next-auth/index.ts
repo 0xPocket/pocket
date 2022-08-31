@@ -5,9 +5,9 @@ import { Magic } from '@magic-sdk/admin';
 import { SiweMessage } from 'siwe';
 import { UserType } from '@prisma/client';
 import { prisma } from '../prisma';
-import { env } from '../env';
+import { env } from 'config/env/server';
 
-const mAdmin = new Magic('sk_live_8185E1937878AC9A');
+const mAdmin = new Magic(env.MAGIC_LINK_SECRET_KEY);
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),

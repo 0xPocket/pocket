@@ -6,8 +6,11 @@
   "files": [
     "eslint-next.js",
     "eslint-nest.js",
+    "env/client.js",
+    "env/server.js",
     "prettier-preset.js",
     "postcss.config.js",
+    "network.js",
     "tailwind.config.js"
   ],
   "dependencies": {

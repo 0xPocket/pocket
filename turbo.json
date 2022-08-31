@@ -34,27 +34,19 @@
       "dependsOn": ["^clean"],
       "cache": false
     },
-    "web#build": {
-      "dependsOn": ["@lib/prisma#deploy"],
-      "outputs": ["dist/**", ".next/**"]
-    },
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["@lib/prisma#deploy", "^build"],
       "outputs": ["dist/**", ".next/**"]
     },
     "dev": {
-      "dependsOn": [
-        "//#env-check",
-        "@lib/prisma#push",
-        "pocket-contract#deploy"
-      ],
+      "dependsOn": ["@lib/prisma#push", "pocket-contract#deploy"],
       "cache": false
     },
     "reset": {
       "cache": false
     },
     "dev-testnet": {
-      "dependsOn": ["//#env-check", "@lib/prisma#push"],
+      "dependsOn": ["@lib/prisma#push"],
       "cache": false
     },
     "start": {
@@ -64,14 +56,7 @@
       "outputs": []
     },
     "test": {
-      "dependsOn": ["^test"]
-    },
-    "test:e2e": {
-      "cache": false
-    },
-    "//#env-check": {
-      "inputs": ["./.env.example", "./.env"],
-      "outputs": ["./.env"]
+      "outputs": []
     }
   }
 }

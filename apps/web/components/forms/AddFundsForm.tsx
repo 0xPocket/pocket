@@ -10,6 +10,7 @@ import { useAccount, useContractWrite, usePrepareContractWrite } from 'wagmi';
 import { useSmartContract } from '../../contexts/contract';
 import { ContractMethodReturn } from '../../hooks/useContractRead';
 import { toast } from 'react-toastify';
+import { env } from 'config/env/client';
 
 type AddFundsFormProps = {
   child: UserChild;
@@ -28,10 +29,7 @@ function stdApprove(contract: IERC20) {
     addressOrName: contract.address,
     contractInterface: contract.interface,
     functionName: 'approve',
-    args: [
-      process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
-      ethers.constants.MaxUint256,
-    ],
+    args: [env.NEXT_PUBLIC_CONTRACT_ADDRESS, ethers.constants.MaxUint256],
   };
 }
 const stdConfig = ['5000000000000000000', '604800'];

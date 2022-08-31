@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import TokenTable from './TokenTable';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PieChartComp from './PieChart';
+import { env } from 'config/env/client';
 // import PieChartComp from './PieChart';
 
 type TokenContentProps = {
@@ -13,11 +14,8 @@ type TokenContentProps = {
 };
 
 const fetchUsers = async (address: string) => {
-  const APIKEY = 'ckey_d68ffbaf2bdf47b6b58e84fada7';
-  const baseURL = 'https://api.covalenthq.com/v1';
-  const blockchainChainId = '137';
   const res = axios.get<CovalentReturn>(
-    `${baseURL}/${blockchainChainId}/address/${address}/balances_v2/?key=${APIKEY}`,
+    `'https://api.covalenthq.com/v1'/${env.CHAIN_ID}/address/${address}/balances_v2/?key=${env.NEXT_PUBLIC_COVALENT_KEY}`,
   );
   return res.then((res) => res.data.data);
 };

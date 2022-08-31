@@ -11,7 +11,7 @@ import { authOptions } from '../next-auth';
 import { prisma } from '../prisma';
 import { AuthSchema } from '../schemas/auth.schema';
 import { User } from '@prisma/client';
-import { env } from '../env';
+import { env } from 'config/env/server';
 
 export const authRouter = createProtectedRouter()
   .query('session', {
