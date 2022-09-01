@@ -18,7 +18,7 @@ function useRamp() {
       userAddress: address,
       userEmailAddress: user?.email || undefined,
       hostApiKey: 'fukzkzsk5wfybdp6d6rspmuq54utvo37wsd9uk9h',
-      webhookStatusUrl: `https://${env.APP_URL}/api/webhook/ramp`,
+      webhookStatusUrl: `${env.APP_URL}/api/webhook/ramp`,
     })
       .on('*', (event) => console.log(event))
       .show();
