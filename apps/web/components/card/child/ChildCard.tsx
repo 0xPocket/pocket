@@ -21,7 +21,7 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
     functionName: 'childToConfig',
     args: [childAddress],
     enabled: !!childAddress,
-    // watch: true,
+    watch: true,
   });
 
   const { data: now } = useQuery(['now'], () => moment(), {
@@ -58,11 +58,11 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
             <ClaimButton disabled={!canClaim || config[1].isZero()}>
               {!canClaim || config[1].isZero()
                 ? config[1].isZero()
-                  ? 'No pocket money for you...'
+                  ? 'Nothing to claim'
                   : 'Next claim in ' +
                     moment.duration(moment().diff(nextClaim)).humanize() +
                     '...'
-                : 'Claim your money !'}
+                : 'Claim'}
             </ClaimButton>
           )}
         </div>

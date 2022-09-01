@@ -2,14 +2,18 @@ import { useTheme } from '@lib/ui/src/Theme/ThemeContext';
 import { SwapWidgetProps, Theme } from '@uniswap/widgets';
 import { env } from 'config/env/client';
 import dynamic from 'next/dynamic';
+
 const SwapWidget = dynamic<SwapWidgetProps>(
   () => import('@uniswap/widgets').then((mod) => mod.SwapWidget),
   { ssr: false },
 );
 type SwapperProps = {};
 
+const jsonrpcmap = { [Number(env.CHAIN_ID)]: [env.RPC_URL] };
+
 function Swapper({}: SwapperProps) {
   const { dark } = useTheme();
+
   const theme: Theme = dark
     ? {
         primary: '#FFF',
@@ -37,7 +41,12 @@ function Swapper({}: SwapperProps) {
       };
 
   return (
-    <SwapWidget theme={theme} defaultInputTokenAddress={env.ERC20_ADDRESS} />
+    <SwapWidget
+      theme={theme}
+      defaultInputTokenAddress={env.ERC20_ADDRESS}
+      jsonRpcUrlMap={jsonrpcmap}
+      hideConnectionUI
+    />
   );
 }
 
