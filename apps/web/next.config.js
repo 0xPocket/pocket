@@ -6,7 +6,7 @@ const { withAxiom } = require('next-axiom');
 
 dotenv.config({ path: '../../.env' });
 
-const { env } = require('config/env/server');
+require('config/env/server');
 
 // const withPlugins = require('next-compose-plugins');
 
@@ -27,6 +27,9 @@ const nextConfig = {
   },
   images: {
     domains: ['logos.covalenthq.com'],
+  },
+  eslint: {
+    dirs: ['pages', 'utils', 'components', 'server'], // Only run ESLint on the 'pages' and 'utils' directories during production builds (next build)
   },
 };
 

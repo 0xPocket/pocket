@@ -34,6 +34,7 @@ const clientSchema = z.object({
   NEXT_PUBLIC_CONTRACT_ADDRESS: z.string(),
   NEXT_PUBLIC_COVALENT_KEY: z.string(),
   NEXT_PUBLIC_MAGIC_LINK_PUBLIC_KEY: z.string(),
+  NEXT_PUBLIC_APP_URL: z.string().url(),
 });
 
 /**
@@ -50,6 +51,7 @@ const clientEnv = {
   NEXT_PUBLIC_COVALENT_KEY: process.env.NEXT_PUBLIC_COVALENT_KEY,
   NEXT_PUBLIC_MAGIC_LINK_PUBLIC_KEY:
     process.env.NEXT_PUBLIC_MAGIC_LINK_PUBLIC_KEY,
+  NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
 };
 
 module.exports = {
