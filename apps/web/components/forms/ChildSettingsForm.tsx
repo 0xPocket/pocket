@@ -68,7 +68,7 @@ function ChildSettingsForm({
 
   const { writeAsync: addChild } = useContractWrite({
     ...addChildConfig,
-    onError(e) {
+    onError: () => {
       toast.error(`An error occured while changing your child configuration`);
     },
   });

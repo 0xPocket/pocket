@@ -1,10 +1,7 @@
-// import Link from 'next/link';
 import { Header, ThemeToggler } from '@lib/ui';
 import Status from './Status';
 
-type GlobalHeaderProps = {};
-
-function GlobalHeader({}: GlobalHeaderProps) {
+function GlobalHeader() {
   return (
     <Header>
       <Header.BlockLeft>
