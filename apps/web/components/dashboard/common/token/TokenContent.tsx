@@ -7,13 +7,14 @@ import TokenTable from './TokenTable';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PieChartComp from './PieChart';
 import { env } from 'config/env/client';
+import { trpc } from '../../../../utils/trpc';
 // import PieChartComp from './PieChart';
 
 type TokenContentProps = {
   childAddress: string;
 };
 
-const fetchUsers = async (address: string) => {
+const fetchUserTokens = async (address: string) => {
   const res = axios.get<CovalentReturn>(
     `https://api.covalenthq.com/v1/${env.CHAIN_ID}/address/${address}/balances_v2/?key=${env.NEXT_PUBLIC_COVALENT_KEY}`,
   );
@@ -21,13 +22,29 @@ const fetchUsers = async (address: string) => {
 };
 
 function TokenContent({ childAddress }: TokenContentProps) {
+  const { data: blacklist, isSuccess } = trpc.useQuery(['token.blacklist']);
+
   const { isLoading, data } = useQuery(
     ['child.token-content', childAddress],
-    () => fetchUsers(childAddress),
+    () => fetchUserTokens(childAddress),
     {
       // enabled: !!child && !!child.address,
       staleTime: 60 * 1000,
       onError: () => toast.error("Could not retrieve user's token"),
+      enabled: isSuccess,
+      select: (data) => {
+        return {
+          ...data,
+          items:
+            data.items.filter((token) => {
+              return !blacklist?.find(
+                (el) =>
+                  el.address.toLowerCase() ===
+                  token.contract_address.toLowerCase(),
+              );
+            }) || undefined,
+        };
+      },
     },
   );
 
@@ -44,7 +61,7 @@ function TokenContent({ childAddress }: TokenContentProps) {
         </div>
         <div className="col-span-8 flex w-4/5 items-start">
           {!isLoading && data?.items ? (
-            <TokenTable tokenList={data!.items} />
+            <TokenTable tokenList={data.items} />
           ) : (
             <FontAwesomeIcon icon={faSpinner} spin className="m-auto" />
           )}
