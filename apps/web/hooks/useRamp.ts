@@ -1,10 +1,11 @@
 import { RampInstantSDK } from '@ramp-network/ramp-instant-sdk';
+import { env } from 'config/env/client';
 import { useAccount } from 'wagmi';
+import { useMagic } from '../contexts/auth';
 
-type RampProps = {};
-
-function useRamp({}: RampProps) {
+function useRamp() {
   const { address } = useAccount();
+  const { user } = useMagic();
 
   function showRamp() {
     new RampInstantSDK({
@@ -15,10 +16,9 @@ function useRamp({}: RampProps) {
       fiatValue: '15',
       swapAsset: 'USDC',
       userAddress: address,
-      userEmailAddress: 'test@gmail.com',
+      userEmailAddress: user?.email || undefined,
       hostApiKey: 'fukzkzsk5wfybdp6d6rspmuq54utvo37wsd9uk9h',
-      webhookStatusUrl:
-        'https://bfa3-2a01-e0a-1ec-f480-f9d0-fb0a-3ed3-1d5.eu.ngrok.io/ramp/webhook',
+      webhookStatusUrl: `${env.APP_URL}/api/webhook/ramp`,
     })
       .on('*', (event) => console.log(event))
       .show();

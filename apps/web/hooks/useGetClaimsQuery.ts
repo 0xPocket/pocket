@@ -2,6 +2,7 @@ import { useQuery } from 'react-query';
 import { useAccount, useProvider } from 'wagmi';
 import { useSmartContract } from '../contexts/contract';
 import { formatUnits } from 'ethers/lib/utils';
+import { useMemo } from 'react';
 
 type Event = {
   symbol: string;
@@ -15,19 +16,18 @@ export const useGetClaimsQuery = (address: string, userType: string) => {
   const { erc20 } = useSmartContract();
   const { address: requesterAddress } = useAccount();
 
-  const eventFilter =
-    userType === 'Parent'
-      ? pocketContract.filters['FundsAdded(uint256,address,uint256,address)'](
-          null,
-          requesterAddress,
-          null,
-          address,
-        )
-      : pocketContract.filters['FundsClaimed(uint256,address,uint256)'](
-          null,
-          address,
-          null,
-        );
+  const eventFilter = useMemo(() => {
+    if (userType === 'Parent') {
+      return pocketContract.filters[
+        'FundsAdded(uint256,address,uint256,address)'
+      ](null, requesterAddress, null, address);
+    }
+    return pocketContract.filters['FundsClaimed(uint256,address,uint256)'](
+      null,
+      address,
+      null,
+    );
+  }, [address, pocketContract.filters, requesterAddress, userType]);
 
   return useQuery(
     ['child-claims', address],

@@ -81,10 +81,7 @@ export const parentRouter = createProtectedRouter()
         template: 'child_invitation',
         context: {
           name: child.name!,
-          // TODO: Use correct URL from production
-          url: env.VERCEL_URL
-            ? `https://${env.VERCEL_URL}/verify-child?${params}`
-            : `http://localhost:3000/verify-child?${params}`,
+          url: `${env.APP_URL}/verify-email?${params}`,
         },
       });
     },
@@ -152,10 +149,7 @@ export const parentRouter = createProtectedRouter()
           template: 'child_invitation',
           context: {
             name: child.name!,
-            // TODO: Use correct URL from production
-            url: env.VERCEL_URL
-              ? `https://${env.VERCEL_URL}/verify-child?${params}`
-              : `http://localhost:3000/verify-child?${params}`,
+            url: `${env.APP_URL}/verify-email?${params}`,
           },
         });
       }

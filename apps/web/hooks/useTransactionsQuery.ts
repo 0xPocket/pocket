@@ -1,42 +1,40 @@
 import { useQuery } from 'react-query';
 import { useAlchemy } from '../contexts/alchemy';
+import type { AssetTransfersResponseWithMetadata } from '@lib/types/interfaces';
 import {
-  AssetTransfersResponseWithMetadata,
-  AssetTransfersResultWithMetadata,
-} from '@lib/types/interfaces';
-import {
-  Alchemy,
-  AssetTransfersCategory,
   getAssetTransfers,
+  AssetTransfersCategory,
+  AssetTransfersOrder,
 } from '@alch/alchemy-sdk';
 
 const staticAssetTransfersParams = {
   excludeZeroValue: false,
   withMetadata: true,
-  maxCount: 1000,
+  maxCount: 100,
   category: [
     AssetTransfersCategory.ERC20,
     AssetTransfersCategory.ERC721,
     AssetTransfersCategory.ERC1155,
     AssetTransfersCategory.SPECIALNFT,
+    AssetTransfersCategory.EXTERNAL,
   ],
-  // order: AssetTransfersOrder.ASCENDING,
+  order: AssetTransfersOrder.DESCENDING,
 };
 
-async function fetchTransactions(alchemy: Alchemy, fromAddress: string) {
-  let tx: AssetTransfersResultWithMetadata[] = [];
-  let pageKey = undefined;
-  do {
-    const ret = (await getAssetTransfers(alchemy, {
-      fromAddress,
-      ...staticAssetTransfersParams,
-      pageKey,
-    })) as AssetTransfersResponseWithMetadata;
-    tx = tx.concat(ret.transfers);
-    pageKey = ret.pageKey;
-  } while (pageKey !== undefined);
-  return tx;
-}
+// async function fetchTransactions(alchemy: Alchemy, fromAddress: string) {
+//   let tx: AssetTransfersResultWithMetadata[] = [];
+//   let pageKey = undefined;
+//   do {
+//     const ret = (await getAssetTransfers(alchemy, {
+//       fromAddress,
+//       ...staticAssetTransfersParams,
+//       pageKey,
+//     })) as AssetTransfersResponseWithMetadata;
+//     tx = tx.concat(ret.transfers);
+//     pageKey = ret.pageKey;
+//   } while (pageKey !== undefined);
+//   return tx;
+// }
 
 export const useTransactionsQuery = (address: string) => {
   const { alchemy } = useAlchemy();
@@ -44,13 +42,15 @@ export const useTransactionsQuery = (address: string) => {
   return useQuery(
     ['child.transactions-content', address],
     () => {
-      return fetchTransactions(alchemy, address);
+      return getAssetTransfers(alchemy, {
+        fromAddress: address,
+        ...staticAssetTransfersParams,
+      }) as Promise<AssetTransfersResponseWithMetadata>;
     },
     {
       staleTime: 60 * 1000,
-      select: (transfers) => {
-        transfers.reverse();
-        return transfers;
+      select(data) {
+        return data.transfers;
       },
     },
   );

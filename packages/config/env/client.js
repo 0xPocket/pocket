@@ -35,10 +35,21 @@ for (let key of Object.keys(_clientEnv.data)) {
   }
 }
 
+function getBaseUrl() {
+  if (process.env.NEXT_PUBLIC_VERCEL_ENV === "production") {
+    return process.env.NEXT_PUBLIC_APP_URL;
+  }
+  if (process.env.NEXT_PUBLIC_VERCEL_URL) {
+    return `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`;
+  }
+  return "http://localhost:3000";
+}
+
 module.exports = {
   env: {
     ..._clientEnv.data,
     ...network[_clientEnv.data.NEXT_PUBLIC_NETWORK],
+    APP_URL: getBaseUrl(),
   },
   formatErrors,
 };

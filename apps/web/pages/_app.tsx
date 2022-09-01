@@ -34,7 +34,7 @@ const { chains, provider } = configureChains(
   ],
 );
 
-function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+function App({ Component, pageProps: { ...pageProps } }: AppProps) {
   const [wagmiClient] = useState(() =>
     createClient({
       autoConnect: true,
@@ -51,9 +51,9 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
         new MagicConnector({
           options: {
             apiKey: env.NEXT_PUBLIC_MAGIC_LINK_PUBLIC_KEY,
-            oauthOptions: {
-              providers: ['facebook', 'google'],
-            },
+            // oauthOptions: {
+            //   providers: ['facebook', 'google'],
+            // },
             additionalMagicOptions: {
               network: {
                 rpcUrl: env.RPC_URL,
@@ -89,11 +89,7 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 export default withTRPC<AppRouter>({
   config() {
     const url =
-      typeof window !== 'undefined'
-        ? '/api/trpc'
-        : process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}/api/trpc`
-        : `http://localhost:3000/api/trpc`;
+      typeof window !== 'undefined' ? '/api/trpc' : `${env.APP_URL}/api/trpc`;
 
     /**
      * If you want to use SSR, you need to use the server's full URL
