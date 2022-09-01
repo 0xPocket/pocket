@@ -3,6 +3,7 @@ export { ALink } from "./src/Links/ALink";
 export { Header } from "./src/Header/Header";
 export { ThemeProvider } from "./src/Theme/ThemeContext";
 export { ThemeToggler } from "./src/Theme/ThemeToggler";
+export { ThemeTogglerApp } from "./src/Theme/ThemeTogglerApp";
 export { SectionContainer } from "./src/Containers/SectionContainer";
 export * from "./src/Form";
 export * from "./src/Animation";
@@ -10,4 +11,4 @@ export {
   DialogFullWrapper,
   DialogPopupWrapper,
 } from "./src/Wrappers/DialogsWrapper";
-export * from './src/Background/BackgoundSplit'
+export * from "./src/Background/BackgoundSplit";

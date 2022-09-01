@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
-import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import {
+  useAccount,
+  useConnect,
+  useDisconnect,
+  useNetwork,
+  useSwitchNetwork,
+} from 'wagmi';
 import { createCtx } from '../utils/createContext';
 import type { MagicConnector } from '../utils/MagicConnector';
 import { signIn, signOut } from 'next-auth/react';
@@ -8,6 +14,7 @@ import type { CustomSessionUser } from 'next-auth';
 import { trpc } from '../utils/trpc';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
+import { env } from 'config/env/client';
 
 interface MagicAuthProviderProps {
   children: React.ReactNode;
@@ -25,7 +32,7 @@ export const [useMagic, MagicAuthContextProvider] =
   createCtx<IMagicAuthContext>();
 
 export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
-  const { isConnected, status: wagmiStatus } = useAccount();
+  const { connector, isConnected, status: wagmiStatus } = useAccount();
   const { disconnectAsync, disconnect } = useDisconnect();
   const queryClient = useQueryClient();
   const [magic, setMagic] = useState<MagicConnector>();
@@ -38,6 +45,9 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
   const router = useRouter();
   const [reconnect, setReconnect] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const { chain } = useNetwork();
+  const { switchNetwork } = useSwitchNetwork();
 
   const signInWithEmail = useMutation(
     async () => {
@@ -90,6 +100,17 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
       setMagic(magic);
     }
   }, [connectors]);
+
+  useEffect(() => {
+    console.log(chain?.id);
+    if (
+      connector?.id !== 'magic' &&
+      chain &&
+      switchNetwork &&
+      chain.id !== env.CHAIN_ID
+    )
+      switchNetwork(env.CHAIN_ID);
+  }, [chain, chain?.id, switchNetwork, connector]);
 
   return (
     <MagicAuthContextProvider
