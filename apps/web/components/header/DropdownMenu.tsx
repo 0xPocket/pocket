@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import type { FC } from 'react';
 import { Button, ThemeTogglerApp } from '@lib/ui';
 import { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';

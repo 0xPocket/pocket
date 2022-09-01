@@ -2,7 +2,7 @@ import { useTheme } from '@lib/ui/src/Theme/ThemeContext';
 import { SwapWidgetProps, Theme } from '@uniswap/widgets';
 import { env } from 'config/env/client';
 import dynamic from 'next/dynamic';
-import { useProvider } from 'wagmi';
+
 const SwapWidget = dynamic<SwapWidgetProps>(
   () => import('@uniswap/widgets').then((mod) => mod.SwapWidget),
   { ssr: false },

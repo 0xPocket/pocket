@@ -1,5 +1,4 @@
 import { Header } from '@lib/ui';
-import { useAccount } from 'wagmi';
 import { useMagic } from '../../contexts/auth';
 import WalletPopover from '../wallet/WalletPopover';
 import DropdownMenu from './DropdownMenu';
