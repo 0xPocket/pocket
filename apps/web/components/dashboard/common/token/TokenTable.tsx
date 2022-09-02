@@ -1,8 +1,4 @@
-import {
-  faArrowDown,
-  faArrowUp,
-  faTriangleExclamation,
-} from '@fortawesome/free-solid-svg-icons';
+import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CovalentItem } from '@lib/types/interfaces';
 import {
@@ -29,8 +25,8 @@ function TokenTable({ tokenList }: TokenTableProps) {
         header: '',
         accessorKey: 'logo_url',
         cell: ({ getValue }) => (
-          <div className="flex w-8 items-center justify-center">
-            {getValue() ? <img src={getValue() as string} alt="" /> : <>lol</>}
+          <div className="flex items-center justify-center">
+            <img src={getValue() as string} alt="" className="w-8" />
           </div>
         ),
       },

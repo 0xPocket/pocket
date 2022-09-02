@@ -1,19 +1,13 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { CovalentItem, CovalentReturn } from '@lib/types/interfaces';
+import { CovalentReturn } from '@lib/types/interfaces';
 import axios from 'axios';
 import { useQuery } from 'react-query';
 import { toast } from 'react-toastify';
 import TokenTable from './TokenTable';
-import {
-  faSpinner,
-  faTriangleExclamation,
-} from '@fortawesome/free-solid-svg-icons';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PieChartComp from './PieChart';
 import { env } from 'config/env/client';
 import { trpc } from '../../../../utils/trpc';
-import { DialogPopupWrapper } from '@lib/ui';
-import { useState } from 'react';
-import { Listbox } from '@headlessui/react';
 import TokenReportPopup from './TokenReportPopup';
 // import PieChartComp from './PieChart';
 
@@ -57,8 +51,6 @@ function TokenContent({ childAddress }: TokenContentProps) {
       },
     },
   );
-
-  const [open, setOpen] = useState(false);
 
   return (
     <div className="space-y-8">
