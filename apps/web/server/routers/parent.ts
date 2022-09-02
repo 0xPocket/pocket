@@ -81,7 +81,7 @@ export const parentRouter = createProtectedRouter()
         template: 'child_invitation',
         context: {
           name: child.name!,
-          url: `${env.APP_URL}/verify-email?${params}`,
+          url: `${env.APP_URL}/verify-child?${params}`,
         },
       });
     },
@@ -149,12 +149,12 @@ export const parentRouter = createProtectedRouter()
           template: 'child_invitation',
           context: {
             name: child.name!,
-            url: `${env.APP_URL}/verify-email?${params}`,
+            url: `${env.APP_URL}/verify-child?${params}`,
           },
         });
       }
 
-      console.log('children created');
+      ctx.log.info('new child created', { child });
 
       return 'OK';
     },

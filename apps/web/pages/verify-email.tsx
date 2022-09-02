@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
 import { FC, useEffect } from 'react';
 import { Spinner } from '../components/common/Spinner';
-import GlobalHeader from '../components/header/Header';
 import MainWrapper from '../components/wrappers/MainWrapper';
 import { trpc } from '../utils/trpc';
 
@@ -26,7 +25,7 @@ const VerifyChild: FC = () => {
 
   if (mutation.status === 'success') {
     return (
-      <MainWrapper>
+      <MainWrapper noHeader>
         <div className="flex h-screen flex-col items-center justify-center gap-2 text-3xl font-bold">
           Your email is now verified !
           <p className="text-sm font-thin">You can safely close this window.</p>
