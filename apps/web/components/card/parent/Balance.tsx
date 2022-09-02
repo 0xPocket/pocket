@@ -13,8 +13,7 @@ type BalanceProps = {
 
 function Balance({ value, setSelectedIndex, hideActions }: BalanceProps) {
   const { erc20 } = useSmartContract();
-  console.log(value);
-  console.log(erc20.data?.decimals);
+
   return (
     <>
       <div className="flex flex-col items-end">
