@@ -37,7 +37,6 @@ function TokenContent({ childAddress }: TokenContentProps) {
           ...data,
           items:
             data.items.filter((token) => {
-              console.log(token.quote);
               return (
                 token.quote > 0.1 &&
                 !blacklist?.find(
