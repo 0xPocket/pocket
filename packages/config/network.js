@@ -1,6 +1,6 @@
 // @ts-check
 
-const { Network } = require("@alch/alchemy-sdk");
+const { Network } = require("alchemy-sdk");
 const chain = require("wagmi/chains");
 
 /**

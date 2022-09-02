@@ -9,7 +9,7 @@ import { useMagic } from '../../contexts/auth';
 const DropdownMenu: FC = ({}) => {
   const { signOut } = useMagic();
   return (
-    <Menu as="div" className="relative inline-block text-left">
+    <Menu as="div" className="relative z-50 inline-block text-left">
       <Menu.Button className="flex h-7 w-7 items-center justify-center rounded-full">
         <span className="sr-only">Open options</span>
         <FontAwesomeIcon icon={faEllipsisVertical} />
