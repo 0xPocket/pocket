@@ -24,11 +24,13 @@ const EthereumProviders: FC<EthereumProvidersProps> = ({ callback }) => {
       ) {
         callback(address, chain?.id);
       } else {
-        connectAsync({ connector }).then((res) => {
-          if (callback) {
-            callback(res.account, res.chain.id);
-          }
-        });
+        connectAsync({ connector })
+          .then((res) => {
+            if (callback) {
+              callback(res.account, res.chain.id);
+            }
+          })
+          .catch(() => null);
       }
     },
     [callback, connectAsync, isConnected, address, chain, activeConnector],
@@ -62,7 +64,6 @@ const EthereumProviders: FC<EthereumProvidersProps> = ({ callback }) => {
             </button>
           ))}
       </div>
-      {isLoading && <Spinner />}
     </>
   );
 };

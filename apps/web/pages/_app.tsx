@@ -21,6 +21,7 @@ import { loggerLink } from '@trpc/client/links/loggerLink';
 import { splitLink } from '@trpc/client/links/splitLink';
 import { withTRPC } from '@trpc/next';
 import { env } from 'config/env/client';
+import { SessionProvider } from 'next-auth/react';
 // import { SessionProvider } from 'next-auth/react';
 
 const { chains, provider } = configureChains(
@@ -34,12 +35,12 @@ const { chains, provider } = configureChains(
   ],
 );
 
-function App({ Component, pageProps: { ...pageProps } }: AppProps) {
+function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const [wagmiClient] = useState(() =>
     createClient({
       autoConnect: true,
       provider,
-      persister: null,
+      persister: undefined,
       connectors: [
         new MetaMaskConnector({ chains }),
         new WalletConnectConnector({
@@ -69,19 +70,19 @@ function App({ Component, pageProps: { ...pageProps } }: AppProps) {
 
   return (
     <WagmiConfig client={wagmiClient}>
-      {/* <SessionProvider session={session}> */}
-      <MagicAuthProvider>
-        <AlchemyProvider>
-          <ThemeProvider>
-            <SmartContractProvider>
-              <Component {...pageProps} />
-              <ToastContainer position="bottom-right" autoClose={3000} />
-              <ReactQueryDevtools />
-            </SmartContractProvider>
-          </ThemeProvider>
-        </AlchemyProvider>
-      </MagicAuthProvider>
-      {/* </SessionProvider> */}
+      <SessionProvider session={session}>
+        <MagicAuthProvider>
+          <AlchemyProvider>
+            <ThemeProvider>
+              <SmartContractProvider>
+                <Component {...pageProps} />
+                <ToastContainer position="bottom-right" autoClose={3000} />
+                <ReactQueryDevtools />
+              </SmartContractProvider>
+            </ThemeProvider>
+          </AlchemyProvider>
+        </MagicAuthProvider>
+      </SessionProvider>
     </WagmiConfig>
   );
 }

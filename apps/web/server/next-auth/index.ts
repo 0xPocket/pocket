@@ -110,14 +110,6 @@ export const authOptions: NextAuthOptions = {
           throw new Error('Your parent must create your account.');
         }
 
-        // console.log('test2');
-
-        // if (existingUser && existingUser.type !== type) {
-        //   throw new Error(
-        //     `You must sign in with the ${existingUser.type} form.`,
-        //   );
-        // }
-
         if (!existingUser) {
           const newUser = await prisma.user.create({
             data: {
@@ -153,6 +145,7 @@ export const authOptions: NextAuthOptions = {
         ...session,
         user: {
           ...session.user,
+          address: token.address,
           emailVerified: !!token.emailVerified,
           newUser: token.newUser,
           type: token.type,
@@ -180,6 +173,7 @@ export const authOptions: NextAuthOptions = {
 
         return {
           ...token,
+          address: checkUser.address || undefined,
           type: checkUser.type,
           name: checkUser.name,
           newUser: checkUser.newUser,
@@ -193,6 +187,7 @@ export const authOptions: NextAuthOptions = {
 
         return {
           ...token,
+          address: user.address,
           type: user.type,
           name: user.name,
           newUser: user.newUser,

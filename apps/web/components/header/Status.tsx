@@ -22,8 +22,7 @@ function Status({}: StatusProps) {
 
   if (!mounted) return <Spinner />;
 
-  if (asPath.includes('/connect') || asPath.includes('/onboarding'))
-    return null;
+  if (asPath.includes('/connect')) return null;
 
   if (status === 'connecting' || status === 'reconnecting') return <Spinner />;
 

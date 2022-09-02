@@ -35,6 +35,7 @@ export const authRouter = createProtectedRouter()
   .mutation('onboard', {
     input: AuthSchema.onboard,
     resolve: async ({ ctx, input }) => {
+      ctx.log.info('onboard', input);
       const user = await prisma.user.findUnique({
         where: {
           id: ctx.session.user.id,

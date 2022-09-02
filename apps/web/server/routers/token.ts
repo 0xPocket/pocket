@@ -16,7 +16,9 @@ export const tokenRouter = createProtectedRouter()
     input: z.object({
       address: z.string().transform((address) => address.toLowerCase()),
     }),
-    resolve: async ({ input }) => {
+    resolve: async ({ ctx, input }) => {
+      ctx.log.info('new token reported', input);
+
       return prisma.blacklistToken.upsert({
         where: {
           address: input.address,

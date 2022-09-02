@@ -154,7 +154,7 @@ export const parentRouter = createProtectedRouter()
         });
       }
 
-      console.log('children created');
+      ctx.log.info('new child created', { child });
 
       return 'OK';
     },

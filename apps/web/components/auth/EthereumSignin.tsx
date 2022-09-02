@@ -1,5 +1,5 @@
 import { FC, useCallback, useMemo, useState } from 'react';
-import { useAccount, useDisconnect, useSignMessage } from 'wagmi';
+import { useAccount, useConnect, useDisconnect, useSignMessage } from 'wagmi';
 import { getCsrfToken, signIn } from 'next-auth/react';
 import SignMessage from './SignMessage';
 import EthereumProviders from './EthereumProviders';

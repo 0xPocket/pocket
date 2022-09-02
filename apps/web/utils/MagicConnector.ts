@@ -48,6 +48,8 @@ export class MagicConnector extends Connector {
 
   oauthCallbackUrl: string | undefined;
 
+  account: string | undefined;
+
   constructor(config: { chains?: Chain[] | undefined; options: Options }) {
     super(config);
     this.magicOptions = config.options;
@@ -94,7 +96,6 @@ export class MagicConnector extends Connector {
 
       const userDetails = { ...this.userDetails };
 
-      console.log(userDetails);
       this.clearUserDetails();
 
       if (userDetails) {
@@ -132,12 +133,18 @@ export class MagicConnector extends Connector {
   }
 
   async getAccount(): Promise<string> {
-    const provider = new ethers.providers.Web3Provider(
-      await this.getProvider(),
-    );
-    const signer = provider.getSigner();
+    if (this.account) {
+      return this.account;
+    }
+
+    const signer = await this.getSigner();
     const account = await signer.getAddress();
-    return account;
+
+    if (!this.account) {
+      this.account = account;
+    }
+
+    return this.account;
   }
 
   async getProvider() {
@@ -154,8 +161,7 @@ export class MagicConnector extends Connector {
     const provider = new ethers.providers.Web3Provider(
       await this.getProvider(),
     );
-    const signer = await provider.getSigner();
-    return signer;
+    return provider.getSigner();
   }
 
   async isAuthorized() {
@@ -172,6 +178,7 @@ export class MagicConnector extends Connector {
       this.magicSDK = new Magic(this.magicOptions.apiKey, {
         ...this.magicOptions.additionalMagicOptions,
       });
+      // console.log('magic sdk created');
       this.magicSDK.preload();
       return this.magicSDK;
     }
@@ -206,6 +213,7 @@ export class MagicConnector extends Connector {
 
   async disconnect(): Promise<void> {
     const magic = this.getMagicSDK();
+    this.account = undefined;
     await magic.user.logout();
   }
 }
