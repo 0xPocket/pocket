@@ -107,7 +107,9 @@ export function TransactionsTable({
           </table>
         </div>
       ) : (
-        <p className="w-full text-center">{'No transactions to display.'}</p>
+        <p className="my-8 w-full text-center text-xl">
+          {'No transactions to display.'}
+        </p>
       )}
     </>
   );

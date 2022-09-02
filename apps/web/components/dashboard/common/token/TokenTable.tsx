@@ -1,8 +1,4 @@
-import {
-  faArrowDown,
-  faArrowUp,
-  faTriangleExclamation,
-} from '@fortawesome/free-solid-svg-icons';
+import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CovalentItem } from '@lib/types/interfaces';
 import {
@@ -17,28 +13,20 @@ import {
 } from '@tanstack/react-table';
 import { ethers } from 'ethers';
 import { useMemo, useState } from 'react';
-import { toast } from 'react-toastify';
-import { trpc } from '../../../../utils/trpc';
 
 type TokenTableProps = {
   tokenList: CovalentItem[];
 };
 
 function TokenTable({ tokenList }: TokenTableProps) {
-  const reportToken = trpc.useMutation(['token.report'], {
-    onSuccess: () => {
-      toast.success('Token was reported as spam');
-    },
-  });
-
   const defaultColumns = useMemo<ColumnDef<CovalentItem>[]>(
     () => [
       {
         header: '',
         accessorKey: 'logo_url',
         cell: ({ getValue }) => (
-          <div className="flex w-8 items-center justify-center">
-            {getValue() ? <img src={getValue() as string} alt="" /> : <>lol</>}
+          <div className="flex items-center justify-center">
+            <img src={getValue() as string} alt="" className="w-8" />
           </div>
         ),
       },
@@ -76,31 +64,9 @@ function TokenTable({ tokenList }: TokenTableProps) {
           </div>
         ),
         id: 'quote',
-        filterFn: (row) => {
-          return (row.getValue('quote') as number) > 0.1;
-        },
-      },
-      {
-        header: () => null,
-        accessorFn: (row) => row.contract_address,
-        cell: (cell) => (
-          <div className="text-right">
-            {!reportToken.isSuccess && (
-              <button
-                className="tracking-wider opacity-50"
-                onClick={() =>
-                  reportToken.mutate({ address: cell.getValue() as string })
-                }
-              >
-                <FontAwesomeIcon icon={faTriangleExclamation} />
-              </button>
-            )}
-          </div>
-        ),
-        id: 'report',
       },
     ],
-    [reportToken],
+    [],
   );
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = useState({});

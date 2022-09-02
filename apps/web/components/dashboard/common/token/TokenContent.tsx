@@ -8,6 +8,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PieChartComp from './PieChart';
 import { env } from 'config/env/client';
 import { trpc } from '../../../../utils/trpc';
+import TokenReportPopup from './TokenReportPopup';
 // import PieChartComp from './PieChart';
 
 type TokenContentProps = {
@@ -28,7 +29,6 @@ function TokenContent({ childAddress }: TokenContentProps) {
     ['child.token-content', childAddress],
     () => fetchUserTokens(childAddress),
     {
-      // enabled: !!child && !!child.address,
       staleTime: 60 * 1000,
       onError: () => toast.error("Could not retrieve user's token"),
       enabled: isSuccess,
@@ -37,10 +37,13 @@ function TokenContent({ childAddress }: TokenContentProps) {
           ...data,
           items:
             data.items.filter((token) => {
-              return !blacklist?.find(
-                (el) =>
-                  el.address.toLowerCase() ===
-                  token.contract_address.toLowerCase(),
+              return (
+                token.quote > 0.1 &&
+                !blacklist?.find(
+                  (el) =>
+                    el.address.toLowerCase() ===
+                    token.contract_address.toLowerCase(),
+                )
               );
             }) || undefined,
         };
@@ -51,21 +54,28 @@ function TokenContent({ childAddress }: TokenContentProps) {
   return (
     <div className="space-y-8">
       <h2>Token Balance</h2>
-      <div className="container-classic flex rounded-lg p-8">
-        <div className="col-span-4 aspect-square w-1/5">
-          {!isLoading && data?.items ? (
-            <PieChartComp tokenList={data.items} />
-          ) : (
-            <FontAwesomeIcon icon={faSpinner} spin />
-          )}
-        </div>
-        <div className="col-span-8 flex w-4/5 items-start">
-          {!isLoading && data?.items ? (
-            <TokenTable tokenList={data.items} />
-          ) : (
-            <FontAwesomeIcon icon={faSpinner} spin className="m-auto" />
-          )}
-        </div>
+      <div className="container-classic flex flex-col rounded-lg p-8">
+        {isLoading && (
+          <FontAwesomeIcon icon={faSpinner} spin className="m-auto" />
+        )}
+        {!isLoading && data?.items && data?.items.length === 0 && (
+          <p className="my-8 w-full text-center text-xl">
+            {'No token to display.'}
+          </p>
+        )}
+        {data?.items && data?.items.length > 0 && (
+          <>
+            <div className="relative flex w-full">
+              <div className="aspect-square w-1/5">
+                <PieChartComp tokenList={data.items} />
+              </div>
+              <div className="flex w-4/5 items-start">
+                <TokenTable tokenList={data.items} />
+              </div>
+            </div>
+            <TokenReportPopup items={data.items} />
+          </>
+        )}
       </div>
     </div>
   );

@@ -81,7 +81,9 @@ function EventsTable({ logs }: EventTableProps) {
           </table>
         </div>
       ) : (
-        <p className="w-full text-center">{'No top-ups for now.'}</p>
+        <p className="my-8 w-full text-center text-xl">
+          {'No transactions to display.'}
+        </p>
       )}
     </>
   );
