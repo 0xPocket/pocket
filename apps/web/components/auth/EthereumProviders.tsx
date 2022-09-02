@@ -1,14 +1,13 @@
 import Image from 'next/image';
 import { FC, useCallback } from 'react';
 import { Connector, useAccount, useConnect, useNetwork } from 'wagmi';
-import { Spinner } from '../common/Spinner';
 
 type EthereumProvidersProps = {
   callback?: (address: string, chainId: number) => void;
 };
 
 const EthereumProviders: FC<EthereumProvidersProps> = ({ callback }) => {
-  const { connectors, connectAsync, error, isLoading } = useConnect();
+  const { connectors, connectAsync } = useConnect();
   const { isConnected, connector: activeConnector, address } = useAccount();
 
   const { chain } = useNetwork();
@@ -24,11 +23,13 @@ const EthereumProviders: FC<EthereumProvidersProps> = ({ callback }) => {
       ) {
         callback(address, chain?.id);
       } else {
-        connectAsync({ connector }).then((res) => {
-          if (callback) {
-            callback(res.account, res.chain.id);
-          }
-        });
+        connectAsync({ connector })
+          .then((res) => {
+            if (callback) {
+              callback(res.account, res.chain.id);
+            }
+          })
+          .catch(() => null);
       }
     },
     [callback, connectAsync, isConnected, address, chain, activeConnector],
@@ -62,7 +63,6 @@ const EthereumProviders: FC<EthereumProvidersProps> = ({ callback }) => {
             </button>
           ))}
       </div>
-      {isLoading && <Spinner />}
     </>
   );
 };

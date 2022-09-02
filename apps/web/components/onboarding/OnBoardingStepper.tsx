@@ -5,6 +5,7 @@ import { trpc } from '../../utils/trpc';
 import Providers from './Providers';
 import SignMessage from '../auth/SignMessage';
 import Step from './Step';
+import { FormErrorMessage } from '@lib/ui';
 
 type OnBoardingStepperProps = {
   token: string;
@@ -63,6 +64,9 @@ function OnBoardingStepper({ token, email }: OnBoardingStepperProps) {
               )
           }
         />
+        {mutation.isError && (
+          <FormErrorMessage message={mutation.error.message} />
+        )}
       </Step>
     </div>
   );
