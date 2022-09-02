@@ -1,4 +1,4 @@
-import { OwnedNft } from '@alch/alchemy-sdk';
+import type { OwnedNft } from 'alchemy-sdk';
 import { useState } from 'react';
 import NftDialog from './NftDialog';
 

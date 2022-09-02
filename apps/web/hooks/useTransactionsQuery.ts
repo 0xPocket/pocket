@@ -1,11 +1,7 @@
 import { useQuery } from 'react-query';
 import { useAlchemy } from '../contexts/alchemy';
 import type { AssetTransfersResponseWithMetadata } from '@lib/types/interfaces';
-import {
-  getAssetTransfers,
-  AssetTransfersCategory,
-  AssetTransfersOrder,
-} from '@alch/alchemy-sdk';
+import { AssetTransfersCategory, AssetTransfersOrder } from 'alchemy-sdk';
 
 const staticAssetTransfersParams = {
   excludeZeroValue: false,
@@ -42,7 +38,7 @@ export const useTransactionsQuery = (address: string) => {
   return useQuery(
     ['child.transactions-content', address],
     () => {
-      return getAssetTransfers(alchemy, {
+      return alchemy.core.getAssetTransfers({
         fromAddress: address,
         ...staticAssetTransfersParams,
       }) as Promise<AssetTransfersResponseWithMetadata>;

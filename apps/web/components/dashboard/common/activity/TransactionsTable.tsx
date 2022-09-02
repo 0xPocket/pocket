@@ -5,7 +5,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { AssetTransfersResultWithMetadata } from '@lib/types/interfaces';
-import { AssetTransfersCategory } from '@alch/alchemy-sdk';
+import type { AssetTransfersCategory } from 'alchemy-sdk';
 import moment from 'moment';
 
 type TransactionsTableProps = {

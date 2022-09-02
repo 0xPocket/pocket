@@ -1,5 +1,4 @@
-import type { Alchemy } from '@alch/alchemy-sdk';
-import { initializeAlchemy } from '@alch/alchemy-sdk';
+import { Alchemy } from 'alchemy-sdk';
 import { env } from 'config/env/client';
 import { createContext, useContext, useState } from 'react';
 
@@ -25,7 +24,7 @@ interface AlchemyProviderProps {
 }
 
 export const AlchemyProvider = ({ children }: AlchemyProviderProps) => {
-  const [alchemy] = useState(initializeAlchemy(settings));
+  const [alchemy] = useState(new Alchemy(settings));
   return (
     <AlchemyContextProvider value={{ alchemy }}>
       {children}

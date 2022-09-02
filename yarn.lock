@@ -2,20 +2,6 @@
 # yarn lockfile v1
 
 
-"@alch/alchemy-sdk@^1.0.8":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@alch/alchemy-sdk/-/alchemy-sdk-1.2.0.tgz#e185ec6ccfc1ba570f0dff75d040d7970f17371d"
-  integrity sha512-V7ajgkdIsTuKfJAzT/6+JQfG4+UodmGduaXcBiuEuTsDnw/sX6Q+ATiBuex0m6ZEPx0QpRe7NYHZNSpSJbtWpg==
-  dependencies:
-    "@ethersproject/abstract-provider" "^5.6.1"
-    "@ethersproject/bignumber" "^5.6.2"
-    "@ethersproject/networks" "^5.6.4"
-    "@ethersproject/providers" "^5.6.8"
-    "@ethersproject/web" "^5.6.1"
-    axios "^0.26.1"
-    sturdy-websocket "^0.2.1"
-    websocket "^1.0.34"
-
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.18.6":
   version "7.18.6"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.18.6.tgz#3b25d38c89600baa2dcc219edfa88a74eb2c427a"
@@ -952,7 +938,7 @@
     "@ethersproject/constants" "^5.7.0"
     "@ethersproject/logger" "^5.7.0"
 
-"@ethersproject/wallet@5.7.0":
+"@ethersproject/wallet@5.7.0", "@ethersproject/wallet@^5.6.2":
   version "5.7.0"
   resolved "https://registry.yarnpkg.com/@ethersproject/wallet/-/wallet-5.7.0.tgz#4e5d0790d96fe21d61d38fb40324e6c7ef350b2d"
   integrity sha512-MhmXlJXEJFBFVKrDLB4ZdDzxcBxQ3rLyCkhNqVu3CDYvR97E+8r01UgrI+TI99Le+aYm/in/0vp86guJuM7FCA==
@@ -3331,6 +3317,21 @@ ajv@^8.0.1, ajv@^8.11.0:
     json-schema-traverse "^1.0.0"
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
+
+alchemy-sdk@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/alchemy-sdk/-/alchemy-sdk-2.0.3.tgz#c439c9e599958734f3dea1dcbfba818bae4c69ea"
+  integrity sha512-5sebgRUrL486KTkZ6w9ViDyfqZQ4Qxv9B+q9C4c3+VTi1iyTvSjGQub2JFTtxQl/70zdLY7ujWutgAGGVxOswQ==
+  dependencies:
+    "@ethersproject/abstract-provider" "^5.6.1"
+    "@ethersproject/bignumber" "^5.6.2"
+    "@ethersproject/networks" "^5.6.4"
+    "@ethersproject/providers" "^5.6.8"
+    "@ethersproject/wallet" "^5.6.2"
+    "@ethersproject/web" "^5.6.1"
+    axios "^0.26.1"
+    sturdy-websocket "^0.2.1"
+    websocket "^1.0.34"
 
 amdefine@>=0.0.4:
   version "1.0.1"

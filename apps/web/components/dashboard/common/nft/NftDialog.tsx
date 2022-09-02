@@ -1,4 +1,4 @@
-import { OwnedNft } from '@alch/alchemy-sdk';
+import { OwnedNft } from 'alchemy-sdk';
 import { DialogPopupWrapper } from '@lib/ui';
 import Link from 'next/link';
 import { Dispatch, SetStateAction } from 'react';
