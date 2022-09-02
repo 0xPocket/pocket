@@ -1,14 +1,13 @@
 import Image from 'next/image';
 import { FC, useCallback } from 'react';
 import { Connector, useAccount, useConnect, useNetwork } from 'wagmi';
-import { Spinner } from '../common/Spinner';
 
 type EthereumProvidersProps = {
   callback?: (address: string, chainId: number) => void;
 };
 
 const EthereumProviders: FC<EthereumProvidersProps> = ({ callback }) => {
-  const { connectors, connectAsync, error, isLoading } = useConnect();
+  const { connectors, connectAsync } = useConnect();
   const { isConnected, connector: activeConnector, address } = useAccount();
 
   const { chain } = useNetwork();

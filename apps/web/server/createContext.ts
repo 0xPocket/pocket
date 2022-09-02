@@ -19,6 +19,7 @@ export const createContext = async (
   const res = opts?.res;
   const session = req && res && (await getServerSession(req, res, authOptions));
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const logger = (req as any)?.log as Logger;
 
   return {

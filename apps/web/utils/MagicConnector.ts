@@ -36,6 +36,7 @@ export class MagicConnector extends Connector {
 
   readonly name = 'Magic';
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   provider?: any;
 
   magicSDK: Magic | undefined;
@@ -185,12 +186,12 @@ export class MagicConnector extends Connector {
     return this.magicSDK;
   }
 
-  async getChainId(): Promise<any> {
+  async getChainId(): Promise<number> {
     const networkOptions = this.magicOptions.additionalMagicOptions?.network;
     if (typeof networkOptions === 'object') {
       const chainID = networkOptions.chainId;
       if (chainID) {
-        return String(normalizeChainId(chainID));
+        return normalizeChainId(chainID);
       }
     }
     throw new Error('Chain ID is not defined');

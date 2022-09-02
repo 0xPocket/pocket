@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
 import { FC, useEffect } from 'react';
 import { Spinner } from '../components/common/Spinner';
-import GlobalHeader from '../components/header/Header';
 import MainWrapper from '../components/wrappers/MainWrapper';
 import { trpc } from '../utils/trpc';
 

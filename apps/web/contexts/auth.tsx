@@ -61,6 +61,9 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
         }
         setLoading(false);
       });
+    },
+  });
+
   const { chain } = useNetwork();
   const { switchNetwork } = useSwitchNetwork();
 
