@@ -27,13 +27,10 @@ const ClaimButton: React.FC<ClaimButtonProps> = ({ disabled, children }) => {
     ...claimConfig,
     onError(e) {
       console.log(e.message);
-      toast.error(`An error occured while claiming your money`);
+      toast.error(`Claim failed.`);
     },
     onSuccess: () => {
-      toast.info(
-        `The network is validating your claim. It may takes between 30 and 60 seconds, please wait`,
-        { isLoading: true },
-      );
+      toast.info(`Claim pending, please hang on !`, { isLoading: true });
     },
   });
 
@@ -41,11 +38,11 @@ const ClaimButton: React.FC<ClaimButtonProps> = ({ disabled, children }) => {
     hash: claim.data?.hash,
     onSuccess: () => {
       toast.dismiss();
-      toast.success('Your claim is a success');
+      toast.success('Successfull claim !');
     },
     onError: () => {
       toast.dismiss();
-      toast.error(`An error occured while claiming your money`);
+      toast.error(`Claim failed.`);
     },
   });
 
