@@ -1,16 +1,22 @@
-import { Header, ThemeToggler } from '@lib/ui';
-import Status from './Status';
+import { Header } from '@lib/ui';
+import { useMagic } from '../../contexts/auth';
+import WalletPopover from '../wallet/WalletPopover';
+import DropdownMenu from './DropdownMenu';
 
 function GlobalHeader() {
+  const { loggedIn } = useMagic();
+
   return (
     <Header>
       <Header.BlockLeft>
         <Header.Title href="/">Pocket.</Header.Title>
       </Header.BlockLeft>
-      <Header.BlockRight>
-        <Status />
-        <ThemeToggler />
-      </Header.BlockRight>
+      {loggedIn && (
+        <Header.BlockRight>
+          <WalletPopover />
+          <DropdownMenu />
+        </Header.BlockRight>
+      )}
     </Header>
   );
 }
