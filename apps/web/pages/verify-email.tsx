@@ -25,7 +25,7 @@ const VerifyChild: FC = () => {
 
   if (mutation.status === 'success') {
     return (
-      <MainWrapper>
+      <MainWrapper noHeader>
         <div className="flex h-screen flex-col items-center justify-center gap-2 text-3xl font-bold">
           Your email is now verified !
           <p className="text-sm font-thin">You can safely close this window.</p>
