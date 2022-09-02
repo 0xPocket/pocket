@@ -63,7 +63,7 @@ function TokenContent({ childAddress }: TokenContentProps) {
   return (
     <div className="space-y-8">
       <h2>Token Balance</h2>
-      <div className="container-classic flex rounded-lg p-8">
+      <div className="container-classic flex flex-col rounded-lg p-8">
         {isLoading && (
           <FontAwesomeIcon icon={faSpinner} spin className="m-auto" />
         )}
@@ -74,11 +74,13 @@ function TokenContent({ childAddress }: TokenContentProps) {
         )}
         {data?.items && data?.items.length > 0 && (
           <>
-            <div className="aspect-square w-1/5">
-              <PieChartComp tokenList={data.items} />
-            </div>
-            <div className="flex w-4/5 items-start">
-              <TokenTable tokenList={data.items} />
+            <div className="relative flex w-full">
+              <div className="aspect-square w-1/5">
+                <PieChartComp tokenList={data.items} />
+              </div>
+              <div className="flex w-4/5 items-start">
+                <TokenTable tokenList={data.items} />
+              </div>
             </div>
             <TokenReportPopup items={data.items} />
           </>

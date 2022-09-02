@@ -21,9 +21,9 @@ const TokenReportPopup: FC<TokenReportPopupProps> = ({ items }) => {
   });
 
   return (
-    <div className="flex items-end justify-center whitespace-nowrap text-sm">
+    <div className="flex items-end justify-end text-sm">
       <div
-        className="flex items-center text-danger"
+        className="flex cursor-pointer items-center text-danger"
         onClick={() => setPopupOpen(true)}
       >
         <FontAwesomeIcon icon={faTriangleExclamation} className="mr-2" />
