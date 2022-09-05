@@ -5,9 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { trpc } from '../../../utils/trpc';
 
-type ChildrenMozaicProps = {};
-
-function ChildrenMozaic({}: ChildrenMozaicProps) {
+function ChildrenMozaic() {
   const router = useRouter();
 
   const { isLoading, data } = trpc.useQuery(['parent.children']);

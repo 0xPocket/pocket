@@ -4,6 +4,8 @@ import useContractRead from '../../../hooks/useContractRead';
 import AccountStatus from './AccountStatus';
 import RightTab from './RightTab';
 import { UserChild } from '@lib/types/interfaces';
+import { trpc } from '../../../utils/trpc';
+import { toast } from 'react-toastify';
 
 type ChildCardProps = {
   child: UserChild;
@@ -14,13 +16,24 @@ type ChildCardProps = {
 function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
   const { pocketContract } = useSmartContract();
 
-  const { data: config } = useContractRead({
+  const { data: config, refetch: refetchConfig } = useContractRead({
     contract: pocketContract,
     functionName: 'childToConfig',
     args: [child.address!],
     enabled: !!child.address,
-    watch: true,
   });
+
+  const { mutate: resendEmail } = trpc.useMutation(
+    'parent.resendChildVerificationEmail',
+    {
+      onError: () => {
+        toast.error(`An error occured, if the problem persits contact us`);
+      },
+      onSuccess: () => {
+        toast.success(`Email sent to ${child.email}`);
+      },
+    },
+  );
 
   return (
     <div
@@ -34,7 +47,15 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
           </div>
         </div>
         {child?.child?.status !== 'ACTIVE' ? (
-          <p>You child has received an email to validate his account</p>
+          <p>
+            {'We sent an email to validate your child account. '}
+            <span
+              className="cursor-pointer underline"
+              onClick={() => resendEmail({ userId: child.id })}
+            >
+              Send a new one.
+            </span>
+          </p>
         ) : !hasLink ? (
           <Link
             //TODO : change mumbai to mainet
@@ -51,7 +72,11 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
         )}
       </div>
       {child?.child?.status === 'ACTIVE' && (
-        <RightTab child={child} config={config} />
+        <RightTab
+          child={child}
+          config={config}
+          refetchConfig={refetchConfig as any}
+        />
       )}
     </div>
   );

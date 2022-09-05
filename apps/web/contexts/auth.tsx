@@ -1,13 +1,20 @@
 import { useEffect, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
-import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import {
+  useAccount,
+  useConnect,
+  useDisconnect,
+  useNetwork,
+  useSwitchNetwork,
+} from 'wagmi';
 import { createCtx } from '../utils/createContext';
 import type { MagicConnector } from '../utils/MagicConnector';
-import { signIn, signOut } from 'next-auth/react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import type { CustomSessionUser } from 'next-auth';
 import { trpc } from '../utils/trpc';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
+import { env } from 'config/env/client';
 
 interface MagicAuthProviderProps {
   children: React.ReactNode;
@@ -16,7 +23,7 @@ interface MagicAuthProviderProps {
 interface IMagicAuthContext {
   loggedIn: boolean;
   loading: boolean;
-  signInWithEmail: (email: string) => Promise<string | undefined>;
+  signInWithEmail: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
   user: CustomSessionUser | undefined;
 }
@@ -25,64 +32,84 @@ export const [useMagic, MagicAuthContextProvider] =
   createCtx<IMagicAuthContext>();
 
 export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
-  const { isConnected, status: wagmiStatus } = useAccount();
-  const { disconnectAsync } = useDisconnect();
+  const { isConnected, status: wagmiStatus, address, connector } = useAccount();
+  const { disconnectAsync, disconnect } = useDisconnect();
   const queryClient = useQueryClient();
   const [magic, setMagic] = useState<MagicConnector>();
   const { connectors, connectAsync } = useConnect();
-  const { data, status, refetch } = trpc.useQuery(['auth.session'], {
-    cacheTime: 60000,
+  const { status: nextAuthStatus } = useSession();
+  const { data, status } = trpc.useQuery(['auth.session'], {
     staleTime: 0,
-    enabled: isConnected,
+    enabled: isConnected && nextAuthStatus === 'authenticated',
     retry: false,
   });
   const router = useRouter();
   const [reconnect, setReconnect] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const signInWithEmail = useMutation(
-    async () => {
-      await connectAsync({ connector: magic });
-      return magic?.getDidToken();
+  const magicConnect = useMutation(async () => magic?.getDidToken(), {
+    onSuccess: async (didToken) => {
+      signIn('magic', {
+        token: didToken,
+        redirect: false,
+      }).then(async (res) => {
+        if (res?.ok) {
+          await router.push('/onboarding');
+        } else {
+          toast.error(res?.error);
+          disconnect();
+        }
+        setLoading(false);
+      });
     },
-    {
-      onSuccess: (token) => {
-        signIn('magic', {
-          token,
-          redirect: false,
-        }).then(async (res) => {
-          if (res?.ok) {
-            await refetch();
-            router.push('/onboarding');
-          } else {
-            toast.error(res?.error);
-            disconnectAsync();
-          }
-        });
-      },
-    },
-  );
+  });
+
+  const { chain } = useNetwork();
+  const { switchNetwork } = useSwitchNetwork();
 
   const logout = useMutation(() => disconnectAsync(), {
     onSuccess: async () => {
       queryClient.removeQueries();
-      signOut({ callbackUrl: '/connect', redirect: false }).then(() => {
+      signOut({ redirect: false }).then(() => {
         router.push('/connect');
       });
     },
   });
 
+  // CHANGE ACCOUNT DISCONNECT
+  useEffect(() => {
+    if (
+      data &&
+      data.user.address &&
+      address &&
+      address?.toLowerCase() !== data?.user.address.toLowerCase()
+    ) {
+      logout.mutate();
+    }
+  }, [address, data, router, logout]);
+
+  // RECONNECTING STATE
   useEffect(() => {
     if (wagmiStatus === 'reconnecting' && !reconnect) {
+      setLoading(true);
       setReconnect(true);
       return;
     }
 
+    if (wagmiStatus === 'connected' && reconnect) {
+      setReconnect(false);
+      if (connector.id === 'magic') return magicConnect.mutate();
+      setLoading(false);
+    }
+
     if (wagmiStatus === 'disconnected' && reconnect) {
-      signOut();
+      logout.mutate();
+      setLoading(false);
       setReconnect(false);
     }
-  }, [wagmiStatus, reconnect]);
+  }, [wagmiStatus, reconnect, router, magicConnect, connector, logout]);
 
+  // WE GET THE MAGIC CONNCETOR HERE
   useEffect(() => {
     const magic = connectors.find((c) => c.id === 'magic') as MagicConnector;
     if (magic) {
@@ -90,18 +117,31 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
     }
   }, [connectors]);
 
+  useEffect(() => {
+    console.log(chain?.id);
+    if (
+      connector?.id !== 'magic' &&
+      chain &&
+      switchNetwork &&
+      chain.id !== env.CHAIN_ID
+    )
+      switchNetwork(env.CHAIN_ID);
+  }, [chain, chain?.id, switchNetwork, connector]);
+
   return (
     <MagicAuthContextProvider
       value={{
         loggedIn: status === 'success' && data.user && isConnected,
-        loading:
-          logout.isLoading || signInWithEmail.isLoading || logout.isLoading,
+        loading: logout.isLoading || loading,
         signInWithEmail: async (email: string) => {
-          if (!isConnected) {
+          setLoading(true);
+          if (isConnected) {
             await disconnectAsync();
           }
           magic?.setUserDetails({ email });
-          return signInWithEmail.mutateAsync();
+          return connectAsync({ connector: magic }).then(() => {
+            return magicConnect.mutate();
+          });
         },
         signOut: async () => logout.mutate(),
         user: data?.user,

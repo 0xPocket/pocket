@@ -36,6 +36,7 @@ export class MagicConnector extends Connector {
 
   readonly name = 'Magic';
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   provider?: any;
 
   magicSDK: Magic | undefined;
@@ -47,6 +48,8 @@ export class MagicConnector extends Connector {
   oauthProviders: OAuthProvider[];
 
   oauthCallbackUrl: string | undefined;
+
+  account: string | undefined;
 
   constructor(config: { chains?: Chain[] | undefined; options: Options }) {
     super(config);
@@ -94,7 +97,6 @@ export class MagicConnector extends Connector {
 
       const userDetails = { ...this.userDetails };
 
-      console.log(userDetails);
       this.clearUserDetails();
 
       if (userDetails) {
@@ -112,7 +114,7 @@ export class MagicConnector extends Connector {
         return {
           account,
           chain: {
-            id: 0,
+            id: await this.getChainId(),
             unsupported: false,
           },
           provider,
@@ -132,12 +134,18 @@ export class MagicConnector extends Connector {
   }
 
   async getAccount(): Promise<string> {
-    const provider = new ethers.providers.Web3Provider(
-      await this.getProvider(),
-    );
-    const signer = provider.getSigner();
+    if (this.account) {
+      return this.account;
+    }
+
+    const signer = await this.getSigner();
     const account = await signer.getAddress();
-    return account;
+
+    if (!this.account) {
+      this.account = account;
+    }
+
+    return this.account;
   }
 
   async getProvider() {
@@ -154,8 +162,7 @@ export class MagicConnector extends Connector {
     const provider = new ethers.providers.Web3Provider(
       await this.getProvider(),
     );
-    const signer = await provider.getSigner();
-    return signer;
+    return provider.getSigner();
   }
 
   async isAuthorized() {
@@ -172,18 +179,19 @@ export class MagicConnector extends Connector {
       this.magicSDK = new Magic(this.magicOptions.apiKey, {
         ...this.magicOptions.additionalMagicOptions,
       });
+      // console.log('magic sdk created');
       this.magicSDK.preload();
       return this.magicSDK;
     }
     return this.magicSDK;
   }
 
-  async getChainId(): Promise<any> {
+  async getChainId(): Promise<number> {
     const networkOptions = this.magicOptions.additionalMagicOptions?.network;
     if (typeof networkOptions === 'object') {
       const chainID = networkOptions.chainId;
       if (chainID) {
-        return String(normalizeChainId(chainID));
+        return normalizeChainId(chainID);
       }
     }
     throw new Error('Chain ID is not defined');
@@ -206,6 +214,7 @@ export class MagicConnector extends Connector {
 
   async disconnect(): Promise<void> {
     const magic = this.getMagicSDK();
+    this.account = undefined;
     await magic.user.logout();
   }
 }

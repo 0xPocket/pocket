@@ -1,7 +1,11 @@
 import { Button } from '@lib/ui';
 import React, { ReactNode } from 'react';
 import { toast } from 'react-toastify';
-import { useContractWrite, usePrepareContractWrite } from 'wagmi';
+import {
+  useContractWrite,
+  usePrepareContractWrite,
+  useWaitForTransaction,
+} from 'wagmi';
 // import useContractWrite from '../../../hooks/useContractWrite';
 import { useSmartContract } from '../../../contexts/contract';
 
@@ -12,19 +16,33 @@ type ClaimButtonProps = {
 
 const ClaimButton: React.FC<ClaimButtonProps> = ({ disabled, children }) => {
   const { pocketContract } = useSmartContract();
+
   const { config: claimConfig } = usePrepareContractWrite({
     addressOrName: pocketContract.address,
     contractInterface: pocketContract.interface,
     functionName: 'claim',
   });
-  const { writeAsync: claim } = useContractWrite({
+
+  const claim = useContractWrite({
     ...claimConfig,
-    onSuccess() {
-      toast.success(`Claim worked perfectly`);
-    },
     onError(e) {
       console.log(e.message);
-      toast.error(`An error occured while claiming your money`);
+      toast.error(`Claim failed.`);
+    },
+    onSuccess: () => {
+      toast.info(`Claim pending, please hang on !`, { isLoading: true });
+    },
+  });
+
+  useWaitForTransaction({
+    hash: claim.data?.hash,
+    onSuccess: () => {
+      toast.dismiss();
+      toast.success('Successfull claim !');
+    },
+    onError: () => {
+      toast.dismiss();
+      toast.error(`Claim failed.`);
     },
   });
 
@@ -41,8 +59,9 @@ const ClaimButton: React.FC<ClaimButtonProps> = ({ disabled, children }) => {
 
   return (
     <Button
+      disabled={!claim.write}
       action={() => {
-        if (claim) claim();
+        if (claim.write) claim.write();
       }}
     >
       {children}

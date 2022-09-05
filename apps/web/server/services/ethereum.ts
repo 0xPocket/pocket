@@ -2,11 +2,11 @@ import { TRPCError } from '@trpc/server';
 import { providers, Wallet } from 'ethers';
 import { parseEther } from 'ethers/lib/utils';
 import { PocketFaucet__factory } from 'pocket-contract/typechain-types';
-import { env } from '../env';
+import { env } from 'config/env/server';
 import { prisma } from '../prisma';
 import type { UserChild, UserParent } from '../utils/sanitizeUser';
 
-const provider = new providers.JsonRpcProvider(env.NEXT_PUBLIC_RPC_ENDPOINT);
+const provider = new providers.JsonRpcProvider(env.RPC_URL);
 const wallet = new Wallet(env.POCKET_PRIVATE_KEY, provider);
 const pocketContract = PocketFaucet__factory.connect(
   env.NEXT_PUBLIC_CONTRACT_ADDRESS,

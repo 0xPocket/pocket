@@ -11,8 +11,7 @@ import { authOptions } from '../next-auth';
 import { prisma } from '../prisma';
 import { AuthSchema } from '../schemas/auth.schema';
 import { User } from '@prisma/client';
-import { env } from '../env';
-import { z } from 'zod';
+import { env } from 'config/env/server';
 
 export const authRouter = createProtectedRouter()
   .query('session', {
@@ -36,6 +35,7 @@ export const authRouter = createProtectedRouter()
   .mutation('onboard', {
     input: AuthSchema.onboard,
     resolve: async ({ ctx, input }) => {
+      ctx.log.info('onboard', input);
       const user = await prisma.user.findUnique({
         where: {
           id: ctx.session.user.id,
@@ -88,10 +88,7 @@ export const authRouter = createProtectedRouter()
           template: 'email_verification',
           context: {
             name: updatedUser.name,
-            // TODO: Use correct URL from production
-            url: env.VERCEL_URL
-              ? `https://${env.VERCEL_URL}/verify-email?${params}`
-              : `http://localhost:3000/verify-email?${params}`,
+            url: `${env.APP_URL}/verify-email?${params}`,
           },
         }).catch(() => {
           throw new TRPCError({
@@ -99,13 +96,12 @@ export const authRouter = createProtectedRouter()
             message: 'Server error',
           });
         });
-
-        // We force settings a new token
-        if (ctx.req && ctx.res) {
-          await unstable_getServerSession(ctx.req, ctx.res, authOptions);
-        }
-
-        return updatedUser;
       }
+
+      // We force settings a new token
+      if (ctx.req && ctx.res) {
+        await unstable_getServerSession(ctx.req, ctx.res, authOptions);
+      }
+      return updatedUser;
     },
   });

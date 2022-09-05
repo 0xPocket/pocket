@@ -13,7 +13,7 @@ import { prisma } from '../prisma';
 import { z } from 'zod';
 import { SiweMessage } from 'siwe';
 import { getCsrfToken } from 'next-auth/react';
-import { env } from '../env';
+import { env } from 'config/env/server';
 
 export const emailRouter = createRouter()
   .mutation('verifyChild', {
@@ -215,10 +215,7 @@ export const emailRouter = createRouter()
         template: 'email_verification',
         context: {
           name: user.name,
-          // TODO: Use correct URL from production
-          url: env.VERCEL_URL
-            ? `https://${env.VERCEL_URL}/verify-email?${params}`
-            : `http://localhost:3000/verify-email?${params}`,
+          url: `${env.APP_URL}/verify-email?${params}`,
         },
       }).catch(() => {
         throw new TRPCError({

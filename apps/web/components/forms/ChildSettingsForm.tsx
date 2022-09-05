@@ -52,9 +52,7 @@ function ChildSettingsForm({
 
   const { writeAsync: changeConfig } = useContractWrite({
     ...changeConfigConfig,
-    onSuccess() {
-      toast.success(`Configuration changed successfully`);
-    },
+
     onError(e) {
       console.log(e.message);
       toast.error(`An error occured while changing your child configuration`);
@@ -70,18 +68,15 @@ function ChildSettingsForm({
 
   const { writeAsync: addChild } = useContractWrite({
     ...addChildConfig,
-    onSuccess() {
-      toast.success(`Configuration changed successfully`);
-    },
-    onError(e) {
-      console.log(e.message);
+    onError: () => {
       toast.error(`An error occured while changing your child configuration`);
     },
   });
 
   const onSubmit = async (data: FormValues) => {
+    let ret;
     if (config?.lastClaim.isZero() && addChild)
-      await addChild({
+      ret = await addChild({
         recklesslySetUnpreparedArgs: [
           parseUnits(data.ceiling, erc20.data?.decimals),
           data.periodicity,
@@ -89,7 +84,7 @@ function ChildSettingsForm({
         ],
       });
     else if (changeConfig)
-      await changeConfig({
+      ret = await changeConfig({
         recklesslySetUnpreparedArgs: [
           parseUnits(data.ceiling, erc20.data?.decimals),
           data.periodicity,
@@ -97,7 +92,17 @@ function ChildSettingsForm({
         ],
       });
     else return;
-    toast.info(`We are waiting for the network to validate your transfer`);
+    const load = toast.info(
+      `The network is validating the changes. It may takes between 30 and 60 seconds, please wait`,
+      {
+        // autoClose: false,
+        isLoading: true,
+      },
+    );
+    await ret.wait();
+    toast.dismiss(load);
+    toast.success(`Configuration set successfully`);
+
     returnFn();
   };
 

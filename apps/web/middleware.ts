@@ -3,8 +3,9 @@ import type { NextRequestWithAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
 
 const userRoutes = {
-  Parent: ['/', '/onboarding', '/add-account', '/account/:path*'],
-  Child: ['/', '/onboarding'],
+  ALL: ['/', '/onboarding'],
+  Parent: ['/add-account', '/account/:path*'],
+  Child: [],
 };
 
 function routeAuthorized(currentRoute: string, toMatch: string) {
@@ -58,6 +59,9 @@ const handler = (req: NextRequestWithAuth) => {
   }
 
   const authorized =
+    userRoutes['ALL'].findIndex((route) => {
+      return routeAuthorized(req.nextUrl.pathname, route);
+    }) !== -1 ||
     userRoutes[userType].findIndex((route) => {
       return routeAuthorized(req.nextUrl.pathname, route);
     }) !== -1;

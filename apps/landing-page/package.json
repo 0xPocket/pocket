@@ -34,7 +34,7 @@
   "devDependencies": {
     "@lib/ui": "*",
     "@types/node": "^18.7.4",
-    "@types/react": "18.0.17",
+    "@types/react": "18.0.18",
     "@types/react-slick": "^0.23.10",
     "autoprefixer": "^10.4.8",
     "config": "*",

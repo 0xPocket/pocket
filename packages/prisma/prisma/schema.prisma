@@ -125,6 +125,11 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model BlacklistToken {
+  address   String  @id @unique
+  verified  Boolean @default(true)
+}
+
 // Survey ?
 
 model Survey {

@@ -5,8 +5,6 @@ import { z } from 'zod';
 import { useZodForm } from '../../utils/useZodForm';
 import { trpc } from '../../utils/trpc';
 
-type AddChildFormProps = {};
-
 const AddChildSchema = z.object({
   name: z.string(),
   email: z.string().email(),
@@ -14,7 +12,7 @@ const AddChildSchema = z.object({
 
 type FormValues = z.infer<typeof AddChildSchema>;
 
-function AddChildForm({}: AddChildFormProps) {
+function AddChildForm() {
   const router = useRouter();
   const queryClient = trpc.useContext();
 
@@ -63,7 +61,7 @@ function AddChildForm({}: AddChildFormProps) {
         type="submit"
         value="Submit"
         disabled={addChild.isLoading}
-        className="rounded-md bg-dark  px-4 py-3 text-bright"
+        className="cursor-pointer rounded-md  bg-dark px-4 py-3 text-bright  "
       />
     </form>
   );

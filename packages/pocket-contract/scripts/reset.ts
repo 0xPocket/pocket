@@ -1,6 +1,7 @@
 import { ethers } from 'hardhat';
 import { PocketFaucet__factory } from '../typechain-types';
 import * as dotenv from 'dotenv';
+import { env } from 'config/env/server';
 
 dotenv.config({
   path: '../../.env',
@@ -9,7 +10,7 @@ dotenv.config({
 async function main() {
   const [account] = await ethers.getSigners();
   const faucet = PocketFaucet__factory.connect(
-    process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string,
+    env.NEXT_PUBLIC_CONTRACT_ADDRESS,
     account
   );
   await faucet.connect(account).resetAll();

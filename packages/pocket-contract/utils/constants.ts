@@ -1,3 +1,4 @@
+import { env } from 'config/env/client';
 import * as dotenv from 'dotenv';
 
 dotenv.config({
@@ -56,65 +57,23 @@ export const FAMILY_ACCOUNT = {
   child3: HH_ACCOUNT.account15,
 };
 
-export const TOKENS = {
-  'eth-rinkeby': '0x47da6c0b7f3fada850898d1e61ae546fc7b603f9',
-  'polygon-mainnet': '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
-  'polygon-mumbai': '0xe11a86849d99f524cac3e7a0ec1241828e332c62',
-};
-
 export const WHALES = {
   'eth-rinkeby': '0xe2e0256d6785d49ec7badcd1d44adbd3f6b0ab58',
   'polygon-mainnet': '0xf977814e90da44bfa03b6295a0616a897441acec',
   'polygon-mumbai': '0xe41c53eb9fce0ac9d204d4f361e28a8f28559d54',
+  localhost: '0xf977814e90da44bfa03b6295a0616a897441acec',
 };
-
-const NETWORK = {
-  'eth-rinkeby': {
-    url:
-      'https://eth-rinkeby.alchemyapi.io/v2/' +
-      process.env.NEXT_PUBLIC_KEY_ALCHEMY,
-    chainId: 4,
-  },
-  'polygon-mainnet': {
-    url:
-      'https://polygon-mainnet.g.alchemy.com/v2/' +
-      process.env.NEXT_PUBLIC_KEY_ALCHEMY,
-    chainId: 137,
-  },
-  'polygon-mumbai': {
-    url:
-      'https://polygon-mumbai.g.alchemy.com/v2/' +
-      process.env.NEXT_PUBLIC_KEY_ALCHEMY,
-    chainId: 80001,
-  },
-};
-
-export enum Network {
-  // ETH_MAINNET = 'eth-mainnet',
-  // ETH_ROPSTEN = 'eth-ropsten',
-  // ETH_GOERLI = 'eth-goerli',
-  // ETH_KOVAN = 'eth-kovan',
-  ETH_RINKEBY = 'eth-rinkeby',
-  // OPT_MAINNET = 'opt-mainnet',
-  // OPT_KOVAN = 'opt-kovan',
-  // ARB_MAINNET = 'arb-mainnet',
-  // ARB_RINKEBY = 'arb-rinkeby',
-  MATIC_MAINNET = 'polygon-mainnet',
-  MATIC_MUMBAI = 'polygon-mumbai',
-}
 
 export const ERROR_MSG = {
   'eth-rinkeby': 'balance too low',
   'polygon-mainnet': 'ERC20: transfer amount exceeds balance',
   'polygon-mumbai': 'ERC20: transfer amount exceeds balance',
+  localhost: 'ERC20: transfer amount exceeds balance',
 };
 
-export const CHOSEN = process.env.NEXT_PUBLIC_CHOSEN as Network;
-
-export const CHOSEN_NETWORK = NETWORK[CHOSEN];
-export const CHOSEN_TOKEN = TOKENS[CHOSEN];
-export const CHOSEN_WHALE = WHALES[CHOSEN];
-export const CHOSEN_ERRORMSG = ERROR_MSG[CHOSEN];
+export const CHOSEN_TOKEN = env.ERC20_ADDRESS;
+export const CHOSEN_WHALE = WHALES[env.NEXT_PUBLIC_NETWORK];
+export const CHOSEN_ERRORMSG = ERROR_MSG[env.NEXT_PUBLIC_NETWORK];
 
 export const RDM_ADDRESS = [
   '0xf977814e90da44bfa01b6295a0616a897441acec',

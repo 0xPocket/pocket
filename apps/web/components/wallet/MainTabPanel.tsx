@@ -9,7 +9,7 @@ type MainTabPanelProps = {};
 function MainTabPanel({}: MainTabPanelProps) {
   const { address } = useAccount();
   const { erc20 } = useSmartContract();
-  const { showRamp } = useRamp({});
+  const { showRamp } = useRamp();
   const { data, isLoading } = useBalance({
     addressOrName: address,
     token: erc20.data?.address,

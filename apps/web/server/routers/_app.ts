@@ -8,6 +8,7 @@ import { authRouter } from './auth';
 import { childRouter } from './child';
 import { emailRouter } from './email';
 import { parentRouter } from './parent';
+import { tokenRouter } from './token';
 
 /**
  * Create your application's root router
@@ -29,6 +30,7 @@ export const appRouter = createRouter()
   .merge('email.', emailRouter)
   .merge('auth.', authRouter)
   .merge('parent.', parentRouter)
-  .merge('child.', childRouter);
+  .merge('child.', childRouter)
+  .merge('token.', tokenRouter);
 
 export type AppRouter = typeof appRouter;

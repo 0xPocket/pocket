@@ -5,9 +5,9 @@ import { Magic } from '@magic-sdk/admin';
 import { SiweMessage } from 'siwe';
 import { UserType } from '@prisma/client';
 import { prisma } from '../prisma';
-import { env } from '../env';
+import { env } from 'config/env/server';
 
-const mAdmin = new Magic('sk_live_8185E1937878AC9A');
+const mAdmin = new Magic(env.MAGIC_LINK_SECRET_KEY);
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -145,6 +145,7 @@ export const authOptions: NextAuthOptions = {
         ...session,
         user: {
           ...session.user,
+          address: token.address,
           emailVerified: !!token.emailVerified,
           newUser: token.newUser,
           type: token.type,
@@ -157,7 +158,8 @@ export const authOptions: NextAuthOptions = {
       // console.log('==== JWT CALLBACK ====');
       // console.log("token", token); //name, email, picture, sub (id)
       // console.log("account", account);
-      // console.log('user', user); // user from return
+      // console.log("user", user); // user from return
+
       if (token.newUser || !token.emailVerified) {
         const checkUser = await prisma.user.findUnique({
           where: {
@@ -171,6 +173,7 @@ export const authOptions: NextAuthOptions = {
 
         return {
           ...token,
+          address: checkUser.address || undefined,
           type: checkUser.type,
           name: checkUser.name,
           newUser: checkUser.newUser,
@@ -184,6 +187,7 @@ export const authOptions: NextAuthOptions = {
 
         return {
           ...token,
+          address: user.address,
           type: user.type,
           name: user.name,
           newUser: user.newUser,

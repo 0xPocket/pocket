@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ThemeProvider } from '@lib/ui';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { AlchemyProvider } from '../contexts/alchemy';
-import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
+import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { MagicAuthProvider } from '../contexts/auth';
@@ -20,15 +20,16 @@ import { httpLink } from '@trpc/client/links/httpLink';
 import { loggerLink } from '@trpc/client/links/loggerLink';
 import { splitLink } from '@trpc/client/links/splitLink';
 import { withTRPC } from '@trpc/next';
+import { env } from 'config/env/client';
+import { SessionProvider } from 'next-auth/react';
 // import { SessionProvider } from 'next-auth/react';
 
 const { chains, provider } = configureChains(
-  [chain.polygon, chain.rinkeby, chain.polygonMumbai],
+  [env.WAGMI_CHAIN],
   [
-    // alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_KEY_ALCHEMY! }),
     jsonRpcProvider({
       rpc: () => ({
-        http: process.env.NEXT_PUBLIC_RPC_ENDPOINT!,
+        http: env.RPC_URL,
       }),
     }),
   ],
@@ -39,7 +40,7 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
     createClient({
       autoConnect: true,
       provider,
-      persister: null,
+      persister: undefined,
       connectors: [
         new MetaMaskConnector({ chains }),
         new WalletConnectConnector({
@@ -50,14 +51,14 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
         }),
         new MagicConnector({
           options: {
-            apiKey: 'pk_live_4752F69D8DDF4CF5',
-            oauthOptions: {
-              providers: ['facebook', 'google'],
-            },
+            apiKey: env.NEXT_PUBLIC_MAGIC_LINK_PUBLIC_KEY,
+            // oauthOptions: {
+            //   providers: ['facebook', 'google'],
+            // },
             additionalMagicOptions: {
               network: {
-                rpcUrl: process.env.NEXT_PUBLIC_RPC_ENDPOINT!,
-                chainId: 80001,
+                rpcUrl: env.RPC_URL,
+                chainId: env.CHAIN_ID,
               },
             },
           },
@@ -69,19 +70,19 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 
   return (
     <WagmiConfig client={wagmiClient}>
-      {/* <SessionProvider session={session}> */}
-      <MagicAuthProvider>
-        <AlchemyProvider>
-          <ThemeProvider>
-            <SmartContractProvider>
-              <Component {...pageProps} />
-              <ToastContainer position="bottom-right" autoClose={3000} />
-              <ReactQueryDevtools />
-            </SmartContractProvider>
-          </ThemeProvider>
-        </AlchemyProvider>
-      </MagicAuthProvider>
-      {/* </SessionProvider> */}
+      <SessionProvider session={session}>
+        <MagicAuthProvider>
+          <AlchemyProvider>
+            <ThemeProvider>
+              <SmartContractProvider>
+                <Component {...pageProps} />
+                <ToastContainer position="bottom-right" autoClose={3000} />
+                <ReactQueryDevtools />
+              </SmartContractProvider>
+            </ThemeProvider>
+          </AlchemyProvider>
+        </MagicAuthProvider>
+      </SessionProvider>
     </WagmiConfig>
   );
 }
@@ -89,11 +90,7 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 export default withTRPC<AppRouter>({
   config() {
     const url =
-      typeof window !== 'undefined'
-        ? '/api/trpc'
-        : process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}/api/trpc`
-        : `http://localhost:3000/api/trpc`;
+      typeof window !== 'undefined' ? '/api/trpc' : `${env.APP_URL}/api/trpc`;
 
     /**
      * If you want to use SSR, you need to use the server's full URL
@@ -107,7 +104,7 @@ export default withTRPC<AppRouter>({
         // adds pretty logs to your console in development and logs errors in production
         loggerLink({
           enabled: (opts) =>
-            !!process.env.NEXT_PUBLIC_DEBUG ||
+            !!env.NEXT_PUBLIC_DEBUG ||
             (opts.direction === 'down' && opts.result instanceof Error),
         }),
         splitLink({
