@@ -30,7 +30,7 @@ function ActivityContent({ childAddress, userType }: ActivityContentProps) {
             rightHeader={userType === 'Parent' ? 'Your Topups' : 'Your Claims'}
           />
         </div>
-        <Tab.Panels className="container-classic relative flex-grow overflow-scroll rounded-lg px-8">
+        <Tab.Panels className="container-classic relative flex-grow overflow-x-hidden overflow-y-scroll rounded-lg px-8">
           <Tab.Panel>
             {!isTxLoading && txList ? (
               <TransactionsTable transactionsList={txList} />
