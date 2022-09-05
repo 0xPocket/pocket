@@ -6,6 +6,8 @@ import { useQuery } from 'wagmi';
 import ClaimButton from '../../dashboard/child/ClaimButton';
 import BaseTokenBalance from '../../common/BaseTokenBalance';
 import PocketMoney from './PocketMoney';
+import ClaimMaticButton from '../../dashboard/child/ClaimMaticButton';
+import { trpc } from '../../../utils/trpc';
 
 type ChildCardProps = {
   childAddress: string;
@@ -21,7 +23,6 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
     functionName: 'childToConfig',
     args: [childAddress],
     enabled: !!childAddress,
-    watch: true,
   });
 
   const { data: now } = useQuery(['now'], () => moment(), {
@@ -43,6 +44,8 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
     return moment(nextClaim) < now;
   }, [now, nextClaim]);
 
+  console.log(config?.balance.isZero());
+
   return (
     <div className="space-y-4">
       <h2>My account</h2>
@@ -54,6 +57,7 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
             <BaseTokenBalance />
             <PocketMoney value={config?.balance} />
           </div>
+          {!config?.balance.isZero() && <ClaimMaticButton />}
           {config && (
             <ClaimButton disabled={!canClaim || config[1].isZero()}>
               {!canClaim || config[1].isZero()

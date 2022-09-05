@@ -1,9 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import * as crypto from 'crypto';
 import type { AlchemyAddressActivity } from '@lib/types/interfaces';
+import { prisma } from '../../../server/prisma';
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default (req: NextApiRequest, res: NextApiResponse) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== 'POST') {
     return res.status(400).send('Bad Request');
   }
@@ -24,39 +25,44 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).send('Bad Request');
   }
 
-  // for (const activity of body.event.activity) {
-  //   const childFrom = await this.prisma.web3Account.findUnique({
-  //     where: { address: activity.fromAddress },
-  //   });
+  for (const activity of body.event.activity) {
+    const childFrom = await prisma.user.findUnique({
+      where: { address: activity.fromAddress },
+    });
 
-  //   const childTo = await this.prisma.web3Account.findUnique({
-  //     where: { address: activity.toAddress },
-  //   });
+    const childTo = await prisma.user.findUnique({
+      where: { address: activity.toAddress },
+    });
 
-  //   if (!childFrom || !childTo) {
-  //     throw new BadRequestException('Child not found');
-  //   }
+    if (
+      !childFrom ||
+      !childTo ||
+      childFrom.type !== 'Child' ||
+      childTo.type !== 'Child'
+    ) {
+      return res.status(400).send('Bad Request');
+    }
 
-  //   await this.prisma.activity
-  //     .create({
-  //       data: {
-  //         id: body.id,
-  //         fromAddress: activity.fromAddress,
-  //         toAddress: activity.toAddress,
-  //         blockNum: activity.blockNum,
-  //         hash: activity.hash,
-  //         category: activity.category,
-  //         value: activity.value,
-  //         asset: activity.asset,
-  //         erc721TokenId: activity.erc721TokenId,
-  //         createdAt: body.createdAt,
-  //         child: {
-  //           connect: [{ id: childFrom.id }, { id: childTo.id }],
-  //         },
-  //       },
-  //     })
-  //     .catch((err) => console.log(err));
-  // }
+    await prisma.activity
+      .create({
+        data: {
+          id: body.id,
+          fromAddress: activity.fromAddress,
+          toAddress: activity.toAddress,
+          blockNum: activity.blockNum,
+          hash: activity.hash,
+          category: activity.category,
+          value: activity.value,
+          asset: activity.asset,
+          erc721TokenId: activity.erc721TokenId,
+          createdAt: body.createdAt,
+          child: {
+            connect: [{ userId: childFrom.id }, { userId: childTo.id }],
+          },
+        },
+      })
+      .catch((err) => console.log(err));
+  }
 
   res.status(200).json({ name: 'John Doe' });
 };

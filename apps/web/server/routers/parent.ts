@@ -4,12 +4,14 @@ import { env } from 'config/env/server';
 import { z } from 'zod';
 import { createProtectedRouter } from '../createRouter';
 import { prisma } from '../prisma';
+import { grantMaticToParent } from '../services/ethereum';
 import {
   generateVerificationToken,
   hashToken,
   saveVerificationToken,
 } from '../services/jwt';
 import { sendEmail } from '../services/sendMail';
+import { sanitizeParent } from '../utils/sanitizeUser';
 
 export const parentRouter = createProtectedRouter()
   .middleware(({ ctx, next }) => {
@@ -157,6 +159,24 @@ export const parentRouter = createProtectedRouter()
       ctx.log.info('new child created', { child });
 
       return 'OK';
+    },
+  })
+  .mutation('testWebhookRamp', {
+    resolve: async ({ ctx }) => {
+      const parent = sanitizeParent(
+        await prisma.parent.findUnique({
+          where: {
+            userId: ctx.session.user.id,
+          },
+          include: {
+            user: true,
+          },
+        }),
+      );
+      if (!parent) {
+        return;
+      }
+      await grantMaticToParent(parent);
     },
   })
   .middleware(async ({ ctx, next, rawInput }) => {

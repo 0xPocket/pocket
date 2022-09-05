@@ -3,6 +3,8 @@ import * as crypto from 'crypto';
 import type { PurchaseStatusWebhookEvent } from '@lib/types/interfaces';
 import { prisma } from '../../../server/prisma';
 import stringify from 'fast-json-stable-stringify';
+import { sanitizeParent } from '../../../server/utils/sanitizeUser';
+import { grantMaticToParent } from '../../../server/services/ethereum';
 
 // PRODUCTION KEY
 // const RAMP_KEY = `-----BEGIN PUBLIC KEY-----
@@ -43,13 +45,28 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).send('Bad Request');
   }
 
-  const userParent = await prisma.user.findUnique({
+  const user = await prisma.user.findUnique({
     where: {
       address: body.purchase.receiverAddress.toLowerCase(),
     },
   });
 
-  if (!userParent || userParent.type !== 'Parent') {
+  if (!user) {
+    return res.status(400).send('Bad Request');
+  }
+
+  const parent = sanitizeParent(
+    await prisma.parent.findUnique({
+      where: {
+        userId: user?.id,
+      },
+      include: {
+        user: true,
+      },
+    }),
+  );
+
+  if (!parent || parent.type !== 'Parent') {
     return res.status(400).send('Bad Request');
   }
 
@@ -76,11 +93,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       status: body.type,
       userParent: {
         connect: {
-          userId: userParent.id,
+          userId: parent.id,
         },
       },
     },
   });
 
-  return 'OK';
+  await grantMaticToParent(parent);
+
+  return res.status(200).send('OK');
 };

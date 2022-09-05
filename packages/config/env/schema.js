@@ -13,6 +13,7 @@ const serverSchema = z.object({
   NEXTAUTH_SECRET: z.string(),
   NEXTAUTH_URL: z.string().url().optional(),
   NODE_ENV: z.enum(["development", "test", "production"]),
+  POCKET_PRIVATE_KEY: z.string(),
   QUERY_DEBUG: z.string().optional(),
   SENDGRID_API_KEY: z.string(),
   VERCEL_URL: z.string().optional(),

@@ -31,20 +31,22 @@ model User {
   newUser   Boolean  @default(true)
 
   accountType   AccountType @default(Ethereum)
-  email         String?   @unique
+  email         String?     @unique
   emailVerified DateTime?
 
-  type   UserType
-  parent Parent?
-  child  Child?
+  type        UserType
+  parent      Parent?
+  child       Child?
+  maticGrants MaticGrant[]
 }
 
 model Parent {
   user   User   @relation(fields: [userId], references: [id])
   userId String @id @unique
 
-  ramp     Ramp[]
-  children Child[]
+  maticGrants Int     @default(0)
+  ramp        Ramp[]
+  children    Child[]
 }
 
 enum ChildStatus {
@@ -61,6 +63,17 @@ model Child {
 
   parent       Parent @relation(fields: [parentUserId], references: [userId])
   parentUserId String
+}
+
+// Matic Grant
+
+model MaticGrant {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  amount    String
+  hash      String?
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
 }
 
 // User Parent Ramp

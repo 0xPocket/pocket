@@ -5,6 +5,7 @@ import superjson from 'superjson';
 
 import { createRouter } from '../createRouter';
 import { authRouter } from './auth';
+import { childRouter } from './child';
 import { emailRouter } from './email';
 import { parentRouter } from './parent';
 import { tokenRouter } from './token';
@@ -29,6 +30,7 @@ export const appRouter = createRouter()
   .merge('email.', emailRouter)
   .merge('auth.', authRouter)
   .merge('parent.', parentRouter)
+  .merge('child.', childRouter)
   .merge('token.', tokenRouter);
 
 export type AppRouter = typeof appRouter;
