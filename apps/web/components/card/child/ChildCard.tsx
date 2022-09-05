@@ -7,7 +7,6 @@ import ClaimButton from '../../dashboard/child/ClaimButton';
 import BaseTokenBalance from '../../common/BaseTokenBalance';
 import PocketMoney from './PocketMoney';
 import ClaimMaticButton from '../../dashboard/child/ClaimMaticButton';
-import { trpc } from '../../../utils/trpc';
 
 type ChildCardProps = {
   childAddress: string;
