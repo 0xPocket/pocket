@@ -81,7 +81,7 @@
 		@apply cat-badge bg-badges-bgblue text-badges-textblue;
 	}
 
-	.cat-bage-dark {
+	.cat-badge-default {
 		@apply cat-badge bg-badges-bgdark text-badges-textdark;
 
 	}
