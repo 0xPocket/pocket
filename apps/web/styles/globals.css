@@ -82,7 +82,7 @@
 	}
 
 	.cat-badge-default {
-		@apply cat-badge bg-badges-bgdark text-badges-textdark;
+		@apply cat-badge dark:bg-badges-bgdefaultdark text-badges-textdefaultlight bg-badges-bgdefaultlight dark:text-badges-textdefaultdark;
 
 	}
 	/* table */
@@ -91,7 +91,7 @@
 		@apply relative w-full h-full;
 	}
 	.table {
-		@apply absolute w-full overflow-y-scroll overflow-hidden;
+		@apply absolute w-full;
 	}
 	.table-head {
 		@apply sticky top-0 bg-bright-dark dark:bg-dark-light ;
