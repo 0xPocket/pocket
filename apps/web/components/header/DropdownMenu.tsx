@@ -1,9 +1,12 @@
 import type { FC } from 'react';
-import { Button, ThemeTogglerApp } from '@lib/ui';
+import { ThemeTogglerApp } from '@lib/ui';
 import { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
+import {
+  faEllipsisVertical,
+  faRightFromBracket,
+} from '@fortawesome/free-solid-svg-icons';
 import { useMagic } from '../../contexts/auth';
 
 const DropdownMenu: FC = ({}) => {
@@ -30,9 +33,10 @@ const DropdownMenu: FC = ({}) => {
             <ThemeTogglerApp />
           </Menu.Item>
           <Menu.Item>
-            <Button action={signOut} light>
+            <button onClick={() => signOut()} className="third-btn">
+              <FontAwesomeIcon icon={faRightFromBracket} className="mr-2" />
               Logout
-            </Button>
+            </button>
           </Menu.Item>
           {/* <Menu.Item>
             {locale === 'fr' ? (
