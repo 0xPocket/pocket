@@ -40,7 +40,6 @@ function Swapper({}: SwapperProps) {
         borderRadius: 0.5,
       };
 
-  return null;
   return (
     <SwapWidget
       theme={theme}
