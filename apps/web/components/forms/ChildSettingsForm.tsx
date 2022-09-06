@@ -1,4 +1,4 @@
-import { faWrench } from '@fortawesome/free-solid-svg-icons';
+import { faAngleLeft, faWrench } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { UserChild } from '@lib/types/interfaces';
 import { FormErrorMessage } from '@lib/ui';
@@ -148,7 +148,8 @@ function ChildSettingsForm({
       </div>
 
       <div className="flex space-x-4">
-        <button type="button" onClick={() => returnFn()}>
+        <button type="button" className="third-btn" onClick={() => returnFn()}>
+          <FontAwesomeIcon icon={faAngleLeft} className="mr-2" />
           return
         </button>
         <button type="submit" className="success-btn">

@@ -4,6 +4,8 @@ import { useAlchemy } from '../../../../contexts/alchemy';
 import {} from 'alchemy-sdk';
 import NftCard from './NftCard';
 import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 type NftContentProps = {
   childAddress: string;
@@ -56,25 +58,33 @@ function NftContent({ childAddress, fill_nbr = 0 }: NftContentProps) {
             ))}
         </>
       </div>
-      {page > 0 && (
-        <button
-          onClick={() => {
-            if (page > 0) setPage((value) => value - 1);
-          }}
-        >
-          Prev
-        </button>
-      )}
-      {(hasNextPage || content?.pages[page + 1]) && (
-        <button
-          onClick={() => {
-            setPage((value) => value + 1);
-            if (!content?.pages[page + 1]) fetchNextPage();
-          }}
-        >
-          Next
-        </button>
-      )}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="text-right">
+          <button
+            className="disabled:opacity-20"
+            disabled={page == 0}
+            onClick={() => {
+              if (page > 0) setPage((value) => value - 1);
+            }}
+          >
+            <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
+            Prev
+          </button>
+        </div>
+        <div className="">
+          <button
+            className="disabled:opacity-20"
+            disabled={!(hasNextPage || content?.pages[page + 1])}
+            onClick={() => {
+              setPage((value) => value + 1);
+              if (!content?.pages[page + 1]) fetchNextPage();
+            }}
+          >
+            Next
+            <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
