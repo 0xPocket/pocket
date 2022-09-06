@@ -68,22 +68,20 @@ function AddFundsForm({ child, addFunds, returnFn }: AddFundsFormProps) {
     >
       <label htmlFor="topup">Add funds to {child.name} account</label>
       <div className="relative  flex items-center text-4xl">
-        <div data-tip="This is the text of the tooltip2">
-          <input
-            className="without-ring appearance-none bg-transparent p-2 text-right text-4xl  text-white outline-none"
-            placeholder="0"
-            type="number"
-            min="0"
-            onKeyDown={(e) => {
-              if (e.key === 'e' || e.key === '-') {
-                e.preventDefault();
-              }
-            }}
-            {...register('topup', {
-              valueAsNumber: true,
-            })}
-          />
-        </div>
+        <input
+          className="without-ring appearance-none bg-transparent p-2 text-right text-4xl  text-white outline-none"
+          placeholder="0"
+          type="number"
+          min="0"
+          onKeyDown={(e) => {
+            if (e.key === 'e' || e.key === '-') {
+              e.preventDefault();
+            }
+          }}
+          {...register('topup', {
+            valueAsNumber: true,
+          })}
+        />
         <span>$</span>
         {errors.topup && (
           <span className="absolute bottom-0 right-0 translate-y-full rounded border border-danger bg-danger/20 p-1 px-2 text-xs text-white">
