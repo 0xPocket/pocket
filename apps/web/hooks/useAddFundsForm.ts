@@ -82,6 +82,7 @@ export function useAddFundsForm(
 
   const approveAndAddChild = useCallback(
     async (amount: BigNumber) => {
+      console.log(amount.toString());
       try {
         if (allowance?.lt(amount) && approve.writeAsync) {
           await approve.writeAsync();
