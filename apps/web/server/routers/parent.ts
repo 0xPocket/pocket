@@ -4,6 +4,7 @@ import { env } from 'config/env/server';
 import { z } from 'zod';
 import { createProtectedRouter } from '../createRouter';
 import { prisma } from '../prisma';
+import { ParentSchema } from '../schemas';
 import { grantMaticToParent } from '../services/ethereum';
 import {
   generateVerificationToken,
@@ -89,10 +90,7 @@ export const parentRouter = createProtectedRouter()
     },
   })
   .mutation('createChild', {
-    input: z.object({
-      name: z.string(),
-      email: z.string().email(),
-    }),
+    input: ParentSchema.createChild,
     resolve: async ({ ctx, input }) => {
       const parent = await prisma.user.findUnique({
         where: {

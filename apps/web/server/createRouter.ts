@@ -1,6 +1,6 @@
-import * as trpc from "@trpc/server";
+import * as trpc from '@trpc/server';
 
-import { Context } from "./createContext";
+import { Context } from './createContext';
 
 /**
  * Helper function to create a router with context
@@ -12,13 +12,15 @@ export function createRouter() {
 export function createProtectedRouter() {
   return createRouter().middleware(({ ctx, next }) => {
     if (!ctx.session) {
-      throw new trpc.TRPCError({ code: "UNAUTHORIZED" });
+      throw new trpc.TRPCError({ code: 'UNAUTHORIZED' });
     }
     return next({
       ctx: {
         ...ctx,
         // infers that `user` and `session` are non-nullable to downstream procedures
-        session: ctx.session,
+        session: {
+          ...ctx.session,
+        },
       },
     });
   });

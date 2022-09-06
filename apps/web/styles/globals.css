@@ -2,8 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
 @layer base {
-	/* global */
+  /* global */
   body {
     @apply background font-raleway;
   }
@@ -18,14 +26,14 @@
   }
 
   a {
-    @apply text-primary without-ring cursor-pointer;
+    @apply without-ring cursor-pointer text-primary;
   }
 
-	button {
-		@apply without-ring;
-	}
+  button {
+    @apply without-ring;
+  }
 
-	/* generics */
+  /* generics */
   .background {
     @apply bg-bright-bg text-dark-lightest dark:bg-dark dark:text-white;
   }
@@ -34,98 +42,96 @@
     @apply border border-dark border-opacity-10 bg-bright-dark dark:border-white-darker dark:bg-dark-light dark:shadow-lg;
   }
 
-	.border-classic {
-		@apply border border-dark border-opacity-10 dark:border-white-darker;
-	}
+  .border-classic {
+    @apply border border-dark border-opacity-10 dark:border-white-darker;
+  }
 
-
-	/* btn */
-	.base-btn {
-		@apply flex justify-center items-center rounded-md px-4 py-3
-	}
+  /* btn */
+  .base-btn {
+    @apply flex items-center justify-center rounded-md px-4 py-3;
+  }
 
   .success-btn {
     @apply base-btn bg-primary  text-bright;
   }
 
-	.danger-btn {
+  .danger-btn {
     @apply base-btn bg-danger  text-bright;
   }
 
-	.action-btn {
+  .action-btn {
     @apply base-btn bg-primary  text-bright;
-	}
+  }
 
-	.disabled-btn {
+  .disabled-btn {
     @apply action-btn cursor-not-allowed opacity-25;
-	}
+  }
 
-	.third-btn {
-		@apply base-btn text-gray;
-	}
+  .third-btn {
+    @apply base-btn text-gray;
+  }
 
-	.dismiss-btn {
-    @apply  base-btn;
-	}
+  .dismiss-btn {
+    @apply base-btn;
+  }
 
-	/* inputs */
-	.input-text {
-		@apply px-4 py-3 rounded-md text-dark-light border-classic without-ring ;
-	}
+  /* inputs */
+  .input-text {
+    @apply border-classic without-ring rounded-md px-4 py-3 text-dark-light;
+  }
 
-	/* badge */
-	.cat-badge {
-		@apply rounded px-2 py-1 text-sm font-bold;
-	}
+  /* badge */
+  .cat-badge {
+    @apply rounded px-2 py-1 text-sm font-bold;
+  }
 
-	.cat-badge-green {
-		@apply cat-badge bg-badges-bggreen text-badges-textgreen;
-	}
+  .cat-badge-green {
+    @apply cat-badge bg-badges-bggreen text-badges-textgreen;
+  }
 
-	.cat-badge-blue {
-		@apply cat-badge bg-badges-bgblue text-badges-textblue;
-	}
+  .cat-badge-blue {
+    @apply cat-badge bg-badges-bgblue text-badges-textblue;
+  }
 
-	.cat-badge-default {
-		@apply cat-badge dark:bg-badges-bgdefaultdark text-badges-textdefaultlight bg-badges-bgdefaultlight dark:text-badges-textdefaultdark;
-	}
-	/* table */
+  .cat-badge-default {
+    @apply cat-badge bg-badges-bgdefaultlight text-badges-textdefaultlight dark:bg-badges-bgdefaultdark dark:text-badges-textdefaultdark;
+  }
+  /* table */
 
-	.table-container {
-		@apply relative w-full h-full;
-	}
+  .table-container {
+    @apply relative h-full w-full;
+  }
 
-	.table {
-		@apply absolute w-full;
-	}
+  .table {
+    @apply absolute w-full;
+  }
 
-	.table-head {
-		@apply sticky top-0 bg-bright-dark dark:bg-dark-light ;
-	}
+  .table-head {
+    @apply sticky top-0 bg-bright-dark dark:bg-dark-light;
+  }
 
-	.table-header
-	{
-		@apply mb-2 mt-4 flex items-center text-xl;
-	}
+  .table-header {
+    @apply mb-2 mt-4 flex items-center text-xl;
+  }
 
-	.table-body {
-		@apply font-thin tracking-wide;
-	}
+  .table-body {
+    @apply font-thin tracking-wide;
+  }
 
-	.table-row:not(:last-child) {
-		@apply border-b border-dark border-opacity-10 font-light dark:border-bright-bg dark:border-opacity-10;
-	}
+  .table-row:not(:last-child) {
+    @apply border-b border-dark border-opacity-10 font-light dark:border-bright-bg dark:border-opacity-10;
+  }
 
-	.table-cell {
-		@apply py-2 text-sm;
-	}
+  .table-cell {
+    @apply py-2 text-sm;
+  }
 
-	/* helpers */
+  /* helpers */
   .without-ring {
     @apply focus:outline-0;
   }
 
-	/* skeleton */
+  /* skeleton */
   .skeleton {
     position: relative;
     overflow: hidden;

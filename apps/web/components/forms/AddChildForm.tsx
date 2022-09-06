@@ -4,13 +4,9 @@ import { useRouter } from 'next/router';
 import { z } from 'zod';
 import { useZodForm } from '../../utils/useZodForm';
 import { trpc } from '../../utils/trpc';
+import { ParentSchema } from '../../server/schemas';
 
-const AddChildSchema = z.object({
-  name: z.string(),
-  email: z.string().email(),
-});
-
-type FormValues = z.infer<typeof AddChildSchema>;
+type FormValues = z.infer<typeof ParentSchema['createChild']>;
 
 function AddChildForm() {
   const router = useRouter();
@@ -21,7 +17,7 @@ function AddChildForm() {
     handleSubmit,
     formState: { errors },
   } = useZodForm({
-    schema: AddChildSchema,
+    schema: ParentSchema['createChild'],
   });
 
   const addChild = trpc.useMutation(['parent.createChild'], {

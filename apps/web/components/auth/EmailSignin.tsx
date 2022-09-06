@@ -9,7 +9,7 @@ const EmailSchema = z.object({
 
 const EmailSignin: FC = () => {
   const { signInWithEmail } = useMagic();
-  const { register, handleSubmit, formState } = useZodForm({
+  const { register, handleSubmit } = useZodForm({
     mode: 'all',
     reValidateMode: 'onChange',
     schema: EmailSchema,
@@ -28,12 +28,7 @@ const EmailSignin: FC = () => {
           autoComplete="email"
           placeholder="my@email.com"
         />
-        <button
-          type="submit"
-          className={` ${
-            formState.isValid ? 'action-btn' : 'disabled-btn'
-          } flex-none`}
-        >
+        <button type="submit" className={`action-btn flex-none`}>
           Sign In
         </button>
       </div>

@@ -1,13 +1,19 @@
-import { faAngleLeft, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import {
+  faAngleLeft,
+  faCaretUp,
+  faPaperPlane,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { UserChild } from '@lib/types/interfaces';
 import { FormErrorMessage } from '@lib/ui';
 import { formatUnits, parseUnits } from 'ethers/lib/utils';
-import { useForm } from 'react-hook-form';
 import { useSmartContract } from '../../contexts/contract';
 import useContractRead from '../../hooks/useContractRead';
 import { useAccount } from 'wagmi';
 import type { BigNumber } from 'ethers';
+import { z } from 'zod';
+import { useZodForm } from '../../utils/useZodForm';
+import { useEffect } from 'react';
 
 type AddFundsFormProps = {
   child: UserChild;
@@ -15,18 +21,7 @@ type AddFundsFormProps = {
   returnFn: () => void;
 };
 
-type FormValues = {
-  topup: number;
-};
-
 function AddFundsForm({ child, addFunds, returnFn }: AddFundsFormProps) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>({
-    mode: 'onChange',
-  });
   const { erc20 } = useSmartContract();
   const { address } = useAccount();
 
@@ -37,9 +32,34 @@ function AddFundsForm({ child, addFunds, returnFn }: AddFundsFormProps) {
     enabled: !!address,
   });
 
+  const ChildSettingsSchema = z.object({
+    topup: z
+      .number({ invalid_type_error: 'Amount is required' })
+      .min(1, 'Minimum is 1')
+      .max(
+        Number(formatUnits(balance || 1000, erc20.data?.decimals)),
+        'Insufficient funds',
+      ),
+  });
+
+  type FormValues = z.infer<typeof ChildSettingsSchema>;
+
+  const {
+    register,
+    handleSubmit,
+    setFocus,
+    formState: { errors },
+  } = useZodForm({
+    schema: ChildSettingsSchema,
+  });
+
   const onSubmit = async (data: FormValues) => {
     addFunds(parseUnits(data.topup.toString(), erc20.data?.decimals));
   };
+
+  useEffect(() => {
+    setFocus('topup');
+  }, [setFocus]);
 
   return (
     <form
@@ -47,23 +67,28 @@ function AddFundsForm({ child, addFunds, returnFn }: AddFundsFormProps) {
       className="flex h-full flex-col items-end justify-between space-y-4"
     >
       <label htmlFor="topup">Add funds to {child.name} account</label>
-      <input
-        className="border p-2 text-dark"
-        placeholder="5 $USDC"
-        type="number"
-        {...register('topup', {
-          min: {
-            value: 1,
-            message: 'Topup cannot be negative',
-          },
-          max: {
-            value:
-              (balance && formatUnits(balance, erc20.data?.decimals)) || 1000,
-            message: 'Insufisant funds',
-          },
-        })}
-      />
-      {errors.topup && <FormErrorMessage message={errors.topup.message} />}
+      <div className="relative  flex items-center text-4xl">
+        <input
+          className="without-ring appearance-none bg-transparent p-2 text-right text-4xl  text-white outline-none"
+          placeholder="0"
+          type="number"
+          min="0"
+          onKeyDown={(e) => {
+            if (e.key === 'e' || e.key === '-') {
+              e.preventDefault();
+            }
+          }}
+          {...register('topup', {
+            valueAsNumber: true,
+          })}
+        />
+        <span>$</span>
+        {errors.topup && (
+          <span className="absolute bottom-0 right-0 translate-y-full rounded border border-danger bg-danger/20 p-1 px-2 text-xs text-white">
+            {errors.topup.message}
+          </span>
+        )}
+      </div>
 
       <div className="flex space-x-4">
         <button type="button" className="third-btn" onClick={() => returnFn()}>
