@@ -68,7 +68,6 @@ function RightTab({
         <Tab>Settings</Tab>
       </Tab.List>
       <Tab.Panels as="div" className="h-full">
-        {/* <TabAnimation> */}
         <Tab.Panel as={'div'} className="h-full">
           <div className="flex h-full flex-col items-end justify-between">
             <Balance
@@ -100,7 +99,6 @@ function RightTab({
             />
           </div>
         </Tab.Panel>
-        {/* </TabAnimation> */}
       </Tab.Panels>
     </Tab.Group>
   );

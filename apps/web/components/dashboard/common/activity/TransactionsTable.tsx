@@ -15,13 +15,15 @@ type TransactionsTableProps = {
 const getBadge = (category: AssetTransfersCategory) => {
   switch (category) {
     case 'erc20':
-      return <span className="cat-badge-green">Crypto</span>;
+      return <span className="cat-badge-green">CRYPTO</span>;
     case 'erc721':
     case 'erc1155':
     case 'specialnft':
       return <span className="cat-badge-blue">NFT</span>;
     default:
-      return <span className="cat-badge-dark">{category}</span>;
+      return (
+        <span className="cat-badge-default">{category.toUpperCase()}</span>
+      );
   }
 };
 

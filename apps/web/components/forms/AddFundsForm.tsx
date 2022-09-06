@@ -1,4 +1,4 @@
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { faAngleLeft, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { UserChild } from '@lib/types/interfaces';
 import { FormErrorMessage } from '@lib/ui';
@@ -83,10 +83,15 @@ function AddFundsForm({ child, addFunds, returnFn }: AddFundsFormProps) {
       {errors.topup && <FormErrorMessage message={errors.topup.message} />}
 
       <div className="flex space-x-4">
-        <button type="button" onClick={() => returnFn()}>
+        <button type="button" className="third-btn" onClick={() => returnFn()}>
+          <FontAwesomeIcon icon={faAngleLeft} className="mr-2" />
           return
         </button>
-        <button type="submit" value="Send" className="success-btn">
+        <button
+          type="submit"
+          value="Send"
+          className="success-btn disabled:disabled-btn"
+        >
           <FontAwesomeIcon icon={faPaperPlane} className="mr-2" />
           Send
         </button>

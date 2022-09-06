@@ -2,6 +2,8 @@ import { OwnedNft } from 'alchemy-sdk';
 import { DialogPopupWrapper } from '@lib/ui';
 import Link from 'next/link';
 import { Dispatch, SetStateAction } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 
 type NftDialogProps = {
   nft: OwnedNft;
@@ -20,7 +22,13 @@ function NftDialog({ nft, isOpen, setIsOpen }: NftDialogProps) {
           <Link
             href={`https://opensea.io/assets/matic/${nft.contract.address}/${nft.tokenId}`}
           >
-            <a className="inline-block">See on OpenSea</a>
+            <a className="inline-block">
+              <FontAwesomeIcon
+                icon={faArrowUpRightFromSquare}
+                className="mr-2"
+              />
+              See on OpenSea
+            </a>
           </Link>
         </div>
       </div>

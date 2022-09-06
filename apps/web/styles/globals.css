@@ -62,8 +62,13 @@
   .action-btn {
     @apply base-btn bg-primary  text-bright;
   }
+
   .disabled-btn {
     @apply action-btn cursor-not-allowed opacity-25;
+  }
+
+  .third-btn {
+    @apply base-btn text-gray;
   }
 
   .dismiss-btn {
@@ -88,17 +93,19 @@
     @apply cat-badge bg-badges-bgblue text-badges-textblue;
   }
 
-  .cat-bage-dark {
-    @apply cat-badge bg-badges-bgdark text-badges-textdark;
+  .cat-badge-default {
+    @apply cat-badge bg-badges-bgdefaultlight text-badges-textdefaultlight dark:bg-badges-bgdefaultdark dark:text-badges-textdefaultdark;
   }
   /* table */
 
   .table-container {
     @apply relative h-full w-full;
   }
+
   .table {
-    @apply absolute w-full overflow-hidden overflow-y-scroll;
+    @apply absolute w-full;
   }
+
   .table-head {
     @apply sticky top-0 bg-bright-dark dark:bg-dark-light;
   }

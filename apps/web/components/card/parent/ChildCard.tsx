@@ -6,6 +6,8 @@ import RightTab from './RightTab';
 import { UserChild } from '@lib/types/interfaces';
 import { trpc } from '../../../utils/trpc';
 import { toast } from 'react-toastify';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 
 type ChildCardProps = {
   child: UserChild;
@@ -49,12 +51,12 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
         {child?.child?.status !== 'ACTIVE' ? (
           <p>
             {'We sent an email to validate your child account. '}
-            <span
-              className="cursor-pointer underline"
+            <button
+              className="third-btn"
               onClick={() => resendEmail({ userId: child.id })}
             >
               Send a new one.
-            </span>
+            </button>
           </p>
         ) : !hasLink ? (
           <Link
@@ -62,6 +64,10 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
             href={`https://mumbai.polygonscan.com/address/${child.address}`}
           >
             <a className="py-3" target="_blank" rel="noopener noreferrer">
+              <FontAwesomeIcon
+                icon={faArrowUpRightFromSquare}
+                className="mr-2"
+              />
               See on polygonscan
             </a>
           </Link>
