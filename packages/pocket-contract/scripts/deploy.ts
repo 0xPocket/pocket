@@ -20,6 +20,11 @@ function replaceEnvInString(
 }
 
 async function main() {
+  if (env.NEXT_PUBLIC_NETWORK !== 'localhost') {
+    console.log('Skipping deployment on non localhost network');
+    return;
+  }
+
   console.log('Network selected :', env.NEXT_PUBLIC_NETWORK);
 
   const PocketFaucet = await ethers.getContractFactory('PocketFaucet');
