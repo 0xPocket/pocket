@@ -12,6 +12,9 @@ const BaseTokenBalance: React.FC = () => {
     enabled: !!erc20.data,
     watch: true,
   });
+  const { data: maticBalance } = useBalance({
+    addressOrName: address,
+  });
 
   if (!data) {
     return <div>Loading..</div>;
@@ -21,6 +24,9 @@ const BaseTokenBalance: React.FC = () => {
     <div>
       <p>Balance</p>
       <span className="text-4xl"> {data.formatted} $</span>
+      <p className="mt-2 text-xs opacity-50">
+        {maticBalance?.formatted.slice(0, 6)} {maticBalance?.symbol}
+      </p>
     </div>
   );
 };
