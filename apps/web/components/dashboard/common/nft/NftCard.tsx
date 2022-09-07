@@ -1,3 +1,5 @@
+import { faImage } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { OwnedNft } from 'alchemy-sdk';
 import { useState } from 'react';
 import NftDialog from './NftDialog';
@@ -10,6 +12,7 @@ type NftCardProps = {
 function NftCard({ nft, isLoading = false }: NftCardProps) {
   const [isOpen, setIsOpen] = useState(false);
   if (nft)
+    // TODO: better height/size between placeholder / text / see more for consistent sizes
     return (
       <div className="container-classic col-span-4 flex flex-col overflow-hidden rounded-md">
         {nft.media[0]?.gateway !== undefined ? (
@@ -19,9 +22,9 @@ function NftCard({ nft, isLoading = false }: NftCardProps) {
             className="aspect-square object-cover"
           />
         ) : (
-          <p className="m-auto aspect-square object-cover">
-            No image for this nft
-          </p>
+          <div className="flex h-60 items-center justify-center">
+            <FontAwesomeIcon icon={faImage} className="text-6xl opacity-50" />
+          </div>
         )}
         <div className="flex flex-grow flex-col justify-between p-2">
           <div>

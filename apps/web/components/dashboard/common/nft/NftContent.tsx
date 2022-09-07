@@ -43,8 +43,9 @@ function NftContent({ childAddress, fill_nbr = 0 }: NftContentProps) {
       <div className="grid grid-cols-12 gap-4">
         <>
           {content &&
-            content.pages[page]?.ownedNfts.map((nft) => (
-              <NftCard nft={nft} key={nft.tokenId} />
+            // ! nft.tokenId is not unique, we must use index for unique div key
+            content.pages[page]?.ownedNfts.map((nft, index) => (
+              <NftCard nft={nft} key={index} />
             ))}
           {content &&
             fill_nbr > content.pages[page]?.ownedNfts.length &&
