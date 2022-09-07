@@ -13,7 +13,7 @@
     "seed": "prisma db seed",
     "migrate": "prisma migrate dev",
     "push": "prisma db push --skip-generate",
-    "drop": "prisma migrate reset && yarn push",
+    "drop": "prisma migrate reset --skip-seed && yarn push",
     "docker:up": "docker-compose up -d --build",
     "docker:down": "docker-compose down"
   },
