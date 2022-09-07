@@ -13,8 +13,8 @@ const pocketContract = PocketFaucet__factory.connect(
   provider,
 );
 
-const AMOUNT_TO_SEND_TO_CHILD = parseEther('20');
-const AMOUNT_TO_SEND_TO_PARENT = parseEther('10');
+const AMOUNT_TO_SEND_TO_CHILD = parseEther('0.2');
+const AMOUNT_TO_SEND_TO_PARENT = parseEther('0.1');
 const AMOUNT_OF_GRANTS = 5;
 
 async function getPriorityFeeData() {
