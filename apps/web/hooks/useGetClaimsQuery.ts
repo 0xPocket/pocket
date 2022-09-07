@@ -30,7 +30,7 @@ export const useGetClaimsQuery = (address: string, userType: string) => {
   }, [address, pocketContract.filters, requesterAddress, userType]);
 
   return useQuery(
-    ['child-claims', address],
+    ['child.claims', address],
     async () =>
       await provider.getLogs({
         fromBlock: 0x1a27777,

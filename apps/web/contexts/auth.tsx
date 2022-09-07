@@ -32,7 +32,7 @@ export const [useMagic, MagicAuthContextProvider] =
   createCtx<IMagicAuthContext>();
 
 export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
-  const { isConnected, status: wagmiStatus, address, connector } = useAccount();
+  const { isConnected, status: wagmiStatus, connector } = useAccount();
   const { disconnectAsync, disconnect } = useDisconnect();
   const queryClient = useQueryClient();
   const [magic, setMagic] = useState<MagicConnector>();
@@ -76,17 +76,17 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
     },
   });
 
-  // CHANGE ACCOUNT DISCONNECT
   useEffect(() => {
-    if (
-      data &&
-      data.user.address &&
-      address &&
-      address?.toLowerCase() !== data?.user.address.toLowerCase()
-    ) {
+    function onDisconnect() {
       logout.mutate();
     }
-  }, [address, data, router, logout]);
+    connector?.on('disconnect', onDisconnect);
+    connector?.on('change', onDisconnect);
+    return () => {
+      connector?.removeListener('disconnect', onDisconnect);
+      connector?.removeListener('change', onDisconnect);
+    };
+  }, [logout, connector]);
 
   // RECONNECTING STATE
   useEffect(() => {
@@ -109,7 +109,7 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
     }
   }, [wagmiStatus, reconnect, router, magicConnect, connector, logout]);
 
-  // WE GET THE MAGIC CONNCETOR HERE
+  // WE GET THE MAGIC CONNECTOR HERE
   useEffect(() => {
     const magic = connectors.find((c) => c.id === 'magic') as MagicConnector;
     if (magic) {
@@ -118,7 +118,6 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
   }, [connectors]);
 
   useEffect(() => {
-    console.log(chain?.id);
     if (
       connector?.id !== 'magic' &&
       chain &&
