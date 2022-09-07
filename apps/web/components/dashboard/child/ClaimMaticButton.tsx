@@ -15,13 +15,14 @@ const ClaimMaticButton: FC = () => {
     },
     onSuccess: () => {
       refetch();
-      toast.info('Transaction sent');
+      toast.info(`Claim matic pending, please hang on !`, { isLoading: true });
     },
   });
   const tx = useWaitForTransaction({
     hash: claimMatic.data,
     enabled: claimMatic.isSuccess,
     onSuccess: () => {
+      toast.dismiss();
       toast.success('Transaction success !');
     },
   });
