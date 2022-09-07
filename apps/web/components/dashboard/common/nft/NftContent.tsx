@@ -75,7 +75,9 @@ function NftContent({ childAddress, fill_nbr = 0 }: NftContentProps) {
         <div className="">
           <button
             className="disabled:opacity-20"
-            disabled={!(hasNextPage || content?.pages[page + 1])}
+            disabled={
+              !(hasNextPage || content?.pages[page + 1]) || isFetchingNextPage
+            }
             onClick={() => {
               setPage((value) => value + 1);
               if (!content?.pages[page + 1]) fetchNextPage();
