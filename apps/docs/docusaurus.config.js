@@ -43,7 +43,7 @@ const config = {
         title: "Pocket",
         logo: {
           alt: "Pocket Logo",
-          src: "img/logo.svg",
+          src: "img/favicon.ico",
         },
         items: [
           { to: "/faq", label: "FAQ", position: "left" },
@@ -54,8 +54,12 @@ const config = {
             label: "Tutorial",
           },
           {
-            href: "https://github.com/facebook/docusaurus",
-            label: "GitHub",
+            type: "localeDropdown",
+            position: "right",
+          },
+          {
+            href: "https://gopocket.fr",
+            label: "Pocket app",
             position: "right",
           },
         ],

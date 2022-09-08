@@ -8,10 +8,9 @@ It includes the following apps and packages:
 
 ### Apps
 
-- `web-parent`: a [Next.js](https://nextjs.org) app for the parent portal
-- `web-child`: another [Next.js](https://nextjs.org) app for the children portal
+- `web`: the [Next.js](https://nextjs.org) app
 - `landing-page`: another [Next.js](https://nextjs.org) app for the landing page
-- `api`: a [NestJS](https://nestjs.com/) app for the api
+- `docs`: [Docusaurus](https://docusaurus.io) app for the documentation
 
 ### Packages
 
@@ -39,7 +38,7 @@ You must setup a `.env` in the root of the monorepo and in the `prisma` package.
 
 You can look at the `.env.example` in the corresponding directory to see which variables are necessary.
 
-### Developement
+### Development
 
 To develop all apps and packages, run the following commands:
 
@@ -55,6 +54,9 @@ yarn fork
 
 # run the dev script on all apps/packages
 yarn dev # this will also seed the db + contract
+
+# start the documentation on port 5000
+yarn docs
 ```
 
 The `Next.js` apps will be available on http://localhost:3000, http://localhost:4000 and http://localhost:4500

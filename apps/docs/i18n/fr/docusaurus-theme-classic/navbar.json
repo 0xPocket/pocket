@@ -1,0 +1,18 @@
+{
+  "title": {
+    "message": "Pocket",
+    "description": "The title in the navbar"
+  },
+  "item.label.FAQ": {
+    "message": "FAQ",
+    "description": "Navbar item with label FAQ"
+  },
+  "item.label.Tutorial": {
+    "message": "Tutorial",
+    "description": "Navbar item with label Tutorial"
+  },
+  "item.label.Pocket app": {
+    "message": "Pocket app",
+    "description": "Navbar item with label Pocket app"
+  }
+}

@@ -4,8 +4,6 @@ sidebar_position: 1
 
 # Frequently Asked Questions
 
-<!-- Let's discover **Docusaurus in less than 5 minutes**. -->
-
 ## Getting Started
 
 Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
@@ -14,3 +12,6 @@ Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new
 
 - [Node.js](https://nodejs.org/en/download/) version 16.14 or above:
   - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+
+test
+lol
