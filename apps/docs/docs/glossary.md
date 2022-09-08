@@ -165,3 +165,5 @@ A designated storage location for digital assets (cryptocurrency) that has an ad
 ### Web3
 
 Web3, or Web 3.0, are terms used synonymously with “the decentralized web” and are often used to refer, broadly, to the blockchain and decentralized technology ecosystems as a whole.
+
+(https://consensys.net/knowledge-base/a-blockchain-glossary-for-beginners/)
