@@ -16,7 +16,8 @@
     "test": "turbo run test",
     "c": "yarn workspace pocket-contract",
     "p": "yarn workspace @lib/prisma",
-    "fork": "turbo run fork"
+    "fork": "turbo run fork",
+    "docs": "turbo run docs"
   },
   "dependencies": {
     "dotenv": "^16.0.1",

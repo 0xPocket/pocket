@@ -30,6 +30,9 @@
     "fork": {
       "cache": false
     },
+    "docs": {
+      "cache": false
+    },
     "clean": {
       "dependsOn": ["^clean"],
       "cache": false
