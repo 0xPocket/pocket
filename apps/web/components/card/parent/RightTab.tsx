@@ -1,6 +1,7 @@
 import { Tab } from '@headlessui/react';
 import { UserChild } from '@lib/types/interfaces';
 import { useState } from 'react';
+import { useContractWrite } from 'wagmi';
 import { useSmartContract } from '../../../contexts/contract';
 import { useAddFundsForm } from '../../../hooks/useAddFundsForm';
 import { useChildSettingsForm } from '../../../hooks/useChildSettingsForm';
@@ -43,6 +44,14 @@ function RightTab({ child }: RightTabProps) {
     },
   );
 
+  const { write: withdrawFundsFromChild } = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    addressOrName: pocketContract.address,
+    functionName: 'withdrawFundsFromChild',
+    contractInterface: pocketContract.interface,
+    args: [config?.balance, child.address],
+  });
+
   if (!config) {
     return null;
   }
@@ -84,6 +93,7 @@ function RightTab({ child }: RightTabProps) {
             <ChildSettingsForm
               changeConfig={changeConfig}
               config={config}
+              withdrawFundsFromChild={withdrawFundsFromChild}
               returnFn={() => {
                 setSelectedIndex(0);
               }}
