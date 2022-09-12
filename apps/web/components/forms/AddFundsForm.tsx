@@ -1,11 +1,6 @@
-import {
-  faAngleLeft,
-  faCaretUp,
-  faPaperPlane,
-} from '@fortawesome/free-solid-svg-icons';
+import { faAngleLeft, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { UserChild } from '@lib/types/interfaces';
-import { FormErrorMessage } from '@lib/ui';
 import { formatUnits, parseUnits } from 'ethers/lib/utils';
 import { useSmartContract } from '../../contexts/contract';
 import useContractRead from '../../hooks/useContractRead';

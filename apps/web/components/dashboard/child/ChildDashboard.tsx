@@ -5,6 +5,7 @@ import TokenContent from '../common/token/TokenContent';
 import ActivityContent from '../common/activity/ActivityContent';
 import ChildCard from '../../card/child/ChildCard';
 import Swapper from './Swapper';
+import ClaimMaticModal from './ClaimMaticModal';
 
 const ChildDashboard: React.FC = () => {
   const { address } = useAccount();
@@ -22,6 +23,7 @@ const ChildDashboard: React.FC = () => {
         <ActivityContent childAddress={address!} userType="Child" />
       </div>
       <TokenContent childAddress={address!} />
+      <ClaimMaticModal />
     </div>
   ) : (
     <div></div>

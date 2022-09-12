@@ -40,12 +40,12 @@ export function useChildSettingsForm(
     onError: (e) => {
       toast.dismiss();
       toast.error(
-        `Changing config failed: ${e.message}. If the problem persits, contact us.`,
+        `Changing config failed: ${e.message}. If the problem persists, contact us.`,
       );
     },
     onSuccess: () => {
       toast.dismiss();
-      toast.success(`Configuration set successfully !`);
+      toast.success(`Configuration sets successfully !`);
     },
   });
 

@@ -24,7 +24,7 @@ interface IMagicAuthContext {
   loggedIn: boolean;
   loading: boolean;
   signInWithEmail: (email: string) => Promise<void>;
-  signOut: () => Promise<void>;
+  signOut: (redirect?: boolean) => Promise<void>;
   user: CustomSessionUser | undefined;
 }
 
@@ -32,7 +32,7 @@ export const [useMagic, MagicAuthContextProvider] =
   createCtx<IMagicAuthContext>();
 
 export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
-  const { isConnected, status: wagmiStatus, address, connector } = useAccount();
+  const { isConnected, status: wagmiStatus, connector } = useAccount();
   const { disconnectAsync, disconnect } = useDisconnect();
   const queryClient = useQueryClient();
   const [magic, setMagic] = useState<MagicConnector>();
@@ -67,26 +67,34 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
   const { chain } = useNetwork();
   const { switchNetwork } = useSwitchNetwork();
 
-  const logout = useMutation(() => disconnectAsync(), {
-    onSuccess: async () => {
+  const logout = useMutation<void, unknown, boolean>(() => disconnectAsync(), {
+    onSuccess: async (_, redirect) => {
+      console.log('on success');
       queryClient.removeQueries();
       signOut({ redirect: false }).then(() => {
-        router.push('/connect');
+        if (redirect) {
+          router.push('/connect');
+        }
+        console.log('sign out');
       });
     },
   });
 
-  // CHANGE ACCOUNT DISCONNECT
   useEffect(() => {
-    if (
-      data &&
-      data.user.address &&
-      address &&
-      address?.toLowerCase() !== data?.user.address.toLowerCase()
-    ) {
-      logout.mutate();
+    function onDisconnect() {
+      logout.mutate(true);
     }
-  }, [address, data, router, logout]);
+    if (connector?.id !== 'magic' && nextAuthStatus === 'authenticated') {
+      connector?.on('disconnect', onDisconnect);
+      connector?.on('change', onDisconnect);
+    }
+    return () => {
+      if (connector?.id !== 'magic' && nextAuthStatus === 'authenticated') {
+        connector?.removeListener('disconnect', onDisconnect);
+        connector?.removeListener('change', onDisconnect);
+      }
+    };
+  }, [logout, connector, router, queryClient, nextAuthStatus]);
 
   // RECONNECTING STATE
   useEffect(() => {
@@ -103,13 +111,13 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
     }
 
     if (wagmiStatus === 'disconnected' && reconnect) {
-      logout.mutate();
+      logout.mutate(true);
       setLoading(false);
       setReconnect(false);
     }
   }, [wagmiStatus, reconnect, router, magicConnect, connector, logout]);
 
-  // WE GET THE MAGIC CONNCETOR HERE
+  // WE GET THE MAGIC CONNECTOR HERE
   useEffect(() => {
     const magic = connectors.find((c) => c.id === 'magic') as MagicConnector;
     if (magic) {
@@ -118,7 +126,6 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
   }, [connectors]);
 
   useEffect(() => {
-    console.log(chain?.id);
     if (
       connector?.id !== 'magic' &&
       chain &&
@@ -143,7 +150,7 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
             return magicConnect.mutate();
           });
         },
-        signOut: async () => logout.mutate(),
+        signOut: async (redirect = true) => logout.mutate(redirect),
         user: data?.user,
       }}
     >

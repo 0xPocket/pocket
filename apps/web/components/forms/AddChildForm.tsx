@@ -3,10 +3,10 @@ import { useRouter } from 'next/router';
 import { z } from 'zod';
 import { useZodForm } from '../../utils/useZodForm';
 import { trpc } from '../../utils/trpc';
+import { ParentSchema } from '../../server/schemas';
 import InputText from '../common/InputText';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { ParentSchema } from '../../server/schemas';
 
 type FormValues = z.infer<typeof ParentSchema['createChild']>;
 

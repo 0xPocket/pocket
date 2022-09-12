@@ -5,17 +5,21 @@ import { SectionContainer } from '@lib/ui';
 import ChildrenMozaic from '../components/dashboard/parent/ChildrenMozaic';
 import ChildDashboard from '../components/dashboard/child/ChildDashboard';
 import { trpc } from '../utils/trpc';
+import { Spinner } from '../components/common/Spinner';
 
 export default function Web() {
-  const { data } = trpc.useQuery(['auth.session']);
+  const { data, isLoading } = trpc.useQuery(['auth.session']);
 
   return (
     <MainWrapper>
       <SectionContainer>
-        <div className="mb-12 flex items-center space-x-4">
-          <FontAwesomeIcon icon={faAngleRight} />
-          <p>dashboard</p>
-        </div>
+        {isLoading && <Spinner />}
+        {data && (
+          <div className="mb-12 flex items-center space-x-4">
+            <FontAwesomeIcon icon={faAngleRight} />
+            <p>dashboard</p>
+          </div>
+        )}
         {data?.user.type === 'Parent' && <ChildrenMozaic />}
         {data?.user.type === 'Child' && <ChildDashboard />}
       </SectionContainer>

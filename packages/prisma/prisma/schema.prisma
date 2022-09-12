@@ -108,13 +108,14 @@ model Activity {
   createdAt     DateTime @default(now())
   fromAddress   String
   toAddress     String?
-  child         Child[]
   blockNum      String
   hash          String
   category      String
-  value         String
+  value         Float
   asset         String?
   erc721TokenId String?
+  child         Child    @relation(fields: [childUserId], references: [userId])
+  childUserId   String
 }
 
 // Verification Token

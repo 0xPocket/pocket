@@ -7,6 +7,9 @@ import {
 import { AssetTransfersResultWithMetadata } from '@lib/types/interfaces';
 import type { AssetTransfersCategory } from 'alchemy-sdk';
 import moment from 'moment';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
+import Link from 'next/link';
 
 type TransactionsTableProps = {
   transactionsList: AssetTransfersResultWithMetadata[];
@@ -34,7 +37,6 @@ function formatValue(value: number | null) {
 }
 
 const columnHelper = createColumnHelper<AssetTransfersResultWithMetadata>();
-
 const columns = [
   columnHelper.accessor('metadata.blockTimestamp', {
     cell: (info) => moment(info.getValue()).fromNow(),
@@ -55,6 +57,22 @@ const columns = [
     ),
     header: () => <span>Category</span>,
     id: 'Category',
+  }),
+  columnHelper.accessor('hash', {
+    cell: (info) => (
+      <div className="w-full text-right">
+        <Link
+          //TODO : change mumbai to mainet
+          href={`https://mumbai.polygonscan.com/tx/${info.getValue()}`}
+        >
+          <a target="_blank" rel="noopener noreferrer">
+            <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+          </a>
+        </Link>
+      </div>
+    ),
+    header: () => null,
+    id: 'Link',
   }),
 ];
 
