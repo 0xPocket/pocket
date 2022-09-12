@@ -1,12 +1,20 @@
 import { useRouter } from 'next/router';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import OnBoardingStepper from '../components/onboarding/child/OnBoarding';
 import MainWrapper from '../components/wrappers/MainWrapper';
+import { useMagic } from '../contexts/auth';
 import { useIsMounted } from '../hooks/useIsMounted';
 
 const VerifyChild: FC = () => {
   const router = useRouter();
   const isMounted = useIsMounted();
+  const { signOut, loggedIn } = useMagic();
+
+  useEffect(() => {
+    if (loggedIn) {
+      signOut(false);
+    }
+  }, [loggedIn, signOut]);
 
   if (!isMounted) {
     return null;

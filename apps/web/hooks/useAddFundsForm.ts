@@ -32,11 +32,6 @@ export function useAddFundsForm(
         `Approval failed : ${e.message}. If the problem persits, contact us.`,
       );
     },
-    onSuccess: () => {
-      toast.info(`Transaction pending, please hang on !`, {
-        isLoading: true,
-      });
-    },
   });
 
   const addChildAndFunds = useContractWrite({
@@ -60,13 +55,6 @@ export function useAddFundsForm(
   });
 
   useWaitForTransaction({
-    hash: approve.data?.hash,
-    onSuccess: () => {
-      toast.dismiss();
-    },
-  });
-
-  useWaitForTransaction({
     hash: addChildAndFunds.data?.hash,
     onError: (e) => {
       toast.dismiss();
@@ -82,7 +70,6 @@ export function useAddFundsForm(
 
   const approveAndAddChild = useCallback(
     async (amount: BigNumber) => {
-      console.log(amount.toString());
       try {
         if (allowance?.lt(amount) && approve.writeAsync) {
           await approve.writeAsync();

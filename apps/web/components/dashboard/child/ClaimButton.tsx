@@ -25,8 +25,7 @@ const ClaimButton: React.FC<ClaimButtonProps> = ({ disabled, children }) => {
 
   const claim = useContractWrite({
     ...claimConfig,
-    onError(e) {
-      console.log(e.message);
+    onError() {
       toast.error(`Claim failed.`);
     },
     onSuccess: () => {

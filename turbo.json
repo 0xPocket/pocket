@@ -1,6 +1,6 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "globalDependencies": [".env", "./packages/prisma/.env"],
+  "globalDependencies": [".env", "./packages/prisma/.env", "$ANALYZE"],
   "pipeline": {
     "@lib/prisma#build": {
       "inputs": ["./prisma/schema.prisma", ".env"],

@@ -14,9 +14,9 @@ const OnBoardingForm: FC = () => {
   const router = useRouter();
 
   const { register, handleSubmit, formState, setValue } = useZodForm({
-    mode: 'all',
+    mode: 'onChange',
     reValidateMode: 'onChange',
-    schema: AuthSchema.onboard,
+    schema: AuthSchema['onboard'],
   });
   console.log(formState.errors);
 

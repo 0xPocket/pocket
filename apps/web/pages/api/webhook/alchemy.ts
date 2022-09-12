@@ -9,6 +9,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).send('Bad Request');
   }
 
+  console.log('webhook triggered');
+
   const signing_key = process.env.ALCHEMY_WEBHOOK_SECRET!;
 
   const signature = req?.headers['x-alchemy-signature'];
@@ -22,26 +24,42 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const digest = hmac.digest('hex');
 
   if (signature !== digest) {
+    console.log('bad secret');
+    console.log('secret is', process.env.ALCHEMY_WEBHOOK_SECRET!);
     return res.status(400).send('Bad Request');
   }
 
   for (const activity of body.event.activity) {
-    const childFrom = await prisma.user.findUnique({
-      where: { address: activity.fromAddress },
+    const child = await prisma.user.findFirst({
+      where: {
+        OR: [
+          {
+            address: {
+              equals: activity.fromAddress,
+              mode: 'insensitive',
+            },
+            type: 'Child',
+          },
+          {
+            address: {
+              equals: activity.toAddress,
+              mode: 'insensitive',
+            },
+            type: 'Child',
+          },
+        ],
+      },
     });
 
-    const childTo = await prisma.user.findUnique({
-      where: { address: activity.toAddress },
-    });
+    console.log(activity.fromAddress);
+    console.log(activity.toAddress);
+    console.log(child);
 
-    if (
-      !childFrom ||
-      !childTo ||
-      childFrom.type !== 'Child' ||
-      childTo.type !== 'Child'
-    ) {
+    if (!child) {
       return res.status(400).send('Bad Request');
     }
+
+    console.log('adding activity to db');
 
     await prisma.activity
       .create({
@@ -57,7 +75,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           erc721TokenId: activity.erc721TokenId,
           createdAt: body.createdAt,
           child: {
-            connect: [{ userId: childFrom.id }, { userId: childTo.id }],
+            connect: {
+              userId: child.id,
+            },
           },
         },
       })

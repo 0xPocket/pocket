@@ -14,6 +14,7 @@ import { z } from 'zod';
 import { SiweMessage } from 'siwe';
 import { getCsrfToken } from 'next-auth/react';
 import { env } from 'config/env/server';
+import { addAddressToWebhook } from '../services/alchemy';
 
 export const emailRouter = createRouter()
   .mutation('verifyChild', {
@@ -99,6 +100,8 @@ export const emailRouter = createRouter()
               message: 'This wallet is already associated with an account.',
             });
           });
+
+        if (user.address) await addAddressToWebhook(user.address);
 
         return user;
       } catch (e) {

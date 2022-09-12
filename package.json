@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "dotenv": "^16.0.1",
-    "turbo": "1.4.4"
+    "turbo": "1.4.6"
   },
   "devDependencies": {
     "commitizen": "^4.2.5",

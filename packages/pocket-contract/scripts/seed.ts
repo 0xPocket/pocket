@@ -6,6 +6,11 @@ import { PocketFaucet__factory } from '../typechain-types';
 import { env } from 'config/env/server';
 
 async function main() {
+  if (env.NEXT_PUBLIC_NETWORK !== 'localhost') {
+    console.log('Skipping seeding on non localhost network');
+    return;
+  }
+
   const tokenDecimals = await getDecimals(env.ERC20_ADDRESS);
   const parent = await ethers.getSigner(constants.ELON_MUSK.address);
   const faucet = PocketFaucet__factory.connect(
