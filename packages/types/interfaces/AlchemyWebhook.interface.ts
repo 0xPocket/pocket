@@ -20,7 +20,7 @@ export interface AddressActivityPayload {
   blockNum: string;
   hash: string;
   category: "external" | "internal" | "token";
-  value: string;
+  value: number;
   asset?: "ETH" | "MATIC";
   erc721TokenId?: string;
   rawContract?: {

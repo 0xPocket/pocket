@@ -8,6 +8,7 @@ import { authRouter } from './auth';
 import { childRouter } from './child';
 import { emailRouter } from './email';
 import { parentRouter } from './parent';
+import { testRouter } from './test';
 import { tokenRouter } from './token';
 
 /**
@@ -31,6 +32,7 @@ export const appRouter = createRouter()
   .merge('auth.', authRouter)
   .merge('parent.', parentRouter)
   .merge('child.', childRouter)
-  .merge('token.', tokenRouter);
+  .merge('token.', tokenRouter)
+  .merge('test.', testRouter);
 
 export type AppRouter = typeof appRouter;
