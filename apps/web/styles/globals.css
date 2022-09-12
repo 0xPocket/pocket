@@ -70,7 +70,7 @@
 
 	/* inputs */
 	.input-text {
-		@apply px-4 py-3 rounded-md text-dark-light border-classic without-ring ;
+		@apply block w-full appearance-none border-0 border-b bg-transparent py-2.5  px-0 text-sm  focus:outline-none focus:ring-0;
 	}
 
 	/* badge */
@@ -100,7 +100,7 @@
 	}
 
 	.table-head {
-		@apply sticky top-0 bg-bright-dark dark:bg-dark-light ;
+		@apply sticky top-0 bg-bright-dark dark:bg-dark-light;
 	}
 
 	.table-header

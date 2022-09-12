@@ -80,7 +80,7 @@ const EthereumSignin: FC<EthereumSigninProps> = ({ type }) => {
       {isConnected && !isLoading && activeConnector?.id !== 'magic' && (
         <div className="flex gap-4">
           <button
-            className="dismiss-btn"
+            className="third-btn"
             onClick={(e) => {
               e.preventDefault();
               disconnect();
