@@ -1,6 +1,4 @@
 import Link from 'next/link';
-import { useSmartContract } from '../../../contexts/contract';
-import useContractRead from '../../../hooks/useContractRead';
 import AccountStatus from './AccountStatus';
 import RightTab from './RightTab';
 import { UserChild } from '@lib/types/interfaces';
@@ -16,15 +14,6 @@ type ChildCardProps = {
 };
 
 function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
-  const { pocketContract } = useSmartContract();
-
-  const { data: config, refetch: refetchConfig } = useContractRead({
-    contract: pocketContract,
-    functionName: 'childToConfig',
-    args: [child.address!],
-    enabled: !!child.address,
-  });
-
   const { mutate: resendEmail } = trpc.useMutation(
     'parent.resendChildVerificationEmail',
     {
@@ -77,13 +66,7 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
           </Link>
         )}
       </div>
-      {child?.child?.status === 'ACTIVE' && (
-        <RightTab
-          child={child}
-          config={config}
-          refetchConfig={refetchConfig as any}
-        />
-      )}
+      {child?.child?.status === 'ACTIVE' && <RightTab child={child} />}
     </div>
   );
 }
