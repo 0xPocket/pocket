@@ -69,9 +69,11 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
 
   const logout = useMutation(() => disconnectAsync(), {
     onSuccess: async () => {
+      console.log('on success');
       queryClient.removeQueries();
       signOut({ redirect: false }).then(() => {
         router.push('/connect');
+        console.log('sign out');
       });
     },
   });
@@ -80,13 +82,17 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
     function onDisconnect() {
       logout.mutate();
     }
-    connector?.on('disconnect', onDisconnect);
-    connector?.on('change', onDisconnect);
+    if (connector?.id !== 'magic') {
+      connector?.on('disconnect', onDisconnect);
+      connector?.on('change', onDisconnect);
+    }
     return () => {
-      connector?.removeListener('disconnect', onDisconnect);
-      connector?.removeListener('change', onDisconnect);
+      if (connector?.id !== 'magic') {
+        connector?.removeListener('disconnect', onDisconnect);
+        connector?.removeListener('change', onDisconnect);
+      }
     };
-  }, [logout, connector]);
+  }, [logout, connector, router, queryClient]);
 
   // RECONNECTING STATE
   useEffect(() => {
