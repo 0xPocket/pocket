@@ -1,9 +1,11 @@
 import { toast } from 'react-toastify';
-import { FormInputText } from '@lib/ui';
 import { useRouter } from 'next/router';
 import { z } from 'zod';
 import { useZodForm } from '../../utils/useZodForm';
 import { trpc } from '../../utils/trpc';
+import InputText from '../common/InputText';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 const AddChildSchema = z.object({
   name: z.string(),
@@ -40,29 +42,21 @@ function AddChildForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-      <div className="flex gap-4">
-        <FormInputText
-          type="text"
-          placeHolder="Name"
-          registerValues={register('name')}
-          error={errors.name}
-        />
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="container-classic flex flex-col gap-4 rounded-lg p-8"
+    >
+      <h2 className="">
+        <FontAwesomeIcon icon={faPlus} className="mr-4" />
+        Your child infos
+      </h2>
+      <div className="flex flex-grow flex-col justify-evenly">
+        <InputText label="Name" register={register('name')} />
+        <InputText label="Email" register={register('email')} />
+        <button disabled={addChild.isLoading} className="action-btn">
+          Submit
+        </button>
       </div>
-
-      <FormInputText
-        placeHolder="john@doe.com"
-        registerValues={register('email')}
-        type="email"
-        error={errors.email}
-      />
-
-      <input
-        type="submit"
-        value="Submit"
-        disabled={addChild.isLoading}
-        className="cursor-pointer rounded-md  bg-dark px-4 py-3 text-bright  "
-      />
     </form>
   );
 }
