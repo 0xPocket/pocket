@@ -106,13 +106,11 @@
     @apply absolute w-full;
   }
 
-  <<<<<<< HEAD .table-head {
+  .table-head {
     @apply sticky top-0 bg-bright-dark dark:bg-dark-light;
   }
-  ======= .table-head {
-    @apply sticky top-0 bg-bright-dark dark:bg-dark-light;
-  }
-  >>>>>>>origin/ui/details_3 .table-header {
+
+  .table-header {
     @apply mb-2 mt-4 flex items-center text-xl;
   }
 
