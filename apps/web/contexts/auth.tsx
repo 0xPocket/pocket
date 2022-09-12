@@ -24,7 +24,7 @@ interface IMagicAuthContext {
   loggedIn: boolean;
   loading: boolean;
   signInWithEmail: (email: string) => Promise<void>;
-  signOut: () => Promise<void>;
+  signOut: (redirect?: boolean) => Promise<void>;
   user: CustomSessionUser | undefined;
 }
 
@@ -67,12 +67,14 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
   const { chain } = useNetwork();
   const { switchNetwork } = useSwitchNetwork();
 
-  const logout = useMutation(() => disconnectAsync(), {
-    onSuccess: async () => {
+  const logout = useMutation<void, unknown, boolean>(() => disconnectAsync(), {
+    onSuccess: async (_, redirect) => {
       console.log('on success');
       queryClient.removeQueries();
       signOut({ redirect: false }).then(() => {
-        router.push('/connect');
+        if (redirect) {
+          router.push('/connect');
+        }
         console.log('sign out');
       });
     },
@@ -80,19 +82,19 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
 
   useEffect(() => {
     function onDisconnect() {
-      logout.mutate();
+      logout.mutate(true);
     }
-    if (connector?.id !== 'magic') {
+    if (connector?.id !== 'magic' && nextAuthStatus === 'authenticated') {
       connector?.on('disconnect', onDisconnect);
       connector?.on('change', onDisconnect);
     }
     return () => {
-      if (connector?.id !== 'magic') {
+      if (connector?.id !== 'magic' && nextAuthStatus === 'authenticated') {
         connector?.removeListener('disconnect', onDisconnect);
         connector?.removeListener('change', onDisconnect);
       }
     };
-  }, [logout, connector, router, queryClient]);
+  }, [logout, connector, router, queryClient, nextAuthStatus]);
 
   // RECONNECTING STATE
   useEffect(() => {
@@ -109,7 +111,7 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
     }
 
     if (wagmiStatus === 'disconnected' && reconnect) {
-      logout.mutate();
+      logout.mutate(true);
       setLoading(false);
       setReconnect(false);
     }
@@ -148,7 +150,7 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
             return magicConnect.mutate();
           });
         },
-        signOut: async () => logout.mutate(),
+        signOut: async (redirect = true) => logout.mutate(redirect),
         user: data?.user,
       }}
     >
