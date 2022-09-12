@@ -4,6 +4,7 @@ import { Button } from '@lib/ui';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { trpc } from '../../../utils/trpc';
+import { FormattedMessage } from 'react-intl';
 
 function ChildrenMozaic() {
   const router = useRouter();
@@ -14,7 +15,9 @@ function ChildrenMozaic() {
   return (
     <div className="flex flex-col space-y-12">
       <div className="flex items-center justify-between">
-        <h1>My children</h1>
+        <h1>
+          <FormattedMessage id={'dashboard.title'} />
+        </h1>
         <button onClick={() => testwebhookramp.mutate()}> Test webhook</button>
         <Button
           action={() => router.push('/add-account')}
