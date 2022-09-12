@@ -14,7 +14,7 @@ function MainWrapper({
   noFooter = false,
 }: MainWrapperProps) {
   return (
-    <div className="relative min-h-screen  overflow-hidden px-4 pb-20">
+    <div className="relative min-h-screen overflow-hidden px-4 pb-20">
       {!noHeader && <Header />}
       {children}
       <BackgoundSplit className="-top-80 -left-96" />
