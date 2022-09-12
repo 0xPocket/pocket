@@ -29,6 +29,7 @@ import { useRouter } from 'next/router';
 import { IntlProvider } from 'react-intl';
 
 const messages = { fr, 'en-US': en };
+export type IntlMessageID = keyof typeof en;
 
 const { chains, provider } = configureChains(
   [env.WAGMI_CHAIN],
