@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useMagic } from '../../contexts/auth';
+import BugDialog from './BugDialog';
+import ContactDialog from './ContactDialog';
 
 type FooterProps = React.DetailedHTMLProps<
   React.HTMLAttributes<HTMLElement>,
@@ -6,11 +9,24 @@ type FooterProps = React.DetailedHTMLProps<
 >;
 
 function Footer(props: FooterProps) {
+  const [contactOpen, setContactOpen] = useState(false);
+  const [bugOpen, setBugOpen] = useState(false);
+  const { loggedIn } = useMagic();
+
   return (
     <footer {...props}>
-      <p className="mt-8 py-2 text-center text-base">
-        &copy; 2022 Pocket. All rights reserved.
-      </p>
+      <div className="mt-8 flex items-center justify-center gap-4 py-2 text-base opacity-70">
+        <p>&copy; 2022 Pocket.</p>
+        <a onClick={() => setContactOpen(true)}>Contact</a>
+        {loggedIn && (
+          <a
+            className="text-danger"
+            onClick={() => setBugOpen(true)}
+          >{`Report a bug`}</a>
+        )}
+      </div>
+      <ContactDialog isOpen={contactOpen} setIsOpen={setContactOpen} />
+      <BugDialog isOpen={bugOpen} setIsOpen={setBugOpen} />
     </footer>
   );
 }

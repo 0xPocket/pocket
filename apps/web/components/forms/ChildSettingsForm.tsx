@@ -19,12 +19,14 @@ type FormValues = z.infer<typeof ChildSettingsSchema>;
 
 type ChildSettingsFormProps = {
   config: ContractMethodReturn<PocketFaucet, 'childToConfig'>;
+  withdrawFundsFromChild: () => void;
   changeConfig: (amount: FormValues) => Promise<void>;
   returnFn: () => void;
 };
 
 function ChildSettingsForm({
   config,
+  withdrawFundsFromChild,
   changeConfig,
   returnFn,
 }: ChildSettingsFormProps) {
@@ -47,57 +49,73 @@ function ChildSettingsForm({
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="flex h-full flex-col items-end justify-between space-y-4"
-    >
-      <div className="flex items-center space-x-8">
-        <label>Periodicity</label>
-        <div className="flex flex-col space-x-2">
+    <>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex h-full flex-col items-end justify-between space-y-4"
+      >
+        <div className="flex items-center space-x-8">
+          <label>Periodicity</label>
+          <div className="flex flex-col space-x-2">
+            <input
+              type="radio"
+              id="weekly"
+              value="604800"
+              {...register('periodicity')}
+            />
+            <label htmlFor="huey">Weekly</label>
+          </div>
+
+          <div className="flex flex-col space-x-2">
+            <input
+              type="radio"
+              id="monthly"
+              value="2592000"
+              {...register('periodicity')}
+            />
+            <label htmlFor="dewey">Monthly</label>
+          </div>
+        </div>
+        <div className="flex items-center space-x-8">
+          <label htmlFor="topup">Ceiling</label>
           <input
-            type="radio"
-            id="weekly"
-            value="604800"
-            {...register('periodicity')}
+            className="border p-2 text-dark"
+            {...register('ceiling', {
+              valueAsNumber: true,
+            })}
+            type="number"
           />
-          <label htmlFor="huey">Weekly</label>
+          {errors.ceiling && (
+            <FormErrorMessage message={errors.ceiling.message} />
+          )}
         </div>
 
-        <div className="flex flex-col space-x-2">
-          <input
-            type="radio"
-            id="monthly"
-            value="2592000"
-            {...register('periodicity')}
-          />
-          <label htmlFor="dewey">Monthly</label>
-        </div>
-      </div>
-      <div className="flex items-center space-x-8">
-        <label htmlFor="topup">Ceiling</label>
-        <input
-          className="border p-2 text-dark"
-          {...register('ceiling', {
-            valueAsNumber: true,
-          })}
-          type="number"
-        />
-        {errors.ceiling && (
-          <FormErrorMessage message={errors.ceiling.message} />
-        )}
-      </div>
+        <button
+          className="third-btn mt-4"
+          onClick={(e) => {
+            e.preventDefault();
+            withdrawFundsFromChild();
+          }}
+        >
+          withdraw funds
+        </button>
 
-      <div className="flex space-x-4">
-        <button type="button" className="third-btn" onClick={() => returnFn()}>
-          <FontAwesomeIcon icon={faAngleLeft} className="mr-2" />
-          return
-        </button>
-        <button type="submit" className="success-btn">
-          <FontAwesomeIcon icon={faWrench} className="mr-2" />
-          Apply
-        </button>
-      </div>
-    </form>
+        <div className="flex space-x-4">
+          <button
+            type="button"
+            className="third-btn"
+            onClick={() => returnFn()}
+          >
+            <FontAwesomeIcon icon={faAngleLeft} className="mr-2" />
+            return
+          </button>
+          <button type="submit" className="success-btn">
+            <FontAwesomeIcon icon={faWrench} className="mr-2" />
+            Apply
+          </button>
+        </div>
+      </form>
+    </>
   );
 }
 

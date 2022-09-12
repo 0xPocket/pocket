@@ -1,6 +1,5 @@
 import {
   faEnvelopeCircleCheck,
-  faList,
   faPenToSquare,
   faThumbsUp,
 } from '@fortawesome/free-solid-svg-icons';

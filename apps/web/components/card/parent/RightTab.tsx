@@ -1,37 +1,30 @@
 import { Tab } from '@headlessui/react';
 import { UserChild } from '@lib/types/interfaces';
-import { Result } from 'ethers/lib/utils';
-import { PocketFaucet } from 'pocket-contract/typechain-types';
 import { useState } from 'react';
-import {
-  QueryObserverResult,
-  RefetchOptions,
-  RefetchQueryFilters,
-} from 'react-query/types/core/types';
+import { useContractWrite } from 'wagmi';
+import { useSmartContract } from '../../../contexts/contract';
 import { useAddFundsForm } from '../../../hooks/useAddFundsForm';
 import { useChildSettingsForm } from '../../../hooks/useChildSettingsForm';
-
-import type { ContractMethodReturn } from '../../../hooks/useContractRead';
+import useContractRead from '../../../hooks/useContractRead';
 import AddFundsForm from '../../forms/AddFundsForm';
 import ChildSettingsForm from '../../forms/ChildSettingsForm';
 import Balance from './Balance';
 
 type RightTabProps = {
   child: UserChild;
-  config: ContractMethodReturn<PocketFaucet, 'childToConfig'> | undefined;
-  hideActions?: boolean;
-  refetchConfig: (
-    options?: (RefetchOptions & RefetchQueryFilters) | undefined,
-  ) => Promise<QueryObserverResult<Result, Error>>;
 };
 
-function RightTab({
-  child,
-  config,
-  hideActions = false,
-  refetchConfig,
-}: RightTabProps) {
+function RightTab({ child }: RightTabProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const { pocketContract } = useSmartContract();
+
+  const { data: config, refetch: refetchConfig } = useContractRead({
+    contract: pocketContract,
+    functionName: 'childToConfig',
+    args: [child.address!],
+    enabled: !!child.address,
+  });
 
   const { approveAndAddChild } = useAddFundsForm(
     child.address,
@@ -50,6 +43,14 @@ function RightTab({
       setSelectedIndex(0);
     },
   );
+
+  const { write: withdrawFundsFromChild } = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    addressOrName: pocketContract.address,
+    functionName: 'withdrawFundsFromChild',
+    contractInterface: pocketContract.interface,
+    args: [config?.balance, child.address],
+  });
 
   if (!config) {
     return null;
@@ -73,7 +74,6 @@ function RightTab({
             <Balance
               value={config?.balance}
               setSelectedIndex={setSelectedIndex}
-              hideActions={hideActions}
             />
           </div>
         </Tab.Panel>
@@ -93,6 +93,7 @@ function RightTab({
             <ChildSettingsForm
               changeConfig={changeConfig}
               config={config}
+              withdrawFundsFromChild={withdrawFundsFromChild}
               returnFn={() => {
                 setSelectedIndex(0);
               }}
