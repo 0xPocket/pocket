@@ -9,8 +9,8 @@
     "fork": "yarn hardhat node",
     "build": "hardhat compile",
     "deploy": "NODE_ENV=development yarn hardhat run ./scripts/deploy.ts --network localhost",
-    "reset": "NODE_ENV=development yarn hardhat run ./scripts/reset.ts --network localhost",
     "seed": "NODE_ENV=development yarn hardhat run ./scripts/seed.ts --network localhost",
+    "reset": "NODE_ENV=development yarn hardhat run ./scripts/reset.ts",
     "lint": "eslint \"{test,utils,helpers}/**/*.ts\" --fix",
     "test": "FORCECOLOR=1 yarn hardhat test"
   },

@@ -13,7 +13,9 @@ async function main() {
     env.NEXT_PUBLIC_CONTRACT_ADDRESS,
     account
   );
-  await faucet.connect(account).resetAll();
+  const tx = await faucet.connect(account).resetAll();
+  console.log('reset initiated, waiting for transaction to complete ...');
+  await tx.wait();
 }
 
 main().catch((error) => {
