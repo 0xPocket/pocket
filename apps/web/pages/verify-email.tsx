@@ -7,7 +7,11 @@ import { trpc } from '../utils/trpc';
 const VerifyChild: FC = () => {
   const router = useRouter();
 
-  const mutation = trpc.useMutation(['email.verifyEmail']);
+  const mutation = trpc.useMutation(['email.verifyEmail'], {
+    onSuccess: () => {
+      setTimeout(() => router.push('/'), 3000);
+    },
+  });
 
   useEffect(() => {
     if (
@@ -25,10 +29,12 @@ const VerifyChild: FC = () => {
 
   if (mutation.status === 'success') {
     return (
-      <MainWrapper noHeader>
-        <div className="flex h-screen flex-col items-center justify-center gap-2 text-3xl font-bold">
+      <MainWrapper>
+        <div className="flex flex-col items-center justify-center gap-2 text-3xl font-bold">
           Your email is now verified !
-          <p className="text-sm font-thin">You can safely close this window.</p>
+          <p className="text-sm font-thin">
+            You will be redirect in few seconds...
+          </p>
         </div>
       </MainWrapper>
     );
@@ -36,16 +42,19 @@ const VerifyChild: FC = () => {
 
   if (mutation.isError) {
     return (
-      <MainWrapper noHeader>
-        <div className="flex h-screen flex-col items-center justify-center gap-8 font-bold text-danger">
-          {mutation.error.message}
+      <MainWrapper>
+        <div className="flex flex-col items-center justify-center gap-8 font-bold">
+          <p>{mutation.error.message}</p>
+          <p className="text-sm font-thin">
+            If the problem persists, contact us.
+          </p>
         </div>
       </MainWrapper>
     );
   }
 
   return (
-    <MainWrapper noHeader>
+    <MainWrapper>
       <div className="flex h-screen flex-col items-center justify-center gap-8">
         <Spinner />
       </div>
