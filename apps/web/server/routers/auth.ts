@@ -5,7 +5,7 @@ import {
 } from '../services/jwt';
 import { sendEmail } from '../services/sendMail';
 import { TRPCError } from '@trpc/server';
-import { unstable_getServerSession } from 'next-auth';
+import { unstable_getServerSession } from 'next-auth/next';
 import { createProtectedRouter } from '../createRouter';
 import { authOptions } from '../next-auth';
 import { prisma } from '../prisma';

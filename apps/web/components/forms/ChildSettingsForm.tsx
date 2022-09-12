@@ -1,11 +1,8 @@
 import { faAngleLeft, faWrench } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { UserChild } from '@lib/types/interfaces';
 import { FormErrorMessage } from '@lib/ui';
-import { formatUnits, parseUnits } from 'ethers/lib/utils';
+import { formatUnits } from 'ethers/lib/utils';
 import { PocketFaucet } from 'pocket-contract/typechain-types';
-import { toast } from 'react-toastify';
-import { useContractWrite, usePrepareContractWrite } from 'wagmi';
 
 import { z } from 'zod';
 import { useSmartContract } from '../../contexts/contract';
@@ -13,25 +10,25 @@ import { ContractMethodReturn } from '../../hooks/useContractRead';
 
 import { useZodForm } from '../../utils/useZodForm';
 
-type ChildSettingsFormProps = {
-  child: UserChild;
-  config: ContractMethodReturn<PocketFaucet, 'childToConfig'> | undefined;
-  returnFn: () => void;
-};
-
 const ChildSettingsSchema = z.object({
-  ceiling: z.string(),
+  ceiling: z.number({ invalid_type_error: 'Ceiling is required' }).min(1),
   periodicity: z.string(),
 });
 
 type FormValues = z.infer<typeof ChildSettingsSchema>;
 
+type ChildSettingsFormProps = {
+  config: ContractMethodReturn<PocketFaucet, 'childToConfig'>;
+  changeConfig: (amount: FormValues) => Promise<void>;
+  returnFn: () => void;
+};
+
 function ChildSettingsForm({
-  child,
   config,
+  changeConfig,
   returnFn,
 }: ChildSettingsFormProps) {
-  const { erc20, pocketContract } = useSmartContract();
+  const { erc20 } = useSmartContract();
   const {
     register,
     handleSubmit,
@@ -39,71 +36,14 @@ function ChildSettingsForm({
   } = useZodForm({
     schema: ChildSettingsSchema,
     defaultValues: {
-      periodicity: formatUnits(config?.periodicity!, 0).toString(),
-      ceiling: formatUnits(config?.[2]!, erc20.data?.decimals).toString(),
-    },
-  });
-  const { config: changeConfigConfig } = usePrepareContractWrite({
-    addressOrName: pocketContract.address,
-    contractInterface: pocketContract.interface,
-    functionName: 'changeConfig',
-    args: [0, 1, child.address],
-  });
-
-  const { writeAsync: changeConfig } = useContractWrite({
-    ...changeConfigConfig,
-
-    onError(e) {
-      console.log(e.message);
-      toast.error(`An error occured while changing your child configuration`);
-    },
-  });
-
-  const { config: addChildConfig } = usePrepareContractWrite({
-    addressOrName: pocketContract.address,
-    contractInterface: pocketContract.interface,
-    functionName: 'addChild',
-    args: [0, 1, child.address],
-  });
-
-  const { writeAsync: addChild } = useContractWrite({
-    ...addChildConfig,
-    onError: () => {
-      toast.error(`An error occured while changing your child configuration`);
+      periodicity: formatUnits(config.periodicity, 0).toString(),
+      ceiling: Number(formatUnits(config.ceiling, erc20.data?.decimals)),
     },
   });
 
   const onSubmit = async (data: FormValues) => {
-    let ret;
-    if (config?.lastClaim.isZero() && addChild)
-      ret = await addChild({
-        recklesslySetUnpreparedArgs: [
-          parseUnits(data.ceiling, erc20.data?.decimals),
-          data.periodicity,
-          child.address,
-        ],
-      });
-    else if (changeConfig)
-      ret = await changeConfig({
-        recklesslySetUnpreparedArgs: [
-          parseUnits(data.ceiling, erc20.data?.decimals),
-          data.periodicity,
-          child.address,
-        ],
-      });
-    else return;
-    const load = toast.info(
-      `The network is validating the changes. It may takes between 30 and 60 seconds, please wait`,
-      {
-        // autoClose: false,
-        isLoading: true,
-      },
-    );
-    await ret.wait();
-    toast.dismiss(load);
-    toast.success(`Configuration set successfully`);
-
-    returnFn();
+    console.log(data);
+    changeConfig(data);
   };
 
   return (
@@ -118,7 +58,6 @@ function ChildSettingsForm({
             type="radio"
             id="weekly"
             value="604800"
-            defaultChecked={true}
             {...register('periodicity')}
           />
           <label htmlFor="huey">Weekly</label>
@@ -138,8 +77,9 @@ function ChildSettingsForm({
         <label htmlFor="topup">Ceiling</label>
         <input
           className="border p-2 text-dark"
-          min="0"
-          {...register('ceiling')}
+          {...register('ceiling', {
+            valueAsNumber: true,
+          })}
           type="number"
         />
         {errors.ceiling && (

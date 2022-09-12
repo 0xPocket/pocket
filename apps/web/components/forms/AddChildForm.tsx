@@ -6,13 +6,9 @@ import { trpc } from '../../utils/trpc';
 import InputText from '../common/InputText';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { ParentSchema } from '../../server/schemas';
 
-const AddChildSchema = z.object({
-  name: z.string(),
-  email: z.string().email(),
-});
-
-type FormValues = z.infer<typeof AddChildSchema>;
+type FormValues = z.infer<typeof ParentSchema['createChild']>;
 
 function AddChildForm() {
   const router = useRouter();
@@ -23,7 +19,7 @@ function AddChildForm() {
     handleSubmit,
     formState: { errors },
   } = useZodForm({
-    schema: AddChildSchema,
+    schema: ParentSchema['createChild'],
   });
 
   const addChild = trpc.useMutation(['parent.createChild'], {

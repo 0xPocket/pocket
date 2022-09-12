@@ -9,6 +9,7 @@ import {
   RefetchQueryFilters,
 } from 'react-query/types/core/types';
 import { useAddFundsForm } from '../../../hooks/useAddFundsForm';
+import { useChildSettingsForm } from '../../../hooks/useChildSettingsForm';
 
 import type { ContractMethodReturn } from '../../../hooks/useContractRead';
 import AddFundsForm from '../../forms/AddFundsForm';
@@ -40,6 +41,19 @@ function RightTab({
       setSelectedIndex(0);
     },
   );
+
+  const { changeConfig } = useChildSettingsForm(
+    child.address,
+    !!config?.lastClaim.isZero(),
+    () => {
+      refetchConfig();
+      setSelectedIndex(0);
+    },
+  );
+
+  if (!config) {
+    return null;
+  }
 
   return (
     <Tab.Group
@@ -77,7 +91,7 @@ function RightTab({
         <Tab.Panel as={'div'} className="h-full">
           <div className="flex h-full flex-col items-end justify-between">
             <ChildSettingsForm
-              child={child}
+              changeConfig={changeConfig}
               config={config}
               returnFn={() => {
                 setSelectedIndex(0);
