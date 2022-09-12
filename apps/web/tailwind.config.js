@@ -29,7 +29,7 @@ module.exports = {
         dark: '#f8ffff',
         darkest: '#b5d8f7',
       },
-      danger: '#FF0000',
+      danger: 'rgba(197,48,48)',
 			success: {
 				DEFAULT :'#3deb57',
 				dark:'#00be26'

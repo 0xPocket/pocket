@@ -1,9 +1,9 @@
 import MainWrapper from '../components/wrappers/MainWrapper';
-import OnBoardingForm from '../components/onboarding/OnBoardingForm';
 import { Spinner } from '../components/common/Spinner';
 import { trpc } from '../utils/trpc';
 import { useRouter } from 'next/router';
 import EmailVerification from '../components/auth/EmailVerification';
+import OnBoardingForm from '../components/onboarding/parent/OnBoardingForm';
 
 function OnBoarding() {
   const router = useRouter();
@@ -23,11 +23,11 @@ function OnBoarding() {
   ) {
     return (
       <MainWrapper>
-        <section className="relative grid min-h-[85vh] grid-cols-1">
-          <div className="mx-auto flex w-72 flex-col items-center justify-center gap-8">
+        <div className="mx-auto flex max-w-md flex-col items-center justify-center gap-8 text-center">
+          <div className="container-classic rounded-lg p-8">
             <Spinner />
           </div>
-        </section>
+        </div>
       </MainWrapper>
     );
   }
@@ -35,20 +35,23 @@ function OnBoarding() {
   if (!data?.user.emailVerified && data?.user.name) {
     return (
       <MainWrapper>
-        <section className="relative grid min-h-[85vh] grid-cols-1">
-          <EmailVerification />
-        </section>
+        <div className="mx-auto flex max-w-md flex-col items-center justify-center gap-8 text-center">
+          <div className="container-classic rounded-lg p-8">
+            <EmailVerification />
+          </div>
+        </div>
       </MainWrapper>
     );
   }
 
   return (
     <MainWrapper>
-      <section className="relative grid min-h-[85vh] grid-cols-1">
-        <div className="mx-auto flex w-72 flex-col items-center justify-center gap-8">
+      <div className="mx-auto flex  flex-col items-center justify-center gap-8 text-center">
+        <h1 className="mb-4">We need some more infos !</h1>
+        <div className="container-classic rounded-lg p-8">
           <OnBoardingForm />
         </div>
-      </section>
+      </div>
     </MainWrapper>
   );
 }
