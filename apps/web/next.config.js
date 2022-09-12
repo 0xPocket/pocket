@@ -21,6 +21,10 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+	i18n :{
+		locales: ['en-US', 'fr'],
+    defaultLocale: 'en-US',
+	},
   reactStrictMode: true,
   experimental: {
     images: { allowFutureImage: true },

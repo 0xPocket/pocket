@@ -8,9 +8,13 @@ import {
   faRightFromBracket,
 } from '@fortawesome/free-solid-svg-icons';
 import { useMagic } from '../../contexts/auth';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const DropdownMenu: FC = ({}) => {
   const { signOut } = useMagic();
+  const { locale, asPath } = useRouter();
+
   return (
     <Menu as="div" className="relative z-50 inline-block text-left">
       <Menu.Button className="flex h-7 w-7 items-center justify-center rounded-full">
@@ -33,12 +37,6 @@ const DropdownMenu: FC = ({}) => {
             <ThemeTogglerApp />
           </Menu.Item>
           <Menu.Item>
-            <button onClick={() => signOut()} className="third-btn">
-              <FontAwesomeIcon icon={faRightFromBracket} className="mr-2" />
-              Logout
-            </button>
-          </Menu.Item>
-          {/* <Menu.Item>
             {locale === 'fr' ? (
               <Link href={asPath} locale="en-US">
                 <a>🇺🇸</a>
@@ -48,7 +46,13 @@ const DropdownMenu: FC = ({}) => {
                 <a>🇫🇷</a>
               </Link>
             )}
-          </Menu.Item> */}
+          </Menu.Item>
+          <Menu.Item>
+            <button onClick={() => signOut()} className="third-btn">
+              <FontAwesomeIcon icon={faRightFromBracket} className="mr-2" />
+              Logout
+            </button>
+          </Menu.Item>
         </Menu.Items>
       </Transition>
     </Menu>
