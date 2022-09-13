@@ -4,7 +4,6 @@ import {
   saveVerificationToken,
   useVerificationToken,
 } from '../services/jwt';
-import { sendEmail } from '../services/sendMail';
 import { TRPCError } from '@trpc/server';
 import { unstable_getServerSession } from 'next-auth';
 import { createRouter } from '../createRouter';
@@ -15,6 +14,7 @@ import { SiweMessage } from 'siwe';
 import { getCsrfToken } from 'next-auth/react';
 import { env } from 'config/env/server';
 import { addAddressToWebhook } from '../services/alchemy';
+import { sendEmailWrapper } from '@pocket/emails';
 
 export const emailRouter = createRouter()
   .mutation('verifyChild', {
@@ -213,12 +213,12 @@ export const emailRouter = createRouter()
 
       const params = new URLSearchParams({ token, email: user.email });
 
-      await sendEmail({
+      await sendEmailWrapper({
         to: user.email,
         template: 'email_verification',
-        context: {
+        props: {
           name: user.name,
-          url: `${env.APP_URL}/verify-email?${params}`,
+          link: `${env.APP_URL}/verify-email?${params}`,
         },
       }).catch(() => {
         throw new TRPCError({
