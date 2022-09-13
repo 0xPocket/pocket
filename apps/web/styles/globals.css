@@ -81,7 +81,7 @@
   }
 
 	.input-number {
-		@apply without-ring max-w-[200px] appearance-none bg-transparent mr-2 text-right text-4xl outline-none
+		@apply without-ring w-full appearance-none bg-transparent mr-2 text-right text-4xl outline-none
 	}
 
 	.input-radio {

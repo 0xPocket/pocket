@@ -71,46 +71,49 @@ function ChildSettingsForm({
         onSubmit={handleSubmit(onSubmit)}
         className="flex h-full flex-col items-end justify-between space-y-4"
       >
-        <RadioGroup
-          value={selected}
-          onChange={setSelected}
-          className="flex items-center space-x-8"
-        >
-          <label>Periodicity</label>
-
-          {periodicity_options.map((option) => (
-            <RadioGroup.Option
-              key={option.name}
-              value={option}
-              className={({ checked }) =>
-                checked ? 'input-radio-checked' : 'input-radio-unchecked'
-              }
-            >
-              {option.name}
-            </RadioGroup.Option>
-          ))}
-        </RadioGroup>
-
-        <div className="flex items-center space-x-8">
-          <label htmlFor="topup">Ceiling</label>
-          <div className="relative flex  items-center text-4xl">
-            <input
-              className="input-number"
-              placeholder="0"
-              type="number"
-              min="0"
-              {...register('ceiling', {
-                valueAsNumber: true,
-              })}
-            />
-            <span>$</span>
-            {/* {errors.ceiling && (
-              <span className="absolute bottom-0 right-0 translate-y-full rounded border border-danger bg-danger/20 p-1 px-2 text-xs text-white">
-                {errors.ceiling.message}
-              </span>
-            )} */}
-          </div>
-        </div>
+        <table className="flex flex-col space-y-4">
+          <tr className="flex items-center space-x-8">
+            <td>
+              <label>Periodicity</label>
+            </td>
+            <td className="flex flex-grow justify-end">
+              <RadioGroup
+                value={selected}
+                onChange={setSelected}
+                className="flex items-center space-x-8"
+              >
+                {periodicity_options.map((option) => (
+                  <RadioGroup.Option
+                    key={option.name}
+                    value={option}
+                    className={({ checked }) =>
+                      checked ? 'input-radio-checked' : 'input-radio-unchecked'
+                    }
+                  >
+                    {option.name}
+                  </RadioGroup.Option>
+                ))}
+              </RadioGroup>
+            </td>
+          </tr>
+          <tr className="flex items-center justify-between">
+            <td>
+              <label htmlFor="topup">Ceiling</label>
+            </td>
+            <td className="flex justify-end text-4xl">
+              <input
+                className="input-number"
+                placeholder="0"
+                type="number"
+                min="0"
+                {...register('ceiling', {
+                  valueAsNumber: true,
+                })}
+              />
+              <span>$</span>
+            </td>
+          </tr>
+        </table>
 
         {/* <button
           className="third-btn mt-4"
