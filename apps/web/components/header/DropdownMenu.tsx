@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { ThemeTogglerApp } from '@lib/ui';
+import { ThemeToggler } from '@lib/ui';
 import { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,8 +8,11 @@ import {
   faRightFromBracket,
 } from '@fortawesome/free-solid-svg-icons';
 import { useMagic } from '../../contexts/auth';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const DropdownMenu: FC = ({}) => {
+  const { locale, asPath } = useRouter();
   const { signOut } = useMagic();
   return (
     <Menu as="div" className="relative z-50 inline-block text-left">
@@ -29,26 +32,29 @@ const DropdownMenu: FC = ({}) => {
         leaveTo="transform opacity-0 scale-95"
       >
         <Menu.Items className="container-classic absolute right-0 mt-2 flex w-56 origin-top-right flex-col items-center rounded-md p-4">
-          <Menu.Item>
-            <ThemeTogglerApp />
-          </Menu.Item>
+          <div className="flex w-full items-center justify-evenly py-2">
+            <Menu.Item>
+              {locale === 'en-US' ? (
+                <Link href={asPath} locale="fr">
+                  <a className="text-2xl">🇫🇷</a>
+                </Link>
+              ) : (
+                <Link href={asPath} locale="en-US">
+                  <a className="text-2xl">🇺🇸</a>
+                </Link>
+              )}
+            </Menu.Item>
+            <div className="h-6  border-l"></div>
+            <Menu.Item>
+              <ThemeToggler />
+            </Menu.Item>
+          </div>
           <Menu.Item>
             <button onClick={() => signOut()} className="third-btn">
               <FontAwesomeIcon icon={faRightFromBracket} className="mr-2" />
               Logout
             </button>
           </Menu.Item>
-          {/* <Menu.Item>
-            {locale === 'fr' ? (
-              <Link href={asPath} locale="en-US">
-                <a>🇺🇸</a>
-              </Link>
-            ) : (
-              <Link href={asPath} locale="fr">
-                <a>🇫🇷</a>
-              </Link>
-            )}
-          </Menu.Item> */}
         </Menu.Items>
       </Transition>
     </Menu>
