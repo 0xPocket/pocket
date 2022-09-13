@@ -15,8 +15,8 @@ function Footer(props: FooterProps) {
 
   return (
     <footer {...props}>
-      <div className="mt-8 flex items-center justify-center gap-4 py-2 text-base opacity-70">
-        <p>&copy; 2022 Pocket.</p>
+      <div className="flex items-center justify-center gap-4 py-2 text-base">
+        <p>&copy; 2022 Pocket</p>
         <a onClick={() => setContactOpen(true)}>Contact</a>
         {loggedIn && (
           <a
