@@ -51,18 +51,16 @@ const ContactDialog: FC<ContactDialogProps> = ({ isOpen, setIsOpen }) => {
         onSubmit={handleSubmit((data) => contact.mutate(data))}
         className="flex min-w-[460px] flex-col gap-4 rounded-lg"
       >
-        <div className="flex gap-4 py-2">
-          <InputText
-            label="Name"
-            register={register('name')}
-            disabled={!!user?.name}
-          />
-          <InputText
-            label="Email"
-            register={register('email')}
-            disabled={!!user?.email}
-          />
-        </div>
+        {(!user?.name || !user?.email) && (
+          <div className="flex gap-4 py-2">
+            {!user?.name && (
+              <InputText label="Name" register={register('name')} />
+            )}
+            {!user?.email && (
+              <InputText label="Email" register={register('email')} />
+            )}
+          </div>
+        )}
         <InputText
           label="Subject"
           register={register('subject')}
