@@ -6,6 +6,7 @@ import NftCard from './NftCard';
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import FormattedMessage from '../../../common/FormattedMessage';
 
 type NftContentProps = {
   childAddress: string;
@@ -33,13 +34,16 @@ function NftContent({ childAddress, fill_nbr = 0 }: NftContentProps) {
       getNextPageParam: (lastPage) => lastPage.pageKey,
       keepPreviousData: true,
       staleTime: 60 * 1000,
-      onError: () => toast.error("Could not retrieve user's token"),
+      onError: () =>
+        toast.error(<FormattedMessage id="dashboard.common.nft.fail" />),
     },
   );
 
   return (
     <div className="space-y-8">
-      <h2>Nft Library</h2>
+      <h2>
+        <FormattedMessage id="dashboard.common.nft.title" />
+      </h2>
       <div className="grid grid-cols-12 gap-4">
         <>
           {content &&
@@ -69,7 +73,7 @@ function NftContent({ childAddress, fill_nbr = 0 }: NftContentProps) {
             }}
           >
             <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
-            Prev
+            <FormattedMessage id="dashboard.common.nft.prev" />
           </button>
         </div>
         <div className="">
@@ -83,7 +87,7 @@ function NftContent({ childAddress, fill_nbr = 0 }: NftContentProps) {
               if (!content?.pages[page + 1]) fetchNextPage();
             }}
           >
-            Next
+            <FormattedMessage id="dashboard.common.nft.next" />
             <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
           </button>
         </div>

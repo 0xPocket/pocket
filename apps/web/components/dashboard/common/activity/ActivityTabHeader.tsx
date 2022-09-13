@@ -1,8 +1,8 @@
 import { Tab } from '@headlessui/react';
 
 type ActivityTabHeadersProps = {
-  leftHeader: string;
-  rightHeader: string;
+  leftHeader: React.ReactElement;
+  rightHeader: React.ReactElement;
 };
 
 function ActivityTabHeaders({

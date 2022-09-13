@@ -5,6 +5,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import moment from 'moment';
+import FormattedMessage from '../../../common/FormattedMessage';
 
 type EventTableProps = {
   logs: Event[];
@@ -20,13 +21,21 @@ const columnHelper = createColumnHelper<Event>();
 
 const columns = [
   columnHelper.accessor('timestamp', {
-    header: () => <span>Date</span>,
+    header: () => (
+      <span>
+        <FormattedMessage id="dashboard.common.activity.events.date" />
+      </span>
+    ),
     cell: (info) => <span>{moment(info.getValue()).format('D/MM')}</span>,
     id: 'Date',
   }),
 
   columnHelper.accessor((row) => `${row.value} ${row.symbol}`, {
-    header: () => <span>Amount</span>,
+    header: () => (
+      <span>
+        <FormattedMessage id="dashboard.common.activity.events.amount" />
+      </span>
+    ),
     cell: (info) => <div className="text-right">{info.getValue()}</div>,
     id: 'Amount',
   }),
@@ -82,7 +91,7 @@ function EventsTable({ logs }: EventTableProps) {
         </div>
       ) : (
         <p className="my-8 w-full text-center text-xl">
-          {'No transactions to display.'}
+          <FormattedMessage id="dashboard.common.activity.events.empty" />
         </p>
       )}
     </>

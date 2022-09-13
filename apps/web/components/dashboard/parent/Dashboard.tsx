@@ -3,6 +3,7 @@ import NftContent from '../common/nft/NftContent';
 import { UserChild } from '@lib/types/interfaces';
 import ChildCard from '../../card/parent/ChildCard';
 import ActivityContent from '../common/activity/ActivityContent';
+import FormattedMessage from '../../common/FormattedMessage';
 
 type AccountDashboardProps = { child: UserChild };
 
@@ -19,7 +20,9 @@ function AccountDashboard({ child }: AccountDashboardProps) {
       <TokenContent childAddress={child.address} />
     </div>
   ) : (
-    <>Your child has not validated his account ! He should check his email...</>
+    <>
+      <FormattedMessage id="dashboard.parent.childAccountStatus" />
+    </>
   );
 }
 
