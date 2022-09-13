@@ -4,11 +4,9 @@ import { RadioGroup } from '@headlessui/react';
 import { formatUnits } from 'ethers/lib/utils';
 import { PocketFaucet } from 'pocket-contract/typechain-types';
 import { useEffect, useState } from 'react';
-
 import { z } from 'zod';
 import { useSmartContract } from '../../contexts/contract';
 import { ContractMethodReturn } from '../../hooks/useContractRead';
-
 import { useZodForm } from '../../utils/useZodForm';
 
 const ChildSettingsSchema = z.object({
@@ -71,48 +69,52 @@ function ChildSettingsForm({
         onSubmit={handleSubmit(onSubmit)}
         className="flex h-full flex-col items-end justify-between space-y-4"
       >
-        <table className="flex flex-col space-y-4">
-          <tr className="flex items-center space-x-8">
-            <td>
-              <label>Periodicity</label>
-            </td>
-            <td className="flex flex-grow justify-end">
-              <RadioGroup
-                value={selected}
-                onChange={setSelected}
-                className="flex items-center space-x-8"
-              >
-                {periodicity_options.map((option) => (
-                  <RadioGroup.Option
-                    key={option.name}
-                    value={option}
-                    className={({ checked }) =>
-                      checked ? 'input-radio-checked' : 'input-radio-unchecked'
-                    }
-                  >
-                    {option.name}
-                  </RadioGroup.Option>
-                ))}
-              </RadioGroup>
-            </td>
-          </tr>
-          <tr className="flex items-center justify-between">
-            <td>
-              <label htmlFor="topup">Ceiling</label>
-            </td>
-            <td className="flex justify-end text-4xl">
-              <input
-                className="input-number"
-                placeholder="0"
-                type="number"
-                min="0"
-                {...register('ceiling', {
-                  valueAsNumber: true,
-                })}
-              />
-              <span>$</span>
-            </td>
-          </tr>
+        <table>
+          <tbody className="flex flex-col space-y-4">
+            <tr className="flex items-center space-x-8">
+              <td>
+                <label>Periodicity</label>
+              </td>
+              <td className="flex flex-grow justify-end">
+                <RadioGroup
+                  value={selected}
+                  onChange={setSelected}
+                  className="flex items-center space-x-8"
+                >
+                  {periodicity_options.map((option) => (
+                    <RadioGroup.Option
+                      key={option.name}
+                      value={option}
+                      className={({ checked }) =>
+                        checked
+                          ? 'input-radio-checked'
+                          : 'input-radio-unchecked'
+                      }
+                    >
+                      {option.name}
+                    </RadioGroup.Option>
+                  ))}
+                </RadioGroup>
+              </td>
+            </tr>
+            <tr className="flex items-center justify-between">
+              <td>
+                <label htmlFor="topup">Ceiling</label>
+              </td>
+              <td className="flex justify-end text-4xl">
+                <input
+                  className="input-number"
+                  placeholder="0"
+                  type="number"
+                  min="0"
+                  {...register('ceiling', {
+                    valueAsNumber: true,
+                  })}
+                />
+                <span>$</span>
+              </td>
+            </tr>
+          </tbody>
         </table>
 
         {/* <button
