@@ -1,3 +1,10 @@
 {
-	"dashboard.title": "Mes enfants"
+  "dashboard.title": "Mes enfants",
+  "dashboard.addChild": "Ajouter un ado",
+
+  "utils.loading": "Chargement...",
+  "utils.signIn": "Se connecter",
+
+  "auth.email.connect": "Se connecter via email",
+  "auth.email.verify": "Vérifiez votre address email avec le lien que nous vous avons envoyé."
 }

@@ -24,12 +24,16 @@ function ChildrenMozaic() {
           className="space-x-2"
         >
           <FontAwesomeIcon icon={faPlus} />
-          <p>Add a child</p>
+          <p>
+            <FormattedMessage id="dashboard.addChild" />
+          </p>
         </Button>
       </div>
       <div className="grid grid-cols-2 gap-4">
         {isLoading ? (
-          <div>Loading...</div>
+          <div>
+            <FormattedMessage id="utils.loading" />
+          </div>
         ) : (
           data?.map((child) => (
             <ChildCard key={child.id} child={child} hasLink />

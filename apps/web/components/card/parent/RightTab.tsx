@@ -12,6 +12,7 @@ import { useAddFundsForm } from '../../../hooks/useAddFundsForm';
 import { useChildSettingsForm } from '../../../hooks/useChildSettingsForm';
 
 import type { ContractMethodReturn } from '../../../hooks/useContractRead';
+import FormattedMessage from '../../common/FormattedMessage';
 import AddFundsForm from '../../forms/AddFundsForm';
 import ChildSettingsForm from '../../forms/ChildSettingsForm';
 import Balance from './Balance';
@@ -63,9 +64,17 @@ function RightTab({
       className="h-full"
     >
       <Tab.List className="hidden">
-        <Tab>Balance</Tab>
-        <Tab>Add Funds</Tab>
-        <Tab>Settings</Tab>
+        <Tab>
+          <FormattedMessage id="card.parent.piggyBank.balance" />
+        </Tab>
+
+        <Tab>
+          <FormattedMessage id="card.parent.piggyBank.addFunds" />
+        </Tab>
+
+        <Tab>
+          <FormattedMessage id="card.parent.piggyBank.settings" />
+        </Tab>
       </Tab.List>
       <Tab.Panels as="div" className="h-full">
         <Tab.Panel as={'div'} className="h-full">

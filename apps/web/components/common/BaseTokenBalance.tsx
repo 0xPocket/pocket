@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAccount, useBalance } from 'wagmi';
 import { useSmartContract } from '../../contexts/contract';
+import FormattedMessage from './FormattedMessage';
 
 const BaseTokenBalance: React.FC = () => {
   const { address } = useAccount();
@@ -22,7 +23,9 @@ const BaseTokenBalance: React.FC = () => {
 
   return (
     <div>
-      <p>Balance</p>
+      <p>
+        <FormattedMessage id="common.baseToken.balance" />
+      </p>
       <span className="text-4xl"> {data.formatted} $</span>
       <p className="mt-2 text-xs opacity-50">
         {maticBalance?.formatted.slice(0, 6)} {maticBalance?.symbol}

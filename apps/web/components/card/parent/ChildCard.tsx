@@ -58,14 +58,20 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
             <AccountStatus child={child} />
           </div>
         </div>
-        <button onClick={() => write()}>WITHDRAW FUNDS FROM CHILD</button>
+        <button onClick={() => write()}>
+          <FormattedMessage id="auth.wallet.signMessage" />
+          WITHDRAW FUNDS FROM CHILD
+        </button>
         {child?.child?.status !== 'ACTIVE' ? (
           <p>
+            <FormattedMessage id="auth.wallet.signMessage" />
+
             {'We sent an email to validate your child account. '}
             <button
               className="third-btn"
               onClick={() => resendEmail({ userId: child.id })}
             >
+              <FormattedMessage id="auth.wallet.signMessage" />
               Send a new one.
             </button>
           </p>
@@ -79,6 +85,7 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
                 icon={faArrowUpRightFromSquare}
                 className="mr-2"
               />
+              <FormattedMessage id="auth.wallet.signMessage" />
               See on polygonscan
             </a>
           </Link>

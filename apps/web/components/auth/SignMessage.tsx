@@ -2,6 +2,7 @@ import { getCsrfToken } from 'next-auth/react';
 import React from 'react';
 import { SiweMessage } from 'siwe';
 import { useAccount, useNetwork, useSignMessage } from 'wagmi';
+import FormattedMessage from '../common/FormattedMessage';
 import { Spinner } from '../common/Spinner';
 
 type SignMessageProps = {
@@ -44,7 +45,11 @@ const SignMessage: React.FC<SignMessageProps> = ({
       ) : (
         <>
           <button className="action-btn" onClick={() => siweSignMessage()}>
-            {register ? 'Link wallet' : 'Sign Message'}
+            {register ? (
+              <FormattedMessage id="auth.wallet.connect" />
+            ) : (
+              <FormattedMessage id="auth.wallet.signMessage" />
+            )}
           </button>
         </>
       )}

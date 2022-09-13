@@ -1,3 +1,45 @@
 {
-	"dashboard.title": "My children"
+  "dashboard.title": "My children",
+  "dashboard.addChild": "Add a child",
+
+  "utils.loading": "Loading...",
+  "utils.signIn": "Sign in",
+
+  "auth.email.connect": "Connect with your email",
+  "auth.email.verify": "Please verify your email with the link we sent you.",
+  "auth.email.resent": "New email sent !",
+  "auth.email.resend": "Didn't received any email? Click here to resend a new one.",
+  "auth.wallet.connect": "Link wallet",
+  "auth.wallet.signMessage": "Sign message",
+
+  "card.child.title": "My account",
+
+  "card.child.piggyBank.title": "In my PiggyBank",
+
+  "card.child.piggyBank.status.nothing": "Nothing to claim",
+  "card.child.piggyBank.status.next": "Next claim in",
+  "card.child.piggyBank.claim": "claim",
+
+  "card.parent.status": "A set-up email has been sent to",
+  "card.parent.piggyBank.claimable": "Claimable",
+  "card.parent.piggyBank.settings": "Settings",
+  "card.parent.piggyBank.addFunds": "Add funds",
+  "card.parent.piggyBank.balance": "Balance",
+
+  "common.baseToken.balance": "Balance",
+
+  "dashboard.child.claim.fail": "Claim failed.",
+  "dashboard.child.claim.pending": "`Claim pending, please hang on !`",
+  "dashbaord.child.claim.success": "Successfull claim !",
+
+  "dashboard.child.claimMatic.pending": "Claim matic pending, please hang on !",
+  "dashboard.child.claimMatic.success": "Transaction succeeded !",
+  "dashboard.child.claimMatic.title": "You can claim your Matic !",
+  "dashboard.child.claimMatic.message": "To start your journey into web3, we grant you some Matic to pay fees on your few first transactions.",
+  "dashboard.child.claimMatic.claim": "Claim",
+
+  "": "",
+  "": "",
+  "": "",
+  "": ""
 }

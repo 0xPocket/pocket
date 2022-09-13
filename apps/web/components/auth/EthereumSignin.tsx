@@ -35,6 +35,7 @@ const EthereumSignin: FC<EthereumSigninProps> = ({ type }) => {
       const message = new SiweMessage({
         domain: window.location.host,
         address,
+        // HELP
         statement: 'Sign this message to access Pocket.',
         uri: window.location.origin,
         version: '1',

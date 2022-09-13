@@ -7,6 +7,7 @@ import { BigNumber } from 'ethers';
 import { formatUnits } from 'ethers/lib/utils';
 import { Dispatch, SetStateAction } from 'react';
 import { useSmartContract } from '../../../contexts/contract';
+import FormattedMessage from '../../common/FormattedMessage';
 
 type BalanceProps = {
   value: BigNumber | undefined;
@@ -20,7 +21,9 @@ function Balance({ value, setSelectedIndex, hideActions }: BalanceProps) {
   return (
     <>
       <div className="flex flex-col items-end">
-        <p>Claimable</p>
+        <p>
+          <FormattedMessage id="card.parent.piggyBank.claimable" />
+        </p>
         <span className="text-4xl">
           {value ? formatUnits(value, erc20.data?.decimals).toString() : '0'} $
         </span>
@@ -29,18 +32,18 @@ function Balance({ value, setSelectedIndex, hideActions }: BalanceProps) {
         <div className="flex space-x-4">
           <button onClick={() => setSelectedIndex(2)} className="third-btn">
             <FontAwesomeIcon icon={faGear} className="mr-2" />
-            Settings
+            <FormattedMessage id="card.parent.piggyBank.settings" />
           </button>
           <button onClick={() => setSelectedIndex(1)} className="success-btn">
             <FontAwesomeIcon icon={faCircleDollarToSlot} className="mr-2" />
-            Add funds
+            <FormattedMessage id="card.parent.piggyBank.addFunds" />
           </button>
         </div>
       )}
       {hideActions && (
         <button onClick={() => setSelectedIndex(1)} className="success-btn">
           <FontAwesomeIcon icon={faCircleDollarToSlot} className="mr-2" />
-          Claim
+          <FormattedMessage id="card.child.piggyBank.claim" />
         </button>
       )}
     </>

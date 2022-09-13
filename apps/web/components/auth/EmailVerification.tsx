@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { trpc } from '../../utils/trpc';
+import FormattedMessage from '../common/FormattedMessage';
 import { Spinner } from '../common/Spinner';
 
 const EmailVerification: FC = () => {
@@ -8,7 +9,7 @@ const EmailVerification: FC = () => {
   return (
     <div className="mx-auto flex flex-col items-center justify-center gap-4">
       <p className="text-xl font-bold">
-        Please verify your email with the link we sent you.
+        <FormattedMessage id="auth.email.verify" />
       </p>
       {resendEmail.status === 'idle' && (
         <a
@@ -18,12 +19,14 @@ const EmailVerification: FC = () => {
             resendEmail.mutateAsync();
           }}
         >
-          {"Didn't received any email? Click here to resend a new one."}
+          <FormattedMessage id="auth.email.resend" />
         </a>
       )}
       {resendEmail.status === 'loading' && <Spinner />}
       {resendEmail.status === 'success' && (
-        <p className="text-success">New email sent !</p>
+        <p className="text-success">
+          <FormattedMessage id="auth.email.resent" />
+        </p>
       )}
     </div>
   );
