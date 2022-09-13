@@ -43,7 +43,7 @@ function MainTabPanel({}: MainTabPanelProps) {
         <div>
           {isLoading ? (
             <h2>
-              <FormattedMessage id="common.loading" />
+              <FormattedMessage id="loading" />
             </h2>
           ) : (
             <div className="flex items-end gap-2">

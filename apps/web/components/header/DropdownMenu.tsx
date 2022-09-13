@@ -53,7 +53,7 @@ const DropdownMenu: FC = ({}) => {
           <Menu.Item>
             <button onClick={() => signOut()} className="third-btn">
               <FontAwesomeIcon icon={faRightFromBracket} className="mr-2" />
-              <FormattedMessage id="common.signout" />
+              <FormattedMessage id="signout" />
             </button>
           </Menu.Item>
         </Menu.Items>

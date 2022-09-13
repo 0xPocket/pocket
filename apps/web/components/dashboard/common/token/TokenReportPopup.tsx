@@ -82,7 +82,7 @@ const TokenReportPopup: FC<TokenReportPopupProps> = ({ items }) => {
               setPopupOpen(false);
             }}
           >
-            <FormattedMessage id="dashboard.common.token.report" />
+            <FormattedMessage id="report" />
           </button>
         </div>
       </DialogPopupWrapper>

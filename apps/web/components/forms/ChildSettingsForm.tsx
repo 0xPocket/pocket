@@ -54,7 +54,7 @@ function ChildSettingsForm({
     >
       <div className="flex items-center space-x-8">
         <label>
-          <FormattedMessage id="child-settings-form.periodicity" />
+          <FormattedMessage id="periodicity" />
         </label>
         <div className="flex flex-col space-x-2">
           <input
@@ -64,7 +64,7 @@ function ChildSettingsForm({
             {...register('periodicity')}
           />
           <label htmlFor="huey">
-            <FormattedMessage id="child-settings-form.weekly" />
+            <FormattedMessage id="weekly" />
           </label>
         </div>
 
@@ -76,13 +76,13 @@ function ChildSettingsForm({
             {...register('periodicity')}
           />
           <label htmlFor="dewey">
-            <FormattedMessage id="child-settings-form.monthly" />
+            <FormattedMessage id="monthly" />
           </label>
         </div>
       </div>
       <div className="flex items-center space-x-8">
         <label htmlFor="topup">
-          <FormattedMessage id="child-settings-form.ceiling" />
+          <FormattedMessage id="ceiling" />
         </label>
         <input
           className="border p-2 text-dark"
@@ -99,11 +99,11 @@ function ChildSettingsForm({
       <div className="flex space-x-4">
         <button type="button" className="third-btn" onClick={() => returnFn()}>
           <FontAwesomeIcon icon={faAngleLeft} className="mr-2" />
-          <FormattedMessage id="common.return" />
+          <FormattedMessage id="return" />
         </button>
         <button type="submit" className="success-btn">
           <FontAwesomeIcon icon={faWrench} className="mr-2" />
-          <FormattedMessage id="common.apply" />
+          <FormattedMessage id="apply" />
         </button>
       </div>
     </form>

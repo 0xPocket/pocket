@@ -32,7 +32,8 @@ function ChildrenMozaic() {
       <div className="grid grid-cols-2 gap-4">
         {isLoading ? (
           <div>
-            <FormattedMessage id="common.loading" />
+            <FormattedMessage id="loading" />
+            ...
           </div>
         ) : (
           data?.map((child) => (

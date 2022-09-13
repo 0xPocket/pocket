@@ -1,20 +1,61 @@
 {
   "dashboard.title": "Mes enfants",
-  "dashboard.addChild": "Ajouter un ado",
+  "dashboard.addChild": "Ajouter un enfant",
 
-  "common.loading": "Chargement...",
-  "common.signIn": "Se connecter",
-  "common.disconnect": "Deconnexion",
-  "common.signout": "Deconnexion",
-  "common.submit": "Envoyer",
-  "common.name": "Nom",
-  "common.email": "Email",
-  "common.return": "retour",
-  "common.send": "Envoyer",
-  "common.apply": "Appliquer",
+  "loading": "Chargement",
+  "signIn": "Se connecter",
+  "disconnect": "Se déconnecter",
+  "signout": "Se déconnecter",
+  "submit": "Soumettre",
+  "name": "Nom",
+  "email": "Email",
+  "return": "Retour",
+  "send": "Envoyer",
+  "apply": "Appliquer",
+  "balance": "Balance",
+  "periodicity": "Fréquence",
+  "ceiling": "Plafond",
+  "weekly": "Hebdomadaire",
+  "monthly": "Mensuelle",
+  "value": "Valeur",
+  "report": "Signaler",
+  "claim": "Retirer",
+  "next": "Suivant",
+  "prev": "Précédent",
+  "date": "Date",
+  "activity": "Activité",
+  "amount": "Montant",
+  "category": "Catégorie",
+  "settings": "Paramétres",
+  "claimable": "Disponible",
+  "or": "ou",
+  "transactions": "Transactions",
 
-  "auth.email.connect": "Se connecter via email",
-  "auth.email.verify": "Vérifiez votre address email avec le lien que nous vous avons envoyé.",
+  "auth.email.connect": "Se connecter avec son email",
+  "auth.email.verify": "Vérifiez votre email avec le lien envoyé s'il vous plait.",
+  "auth.email.resent": "Nouvel email envoyé !",
+  "auth.email.resend": "Vous n'avez rien reçu? Cliquez ici pour en renvoyer un.",
+  "auth.wallet.connect": "Lié le wallet",
+  "auth.wallet.signMessage": "Signer le message",
+
+  "card.child.title": "Mon compte",
+
+  "card.child.piggyBank.title": "Dans ma tirelire",
+
+  "card.child.piggyBank.status.nothing": "Rien à retirer",
+  "card.child.piggyBank.status.next": "Prochain retrait dans",
+
+  "card.parent.status": "Un email de configuration a été envoyé à",
+  "card.parent.piggyBank.addFunds": "Ajouter des fonds",
+
+  "dashboard.child.claim.fail": "Le retrait a échoué.",
+  "dashboard.child.claim.pending": "Retrait en cours, encore quelques secondes et ce sera bon",
+  "dashbaord.child.claim.success": "Le retrait a fonctionné",
+
+  "dashboard.child.claimMatic.pending": "Le retrait de matic est en cours, encore quelques secondes et ce sera bon!",
+  "dashboard.child.claimMatic.success": "Transaction réussie",
+  "dashboard.child.claimMatic.title": "Tu peux récupérer tes Matics !",
+  "dashboard.child.claimMatic.message": "Pour commencer ton voyage dans le web3, nous t'offrons quelques Matic pour payer les frais de tes premiéres transactions.",
 
   "verify-email.email-verified": "Votre email est verifié !",
   "verify-email.redirect": "Vous allez être redirigé dans quelques instants...",
@@ -28,8 +69,8 @@
   "route.dashboard": "tableau de bord",
 
   "add-account.how-to": "Comment créer un nouveau compte ?",
-  "add-account.step1": "Completez ce formulaire avec les informations de votre enfant",
-  "add-account.step2": "Un email va être envoyé à votre enfant, suivez les instructions pour finaliser l'inscription",
+  "add-account.step1": "Complétez ce formulaire avec les informations de votre enfant",
+  "add-account.step2": "Un email va être envoyé à votre enfant, il faut qu'il suive les instructions pour finaliser son inscription",
   "add-account.step3": "Le compte est prêt à être utilisé !",
 
   "connect.parent": "Je suis un parent",
@@ -38,9 +79,50 @@
   "account.not-found": "L'utilisateur n'existe pas",
 
   "wallet.my-wallet": "Mon wallet",
-  "wallet.funds": "Fonds disponible",
-  "wallet.top-up": "Recharger",
+  "wallet.funds": "Fonds disponibles",
+  "wallet.top-up": "Ajouter des fonds",
   "wallet.clipboard": "Adresse copiée dans le presse-papier !",
 
-  "header.open-options": "Ouvrir les options"
+  "header.open-options": "Ouvrir les options",
+
+  "child-form.info": "Informations de votre enfant",
+  "child-form.created": "Le compte a été crée !",
+
+  "funds-form.amount-required": "Le montant est requis",
+  "funds-form.minimum": "Montant minimum de 1 requis",
+  "funds-form.insufficient": "Fonds insuffisants",
+  "funds-form.add-funds-to": "Ajouter des fonds à {name}",
+
+  "dashboard.common.activity.header.topups": "Vos topups",
+  "dashboard.common.activity.header.claims": "Vos retraits",
+  "dashboard.common.activity.events.empty": "Pas de transactions à afficher.",
+
+  "dashboard.common.activity.tx.empty": "Pas de transactions à afficher.",
+
+  "dashboard.common.nft.seeMore": "Voir plus",
+  "dashboard.common.nft.title": "Librairie de NFTs",
+  "dashboard.common.nft.fail": "Une erreur s'est produite en récupérant les NFT",
+
+  "dashboard.common.nft.opensea": "Voir sur OpenSea",
+
+  "dashboard.common.token.fail": "Une erreur s'est produite en récupérant les tokens.",
+  "dashboard.common.token.balance": "Ses tokens",
+  "dashboard.common.token.empty": "Pas de token à afficher.",
+
+  "dashboard.common.token.report.sent": "Signalement envoyé !",
+  "dashboard.common.token.report.send": "Signaler un token suspicieux",
+  "dashboard.common.token.report.select": "Sélectionner un token",
+
+  "dashboard.common.token.table.header.tokenName": "Nom du token",
+
+  "dashboard.parent.childAccountStatus": "Votre enfant n'a pas verifié son compte ! Il devrait regarder ses emails...",
+
+  "dashboard.parent.card.email-sent": "Nous avons envoyé un email a votre enfant.",
+  "dashboard.parent.card.send-new": "Renvoyer un email.",
+  "dashboard.parent.card.see-on-polygon": "Voir sur polygonscan",
+  "dashboard.parent.card.email-error": "Une erreur s'est produite, si le problème persiste, contactez nous.",
+  "dashboard.parent.card.email-sent-to": "Email envoyé à {email}",
+  "dashboard.parent.card.go-to": "Aller sur le profil de {name}",
+
+  "footer.rightReserved": "2022 Pocket. Tous droits réservés."
 }

@@ -9,6 +9,7 @@ import { useIsMounted } from '../../hooks/useIsMounted';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { trpc } from '../../utils/trpc';
+import FormattedMessage from '../common/FormattedMessage';
 
 type EthereumSigninProps = {
   type: 'Parent' | 'Child';
@@ -75,7 +76,9 @@ const EthereumSignin: FC<EthereumSigninProps> = ({ type }) => {
 
   return (
     <>
-      <p>Connect with your favorite wallet</p>
+      <p>
+        <FormattedMessage id="onboarding.connect-wallet" />
+      </p>
       {!isConnected && <EthereumProviders callback={siweSignMessage} />}
       {isLoading && <Spinner />}
       {isConnected && !isLoading && activeConnector?.id !== 'magic' && (
@@ -87,7 +90,7 @@ const EthereumSignin: FC<EthereumSigninProps> = ({ type }) => {
               disconnect();
             }}
           >
-            Disconnect
+            <FormattedMessage id="disconnect" />
           </button>
           <SignMessage
             callback={(message, signature) =>

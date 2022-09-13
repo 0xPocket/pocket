@@ -57,9 +57,7 @@ function TokenTable({ tokenList }: TokenTableProps) {
         ),
       },
       {
-        header: () => (
-          <FormattedMessage id="dashboard.common.token.table.header.value" />
-        ),
+        header: () => <FormattedMessage id="value" />,
         // 'Value'
         accessorFn: (row) => {
           const roundValue = Math.floor(Number(row.quote) * 100) / 100;

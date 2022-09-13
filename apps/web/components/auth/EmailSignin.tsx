@@ -32,7 +32,7 @@ const EmailSignin: FC = () => {
           placeholder="my@email.com"
         />
         <button type="submit" className={`action-btn flex-none`}>
-          <FormattedMessage id="utils.signIn" />
+          <FormattedMessage id="signIn" />
         </button>
       </div>
     </form>

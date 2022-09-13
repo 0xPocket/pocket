@@ -22,7 +22,7 @@ function Balance({ value, setSelectedIndex, hideActions }: BalanceProps) {
     <>
       <div className="flex flex-col items-end">
         <p>
-          <FormattedMessage id="card.parent.piggyBank.claimable" />
+          <FormattedMessage id="claimable" />
         </p>
         <span className="text-4xl">
           {value ? formatUnits(value, erc20.data?.decimals).toString() : '0'} $
@@ -32,7 +32,7 @@ function Balance({ value, setSelectedIndex, hideActions }: BalanceProps) {
         <div className="flex space-x-4">
           <button onClick={() => setSelectedIndex(2)} className="third-btn">
             <FontAwesomeIcon icon={faGear} className="mr-2" />
-            <FormattedMessage id="card.parent.piggyBank.settings" />
+            <FormattedMessage id="settings" />
           </button>
           <button onClick={() => setSelectedIndex(1)} className="success-btn">
             <FontAwesomeIcon icon={faCircleDollarToSlot} className="mr-2" />
@@ -43,7 +43,7 @@ function Balance({ value, setSelectedIndex, hideActions }: BalanceProps) {
       {hideActions && (
         <button onClick={() => setSelectedIndex(1)} className="success-btn">
           <FontAwesomeIcon icon={faCircleDollarToSlot} className="mr-2" />
-          <FormattedMessage id="card.child.piggyBank.claim" />
+          <FormattedMessage id="claim" />
         </button>
       )}
     </>

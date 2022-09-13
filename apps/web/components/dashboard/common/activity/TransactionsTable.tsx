@@ -43,7 +43,7 @@ const columns = [
     cell: (info) => moment(info.getValue()).fromNow(),
     header: () => (
       <span>
-        <FormattedMessage id="dashboard.common.activity.tx.date" />
+        <FormattedMessage id="date" />
       </span>
     ),
     id: 'Date',
@@ -54,7 +54,7 @@ const columns = [
       cell: (info) => <div className=" text-right">{info.getValue()}</div>,
       header: () => (
         <span>
-          <FormattedMessage id="dashboard.common.activity.tx.amount" />
+          <FormattedMessage id="amount" />
         </span>
       ),
       id: 'Amount',
@@ -66,7 +66,7 @@ const columns = [
     ),
     header: () => (
       <span>
-        <FormattedMessage id="dashboard.common.activity.tx.category" />
+        <FormattedMessage id="category" />
       </span>
     ),
     id: 'Category',

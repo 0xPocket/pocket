@@ -24,7 +24,7 @@ const BaseTokenBalance: React.FC = () => {
   return (
     <div>
       <p>
-        <FormattedMessage id="common.baseToken.balance" />
+        <FormattedMessage id="balance" />
       </p>
       <span className="text-4xl"> {data.formatted} $</span>
       <p className="mt-2 text-xs opacity-50">

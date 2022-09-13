@@ -49,15 +49,15 @@ function AddChildForm() {
       </h2>
       <div className="flex flex-grow flex-col justify-evenly">
         <InputText
-          label={<FormattedMessage id="common.name" />}
+          label={<FormattedMessage id="name" />}
           register={register('name')}
         />
         <InputText
-          label={<FormattedMessage id="common.email" />}
+          label={<FormattedMessage id="email" />}
           register={register('email')}
         />
         <button disabled={addChild.isLoading} className="action-btn">
-          <FormattedMessage id="common.submit" />
+          <FormattedMessage id="send" />
         </button>
       </div>
     </form>

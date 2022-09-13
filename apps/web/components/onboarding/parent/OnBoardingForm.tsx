@@ -62,7 +62,7 @@ const OnBoardingForm: FC = () => {
         autoComplete="email"
       />
       <button className="action-btn">
-        <FormattedMessage id="common.submit" />
+        <FormattedMessage id="submit" />
       </button>
     </form>
   );

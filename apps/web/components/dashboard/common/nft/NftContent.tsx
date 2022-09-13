@@ -73,7 +73,7 @@ function NftContent({ childAddress, fill_nbr = 0 }: NftContentProps) {
             }}
           >
             <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
-            <FormattedMessage id="dashboard.common.nft.prev" />
+            <FormattedMessage id="prev" />
           </button>
         </div>
         <div className="">
@@ -87,7 +87,7 @@ function NftContent({ childAddress, fill_nbr = 0 }: NftContentProps) {
               if (!content?.pages[page + 1]) fetchNextPage();
             }}
           >
-            <FormattedMessage id="dashboard.common.nft.next" />
+            <FormattedMessage id="next" />
             <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
           </button>
         </div>

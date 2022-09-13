@@ -32,7 +32,7 @@ function OnBoardingStepper({ token, email }: OnBoardingStepperProps) {
               disconnect();
             }}
           >
-            <FormattedMessage id="common.disconnect" />
+            <FormattedMessage id="disconnect" />
           </button>
           <SignMessage
             callback={(message, signature) =>

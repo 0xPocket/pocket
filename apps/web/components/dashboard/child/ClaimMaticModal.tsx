@@ -120,7 +120,7 @@ export default function ClaimMaticModal() {
                     onClick={() => claimMatic.mutate()}
                     disabled={claimMatic.isLoading}
                   >
-                    <FormattedMessage id="dashboard.child.claimMatic.claim" />
+                    <FormattedMessage id="claim" />
                   </button>
                 )}
               </div>

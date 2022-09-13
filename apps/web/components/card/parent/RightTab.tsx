@@ -65,7 +65,7 @@ function RightTab({
     >
       <Tab.List className="hidden">
         <Tab>
-          <FormattedMessage id="card.parent.piggyBank.balance" />
+          <FormattedMessage id="balance" />
         </Tab>
 
         <Tab>
@@ -73,7 +73,7 @@ function RightTab({
         </Tab>
 
         <Tab>
-          <FormattedMessage id="card.parent.piggyBank.settings" />
+          <FormattedMessage id="settings" />
         </Tab>
       </Tab.List>
       <Tab.Panels as="div" className="h-full">

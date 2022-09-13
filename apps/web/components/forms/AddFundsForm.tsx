@@ -109,7 +109,7 @@ function AddFundsForm({ child, addFunds, returnFn }: AddFundsFormProps) {
       <div className="flex space-x-4">
         <button type="button" className="third-btn" onClick={() => returnFn()}>
           <FontAwesomeIcon icon={faAngleLeft} className="mr-2" />
-          <FormattedMessage id="common.return" />
+          <FormattedMessage id="return" />
         </button>
         <button
           type="submit"
@@ -117,7 +117,7 @@ function AddFundsForm({ child, addFunds, returnFn }: AddFundsFormProps) {
           className="success-btn disabled:disabled-btn"
         >
           <FontAwesomeIcon icon={faPaperPlane} className="mr-2" />
-          <FormattedMessage id="common.send" />
+          <FormattedMessage id="send" />
         </button>
       </div>
     </form>

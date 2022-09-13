@@ -23,7 +23,7 @@ const columns = [
   columnHelper.accessor('timestamp', {
     header: () => (
       <span>
-        <FormattedMessage id="dashboard.common.activity.events.date" />
+        <FormattedMessage id="date" />
       </span>
     ),
     cell: (info) => <span>{moment(info.getValue()).format('D/MM')}</span>,
@@ -33,7 +33,7 @@ const columns = [
   columnHelper.accessor((row) => `${row.value} ${row.symbol}`, {
     header: () => (
       <span>
-        <FormattedMessage id="dashboard.common.activity.events.amount" />
+        <FormattedMessage id="amount" />
       </span>
     ),
     cell: (info) => <div className="text-right">{info.getValue()}</div>,

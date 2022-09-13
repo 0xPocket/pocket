@@ -68,7 +68,7 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
                   '...'
                 )
               ) : (
-                <FormattedMessage id="card.child.piggyBank.claim" />
+                <FormattedMessage id="claim" />
               )}
             </ClaimButton>
           )}
