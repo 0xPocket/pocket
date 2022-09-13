@@ -2,6 +2,7 @@ import { faImage } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { OwnedNft } from 'alchemy-sdk';
 import { useState } from 'react';
+import FormattedMessage from '../../../common/FormattedMessage';
 import NftDialog from './NftDialog';
 
 type NftCardProps = {
@@ -31,7 +32,7 @@ function NftCard({ nft, isLoading = false }: NftCardProps) {
             <h3>{nft.title}</h3>
           </div>
           <a className="text-right" onClick={() => setIsOpen(true)}>
-            See more
+            <FormattedMessage id="dashboard.common.nft.seeMore" />
           </a>
         </div>
         <NftDialog nft={nft} isOpen={isOpen} setIsOpen={setIsOpen}></NftDialog>

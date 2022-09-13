@@ -1,4 +1,5 @@
 import React from 'react';
+import FormattedMessage from '../common/FormattedMessage';
 
 type FooterProps = React.DetailedHTMLProps<
   React.HTMLAttributes<HTMLElement>,
@@ -9,7 +10,8 @@ function Footer(props: FooterProps) {
   return (
     <footer {...props}>
       <p className="mt-8 py-2 text-center text-base">
-        &copy; 2022 Pocket. All rights reserved.
+        &copy;
+        <FormattedMessage id="footer.rightReserved" />
       </p>
     </footer>
   );

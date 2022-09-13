@@ -37,7 +37,7 @@
   "common.baseToken.balance": "Balance",
 
   "dashboard.child.claim.fail": "Claim failed.",
-  "dashboard.child.claim.pending": "`Claim pending, please hang on !`",
+  "dashboard.child.claim.pending": "Claim pending, please hang on !",
   "dashbaord.child.claim.success": "Successfull claim !",
 
   "dashboard.child.claimMatic.pending": "Claim matic pending, please hang on !",
@@ -88,6 +88,43 @@
   "child-settings-form.monthly": "Monthly",
 
   "": "",
+  "dashboard.common.activity.header.topup": "Your topups",
+  "dashboard.common.activity.header.claim": "Your claims",
+  "dashboard.common.activity.title": "Activity",
+  "dashboard.common.activity.events.date": "Date",
+  "dashboard.common.activity.events.amount": "Amount",
+  "dashboard.common.activity.events.empty": "No transactions to display.",
+
+  "dashboard.common.activity.tx.date": "Date",
+  "dashboard.common.activity.tx.category": "Category",
+  "dashboard.common.activity.tx.amount": "Amount",
+  "dashboard.common.activity.tx.empty": "No transactions to display.",
+
+  "dashboard.common.nft.seeMore": "See more",
+  "dashboard.common.nft.title": "Nft Library",
+  "dashboard.common.nft.fail": "Could not retrieve user's NFT",
+
+  "dashboard.common.nft.prev": "Prev",
+  "dashboard.common.nft.next": "Next",
+  "dashboard.common.nft.opensea": "See on OpenSea",
+
+  "dashboard.common.token.fail": "Could not retrieve user's token",
+  "dashboard.common.token.balance": "Token balance",
+  "dashboard.common.token.empty": "No token to display.",
+
+  "dashboard.common.token.report.sent": "Report sent !",
+  "dashboard.common.token.report.send": "Report a suspicious token !",
+  "dashboard.common.token.report.select": "Select a token",
+  "dashboard.common.token.report": "Report",
+
+  "dashboard.common.token.table.header.tokenName": "Token Name",
+  "dashboard.common.token.table.header.balance": "Balance",
+  "dashboard.common.token.table.header.value": "Value",
+
+  "dashboard.parent.childAccountStatus": "Your child has not validated his account ! He should check his email...",
+
+  "footer.rightReserved": "2022 Pocket. All rights reserved.",
+
   "": "",
   "": "",
   "": ""

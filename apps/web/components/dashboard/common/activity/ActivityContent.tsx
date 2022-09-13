@@ -26,12 +26,21 @@ function ActivityContent({ childAddress, userType }: ActivityContentProps) {
       <Tab.Group>
         <div className="flex justify-between">
           <h2>
-            Activity
-            <FormattedMessage id="dashboard.child.claimMatic.claim" />
+            <FormattedMessage id="dashboard.common.activity.title" />
           </h2>
           <ActivityTabHeaders
-            leftHeader="Transactions"
-            rightHeader={userType === 'Parent' ? 'Your Topups' : 'Your Claims'}
+            leftHeader={
+              <FormattedMessage id="dashboard.child.claimMatic.claim" />
+            }
+            rightHeader={
+              <FormattedMessage
+                id={
+                  userType === 'Parent'
+                    ? 'dashboard.common.activity.header.topup'
+                    : 'dashboard.common.activity.header.claim'
+                }
+              />
+            }
           />
         </div>
         <Tab.Panels className="container-classic relative flex-grow overflow-x-hidden overflow-y-scroll rounded-lg px-8">
