@@ -1,5 +1,4 @@
 import { toast } from 'react-toastify';
-import { Button } from '@lib/ui';
 import { useAccount, useBalance } from 'wagmi';
 import { useSmartContract } from '../../contexts/contract';
 import useRamp from '../../hooks/useRamp';
@@ -21,9 +20,9 @@ function MainTabPanel({}: MainTabPanelProps) {
   });
 
   return (
-    <div className="flex w-full flex-col gap-8">
+    <div className="flex w-full flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h2 className="">My Wallet</h2>
+        <h2 className="text-2xl">My Wallet</h2>
         {address && (
           <button
             className="action-btn"
