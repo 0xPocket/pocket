@@ -9,6 +9,8 @@ import type { BigNumber } from 'ethers';
 import { z } from 'zod';
 import { useZodForm } from '../../utils/useZodForm';
 import { useEffect } from 'react';
+import FormattedMessage from '../common/FormattedMessage';
+import { useIntl } from 'react-intl';
 
 type AddFundsFormProps = {
   child: UserChild;
@@ -19,6 +21,7 @@ type AddFundsFormProps = {
 function AddFundsForm({ child, addFunds, returnFn }: AddFundsFormProps) {
   const { erc20 } = useSmartContract();
   const { address } = useAccount();
+  const intl = useIntl();
 
   const { data: balance } = useContractRead({
     contract: erc20.contract,
@@ -29,11 +32,22 @@ function AddFundsForm({ child, addFunds, returnFn }: AddFundsFormProps) {
 
   const ChildSettingsSchema = z.object({
     topup: z
-      .number({ invalid_type_error: 'Amount is required' })
-      .min(1, 'Minimum is 1')
+      .number({
+        invalid_type_error: intl.formatMessage({
+          id: 'funds-form.amount-required',
+        }),
+      })
+      .min(
+        1,
+        intl.formatMessage({
+          id: 'funds-form.minimum',
+        }),
+      )
       .max(
         Number(formatUnits(balance || 1000, erc20.data?.decimals)),
-        'Insufficient funds',
+        intl.formatMessage({
+          id: 'funds-form.insufficient',
+        }),
       ),
   });
 
@@ -61,7 +75,14 @@ function AddFundsForm({ child, addFunds, returnFn }: AddFundsFormProps) {
       onSubmit={handleSubmit(onSubmit)}
       className="flex h-full flex-col items-end justify-between space-y-4"
     >
-      <label htmlFor="topup">Add funds to {child.name} account</label>
+      <label htmlFor="topup">
+        <FormattedMessage
+          id="funds-form.add-funds-to"
+          values={{
+            name: child.name,
+          }}
+        />
+      </label>
       <div className="relative  flex items-center text-4xl">
         <input
           className="without-ring appearance-none bg-transparent p-2 text-right text-4xl  text-white outline-none"
@@ -88,7 +109,7 @@ function AddFundsForm({ child, addFunds, returnFn }: AddFundsFormProps) {
       <div className="flex space-x-4">
         <button type="button" className="third-btn" onClick={() => returnFn()}>
           <FontAwesomeIcon icon={faAngleLeft} className="mr-2" />
-          return
+          <FormattedMessage id="common.return" />
         </button>
         <button
           type="submit"
@@ -96,7 +117,7 @@ function AddFundsForm({ child, addFunds, returnFn }: AddFundsFormProps) {
           className="success-btn disabled:disabled-btn"
         >
           <FontAwesomeIcon icon={faPaperPlane} className="mr-2" />
-          Send
+          <FormattedMessage id="common.send" />
         </button>
       </div>
     </form>

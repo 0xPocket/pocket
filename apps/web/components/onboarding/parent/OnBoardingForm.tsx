@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { useMagic } from '../../../contexts/auth';
 import InputText from '../../common/InputText';
+import FormattedMessage from '../../common/FormattedMessage';
 
 const OnBoardingForm: FC = () => {
   const { user } = useMagic();
@@ -60,7 +61,9 @@ const OnBoardingForm: FC = () => {
         register={register('email')}
         autoComplete="email"
       />
-      <button className="action-btn">Submit</button>
+      <button className="action-btn">
+        <FormattedMessage id="common.submit" />
+      </button>
     </form>
   );
 };

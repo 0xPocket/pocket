@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { trpc } from '../../utils/trpc';
+import FormattedMessage from '../../components/common/FormattedMessage';
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.id as string;
@@ -31,17 +32,23 @@ function Account({
         <div className="mb-12 flex items-center space-x-4">
           <FontAwesomeIcon icon={faAngleRight} />
           <Link href="/">
-            <a>dashboard</a>
+            <a>
+              <FormattedMessage id="route.dashboard" />
+            </a>
           </Link>
           <p>{`>`}</p>
           <p>{child?.name}</p>
         </div>
         {isLoading ? (
-          <>Loading</>
+          <>
+            <FormattedMessage id="common.loading" />
+          </>
         ) : child ? (
           <AccountDashboard child={child} />
         ) : (
-          <div>User not found</div>
+          <div>
+            <FormattedMessage id="account.not-found" />
+          </div>
         )}
       </SectionContainer>
     </MainWrapper>

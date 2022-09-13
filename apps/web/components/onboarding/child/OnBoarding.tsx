@@ -4,6 +4,7 @@ import { trpc } from '../../../utils/trpc';
 import SignMessage from '../../auth/SignMessage';
 import EthereumProviders from '../../auth/EthereumProviders';
 import { toast } from 'react-toastify';
+import FormattedMessage from '../../common/FormattedMessage';
 
 type OnBoardingStepperProps = {
   token: string;
@@ -18,7 +19,9 @@ function OnBoardingStepper({ token, email }: OnBoardingStepperProps) {
 
   return (
     <div className="mx-auto flex w-72 flex-col items-center justify-center gap-8">
-      <p>Connect with your favorite wallet</p>
+      <p>
+        <FormattedMessage id="onboarding.connect-wallet" />
+      </p>
       {!isConnected && <EthereumProviders />}
       {isConnected && (
         <div className="flex gap-4">
@@ -29,7 +32,7 @@ function OnBoardingStepper({ token, email }: OnBoardingStepperProps) {
               disconnect();
             }}
           >
-            Disconnect
+            <FormattedMessage id="common.disconnect" />
           </button>
           <SignMessage
             callback={(message, signature) =>

@@ -2,8 +2,16 @@
   "dashboard.title": "My children",
   "dashboard.addChild": "Add a child",
 
-  "utils.loading": "Loading...",
-  "utils.signIn": "Sign in",
+  "common.loading": "Loading...",
+  "common.signIn": "Sign in",
+  "common.disconnect": "Disconnect",
+  "common.signout": "Logout",
+  "common.submit": "Submit",
+  "common.name": "Name",
+  "common.email": "Email",
+  "common.return": "return",
+  "common.send": "Send",
+  "common.apply": "Apply",
 
   "auth.email.connect": "Connect with your email",
   "auth.email.verify": "Please verify your email with the link we sent you.",
@@ -37,6 +45,47 @@
   "dashboard.child.claimMatic.title": "You can claim your Matic !",
   "dashboard.child.claimMatic.message": "To start your journey into web3, we grant you some Matic to pay fees on your few first transactions.",
   "dashboard.child.claimMatic.claim": "Claim",
+
+  "verify-email.email-verified": "Your email is now verified !",
+  "verify-email.redirect": "You will be redirect in few seconds...",
+  "verify-email.problem": "If the problem persists, contact us.",
+
+  "common.welcome": "Welcome to Pocket !",
+
+  "onboarding.connect-wallet": "Connect with your favorite wallet",
+  "onboarding.more-info": "We need some more infos !",
+
+  "route.dashboard": "dashboard",
+
+  "add-account.how-to": "How to add a new account ?",
+  "add-account.step1": "Complete this form with your child infos",
+  "add-account.step2": "An email will be send to the address, follow the few steps to create the child account.",
+  "add-account.step3": "The account is set and you're ready to go !",
+
+  "connect.parent": "I'm a parent",
+  "connect.child": "I'm a child",
+
+  "account.not-found": "User not found",
+
+  "wallet.my-wallet": "My wallet",
+  "wallet.funds": "Available funds",
+  "wallet.top-up": "Top-Up",
+  "wallet.clipboard": "Address copied to clipboard !",
+
+  "header.open-options": "Open options",
+
+  "child-form.info": "Your child infos",
+  "child-form.created": "Account created !",
+
+  "funds-form.amount-required": "Amount is required",
+  "funds-form.minimum": "Minimum amount is 1",
+  "funds-form.insufficient": "Insufficient funds",
+  "funds-form.add-funds-to": "Add funds to {name} account",
+
+  "child-settings-form.periodicity": "Periodicity",
+  "child-settings-form.ceiling": "Ceiling",
+  "child-settings-form.weekly": "Weekly",
+  "child-settings-form.monthly": "Monthly",
 
   "": "",
   "": "",

@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { FC, useEffect } from 'react';
+import FormattedMessage from '../components/common/FormattedMessage';
 import { Spinner } from '../components/common/Spinner';
 import MainWrapper from '../components/wrappers/MainWrapper';
 import { trpc } from '../utils/trpc';
@@ -31,9 +32,9 @@ const VerifyChild: FC = () => {
     return (
       <MainWrapper>
         <div className="flex flex-col items-center justify-center gap-2 text-3xl font-bold">
-          Your email is now verified !
+          <FormattedMessage id="verify-email.email-verified" />
           <p className="text-sm font-thin">
-            You will be redirect in few seconds...
+            <FormattedMessage id="verify-email.redirect" />
           </p>
         </div>
       </MainWrapper>
@@ -46,7 +47,7 @@ const VerifyChild: FC = () => {
         <div className="flex flex-col items-center justify-center gap-8 font-bold">
           <p>{mutation.error.message}</p>
           <p className="text-sm font-thin">
-            If the problem persists, contact us.
+            <FormattedMessage id="verify-email.problem" />
           </p>
         </div>
       </MainWrapper>

@@ -9,6 +9,7 @@ import { useSmartContract } from '../../contexts/contract';
 import { ContractMethodReturn } from '../../hooks/useContractRead';
 
 import { useZodForm } from '../../utils/useZodForm';
+import FormattedMessage from '../common/FormattedMessage';
 
 const ChildSettingsSchema = z.object({
   ceiling: z.number({ invalid_type_error: 'Ceiling is required' }).min(1),
@@ -52,7 +53,9 @@ function ChildSettingsForm({
       className="flex h-full flex-col items-end justify-between space-y-4"
     >
       <div className="flex items-center space-x-8">
-        <label>Periodicity</label>
+        <label>
+          <FormattedMessage id="child-settings-form.periodicity" />
+        </label>
         <div className="flex flex-col space-x-2">
           <input
             type="radio"
@@ -60,7 +63,9 @@ function ChildSettingsForm({
             value="604800"
             {...register('periodicity')}
           />
-          <label htmlFor="huey">Weekly</label>
+          <label htmlFor="huey">
+            <FormattedMessage id="child-settings-form.weekly" />
+          </label>
         </div>
 
         <div className="flex flex-col space-x-2">
@@ -70,11 +75,15 @@ function ChildSettingsForm({
             value="2592000"
             {...register('periodicity')}
           />
-          <label htmlFor="dewey">Monthly</label>
+          <label htmlFor="dewey">
+            <FormattedMessage id="child-settings-form.monthly" />
+          </label>
         </div>
       </div>
       <div className="flex items-center space-x-8">
-        <label htmlFor="topup">Ceiling</label>
+        <label htmlFor="topup">
+          <FormattedMessage id="child-settings-form.ceiling" />
+        </label>
         <input
           className="border p-2 text-dark"
           {...register('ceiling', {
@@ -90,11 +99,11 @@ function ChildSettingsForm({
       <div className="flex space-x-4">
         <button type="button" className="third-btn" onClick={() => returnFn()}>
           <FontAwesomeIcon icon={faAngleLeft} className="mr-2" />
-          return
+          <FormattedMessage id="common.return" />
         </button>
         <button type="submit" className="success-btn">
           <FontAwesomeIcon icon={faWrench} className="mr-2" />
-          Apply
+          <FormattedMessage id="common.apply" />
         </button>
       </div>
     </form>

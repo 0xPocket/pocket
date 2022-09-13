@@ -2,9 +2,45 @@
   "dashboard.title": "Mes enfants",
   "dashboard.addChild": "Ajouter un ado",
 
-  "utils.loading": "Chargement...",
-  "utils.signIn": "Se connecter",
+  "common.loading": "Chargement...",
+  "common.signIn": "Se connecter",
+  "common.disconnect": "Deconnexion",
+  "common.signout": "Deconnexion",
+  "common.submit": "Envoyer",
+  "common.name": "Nom",
+  "common.email": "Email",
+  "common.return": "retour",
+  "common.send": "Envoyer",
+  "common.apply": "Appliquer",
 
   "auth.email.connect": "Se connecter via email",
-  "auth.email.verify": "Vérifiez votre address email avec le lien que nous vous avons envoyé."
+  "auth.email.verify": "Vérifiez votre address email avec le lien que nous vous avons envoyé.",
+
+  "verify-email.email-verified": "Votre email est verifié !",
+  "verify-email.redirect": "Vous allez être redirigé dans quelques instants...",
+  "verify-email.problem": "Si le problème persiste, contactez nous.",
+
+  "common.welcome": "Bienvenue sur Pocket !",
+
+  "onboarding.connect-wallet": "Connectez-vous avec votre wallet préféré",
+  "onboarding.more-info": "Nous avons besoin de plus d'informations !",
+
+  "route.dashboard": "tableau de bord",
+
+  "add-account.how-to": "Comment créer un nouveau compte ?",
+  "add-account.step1": "Completez ce formulaire avec les informations de votre enfant",
+  "add-account.step2": "Un email va être envoyé à votre enfant, suivez les instructions pour finaliser l'inscription",
+  "add-account.step3": "Le compte est prêt à être utilisé !",
+
+  "connect.parent": "Je suis un parent",
+  "connect.child": "Je suis un enfant",
+
+  "account.not-found": "L'utilisateur n'existe pas",
+
+  "wallet.my-wallet": "Mon wallet",
+  "wallet.funds": "Fonds disponible",
+  "wallet.top-up": "Recharger",
+  "wallet.clipboard": "Adresse copiée dans le presse-papier !",
+
+  "header.open-options": "Ouvrir les options"
 }

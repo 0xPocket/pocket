@@ -4,6 +4,7 @@ import { trpc } from '../utils/trpc';
 import { useRouter } from 'next/router';
 import EmailVerification from '../components/auth/EmailVerification';
 import OnBoardingForm from '../components/onboarding/parent/OnBoardingForm';
+import FormattedMessage from '../components/common/FormattedMessage';
 
 function OnBoarding() {
   const router = useRouter();
@@ -47,7 +48,9 @@ function OnBoarding() {
   return (
     <MainWrapper>
       <div className="mx-auto flex  flex-col items-center justify-center gap-8 text-center">
-        <h1 className="mb-4">We need some more infos !</h1>
+        <h1 className="mb-4">
+          <FormattedMessage id="onboarding.more-info" />
+        </h1>
         <div className="container-classic rounded-lg p-8">
           <OnBoardingForm />
         </div>

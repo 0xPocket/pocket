@@ -7,6 +7,7 @@ import { ParentSchema } from '../../server/schemas';
 import InputText from '../common/InputText';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import FormattedMessage from '../common/FormattedMessage';
 
 type FormValues = z.infer<typeof ParentSchema['createChild']>;
 
@@ -26,7 +27,7 @@ function AddChildForm() {
     onSuccess: () => {
       queryClient.invalidateQueries('parent.children');
       router.push('/');
-      toast.success(`Account created !`);
+      toast.success(<FormattedMessage id="child-form.created" />);
     },
     onError: (e) => {
       toast.error(e.message);
@@ -44,13 +45,19 @@ function AddChildForm() {
     >
       <h2 className="">
         <FontAwesomeIcon icon={faPlus} className="mr-4" />
-        Your child infos
+        <FormattedMessage id="child-form.info" />
       </h2>
       <div className="flex flex-grow flex-col justify-evenly">
-        <InputText label="Name" register={register('name')} />
-        <InputText label="Email" register={register('email')} />
+        <InputText
+          label={<FormattedMessage id="common.name" />}
+          register={register('name')}
+        />
+        <InputText
+          label={<FormattedMessage id="common.email" />}
+          register={register('email')}
+        />
         <button disabled={addChild.isLoading} className="action-btn">
-          Submit
+          <FormattedMessage id="common.submit" />
         </button>
       </div>
     </form>
