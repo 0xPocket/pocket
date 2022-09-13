@@ -80,6 +80,22 @@
     @apply block w-full appearance-none border-0 border-b bg-transparent py-2.5  px-0 text-sm  focus:outline-none focus:ring-0;
   }
 
+	.input-number {
+		@apply without-ring max-w-[200px] appearance-none bg-transparent p-2 text-right text-4xl outline-none
+	}
+
+	.input-radio {
+		@apply relative flex items-center justify-center cursor-pointer rounded-lg border  px-3 py-2 shadow-sm focus:outline-none;
+	}
+
+	.input-radio-checked {
+		@apply input-radio border border-primary bg-primary text-white;
+	}
+
+	.input-radio-unchecked {
+		@apply input-radio border border-primary text-primary;
+	}
+
   /* badge */
   .cat-badge {
     @apply rounded px-2 py-1 text-sm font-bold;
