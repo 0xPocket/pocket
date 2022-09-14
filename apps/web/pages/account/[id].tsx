@@ -41,7 +41,7 @@ function Account({
         </div>
         {isLoading ? (
           <>
-            <FormattedMessage id="common.loading" />
+            <FormattedMessage id="loading" />
           </>
         ) : child ? (
           <AccountDashboard child={child} />
