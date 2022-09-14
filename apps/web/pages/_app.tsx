@@ -89,7 +89,11 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
               <ThemeProvider>
                 <SmartContractProvider>
                   <Component {...pageProps} />
-                  <ToastContainer position="bottom-right" autoClose={3000} />
+                  <ToastContainer
+                    toastClassName="toast-container"
+                    position="bottom-right"
+                    autoClose={3000}
+                  />
                   <ReactQueryDevtools />
                 </SmartContractProvider>
               </ThemeProvider>

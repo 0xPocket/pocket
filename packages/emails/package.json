@@ -1,0 +1,15 @@
+{
+  "name": "@pocket/emails",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "mailing preview --quiet"
+  },
+  "dependencies": {
+    "@aws-sdk/client-ses": "^3.168.0",
+    "@aws-sdk/credential-provider-node": "^3.168.0",
+    "mailing": "0.7.7",
+    "mailing-core": "0.7.7"
+  }
+}

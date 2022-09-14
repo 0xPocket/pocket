@@ -3,7 +3,6 @@ import {
   hashToken,
   saveVerificationToken,
 } from '../services/jwt';
-import { sendEmail } from '../services/sendMail';
 import { TRPCError } from '@trpc/server';
 import { unstable_getServerSession } from 'next-auth/next';
 import { createProtectedRouter } from '../createRouter';
@@ -12,6 +11,7 @@ import { prisma } from '../prisma';
 import { AuthSchema } from '../schemas/auth.schema';
 import { User } from '@prisma/client';
 import { env } from 'config/env/server';
+import { sendEmailWrapper } from '@pocket/emails';
 
 export const authRouter = createProtectedRouter()
   .query('session', {
@@ -83,12 +83,12 @@ export const authRouter = createProtectedRouter()
 
         const params = new URLSearchParams({ token, email: input.email });
 
-        await sendEmail({
+        await sendEmailWrapper({
           to: updatedUser.email,
           template: 'email_verification',
-          context: {
+          props: {
             name: updatedUser.name,
-            url: `${env.APP_URL}/verify-email?${params}`,
+            link: `${env.APP_URL}/verify-email?${params}`,
           },
         }).catch(() => {
           throw new TRPCError({

@@ -124,5 +124,6 @@
   "dashboard.parent.card.email-sent-to": "Email sent to {email}",
   "dashboard.parent.card.go-to": "Go to {name}'s profile",
 
-  "footer.rightReserved": "2022 Pocket. All rights reserved."
+  "footer.rightReserved": "2022 Pocket",
+  "footer.report-bug": "Report a bug"
 }

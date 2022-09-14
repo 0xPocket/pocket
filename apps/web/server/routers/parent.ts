@@ -1,3 +1,4 @@
+import { sendEmailWrapper } from '@pocket/emails';
 import type { User } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import { env } from 'config/env/server';
@@ -11,7 +12,6 @@ import {
   hashToken,
   saveVerificationToken,
 } from '../services/jwt';
-import { sendEmail } from '../services/sendMail';
 import { sanitizeParent } from '../utils/sanitizeUser';
 
 export const parentRouter = createProtectedRouter()
@@ -79,12 +79,12 @@ export const parentRouter = createProtectedRouter()
 
       const params = new URLSearchParams({ token, email: child.email });
 
-      await sendEmail({
-        to: child.email!,
+      await sendEmailWrapper({
+        to: child.email,
         template: 'child_invitation',
-        context: {
+        props: {
           name: child.name!,
-          url: `${env.APP_URL}/verify-child?${params}`,
+          link: `${env.APP_URL}/verify-child?${params}`,
         },
       });
     },
@@ -144,12 +144,12 @@ export const parentRouter = createProtectedRouter()
 
         const params = new URLSearchParams({ token, email: input.email });
 
-        await sendEmail({
+        await sendEmailWrapper({
           to: child.email!,
           template: 'child_invitation',
-          context: {
+          props: {
             name: child.name!,
-            url: `${env.APP_URL}/verify-child?${params}`,
+            link: `${env.APP_URL}/verify-child?${params}`,
           },
         });
       }

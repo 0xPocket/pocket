@@ -12,10 +12,9 @@ import FormattedMessage from '../../common/FormattedMessage';
 type BalanceProps = {
   value: BigNumber | undefined;
   setSelectedIndex: Dispatch<SetStateAction<number>>;
-  hideActions: boolean;
 };
 
-function Balance({ value, setSelectedIndex, hideActions }: BalanceProps) {
+function Balance({ value, setSelectedIndex }: BalanceProps) {
   const { erc20 } = useSmartContract();
 
   return (
@@ -28,24 +27,17 @@ function Balance({ value, setSelectedIndex, hideActions }: BalanceProps) {
           {value ? formatUnits(value, erc20.data?.decimals).toString() : '0'} $
         </span>
       </div>
-      {!hideActions && (
-        <div className="flex space-x-4">
-          <button onClick={() => setSelectedIndex(2)} className="third-btn">
-            <FontAwesomeIcon icon={faGear} className="mr-2" />
-            <FormattedMessage id="settings" />
-          </button>
-          <button onClick={() => setSelectedIndex(1)} className="success-btn">
-            <FontAwesomeIcon icon={faCircleDollarToSlot} className="mr-2" />
-            <FormattedMessage id="card.parent.piggyBank.addFunds" />
-          </button>
-        </div>
-      )}
-      {hideActions && (
+
+      <div className="flex space-x-4">
+        <button onClick={() => setSelectedIndex(2)} className="third-btn">
+          <FontAwesomeIcon icon={faGear} className="mr-2" />
+          <FormattedMessage id="settings" />
+        </button>
         <button onClick={() => setSelectedIndex(1)} className="success-btn">
           <FontAwesomeIcon icon={faCircleDollarToSlot} className="mr-2" />
-          <FormattedMessage id="claim" />
+          <FormattedMessage id="card.parent.piggyBank.addFunds" />
         </button>
-      )}
+      </div>
     </>
   );
 }

@@ -38,6 +38,8 @@ model User {
   parent      Parent?
   child       Child?
   maticGrants MaticGrant[]
+  BugReport   Ticket[]
+  Contact     Contact[]
 }
 
 model Parent {
@@ -129,6 +131,30 @@ model VerificationToken {
 model BlacklistToken {
   address  String  @id @unique
   verified Boolean @default(true)
+}
+
+// FORMS
+
+model Ticket {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  fromURL   String
+  subject   String?
+  desc      String
+  resolved  Boolean  @default(false)
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+}
+
+model Contact {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  name      String
+  email     String
+  subject   String?
+  desc      String
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
 }
 
 // Survey ?

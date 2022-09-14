@@ -1,9 +1,10 @@
 import { toast } from 'react-toastify';
-import { Button } from '@lib/ui';
 import { useAccount, useBalance } from 'wagmi';
 import { useSmartContract } from '../../contexts/contract';
 import useRamp from '../../hooks/useRamp';
 import FormattedMessage from '../common/FormattedMessage';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faClipboard } from '@fortawesome/free-solid-svg-icons';
 
 type MainTabPanelProps = {};
 
@@ -20,42 +21,42 @@ function MainTabPanel({}: MainTabPanelProps) {
   });
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between border-b pb-4">
-        <h2 className="">
+    <div className="flex w-full flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl">
           <FormattedMessage id="wallet.my-wallet" />
         </h2>
         {address && (
-          <Button
-            action={() => {
+          <button
+            className="action-btn"
+            onClick={() => {
               navigator.clipboard.writeText(address);
               toast.success(<FormattedMessage id="wallet.clipboard" />);
             }}
           >
-            Copy address
-          </Button>
+            <FontAwesomeIcon icon={faClipboard} />
+          </button>
         )}
       </div>
-      <div className="border-b pb-4">
+      <div className="flex flex-col">
         <span>
           <FormattedMessage id="wallet.funds" />
         </span>
-        <div>
-          {isLoading ? (
-            <h2>
-              <FormattedMessage id="loading" />
-            </h2>
-          ) : (
-            <div className="flex items-end gap-2">
-              <h2>{data?.formatted}</h2>
-              <span>{data?.symbol}</span>
-            </div>
-          )}
-        </div>
+        {isLoading ? (
+          <h2>
+            <FormattedMessage id="loading" />
+            ...
+          </h2>
+        ) : (
+          <div className="flex items-end gap-2">
+            <h2>{data?.formatted}</h2>
+            <span>{data?.symbol}</span>
+          </div>
+        )}
       </div>
-      <Button action={showRamp}>
+      <button onClick={showRamp} className="action-btn">
         <FormattedMessage id="wallet.top-up" />
-      </Button>
+      </button>
     </div>
   );
 }
