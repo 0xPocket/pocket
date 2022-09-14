@@ -165,6 +165,26 @@ export async function grantMaticToParent(parent: UserParent) {
     });
   }
 
+  const grant = await prisma.maticGrant.findFirst({
+    where: {
+      userId: parent.id,
+    },
+  });
+
+  if (grant) {
+    throw new TRPCError({
+      code: 'BAD_REQUEST',
+      message: 'Matic already claimed',
+    });
+  }
+
+  const newGrant = await prisma.maticGrant.create({
+    data: {
+      userId: parent.id,
+      amount: AMOUNT_TO_SEND_TO_PARENT.toHexString(),
+    },
+  });
+
   const tx = await wallet
     .sendTransaction({
       maxFeePerGas: feeData.maxFeePerGas,
@@ -185,15 +205,15 @@ export async function grantMaticToParent(parent: UserParent) {
           userId: parent.id,
         },
         data: {
-          maticGrants: {
-            increment: AMOUNT_OF_GRANTS,
-          },
+          maticGrants: AMOUNT_OF_GRANTS,
         },
       }),
-      prisma.maticGrant.create({
+      prisma.maticGrant.update({
+        where: {
+          id: newGrant.id,
+        },
         data: {
-          userId: parent.id,
-          amount: AMOUNT_TO_SEND_TO_PARENT.toHexString(),
+          hash: tx.hash,
         },
       }),
     ]);
