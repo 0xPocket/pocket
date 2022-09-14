@@ -176,4 +176,9 @@
       transform: translateX(100%);
     }
   }
+
+	/* toastify */
+	.toast-container {
+		@apply container-classic  text-dark-lightest  dark:text-white !important;
+	}
 }
