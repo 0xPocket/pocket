@@ -9,6 +9,7 @@ import { useSmartContract } from '../../contexts/contract';
 import { ContractMethodReturn } from '../../hooks/useContractRead';
 import { useZodForm } from '../../utils/useZodForm';
 import FormattedMessage from '../common/FormattedMessage';
+import { Spinner } from '../common/Spinner';
 
 const ChildSettingsSchema = z.object({
   ceiling: z.number({ invalid_type_error: 'Ceiling is required' }).min(1),
@@ -26,6 +27,7 @@ type ChildSettingsFormProps = {
   withdrawFundsFromChild: () => void;
   changeConfig: (amount: FormValues) => Promise<void>;
   returnFn: () => void;
+  isLoading: boolean;
 };
 
 function ChildSettingsForm({
@@ -33,6 +35,7 @@ function ChildSettingsForm({
   withdrawFundsFromChild,
   changeConfig,
   returnFn,
+  isLoading,
 }: ChildSettingsFormProps) {
   const [selected, setSelected] = useState(
     periodicity_options.find(
@@ -144,7 +147,7 @@ function ChildSettingsForm({
           </button>
           <button type="submit" className="success-btn">
             <FontAwesomeIcon icon={faWrench} className="mr-2" />
-            <FormattedMessage id="apply" />
+            {isLoading ? <Spinner /> : <FormattedMessage id="apply" />}
           </button>
         </div>
       </form>
