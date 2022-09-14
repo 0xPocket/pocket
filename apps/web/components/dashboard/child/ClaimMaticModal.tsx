@@ -52,7 +52,10 @@ export default function ClaimMaticModal() {
   });
 
   return (
-    <Transition.Root show={open && !config?.balance.isZero()} as={Fragment}>
+    <Transition.Root
+      show={open && !!config && !config?.balance.isZero()}
+      as={Fragment}
+    >
       <Dialog
         as="div"
         className="fixed inset-0 z-10 overflow-y-auto"
