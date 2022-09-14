@@ -6,6 +6,7 @@ import EventsTable from './EventsTable';
 import { TransactionsTable } from './TransactionsTable';
 import { useGetClaimsQuery } from '../../../../hooks/useGetClaimsQuery';
 import { useTransactionsQuery } from '../../../../hooks/useTransactionsQuery';
+import FormattedMessage from '../../../common/FormattedMessage';
 
 type ActivityContentProps = {
   childAddress: string;
@@ -24,10 +25,20 @@ function ActivityContent({ childAddress, userType }: ActivityContentProps) {
     <div className="flex flex-col space-y-8">
       <Tab.Group>
         <div className="flex justify-between">
-          <h2>Activity</h2>
+          <h2>
+            <FormattedMessage id="activity" />
+          </h2>
           <ActivityTabHeaders
-            leftHeader="Transactions"
-            rightHeader={userType === 'Parent' ? 'Your Topups' : 'Your Claims'}
+            leftHeader={<FormattedMessage id="transactions" />}
+            rightHeader={
+              <FormattedMessage
+                id={
+                  userType === 'Parent'
+                    ? 'dashboard.common.activity.header.topups'
+                    : 'dashboard.common.activity.header.claims'
+                }
+              />
+            }
           />
         </div>
         <Tab.Panels className="container-classic relative flex-grow overflow-x-hidden overflow-y-scroll rounded-lg px-8">

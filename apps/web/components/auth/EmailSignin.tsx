@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import { z } from 'zod';
 import { useMagic } from '../../contexts/auth';
 import { useZodForm } from '../../utils/useZodForm';
+import FormattedMessage from '../common/FormattedMessage';
 
 const EmailSchema = z.object({
   email: z.string().email(),
@@ -20,7 +21,9 @@ const EmailSignin: FC = () => {
       className="flex w-full flex-col items-center justify-center gap-4"
       onSubmit={handleSubmit((data) => signInWithEmail(data.email))}
     >
-      <p>Connect with your email</p>
+      <p>
+        <FormattedMessage id="auth.email.connect" />
+      </p>
       <div className="flex gap-2">
         <input
           {...register('email')}
@@ -29,7 +32,7 @@ const EmailSignin: FC = () => {
           placeholder="my@email.com"
         />
         <button type="submit" className={`action-btn flex-none`}>
-          Sign In
+          <FormattedMessage id="signIn" />
         </button>
       </div>
     </form>

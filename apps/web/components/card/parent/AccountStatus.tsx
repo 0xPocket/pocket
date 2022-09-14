@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { UserChild } from '@lib/types/interfaces';
 import { useState } from 'react';
 import { usePopper } from 'react-popper';
+import FormattedMessage from '../../common/FormattedMessage';
 
 type AccountStatusProps = { child: UserChild };
 
@@ -44,7 +45,7 @@ function AccountStatus({ child }: AccountStatusProps) {
           {...attributes.popper}
           className="rounded-md bg-primary p-1 text-sm"
         >
-          A set-up email has been sent to {child!.email}
+          <FormattedMessage id="card.parent.status" /> {child!.email}
         </div>
       )}
     </div>

@@ -6,6 +6,7 @@ import { trpc } from '../../../utils/trpc';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
+import FormattedMessage from '../../common/FormattedMessage';
 
 type ChildCardProps = {
   child: UserChild;
@@ -17,11 +18,20 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
   const { mutate: resendEmail } = trpc.useMutation(
     'parent.resendChildVerificationEmail',
     {
-      onError: () => {
-        toast.error(`An error occured, if the problem persits contact us`);
+      onError: (e) => {
+        toast.error(
+          <FormattedMessage id="dashboard.parent.card.email-error" />,
+        );
       },
       onSuccess: () => {
-        toast.success(`Email sent to ${child.email}`);
+        toast.success(
+          <FormattedMessage
+            id="dashboard.parent.card.email-sent-to"
+            values={{
+              email: child.email,
+            }}
+          />,
+        );
       },
     },
   );
@@ -39,12 +49,12 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
         </div>
         {child?.child?.status !== 'ACTIVE' ? (
           <p>
-            {'We sent an email to validate your child account. '}
+            <FormattedMessage id="dashboard.parent.card.email-sent" />
             <button
               className="third-btn"
               onClick={() => resendEmail({ userId: child.id })}
             >
-              Send a new one.
+              <FormattedMessage id="dashboard.parent.card.send-new" />
             </button>
           </p>
         ) : !hasLink ? (
@@ -57,12 +67,21 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
                 icon={faArrowUpRightFromSquare}
                 className="mr-2"
               />
-              See on polygonscan
+              <FormattedMessage id="dashboard.parent.card.see-on-polygon" />
             </a>
           </Link>
         ) : (
           <Link href={`/account/${child.address}`}>
-            <a className="py-3">{`Go to ${child.name}'s profile`}</a>
+            <a className="py-3">
+              {
+                <FormattedMessage
+                  id="dashboard.parent.card.go-to"
+                  values={{
+                    name: child.name,
+                  }}
+                />
+              }
+            </a>
           </Link>
         )}
       </div>

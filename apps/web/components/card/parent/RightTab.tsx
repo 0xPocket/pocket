@@ -5,6 +5,7 @@ import { useContractWrite } from 'wagmi';
 import { useSmartContract } from '../../../contexts/contract';
 import { useAddFundsForm } from '../../../hooks/useAddFundsForm';
 import { useChildSettingsForm } from '../../../hooks/useChildSettingsForm';
+import FormattedMessage from '../../common/FormattedMessage';
 import useContractRead from '../../../hooks/useContractRead';
 import AddFundsForm from '../../forms/AddFundsForm';
 import ChildSettingsForm from '../../forms/ChildSettingsForm';
@@ -64,9 +65,17 @@ function RightTab({ child }: RightTabProps) {
       className="h-full"
     >
       <Tab.List className="hidden">
-        <Tab>Balance</Tab>
-        <Tab>Add Funds</Tab>
-        <Tab>Settings</Tab>
+        <Tab>
+          <FormattedMessage id="balance" />
+        </Tab>
+
+        <Tab>
+          <FormattedMessage id="card.parent.piggyBank.addFunds" />
+        </Tab>
+
+        <Tab>
+          <FormattedMessage id="settings" />
+        </Tab>
       </Tab.List>
       <Tab.Panels as="div" className="h-full">
         <Tab.Panel as={'div'} className="h-full">

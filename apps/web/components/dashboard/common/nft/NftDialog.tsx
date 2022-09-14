@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Dispatch, SetStateAction } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
+import FormattedMessage from '../../../common/FormattedMessage';
 
 type NftDialogProps = {
   nft: OwnedNft;
@@ -27,7 +28,8 @@ function NftDialog({ nft, isOpen, setIsOpen }: NftDialogProps) {
                 icon={faArrowUpRightFromSquare}
                 className="mr-2"
               />
-              See on OpenSea
+
+              <FormattedMessage id="dashboard.common.nft.opensea" />
             </a>
           </Link>
         </div>

@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { trpc } from '../../../utils/trpc';
+import FormattedMessage from '../../common/FormattedMessage';
 import { Spinner } from '../../common/Spinner';
 
 function ChildrenMozaic() {
@@ -14,7 +15,9 @@ function ChildrenMozaic() {
   return (
     <div className="flex flex-col space-y-12">
       <div className="flex items-center justify-between">
-        <h1>My children</h1>
+        <h1>
+          <FormattedMessage id="dashboard.title" />
+        </h1>
         <button onClick={() => testwebhookramp.mutate()} className="danger-btn">
           Test webhook
         </button>
@@ -31,7 +34,9 @@ function ChildrenMozaic() {
               className="container-classic flex min-h-[260px] cursor-pointer items-center justify-center rounded-lg p-8 text-3xl opacity-60 transition-all hover:text-primary hover:opacity-100"
             >
               <FontAwesomeIcon icon={faPlus} className="mr-2" />
-              <p>Add a child</p>
+              <p>
+                <FormattedMessage id="dashboard.addChild" />
+              </p>
             </div>
           </>
         )}

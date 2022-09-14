@@ -8,6 +8,7 @@ import {
 } from 'wagmi';
 // import useContractWrite from '../../../hooks/useContractWrite';
 import { useSmartContract } from '../../../contexts/contract';
+import FormattedMessage from '../../common/FormattedMessage';
 
 type ClaimButtonProps = {
   disabled?: boolean;
@@ -26,10 +27,12 @@ const ClaimButton: React.FC<ClaimButtonProps> = ({ disabled, children }) => {
   const claim = useContractWrite({
     ...claimConfig,
     onError() {
-      toast.error(`Claim failed.`);
+      toast.error(<FormattedMessage id="dashboard.child.claim.fail" />);
     },
     onSuccess: () => {
-      toast.info(`Claim pending, please hang on !`, { isLoading: true });
+      toast.info(<FormattedMessage id="dashboard.child.claim.pending" />, {
+        isLoading: true,
+      });
     },
   });
 
@@ -37,11 +40,13 @@ const ClaimButton: React.FC<ClaimButtonProps> = ({ disabled, children }) => {
     hash: claim.data?.hash,
     onSuccess: () => {
       toast.dismiss();
-      toast.success('Successfull claim !');
+
+      toast.success(<FormattedMessage id="dashbaord.child.claim.success" />);
     },
     onError: () => {
       toast.dismiss();
-      toast.error(`Claim failed.`);
+
+      toast.error(<FormattedMessage id="dashboard.child.claim.fail" />);
     },
   });
 

@@ -2,6 +2,7 @@ import { toast } from 'react-toastify';
 import { useAccount, useBalance } from 'wagmi';
 import { useSmartContract } from '../../contexts/contract';
 import useRamp from '../../hooks/useRamp';
+import FormattedMessage from '../common/FormattedMessage';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClipboard } from '@fortawesome/free-solid-svg-icons';
 
@@ -22,13 +23,15 @@ function MainTabPanel({}: MainTabPanelProps) {
   return (
     <div className="flex w-full flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl">My Wallet</h2>
+        <h2 className="text-2xl">
+          <FormattedMessage id="wallet.my-wallet" />
+        </h2>
         {address && (
           <button
             className="action-btn"
             onClick={() => {
               navigator.clipboard.writeText(address);
-              toast.success('Address copied to clipboard !');
+              toast.success(<FormattedMessage id="wallet.clipboard" />);
             }}
           >
             <FontAwesomeIcon icon={faClipboard} />
@@ -36,9 +39,14 @@ function MainTabPanel({}: MainTabPanelProps) {
         )}
       </div>
       <div className="flex flex-col">
-        <span>Available funds</span>
+        <span>
+          <FormattedMessage id="wallet.funds" />
+        </span>
         {isLoading ? (
-          <h2>loading...</h2>
+          <h2>
+            <FormattedMessage id="loading" />
+            ...
+          </h2>
         ) : (
           <div className="flex items-end gap-2">
             <h2>{data?.formatted}</h2>
@@ -47,7 +55,7 @@ function MainTabPanel({}: MainTabPanelProps) {
         )}
       </div>
       <button onClick={showRamp} className="action-btn">
-        Top-Up
+        <FormattedMessage id="wallet.top-up" />
       </button>
     </div>
   );

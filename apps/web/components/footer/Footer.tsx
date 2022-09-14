@@ -1,3 +1,4 @@
+import FormattedMessage from '../common/FormattedMessage';
 import React, { useState } from 'react';
 import { useMagic } from '../../contexts/auth';
 import BugDialog from './BugDialog';
@@ -19,10 +20,9 @@ function Footer(props: FooterProps) {
         <p>&copy; 2022 Pocket</p>
         <a onClick={() => setContactOpen(true)}>Contact</a>
         {loggedIn && (
-          <a
-            className="text-danger"
-            onClick={() => setBugOpen(true)}
-          >{`Report a bug`}</a>
+          <a className="text-danger" onClick={() => setBugOpen(true)}>
+            <FormattedMessage id="footer.report-bug" />
+          </a>
         )}
       </div>
       <ContactDialog isOpen={contactOpen} setIsOpen={setContactOpen} />

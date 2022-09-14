@@ -10,6 +10,7 @@ import moment from 'moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
+import FormattedMessage from '../../../common/FormattedMessage';
 
 type TransactionsTableProps = {
   transactionsList: AssetTransfersResultWithMetadata[];
@@ -40,14 +41,22 @@ const columnHelper = createColumnHelper<AssetTransfersResultWithMetadata>();
 const columns = [
   columnHelper.accessor('metadata.blockTimestamp', {
     cell: (info) => moment(info.getValue()).fromNow(),
-    header: () => <span>Date</span>,
+    header: () => (
+      <span>
+        <FormattedMessage id="date" />
+      </span>
+    ),
     id: 'Date',
   }),
   columnHelper.accessor(
     (row) => `${formatValue(row.value)} ${row.asset ?? ''}`,
     {
       cell: (info) => <div className=" text-right">{info.getValue()}</div>,
-      header: () => <span>Amount</span>,
+      header: () => (
+        <span>
+          <FormattedMessage id="amount" />
+        </span>
+      ),
       id: 'Amount',
     },
   ),
@@ -55,7 +64,11 @@ const columns = [
     cell: (info) => (
       <div className="text-right">{getBadge(info.getValue())}</div>
     ),
-    header: () => <span>Category</span>,
+    header: () => (
+      <span>
+        <FormattedMessage id="category" />
+      </span>
+    ),
     id: 'Category',
   }),
   columnHelper.accessor('hash', {
@@ -128,7 +141,7 @@ export function TransactionsTable({
         </div>
       ) : (
         <p className="my-8 w-full text-center text-xl">
-          {'No transactions to display.'}
+          <FormattedMessage id="dashboard.common.activity.tx.empty" />
         </p>
       )}
     </>

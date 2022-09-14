@@ -6,6 +6,7 @@ import ParentSignin from '../components/auth/ParentSignin';
 import ChildSignin from '../components/auth/ChildSignin';
 import { Fragment, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import FormattedMessage from '../components/common/FormattedMessage';
 
 function Connect() {
   const { loading, loggedIn } = useMagic();
@@ -30,20 +31,22 @@ function Connect() {
   return (
     <MainWrapper>
       <div className="mx-auto flex max-w-sm flex-col items-center justify-center gap-8 text-center">
-        <h1 className="mb-4">Welcome to Pocket !</h1>
+        <h1 className="mb-4">
+          <FormattedMessage id="common.welcome" />
+        </h1>
         <Tab.Group>
           <Tab.List className="flex gap-8">
             <Tab as={Fragment}>
               {({ selected }) => (
                 <button className={`${!selected && 'opacity-40'}`}>
-                  {`I'm a parent`}
+                  <FormattedMessage id="connect.parent" />
                 </button>
               )}
             </Tab>
             <Tab as={Fragment}>
               {({ selected }) => (
                 <button className={`${!selected && 'opacity-40'}`}>
-                  {`I'm a child`}
+                  <FormattedMessage id="connect.child" />
                 </button>
               )}
             </Tab>

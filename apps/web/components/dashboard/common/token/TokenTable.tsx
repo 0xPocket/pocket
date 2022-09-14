@@ -13,6 +13,7 @@ import {
 } from '@tanstack/react-table';
 import { ethers } from 'ethers';
 import { useMemo, useState } from 'react';
+import FormattedMessage from '../../../common/FormattedMessage';
 
 type TokenTableProps = {
   tokenList: CovalentItem[];
@@ -31,7 +32,10 @@ function TokenTable({ tokenList }: TokenTableProps) {
         ),
       },
       {
-        header: () => 'Token Name',
+        header: () => (
+          <FormattedMessage id="dashboard.common.token.table.header.tokenName" />
+        ),
+
         accessorKey: 'contract_name',
         cell: ({ getValue }) => {
           return <div>{getValue() as number}</div>;
@@ -53,7 +57,8 @@ function TokenTable({ tokenList }: TokenTableProps) {
         ),
       },
       {
-        header: 'Value',
+        header: () => <FormattedMessage id="value" />,
+        // 'Value'
         accessorFn: (row) => {
           const roundValue = Math.floor(Number(row.quote) * 100) / 100;
           return roundValue;

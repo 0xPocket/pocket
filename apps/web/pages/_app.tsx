@@ -23,6 +23,13 @@ import { withTRPC } from '@trpc/next';
 import { env } from 'config/env/client';
 import { SessionProvider } from 'next-auth/react';
 // import { SessionProvider } from 'next-auth/react';
+import fr from '../lang/fr.json';
+import en from '../lang/en-US.json';
+import { useRouter } from 'next/router';
+import { IntlProvider } from 'react-intl';
+
+const messages = { fr, 'en-US': en };
+export type IntlMessageID = keyof typeof en;
 
 const { chains, provider } = configureChains(
   [env.WAGMI_CHAIN],
@@ -36,6 +43,8 @@ const { chains, provider } = configureChains(
 );
 
 function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+  const { locale } = useRouter();
+
   const [wagmiClient] = useState(() =>
     createClient({
       autoConnect: true,
@@ -69,26 +78,30 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   );
 
   return (
-    <WagmiConfig client={wagmiClient}>
-      <SessionProvider session={session}>
-        <MagicAuthProvider>
-          <AlchemyProvider>
-            <ThemeProvider>
-              <SmartContractProvider>
-                <Component {...pageProps} />
-                <ToastContainer
-                  toastClassName="toast-container"
-                  position="bottom-right"
-                  autoClose={3000}
-                  // autoClose={3000}
-                />
-                <ReactQueryDevtools />
-              </SmartContractProvider>
-            </ThemeProvider>
-          </AlchemyProvider>
-        </MagicAuthProvider>
-      </SessionProvider>
-    </WagmiConfig>
+    <IntlProvider
+      locale={locale as 'fr' | 'en-US'}
+      messages={messages[locale as 'fr' | 'en-US']}
+    >
+      <WagmiConfig client={wagmiClient}>
+        <SessionProvider session={session}>
+          <MagicAuthProvider>
+            <AlchemyProvider>
+              <ThemeProvider>
+                <SmartContractProvider>
+                  <Component {...pageProps} />
+                  <ToastContainer
+                    toastClassName="toast-container"
+                    position="bottom-right"
+                    autoClose={3000}
+                  />
+                  <ReactQueryDevtools />
+                </SmartContractProvider>
+              </ThemeProvider>
+            </AlchemyProvider>
+          </MagicAuthProvider>
+        </SessionProvider>
+      </WagmiConfig>
+    </IntlProvider>
   );
 }
 

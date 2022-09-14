@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { Spinner } from '../../common/Spinner';
 import useContractRead from '../../../hooks/useContractRead';
 import { useSmartContract } from '../../../contexts/contract';
+import FormattedMessage from '../../common/FormattedMessage';
 
 export default function ClaimMaticModal() {
   const [open, setOpen] = useState(false);
@@ -32,7 +33,10 @@ export default function ClaimMaticModal() {
     },
     onSuccess: () => {
       refetch();
-      toast.info(`Claim matic pending, please hang on !`, { isLoading: true });
+
+      toast.info(<FormattedMessage id="dashboard.child.claimMatic.pending" />, {
+        isLoading: true,
+      });
     },
   });
   const tx = useWaitForTransaction({
@@ -40,7 +44,10 @@ export default function ClaimMaticModal() {
     enabled: claimMatic.isSuccess,
     onSuccess: () => {
       toast.dismiss();
-      toast.success('Transaction success !');
+
+      toast.success(
+        <FormattedMessage id="dashboard.child.claimMatic.success" />,
+      );
     },
   });
 
@@ -92,12 +99,11 @@ export default function ClaimMaticModal() {
                     as="h3"
                     className="my-4 text-lg font-bold leading-6"
                   >
-                    You can claim your Matic !
+                    <FormattedMessage id="dashboard.child.claimMatic.title" />
                   </Dialog.Title>
                   <div className="mt-2">
                     <p className="text-gray-500 text-sm">
-                      To start your journey into web3, we grant you some Matic
-                      to pay fees on your few first transactions.
+                      <FormattedMessage id="dashboard.child.claimMatic.message" />
                     </p>
                   </div>
                 </div>
@@ -114,7 +120,7 @@ export default function ClaimMaticModal() {
                     onClick={() => claimMatic.mutate()}
                     disabled={claimMatic.isLoading}
                   >
-                    Claim
+                    <FormattedMessage id="claim" />
                   </button>
                 )}
               </div>

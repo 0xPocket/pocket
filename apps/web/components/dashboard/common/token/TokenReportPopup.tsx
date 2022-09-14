@@ -6,6 +6,7 @@ import { DialogPopupWrapper } from '@lib/ui';
 import { FC, Fragment, useState } from 'react';
 import { toast } from 'react-toastify';
 import { trpc } from '../../../../utils/trpc';
+import FormattedMessage from '../../../common/FormattedMessage';
 
 type TokenReportPopupProps = {
   items: CovalentItem[];
@@ -16,7 +17,9 @@ const TokenReportPopup: FC<TokenReportPopupProps> = ({ items }) => {
   const [popupOpen, setPopupOpen] = useState(false);
   const reportToken = trpc.useMutation(['token.report'], {
     onSuccess: () => {
-      toast.success('Report sent !');
+      toast.success(
+        <FormattedMessage id="dashboard.common.token.report.sent" />,
+      );
     },
   });
 
@@ -27,7 +30,7 @@ const TokenReportPopup: FC<TokenReportPopupProps> = ({ items }) => {
         onClick={() => setPopupOpen(true)}
       >
         <FontAwesomeIcon icon={faTriangleExclamation} className="mr-2" />
-        Report a suspicious token
+        <FormattedMessage id="dashboard.common.token.report.send" />
       </div>
       <DialogPopupWrapper isOpen={popupOpen} setIsOpen={setPopupOpen}>
         <div className="relative flex w-60 flex-col gap-4">
@@ -35,7 +38,7 @@ const TokenReportPopup: FC<TokenReportPopupProps> = ({ items }) => {
             {({ open }) => (
               <>
                 <Listbox.Label className="block text-sm font-medium">
-                  Select a token
+                  <FormattedMessage id="dashboard.common.token.report.select" />
                 </Listbox.Label>
 
                 <div className="relative">
@@ -79,7 +82,7 @@ const TokenReportPopup: FC<TokenReportPopupProps> = ({ items }) => {
               setPopupOpen(false);
             }}
           >
-            Report
+            <FormattedMessage id="report" />
           </button>
         </div>
       </DialogPopupWrapper>

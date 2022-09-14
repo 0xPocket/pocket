@@ -6,6 +6,7 @@ import { useQuery } from 'wagmi';
 import ClaimButton from '../../dashboard/child/ClaimButton';
 import BaseTokenBalance from '../../common/BaseTokenBalance';
 import PocketMoney from './PocketMoney';
+import FormattedMessage from '../../common/FormattedMessage';
 
 type ChildCardProps = {
   childAddress: string;
@@ -45,7 +46,9 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
 
   return (
     <div className="space-y-4">
-      <h2>My account</h2>
+      <h2>
+        <FormattedMessage id="card.child.title" />
+      </h2>
       <div
         className={`${className} container-classic h-4/5 min-h-[260px] rounded-lg p-8`}
       >
@@ -56,13 +59,17 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
           </div>
           {config && (
             <ClaimButton disabled={!canClaim || config[1].isZero()}>
-              {!canClaim || config[1].isZero()
-                ? config[1].isZero()
-                  ? 'Nothing to claim'
-                  : 'Next claim in ' +
-                    moment.duration(moment().diff(nextClaim)).humanize() +
-                    '...'
-                : 'Claim'}
+              {!canClaim || config[1].isZero() ? (
+                config[1].isZero() ? (
+                  <FormattedMessage id="card.child.piggyBank.status.nothing" />
+                ) : (
+                  <FormattedMessage id="card.child.piggyBank.status.next" /> +
+                  moment.duration(moment().diff(nextClaim)).humanize() +
+                  '...'
+                )
+              ) : (
+                <FormattedMessage id="claim" />
+              )}
             </ClaimButton>
           )}
         </div>

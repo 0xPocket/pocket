@@ -6,6 +6,7 @@ import ChildrenMozaic from '../components/dashboard/parent/ChildrenMozaic';
 import ChildDashboard from '../components/dashboard/child/ChildDashboard';
 import { trpc } from '../utils/trpc';
 import { Spinner } from '../components/common/Spinner';
+import FormattedMessage from '../components/common/FormattedMessage';
 
 export default function Web() {
   const { data, isLoading } = trpc.useQuery(['auth.session']);
@@ -17,7 +18,9 @@ export default function Web() {
         {data && (
           <div className="mb-12 flex items-center space-x-4">
             <FontAwesomeIcon icon={faAngleRight} />
-            <p>dashboard</p>
+            <p>
+              <FormattedMessage id="route.dashboard" />
+            </p>
           </div>
         )}
         {data?.user.type === 'Parent' && <ChildrenMozaic />}

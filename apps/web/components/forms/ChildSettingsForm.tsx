@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { useSmartContract } from '../../contexts/contract';
 import { ContractMethodReturn } from '../../hooks/useContractRead';
 import { useZodForm } from '../../utils/useZodForm';
+import FormattedMessage from '../common/FormattedMessage';
 
 const ChildSettingsSchema = z.object({
   ceiling: z.number({ invalid_type_error: 'Ceiling is required' }).min(1),
@@ -73,7 +74,9 @@ function ChildSettingsForm({
           <tbody className="flex flex-col space-y-4">
             <tr className="flex items-center space-x-8">
               <td>
-                <label>Periodicity</label>
+                <label>
+                  <FormattedMessage id="periodicity" />
+                </label>
               </td>
               <td className="flex flex-grow justify-end">
                 <RadioGroup
@@ -99,7 +102,10 @@ function ChildSettingsForm({
             </tr>
             <tr className="flex items-center justify-between">
               <td>
-                <label htmlFor="topup">Ceiling</label>
+                <label htmlFor="topup">
+                  {' '}
+                  <FormattedMessage id="ceiling" />
+                </label>
               </td>
               <td className="flex justify-end text-4xl">
                 <input
@@ -134,11 +140,11 @@ function ChildSettingsForm({
             onClick={() => returnFn()}
           >
             <FontAwesomeIcon icon={faAngleLeft} className="mr-2" />
-            return
+            <FormattedMessage id="return" />
           </button>
           <button type="submit" className="success-btn">
             <FontAwesomeIcon icon={faWrench} className="mr-2" />
-            Apply
+            <FormattedMessage id="apply" />
           </button>
         </div>
       </form>
