@@ -3,7 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { RadioGroup } from '@headlessui/react';
 import { formatUnits } from 'ethers/lib/utils';
 import { PocketFaucet } from 'pocket-contract/typechain-types';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useIntl } from 'react-intl';
 import { z } from 'zod';
 import { useSmartContract } from '../../contexts/contract';
 import { ContractMethodReturn } from '../../hooks/useContractRead';
@@ -14,10 +15,6 @@ const ChildSettingsSchema = z.object({
   ceiling: z.number({ invalid_type_error: 'Ceiling is required' }).min(1),
   periodicity: z.string(),
 });
-const periodicity_options = [
-  { name: 'weekly', value: '604800' },
-  { name: 'monthly', value: '2592000' },
-];
 
 type FormValues = z.infer<typeof ChildSettingsSchema>;
 
@@ -34,6 +31,15 @@ function ChildSettingsForm({
   changeConfig,
   returnFn,
 }: ChildSettingsFormProps) {
+  const intl = useIntl();
+
+  const periodicity_options = useMemo(
+    () => [
+      { name: intl.formatMessage({ id: 'weekly' }), value: '604800' },
+      { name: intl.formatMessage({ id: 'monthly' }), value: '2592000' },
+    ],
+    [intl],
+  );
   const [selected, setSelected] = useState(
     periodicity_options.find(
       (option) =>
@@ -103,7 +109,6 @@ function ChildSettingsForm({
             <tr className="flex items-center justify-between">
               <td>
                 <label htmlFor="topup">
-                  {' '}
                   <FormattedMessage id="ceiling" />
                 </label>
               </td>

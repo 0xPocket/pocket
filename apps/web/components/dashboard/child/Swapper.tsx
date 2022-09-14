@@ -2,6 +2,7 @@ import { useTheme } from '@lib/ui/src/Theme/ThemeContext';
 import { SwapWidgetProps, Theme } from '@uniswap/widgets';
 import { env } from 'config/env/client';
 import dynamic from 'next/dynamic';
+import { useIntl } from 'react-intl';
 
 const SwapWidget = dynamic<SwapWidgetProps>(
   () => import('@uniswap/widgets').then((mod) => mod.SwapWidget),
@@ -11,8 +12,14 @@ type SwapperProps = {};
 
 const jsonrpcmap = { [Number(env.CHAIN_ID)]: [env.RPC_URL] };
 
+const mapLanguage = {
+  fr: 'fr-FR',
+  en: 'en-US',
+};
+
 function Swapper({}: SwapperProps) {
   const { dark } = useTheme();
+  const intl = useIntl();
 
   const theme: Theme = dark
     ? {
@@ -45,6 +52,7 @@ function Swapper({}: SwapperProps) {
       theme={theme}
       defaultInputTokenAddress={env.ERC20_ADDRESS}
       jsonRpcUrlMap={jsonrpcmap}
+      locale={mapLanguage[intl.locale as 'fr' | 'en']}
       hideConnectionUI
     />
   );

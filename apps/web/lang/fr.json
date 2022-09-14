@@ -30,6 +30,8 @@
   "claimable": "Disponible",
   "or": "ou",
   "transactions": "Transactions",
+  "subject": "Sujet",
+  "optional": "(optionnel)",
 
   "auth.email.connect": "Se connecter avec son email",
   "auth.email.verify": "Vérifiez votre email avec le lien envoyé s'il vous plait.",
@@ -55,7 +57,7 @@
   "dashboard.child.claimMatic.pending": "Le retrait de matic est en cours, encore quelques secondes et ce sera bon!",
   "dashboard.child.claimMatic.success": "Transaction réussie",
   "dashboard.child.claimMatic.title": "Tu peux récupérer tes Matics !",
-  "dashboard.child.claimMatic.message": "Pour commencer ton voyage dans le web3, nous t'offrons quelques Matic pour payer les frais de tes premiéres transactions.",
+  "dashboard.child.claimMatic.message": "Pour commencer ton voyage dans le web3, nous t'offrons quelques Matics pour payer les frais de tes premières transactions.",
 
   "verify-email.email-verified": "Votre email est verifié !",
   "verify-email.redirect": "Vous allez être redirigé dans quelques instants...",
@@ -125,5 +127,9 @@
   "dashboard.parent.card.go-to": "Aller sur le profil de {name}",
 
   "footer.rightReserved": "2022 Pocket",
-  "footer.report-bug": "Signaler un bug"
+  "footer.report-bug": "Signaler un bug",
+  "footer.report-success": "Merci pour le signalement, nous reviendrons vers vous dès que possible si nécessaire !",
+  "footer.tell-more": "Quel est le problème ?",
+  "footer.my-message": "Mon message",
+  "footer.contact-us": "Contactez-nous"
 }

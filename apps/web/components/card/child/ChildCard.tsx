@@ -7,6 +7,7 @@ import ClaimButton from '../../dashboard/child/ClaimButton';
 import BaseTokenBalance from '../../common/BaseTokenBalance';
 import PocketMoney from './PocketMoney';
 import FormattedMessage from '../../common/FormattedMessage';
+import { useIntl } from 'react-intl';
 
 type ChildCardProps = {
   childAddress: string;
@@ -16,6 +17,7 @@ type ChildCardProps = {
 
 function ChildCard({ childAddress, className }: ChildCardProps) {
   const { pocketContract } = useSmartContract();
+  const intl = useIntl();
 
   const { data: config } = useContractRead({
     contract: pocketContract,
@@ -63,9 +65,13 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
                 config[1].isZero() ? (
                   <FormattedMessage id="card.child.piggyBank.status.nothing" />
                 ) : (
-                  <FormattedMessage id="card.child.piggyBank.status.next" /> +
-                  moment.duration(moment().diff(nextClaim)).humanize() +
-                  '...'
+                  <>
+                    <FormattedMessage id="card.child.piggyBank.status.next" />{' '}
+                    {moment
+                      .duration(moment().diff(nextClaim))
+                      .locale(intl.locale)
+                      .humanize() + '...'}
+                  </>
                 )
               ) : (
                 <FormattedMessage id="claim" />

@@ -5,6 +5,8 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import moment from 'moment';
+import { useMemo } from 'react';
+import { useIntl } from 'react-intl';
 import FormattedMessage from '../../../common/FormattedMessage';
 
 type EventTableProps = {
@@ -26,7 +28,7 @@ const columns = [
         <FormattedMessage id="date" />
       </span>
     ),
-    cell: (info) => <span>{moment(info.getValue()).format('D/MM')}</span>,
+    cell: (info) => <span>{moment(info.getValue() * 1000).fromNow()}</span>,
     id: 'Date',
   }),
 
@@ -42,6 +44,39 @@ const columns = [
 ];
 
 function EventsTable({ logs }: EventTableProps) {
+  const intl = useIntl();
+
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor('timestamp', {
+        header: () => (
+          <span>
+            <FormattedMessage id="date" />
+          </span>
+        ),
+        cell: (info) => (
+          <span>
+            {moment(info.getValue() * 1000)
+              .locale(intl.locale)
+              .fromNow()}
+          </span>
+        ),
+        id: 'Date',
+      }),
+
+      columnHelper.accessor((row) => `${row.value} ${row.symbol}`, {
+        header: () => (
+          <span>
+            <FormattedMessage id="amount" />
+          </span>
+        ),
+        cell: (info) => <div className="text-right">{info.getValue()}</div>,
+        id: 'Amount',
+      }),
+    ],
+    [intl],
+  );
+
   const table = useReactTable({
     data: logs,
     columns,

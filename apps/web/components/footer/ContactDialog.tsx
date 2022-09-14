@@ -8,6 +8,8 @@ import { toast } from 'react-toastify';
 import { useMagic } from '../../contexts/auth';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import FormattedMessage from '../common/FormattedMessage';
+import { useIntl } from 'react-intl';
 
 type ContactDialogProps = {
   isOpen: boolean;
@@ -32,6 +34,8 @@ const ContactDialog: FC<ContactDialogProps> = ({ isOpen, setIsOpen }) => {
     },
   });
 
+  const intl = useIntl();
+
   useEffect(() => {
     if (user?.email) {
       setValue('email', user.email);
@@ -45,7 +49,7 @@ const ContactDialog: FC<ContactDialogProps> = ({ isOpen, setIsOpen }) => {
     <DialogPopupWrapper isOpen={isOpen} setIsOpen={setIsOpen}>
       <h1 className="mb-6">
         <FontAwesomeIcon icon={faEnvelope} className="mr-2" />
-        Contact Us
+        <FormattedMessage id="footer.contact-us" />
       </h1>
       <form
         onSubmit={handleSubmit((data) => contact.mutate(data))}
@@ -62,7 +66,7 @@ const ContactDialog: FC<ContactDialogProps> = ({ isOpen, setIsOpen }) => {
           </div>
         )}
         <InputText
-          label="Subject"
+          label={<FormattedMessage id="subject" />}
           register={register('subject')}
           autoComplete="off"
         />
@@ -70,12 +74,13 @@ const ContactDialog: FC<ContactDialogProps> = ({ isOpen, setIsOpen }) => {
         <textarea
           {...register('desc')}
           className="container-classic without-ring min-h-[150px] rounded-md p-4"
-          placeholder="My message"
+          placeholder={intl.formatMessage({ id: 'footer.my-message' })}
           autoComplete="off"
           required
         />
         <button className="action-btn">
-          <FontAwesomeIcon icon={faPaperPlane} className="mr-2" /> Send
+          <FontAwesomeIcon icon={faPaperPlane} className="mr-2" />{' '}
+          <FormattedMessage id="send" />
         </button>
       </form>
     </DialogPopupWrapper>
