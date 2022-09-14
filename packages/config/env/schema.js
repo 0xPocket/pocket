@@ -9,13 +9,13 @@ const { z } = require("zod");
 const serverSchema = z.object({
   JWT_EMAIL_SECRET: z.string().optional(),
   MAGIC_LINK_SECRET_KEY: z.string(),
-  MAIL_USER: z.string().email(),
+  MAIL_USER: z.string(),
+  MAIL_PASSWORD: z.string(),
   NEXTAUTH_SECRET: z.string(),
   NEXTAUTH_URL: z.string().url().optional(),
   NODE_ENV: z.enum(["development", "test", "production"]),
   POCKET_PRIVATE_KEY: z.string(),
   QUERY_DEBUG: z.string().optional(),
-  SENDGRID_API_KEY: z.string(),
   VERCEL_URL: z.string().optional(),
 });
 
