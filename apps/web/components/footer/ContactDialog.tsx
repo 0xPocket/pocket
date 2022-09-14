@@ -6,6 +6,8 @@ import InputText from '../common/InputText';
 import { ContactSchema } from '../../server/schemas';
 import { toast } from 'react-toastify';
 import { useMagic } from '../../contexts/auth';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEnvelope, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
 type ContactDialogProps = {
   isOpen: boolean;
@@ -41,23 +43,24 @@ const ContactDialog: FC<ContactDialogProps> = ({ isOpen, setIsOpen }) => {
 
   return (
     <DialogPopupWrapper isOpen={isOpen} setIsOpen={setIsOpen}>
-      <h1 className="mb-6">Contact Us</h1>
+      <h1 className="mb-6">
+        <FontAwesomeIcon icon={faEnvelope} className="mr-2" />
+        Contact Us
+      </h1>
       <form
         onSubmit={handleSubmit((data) => contact.mutate(data))}
         className="flex min-w-[460px] flex-col gap-4 rounded-lg"
       >
-        <div className="flex gap-4">
-          <InputText
-            label="Name"
-            register={register('name')}
-            disabled={!!user?.name}
-          />
-          <InputText
-            label="Email"
-            register={register('email')}
-            disabled={!!user?.email}
-          />
-        </div>
+        {(!user?.name || !user?.email) && (
+          <div className="flex gap-4 py-2">
+            {!user?.name && (
+              <InputText label="Name" register={register('name')} />
+            )}
+            {!user?.email && (
+              <InputText label="Email" register={register('email')} />
+            )}
+          </div>
+        )}
         <InputText
           label="Subject"
           register={register('subject')}
@@ -71,7 +74,9 @@ const ContactDialog: FC<ContactDialogProps> = ({ isOpen, setIsOpen }) => {
           autoComplete="off"
           required
         />
-        <button className="action-btn">Submit</button>
+        <button className="action-btn">
+          <FontAwesomeIcon icon={faPaperPlane} className="mr-2" /> Send
+        </button>
       </form>
     </DialogPopupWrapper>
   );

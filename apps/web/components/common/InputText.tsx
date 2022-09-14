@@ -27,7 +27,7 @@ const InputText: FC<InputTextProps> = ({
       />
       <label
         htmlFor={id}
-        className="text-md absolute top-1 -z-10 origin-[0] -translate-y-6 scale-75 transform text-left duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium"
+        className="text-md absolute top-2 -z-10 origin-[0] -translate-y-6 scale-75 transform text-left duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium"
       >
         {label}
       </label>

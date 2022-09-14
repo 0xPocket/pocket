@@ -77,8 +77,24 @@
 
   /* inputs */
   .input-text {
-    @apply block w-full appearance-none border-0 border-b bg-transparent py-2.5  px-0 text-sm  focus:outline-none focus:ring-0;
+    @apply block w-full appearance-none border-b  bg-transparent py-2.5  px-0 text-sm  focus:outline-none focus:ring-0 disabled:bg-gray disabled:bg-opacity-20 disabled:cursor-not-allowed;
   }
+
+	.input-number {
+		@apply without-ring w-full appearance-none bg-transparent mr-2 text-right text-4xl outline-none
+	}
+
+	.input-radio {
+		@apply relative flex items-center justify-center cursor-pointer rounded-lg border  px-3 py-2 shadow-sm focus:outline-none;
+	}
+
+	.input-radio-checked {
+		@apply input-radio border border-primary bg-primary text-white;
+	}
+
+	.input-radio-unchecked {
+		@apply input-radio border border-primary text-primary;
+	}
 
   /* badge */
   .cat-badge {
@@ -160,4 +176,9 @@
       transform: translateX(100%);
     }
   }
+
+	/* toastify */
+	.toast-container {
+		@apply container-classic  text-dark-lightest  dark:text-white !important;
+	}
 }

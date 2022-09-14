@@ -1,19 +1,22 @@
 import { faAngleLeft, faWrench } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { FormErrorMessage } from '@lib/ui';
+import { RadioGroup } from '@headlessui/react';
 import { formatUnits } from 'ethers/lib/utils';
 import { PocketFaucet } from 'pocket-contract/typechain-types';
-
+import { useEffect, useState } from 'react';
 import { z } from 'zod';
 import { useSmartContract } from '../../contexts/contract';
 import { ContractMethodReturn } from '../../hooks/useContractRead';
-
 import { useZodForm } from '../../utils/useZodForm';
 
 const ChildSettingsSchema = z.object({
   ceiling: z.number({ invalid_type_error: 'Ceiling is required' }).min(1),
   periodicity: z.string(),
 });
+const periodicity_options = [
+  { name: 'weekly', value: '604800' },
+  { name: 'monthly', value: '2592000' },
+];
 
 type FormValues = z.infer<typeof ChildSettingsSchema>;
 
@@ -30,11 +33,19 @@ function ChildSettingsForm({
   changeConfig,
   returnFn,
 }: ChildSettingsFormProps) {
+  const [selected, setSelected] = useState(
+    periodicity_options.find(
+      (option) =>
+        option.value === formatUnits(config.periodicity, 0).toString(),
+    ) ?? periodicity_options[0],
+  );
+
   const { erc20 } = useSmartContract();
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useZodForm({
     schema: ChildSettingsSchema,
     defaultValues: {
@@ -48,49 +59,65 @@ function ChildSettingsForm({
     changeConfig(data);
   };
 
+  useEffect(() => {
+    setValue('periodicity', selected.value);
+  }, [selected, setValue]);
+
   return (
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex h-full flex-col items-end justify-between space-y-4"
       >
-        <div className="flex items-center space-x-8">
-          <label>Periodicity</label>
-          <div className="flex flex-col space-x-2">
-            <input
-              type="radio"
-              id="weekly"
-              value="604800"
-              {...register('periodicity')}
-            />
-            <label htmlFor="huey">Weekly</label>
-          </div>
+        <table>
+          <tbody className="flex flex-col space-y-4">
+            <tr className="flex items-center space-x-8">
+              <td>
+                <label>Periodicity</label>
+              </td>
+              <td className="flex flex-grow justify-end">
+                <RadioGroup
+                  value={selected}
+                  onChange={setSelected}
+                  className="flex items-center space-x-8"
+                >
+                  {periodicity_options.map((option) => (
+                    <RadioGroup.Option
+                      key={option.name}
+                      value={option}
+                      className={({ checked }) =>
+                        checked
+                          ? 'input-radio-checked'
+                          : 'input-radio-unchecked'
+                      }
+                    >
+                      {option.name}
+                    </RadioGroup.Option>
+                  ))}
+                </RadioGroup>
+              </td>
+            </tr>
+            <tr className="flex items-center justify-between">
+              <td>
+                <label htmlFor="topup">Ceiling</label>
+              </td>
+              <td className="flex justify-end text-4xl">
+                <input
+                  className="input-number"
+                  placeholder="0"
+                  type="number"
+                  min="0"
+                  {...register('ceiling', {
+                    valueAsNumber: true,
+                  })}
+                />
+                <span>$</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
-          <div className="flex flex-col space-x-2">
-            <input
-              type="radio"
-              id="monthly"
-              value="2592000"
-              {...register('periodicity')}
-            />
-            <label htmlFor="dewey">Monthly</label>
-          </div>
-        </div>
-        <div className="flex items-center space-x-8">
-          <label htmlFor="topup">Ceiling</label>
-          <input
-            className="border p-2 text-dark"
-            {...register('ceiling', {
-              valueAsNumber: true,
-            })}
-            type="number"
-          />
-          {errors.ceiling && (
-            <FormErrorMessage message={errors.ceiling.message} />
-          )}
-        </div>
-
-        <button
+        {/* <button
           className="third-btn mt-4"
           onClick={(e) => {
             e.preventDefault();
@@ -98,7 +125,7 @@ function ChildSettingsForm({
           }}
         >
           withdraw funds
-        </button>
+        </button> */}
 
         <div className="flex space-x-4">
           <button

@@ -6,6 +6,8 @@ import { trpc } from '../../utils/trpc';
 import InputText from '../common/InputText';
 import { useZodForm } from '../../utils/useZodForm';
 import { TicketSchema } from '../../server/schemas';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBug, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
 type BugDialogProps = {
   isOpen: boolean;
@@ -34,24 +36,27 @@ const BugDialog: FC<BugDialogProps> = ({ isOpen, setIsOpen }) => {
 
   return (
     <DialogPopupWrapper isOpen={isOpen} setIsOpen={setIsOpen}>
-      <h1 className="mb-6">Report a bug</h1>
+      <h1 className="mb-6">
+        <FontAwesomeIcon icon={faBug} className="mr-2" /> Report a bug
+      </h1>
       <form
         onSubmit={handleSubmit((data) => reportBug.mutate(data))}
-        className="flex min-w-[360px] flex-col gap-4 rounded-lg"
+        className="flex min-w-[360px] flex-col gap-6 rounded-lg"
       >
         <InputText
           label="Subject (optional)"
           register={register('subject')}
           optional
         />
-        <label htmlFor="desc"></label>
         <textarea
           {...register('desc')}
           className="container-classic without-ring min-h-[150px] rounded-md p-4"
           placeholder="Tell us more about it"
           required
         />
-        <button className="action-btn">Submit</button>
+        <button className="action-btn">
+          <FontAwesomeIcon icon={faPaperPlane} className="mr-2" /> Send
+        </button>
       </form>
     </DialogPopupWrapper>
   );

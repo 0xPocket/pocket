@@ -61,28 +61,30 @@ function AddFundsForm({ child, addFunds, returnFn }: AddFundsFormProps) {
       onSubmit={handleSubmit(onSubmit)}
       className="flex h-full flex-col items-end justify-between space-y-4"
     >
-      <label htmlFor="topup">Add funds to {child.name} account</label>
-      <div className="relative  flex items-center text-4xl">
-        <input
-          className="without-ring appearance-none bg-transparent p-2 text-right text-4xl  text-white outline-none"
-          placeholder="0"
-          type="number"
-          min="0"
-          onKeyDown={(e) => {
-            if (e.key === 'e' || e.key === '-') {
-              e.preventDefault();
-            }
-          }}
-          {...register('topup', {
-            valueAsNumber: true,
-          })}
-        />
-        <span>$</span>
-        {errors.topup && (
-          <span className="absolute bottom-0 right-0 translate-y-full rounded border border-danger bg-danger/20 p-1 px-2 text-xs text-white">
-            {errors.topup.message}
-          </span>
-        )}
+      <div className="flex flex-col items-end">
+        <label htmlFor="topup">Add funds to {child.name} account</label>
+        <div className="relative flex items-center text-4xl">
+          <input
+            className="input-number"
+            placeholder="0"
+            type="number"
+            min="0"
+            onKeyDown={(e) => {
+              if (e.key === 'e' || e.key === '-') {
+                e.preventDefault();
+              }
+            }}
+            {...register('topup', {
+              valueAsNumber: true,
+            })}
+          />
+          <span>$</span>
+          {errors.topup && (
+            <span className="absolute bottom-0 right-0 translate-y-full rounded border border-danger bg-danger/20 p-1 px-2 text-xs text-white">
+              {errors.topup.message}
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="flex space-x-4">
