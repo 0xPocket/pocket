@@ -74,6 +74,9 @@ const handler = (req: NextRequestWithAuth) => {
 };
 
 const middleware = withAuth(handler, {
+  pages: {
+    signIn: '/connect',
+  },
   callbacks: {
     authorized: ({ token }) => {
       return !!token;
