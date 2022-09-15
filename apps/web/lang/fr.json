@@ -131,5 +131,10 @@
   "footer.report-success": "Merci pour le signalement, nous reviendrons vers vous dès que possible si nécessaire !",
   "footer.tell-more": "Quel est le problème ?",
   "footer.my-message": "Mon message",
-  "footer.contact-us": "Contactez-nous"
+  "footer.contact-us": "Contactez-nous",
+
+  "add-child-and-funds.error": "Le dépôt a échoué: {message}. Si le probléme persiste, contactez-nous s'il vous plaît.",
+  "add-child-and-funds.success": "Le depôt est un succés !",
+  "add-child-and-funds.pending": "Transaction en cours, ce sera bientôt bon !",
+  "add-child-and-funds.approve": "L'opération a échoué: {message}. Si le probléme persiste, contactez-nous s'il vous plaît."
 }

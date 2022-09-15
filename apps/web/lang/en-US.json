@@ -131,5 +131,11 @@
   "footer.report-success": "Thank you for the report, we'll get back to you asap if needed !",
   "footer.tell-more": "What's the issue ?",
   "footer.my-message": "My message",
-  "footer.contact-us": "Contact us"
+  "footer.contact-us": "Contact us",
+
+  "add-child-and-funds.error": "Deposit failed: {message}. If the problem persits, please contact us.",
+  "add-child-and-funds.success": "Successfull deposit !",
+  "add-child-and-funds.approve": "Approve failed: {message}. If the problem persits, please contact us.",
+
+  "transaction.pending": "Transaction pending, please hang on !"
 }
