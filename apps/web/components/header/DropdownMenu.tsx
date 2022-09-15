@@ -8,13 +8,11 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { useMagic } from '../../contexts/auth';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import FormattedMessage from '../common/FormattedMessage';
 import LangToggler from './LangToggler';
 import { ThemeToggler } from './ThemeToggler';
 
 const DropdownMenu: FC = ({}) => {
-  const { locale, asPath } = useRouter();
   const { signOut } = useMagic();
 
   return (

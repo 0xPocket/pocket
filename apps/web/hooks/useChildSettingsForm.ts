@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { toast } from 'react-toastify';
 import { useContractWrite, useWaitForTransaction } from 'wagmi';
 import { useSmartContract } from '../contexts/contract';
+import { useIntl } from 'react-intl';
 
 type ChangeConfigProps = {
   ceiling: number;
@@ -15,6 +16,7 @@ export function useChildSettingsForm(
   returnFn: () => void,
 ) {
   const { pocketContract, erc20 } = useSmartContract();
+  const intl = useIntl();
 
   const addChildOrChangeConfig = useContractWrite({
     mode: 'recklesslyUnprepared',
@@ -25,7 +27,10 @@ export function useChildSettingsForm(
     overrides: { gasLimit: '3000000' },
     onError(e) {
       console.log(e.message);
-      toast.error(`An error occured while changing your child configuration`);
+      toast.error(
+        intl.formatMessage({ id: 'add-child-or-change-config.fail' }),
+      );
+      // toast.error(`An error occured while setting your child configuration`);
     },
     onSuccess: () => {
       toast.info(`Transaction pending, please hang on !`, {
@@ -40,12 +45,19 @@ export function useChildSettingsForm(
     onError: (e) => {
       toast.dismiss();
       toast.error(
-        `Changing config failed: ${e.message}. If the problem persists, contact us.`,
+        intl.formatMessage(
+          { id: 'add-child-or-change-config.error' },
+          { message: e.message },
+        ),
+        // `Changing config failed: ${e.message}. If the problem persists, contact us.`,
       );
     },
     onSuccess: () => {
       toast.dismiss();
-      toast.success(`Configuration sets successfully !`);
+      toast.success(
+        intl.formatMessage({ id: 'add-child-or-change-config.success' }),
+        // `Configuration sets successfully !`
+      );
     },
   });
 
@@ -66,5 +78,5 @@ export function useChildSettingsForm(
     [childAddress, addChildOrChangeConfig, erc20.data?.decimals],
   );
 
-  return { changeConfig };
+  return { changeConfig, isLoading: addChildOrChangeConfig.isLoading };
 }

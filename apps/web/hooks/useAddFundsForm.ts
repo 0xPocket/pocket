@@ -6,6 +6,7 @@ import { useAccount, useContractWrite, useWaitForTransaction } from 'wagmi';
 import { useSmartContract } from '../contexts/contract';
 import { useApprove } from './useApprove';
 import useContractRead from './useContractRead';
+import { useIntl } from 'react-intl';
 
 export function useAddFundsForm(
   childAddress: string | null,
@@ -14,6 +15,7 @@ export function useAddFundsForm(
 ) {
   const { pocketContract, erc20 } = useSmartContract();
   const { address } = useAccount();
+  const intl = useIntl();
 
   const { data: allowance } = useContractRead({
     contract: erc20.contract,
@@ -29,7 +31,7 @@ export function useAddFundsForm(
       '0xf000000000000000000000000000000000000000000000000000000000000000',
     onError: (e) => {
       toast.error(
-        `Approval failed : ${e.message}. If the problem persits, contact us.`,
+        intl.formatMessage({ id: 'approve.fail' }, { message: e.message }),
       );
     },
   });
@@ -43,11 +45,14 @@ export function useAddFundsForm(
     overrides: { gasLimit: '3000000' },
     onError: (e) => {
       toast.error(
-        `Deposit failed : ${e.message}. If the problem persits, contact us.`,
+        intl.formatMessage(
+          { id: 'add-child-and-funds.error' },
+          { message: e.message },
+        ),
       );
     },
     onSuccess: () => {
-      toast.info(`Transaction pending, please hang on !`, {
+      toast.info(intl.formatMessage({ id: 'add-child-and-funds.pending' }), {
         isLoading: true,
       });
       returnFn();
@@ -59,12 +64,15 @@ export function useAddFundsForm(
     onError: (e) => {
       toast.dismiss();
       toast.error(
-        `Deposit failed: ${e.message}. If the problem persits, contact us.`,
+        intl.formatMessage(
+          { id: 'add-child-and-funds.error' },
+          { message: e.message },
+        ),
       );
     },
     onSuccess: () => {
       toast.dismiss();
-      toast.success(`Successfull deposit !`);
+      toast.success(intl.formatMessage({ id: 'add-child-and-funds.success' }));
     },
   });
 

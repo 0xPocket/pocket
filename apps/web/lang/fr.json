@@ -125,5 +125,10 @@
   "dashboard.parent.card.go-to": "Aller sur le profil de {name}",
 
   "footer.rightReserved": "2022 Pocket",
-  "footer.report-bug": "Signaler un bug"
+  "footer.report-bug": "Signaler un bug",
+
+  "add-child-and-funds.error": "Le dépôt a échoué: {message}. Si le probléme persiste, contactez-nous s'il vous plaît.",
+  "add-child-and-funds.success": "Le depôt est un succés !",
+  "add-child-and-funds.pending": "Transaction en cours, ce sera bientôt bon !",
+  "add-child-and-funds.approve": "L'opération a échoué: {message}. Si le probléme persiste, contactez-nous s'il vous plaît."
 }

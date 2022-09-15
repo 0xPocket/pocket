@@ -36,7 +36,7 @@ function RightTab({ child }: RightTabProps) {
     },
   );
 
-  const { changeConfig } = useChildSettingsForm(
+  const { changeConfig, isLoading } = useChildSettingsForm(
     child.address,
     !!config?.lastClaim.isZero(),
     () => {
@@ -103,6 +103,7 @@ function RightTab({ child }: RightTabProps) {
               changeConfig={changeConfig}
               config={config}
               withdrawFundsFromChild={withdrawFundsFromChild}
+              isLoading={isLoading}
               returnFn={() => {
                 setSelectedIndex(0);
               }}
