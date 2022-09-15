@@ -10,7 +10,7 @@ import { env } from 'config/env/client';
 import { trpc } from '../../../../utils/trpc';
 import TokenReportPopup from './TokenReportPopup';
 import FormattedMessage from '../../../common/FormattedMessage';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 // import PieChartComp from './PieChart';
 
 type TokenContentProps = {
@@ -40,10 +40,12 @@ function TokenContent({ childAddress }: TokenContentProps) {
           ...data,
           items:
             data.items.filter((token) => {
+              console.log(token);
+
               return (
-                ethers.utils
-                  .parseUnits(token.balance.toString(), token.contract_decimals)
-                  .gt(ethers.utils.parseUnits('1', 6)) &&
+                BigNumber.from(token.balance).gt(
+                  ethers.utils.parseUnits('1', 6),
+                ) &&
                 !blacklist?.find(
                   (el) =>
                     el.address.toLowerCase() ===
@@ -76,7 +78,7 @@ function TokenContent({ childAddress }: TokenContentProps) {
               <div className="aspect-square w-1/5">
                 <PieChartComp tokenList={data.items} />
               </div>
-              <div className="flex w-4/5 items-start">
+              <div className="flex w-4/5 items-start overflow-y-scroll">
                 <TokenTable tokenList={data.items} />
               </div>
             </div>
