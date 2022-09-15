@@ -14,15 +14,16 @@
     "tailwind.config.js"
   ],
   "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.37.0",
     "eslint-config-next": "^12.2.5",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-react": "7.31.7",
+    "eslint-plugin-react": "7.31.8",
     "prettier-plugin-prisma": "^4.1.0",
     "prettier-plugin-tailwindcss": "^0.1.13"
   },
   "devDependencies": {
-    "eslint": "8.23.0",
+    "eslint": "8.23.1",
     "prettier": "^2.7.1"
   }
 }
