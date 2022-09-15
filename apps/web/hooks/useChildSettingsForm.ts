@@ -33,9 +33,14 @@ export function useChildSettingsForm(
       // toast.error(`An error occured while setting your child configuration`);
     },
     onSuccess: () => {
-      toast.info(`Transaction pending, please hang on !`, {
-        isLoading: true,
-      });
+      toast.info(
+        intl.formatMessage({
+          id: 'transaction.pending',
+        }),
+        {
+          isLoading: true,
+        },
+      );
       returnFn();
     },
   });

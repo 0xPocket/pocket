@@ -129,6 +129,7 @@
 
   "add-child-and-funds.error": "Deposit failed: {message}. If the problem persits, please contact us.",
   "add-child-and-funds.success": "Successfull deposit !",
-  "add-child-and-funds.pending": "Transaction pending, please hang on !",
-  "add-child-and-funds.approve": "Approve failed: {message}. If the problem persits, please contact us."
+  "add-child-and-funds.approve": "Approve failed: {message}. If the problem persits, please contact us.",
+
+  "transaction.pending": "Transaction pending, please hang on !"
 }
