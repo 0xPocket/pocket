@@ -1,6 +1,6 @@
 import { Tab } from '@headlessui/react';
 import { UserChild } from '@lib/types/interfaces';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useContractWrite } from 'wagmi';
 import { useSmartContract } from '../../../contexts/contract';
 import { useAddFundsForm } from '../../../hooks/useAddFundsForm';
@@ -10,6 +10,8 @@ import useContractRead from '../../../hooks/useContractRead';
 import AddFundsForm from '../../forms/AddFundsForm';
 import ChildSettingsForm from '../../forms/ChildSettingsForm';
 import Balance from './Balance';
+import { parseUnits } from 'ethers/lib/utils';
+import { BigNumber } from 'ethers';
 
 type RightTabProps = {
   child: UserChild;
@@ -18,7 +20,7 @@ type RightTabProps = {
 function RightTab({ child }: RightTabProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const { pocketContract } = useSmartContract();
+  const { pocketContract, erc20 } = useSmartContract();
 
   const { data: config, refetch: refetchConfig } = useContractRead({
     contract: pocketContract,
@@ -28,7 +30,7 @@ function RightTab({ child }: RightTabProps) {
   });
 
   const { approveAndAddChild } = useAddFundsForm(
-    child.address,
+    child,
     !!config?.lastClaim.isZero(),
     () => {
       refetchConfig();
@@ -52,6 +54,22 @@ function RightTab({ child }: RightTabProps) {
     contractInterface: pocketContract.interface,
     args: [config?.balance, child.address],
   });
+
+  const initialConfig = useMemo(() => {
+    return {
+      periodicity:
+        config && !config.periodicity.isZero()
+          ? config.periodicity
+          : BigNumber.from(child.child?.initialPeriodicity),
+      ceiling:
+        config && !config.ceiling.isZero()
+          ? config.ceiling
+          : parseUnits(
+              child.child!.initialCeiling!.toString(),
+              erc20.data?.decimals,
+            ),
+    };
+  }, [config]);
 
   if (!config) {
     return null;
@@ -101,6 +119,7 @@ function RightTab({ child }: RightTabProps) {
           <div className="flex h-full flex-col items-end justify-between">
             <ChildSettingsForm
               changeConfig={changeConfig}
+              initialConfig={initialConfig}
               config={config}
               withdrawFundsFromChild={withdrawFundsFromChild}
               isLoading={isLoading}

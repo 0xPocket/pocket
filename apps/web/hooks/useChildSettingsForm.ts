@@ -28,9 +28,13 @@ export function useChildSettingsForm(
     onError(e) {
       console.log(e.message);
       toast.error(
-        intl.formatMessage({ id: 'add-child-or-change-config.fail' }),
+        intl.formatMessage(
+          { id: 'add-child-or-change-config.error' },
+          {
+            message: e.message,
+          },
+        ),
       );
-      // toast.error(`An error occured while setting your child configuration`);
     },
     onSuccess: () => {
       toast.info(
@@ -54,14 +58,12 @@ export function useChildSettingsForm(
           { id: 'add-child-or-change-config.error' },
           { message: e.message },
         ),
-        // `Changing config failed: ${e.message}. If the problem persists, contact us.`,
       );
     },
     onSuccess: () => {
       toast.dismiss();
       toast.success(
         intl.formatMessage({ id: 'add-child-or-change-config.success' }),
-        // `Configuration sets successfully !`
       );
     },
   });
