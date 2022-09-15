@@ -10,6 +10,7 @@ import { env } from 'config/env/client';
 import { trpc } from '../../../../utils/trpc';
 import TokenReportPopup from './TokenReportPopup';
 import FormattedMessage from '../../../common/FormattedMessage';
+import { ethers } from 'ethers';
 // import PieChartComp from './PieChart';
 
 type TokenContentProps = {
@@ -40,7 +41,9 @@ function TokenContent({ childAddress }: TokenContentProps) {
           items:
             data.items.filter((token) => {
               return (
-                token.balance > 0.0000000001 &&
+                ethers.utils
+                  .parseUnits(token.balance.toString(), token.contract_decimals)
+                  .gt(ethers.utils.parseUnits('1', 6)) &&
                 !blacklist?.find(
                   (el) =>
                     el.address.toLowerCase() ===
