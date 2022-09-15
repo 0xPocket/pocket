@@ -49,6 +49,8 @@ async function main() {
             userId: "damianmusk",
           },
           create: {
+            initialCeiling: 50,
+            initialPeriodicity: "2592000",
             parentUserId: "elonmusk",
             status: "ACTIVE",
           },
@@ -77,6 +79,8 @@ async function main() {
             userId: "xaviermusk",
           },
           create: {
+            initialCeiling: 50,
+            initialPeriodicity: "2592000",
             parentUserId: "elonmusk",
             status: "ACTIVE",
           },
@@ -105,6 +109,8 @@ async function main() {
             userId: "lolamusk",
           },
           create: {
+            initialCeiling: 50,
+            initialPeriodicity: "2592000",
             parentUserId: "elonmusk",
             status: "ACTIVE",
           },
