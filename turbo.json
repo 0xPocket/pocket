@@ -3,6 +3,7 @@
   "globalDependencies": [".env", "./packages/prisma/.env", "$ANALYZE"],
   "pipeline": {
     "@lib/prisma#build": {
+      "cache": false,
       "inputs": ["./prisma/schema.prisma", ".env"],
       "dependsOn": ["$DATABASE_URL"],
       "outputs": ["./../../node_modules/@prisma/client"]
