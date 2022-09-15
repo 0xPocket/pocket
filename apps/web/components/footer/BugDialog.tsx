@@ -8,6 +8,8 @@ import { useZodForm } from '../../utils/useZodForm';
 import { TicketSchema } from '../../server/schemas';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBug, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import FormattedMessage from '../common/FormattedMessage';
+import { useIntl } from 'react-intl';
 
 type BugDialogProps = {
   isOpen: boolean;
@@ -26,7 +28,7 @@ const BugDialog: FC<BugDialogProps> = ({ isOpen, setIsOpen }) => {
 
   const reportBug = trpc.useMutation(['ticket.submit'], {
     onSuccess: () => {
-      toast.success(`Bug reported, we'll get back to you asap if needed !`);
+      toast.success(<FormattedMessage id="footer.report-success" />);
       setIsOpen(false);
     },
     onError: (e) => {
@@ -34,28 +36,37 @@ const BugDialog: FC<BugDialogProps> = ({ isOpen, setIsOpen }) => {
     },
   });
 
+  const intl = useIntl();
+
   return (
     <DialogPopupWrapper isOpen={isOpen} setIsOpen={setIsOpen}>
       <h1 className="mb-6">
-        <FontAwesomeIcon icon={faBug} className="mr-2" /> Report a bug
+        <FontAwesomeIcon icon={faBug} className="mr-2" />{' '}
+        <FormattedMessage id="footer.report-bug" />
       </h1>
       <form
         onSubmit={handleSubmit((data) => reportBug.mutate(data))}
         className="flex min-w-[360px] flex-col gap-6 rounded-lg"
       >
         <InputText
-          label="Subject (optional)"
+          label={
+            <>
+              <FormattedMessage id="subject" />{' '}
+              <FormattedMessage id="optional" />
+            </>
+          }
           register={register('subject')}
           optional
         />
         <textarea
           {...register('desc')}
           className="container-classic without-ring min-h-[150px] rounded-md p-4"
-          placeholder="Tell us more about it"
+          placeholder={intl.formatMessage({ id: 'footer.tell-more' })}
           required
         />
         <button className="action-btn">
-          <FontAwesomeIcon icon={faPaperPlane} className="mr-2" /> Send
+          <FontAwesomeIcon icon={faPaperPlane} className="mr-2" />
+          <FormattedMessage id="send" />
         </button>
       </form>
     </DialogPopupWrapper>

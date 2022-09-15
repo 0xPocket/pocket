@@ -40,7 +40,7 @@ function TokenContent({ childAddress }: TokenContentProps) {
           items:
             data.items.filter((token) => {
               return (
-                token.quote > 0.1 &&
+                token.balance > 0.0000000001 &&
                 !blacklist?.find(
                   (el) =>
                     el.address.toLowerCase() ===

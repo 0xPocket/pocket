@@ -173,6 +173,7 @@ export const authOptions: NextAuthOptions = {
 
         return {
           ...token,
+          email: checkUser.email,
           address: checkUser.address || undefined,
           type: checkUser.type,
           name: checkUser.name,
@@ -187,6 +188,7 @@ export const authOptions: NextAuthOptions = {
 
         return {
           ...token,
+          email: user.email,
           address: user.address,
           type: user.type,
           name: user.name,

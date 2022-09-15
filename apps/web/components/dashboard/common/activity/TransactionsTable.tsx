@@ -11,6 +11,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import FormattedMessage from '../../../common/FormattedMessage';
+import { useMemo } from 'react';
+import { useIntl } from 'react-intl';
+import 'moment/locale/fr';
 
 type TransactionsTableProps = {
   transactionsList: AssetTransfersResultWithMetadata[];
@@ -38,60 +41,66 @@ function formatValue(value: number | null) {
 }
 
 const columnHelper = createColumnHelper<AssetTransfersResultWithMetadata>();
-const columns = [
-  columnHelper.accessor('metadata.blockTimestamp', {
-    cell: (info) => moment(info.getValue()).fromNow(),
-    header: () => (
-      <span>
-        <FormattedMessage id="date" />
-      </span>
-    ),
-    id: 'Date',
-  }),
-  columnHelper.accessor(
-    (row) => `${formatValue(row.value)} ${row.asset ?? ''}`,
-    {
-      cell: (info) => <div className=" text-right">{info.getValue()}</div>,
-      header: () => (
-        <span>
-          <FormattedMessage id="amount" />
-        </span>
-      ),
-      id: 'Amount',
-    },
-  ),
-  columnHelper.accessor('category', {
-    cell: (info) => (
-      <div className="text-right">{getBadge(info.getValue())}</div>
-    ),
-    header: () => (
-      <span>
-        <FormattedMessage id="category" />
-      </span>
-    ),
-    id: 'Category',
-  }),
-  columnHelper.accessor('hash', {
-    cell: (info) => (
-      <div className="w-full text-right">
-        <Link
-          //TODO : change mumbai to mainet
-          href={`https://mumbai.polygonscan.com/tx/${info.getValue()}`}
-        >
-          <a target="_blank" rel="noopener noreferrer">
-            <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
-          </a>
-        </Link>
-      </div>
-    ),
-    header: () => null,
-    id: 'Link',
-  }),
-];
 
 export function TransactionsTable({
   transactionsList,
 }: TransactionsTableProps) {
+  const intl = useIntl();
+
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor('metadata.blockTimestamp', {
+        cell: (info) => moment(info.getValue()).locale(intl.locale).fromNow(),
+        header: () => (
+          <span>
+            <FormattedMessage id="date" />
+          </span>
+        ),
+        id: 'Date',
+      }),
+      columnHelper.accessor(
+        (row) => `${formatValue(row.value)} ${row.asset ?? ''}`,
+        {
+          cell: (info) => <div className=" text-right">{info.getValue()}</div>,
+          header: () => (
+            <span>
+              <FormattedMessage id="amount" />
+            </span>
+          ),
+          id: 'Amount',
+        },
+      ),
+      columnHelper.accessor('category', {
+        cell: (info) => (
+          <div className="text-right">{getBadge(info.getValue())}</div>
+        ),
+        header: () => (
+          <span>
+            <FormattedMessage id="category" />
+          </span>
+        ),
+        id: 'Category',
+      }),
+      columnHelper.accessor('hash', {
+        cell: (info) => (
+          <div className="w-full text-right">
+            <Link
+              //TODO : change mumbai to mainet
+              href={`https://mumbai.polygonscan.com/tx/${info.getValue()}`}
+            >
+              <a target="_blank" rel="noopener noreferrer">
+                <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+              </a>
+            </Link>
+          </div>
+        ),
+        header: () => null,
+        id: 'Link',
+      }),
+    ],
+    [intl.locale],
+  );
+
   const table = useReactTable({
     data: transactionsList,
     columns,

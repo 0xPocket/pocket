@@ -45,9 +45,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).send('Bad Request');
   }
 
-  const user = await prisma.user.findUnique({
+  const user = await prisma.user.findFirst({
     where: {
-      address: body.purchase.receiverAddress.toLowerCase(),
+      address: {
+        equals: body.purchase.receiverAddress,
+        mode: 'insensitive',
+      },
     },
   });
 
@@ -99,7 +102,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 
-  await grantMaticToParent(parent);
+  try {
+    if (body.type === 'RELEASED') {
+      await grantMaticToParent(parent);
+    }
+  } catch (e) {
+    return res.status(400).send('Error');
+  }
 
   return res.status(200).send('OK');
 };

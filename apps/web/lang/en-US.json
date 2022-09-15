@@ -30,6 +30,8 @@
   "claimable": "Claimable",
   "or": "or",
   "transactions": "Transactions",
+  "subject": "Subject",
+  "optional": "(optional)",
 
   "auth.email.connect": "Connect with your email",
   "auth.email.verify": "Please verify your email with the link we sent you.",
@@ -55,7 +57,7 @@
   "dashboard.child.claimMatic.pending": "Claim matic pending, please hang on !",
   "dashboard.child.claimMatic.success": "Transaction succeeded !",
   "dashboard.child.claimMatic.title": "You can claim your Matic !",
-  "dashboard.child.claimMatic.message": "To start your journey into web3, we grant you some Matic to pay fees on your few first transactions.",
+  "dashboard.child.claimMatic.message": "To start your journey into web3, we grant you some Matic to pay fees for your first transaction.",
 
   "verify-email.email-verified": "Your email is now verified !",
   "verify-email.redirect": "You will be redirect in few seconds...",
@@ -126,6 +128,10 @@
 
   "footer.rightReserved": "2022 Pocket",
   "footer.report-bug": "Report a bug",
+  "footer.report-success": "Thank you for the report, we'll get back to you asap if needed !",
+  "footer.tell-more": "What's the issue ?",
+  "footer.my-message": "My message",
+  "footer.contact-us": "Contact us",
 
   "add-child-and-funds.error": "Deposit failed: {message}. If the problem persits, please contact us.",
   "add-child-and-funds.success": "Successfull deposit !",

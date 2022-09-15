@@ -299,7 +299,6 @@ contract PocketFaucet is AccessControlUpgradeable {
             conf.lastClaim + conf.periodicity <= block.timestamp,
             '!calculateClaimable: period is not finished'
         );
-        if (conf.periodicity == 0) return 0;
         uint256 claimable;
         uint256 nbPeriod = (block.timestamp - conf.lastClaim) /
             conf.periodicity;
