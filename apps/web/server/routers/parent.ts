@@ -113,6 +113,8 @@ export const parentRouter = createProtectedRouter()
             newUser: true,
             child: {
               create: {
+                initialCeiling: input.ceiling,
+                initialPeriodicity: input.periodicity,
                 parent: {
                   connect: {
                     userId: parent.id,

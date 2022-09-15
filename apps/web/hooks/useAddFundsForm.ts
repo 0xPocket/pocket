@@ -7,9 +7,11 @@ import { useSmartContract } from '../contexts/contract';
 import { useApprove } from './useApprove';
 import useContractRead from './useContractRead';
 import { useIntl } from 'react-intl';
+import { UserChild } from '@lib/types/interfaces';
+import { formatUnits, parseUnits } from 'ethers/lib/utils';
 
 export function useAddFundsForm(
-  childAddress: string | null,
+  child: UserChild | null,
   addChild: boolean,
   returnFn: () => void,
 ) {
@@ -29,6 +31,11 @@ export function useAddFundsForm(
     spender: pocketContract.address,
     amount:
       '0xf000000000000000000000000000000000000000000000000000000000000000',
+    onSuccess: () => {
+      toast.info(intl.formatMessage({ id: 'transaction.pending' }), {
+        isLoading: true,
+      });
+    },
     onError: (e) => {
       toast.error(
         intl.formatMessage({ id: 'approve.fail' }, { message: e.message }),
@@ -60,6 +67,25 @@ export function useAddFundsForm(
   });
 
   useWaitForTransaction({
+    hash: approve.data?.hash,
+    onError: (e) => {
+      toast.dismiss();
+      toast.error(
+        intl.formatMessage(
+          { id: 'add-child-and-funds.approve' },
+          { message: e.message },
+        ),
+      );
+    },
+    onSuccess: () => {
+      toast.dismiss();
+      toast.success(
+        intl.formatMessage({ id: 'add-child-and-funds.approve-success' }),
+      );
+    },
+  });
+
+  useWaitForTransaction({
     hash: addChildAndFunds.data?.hash,
     onError: (e) => {
       toast.dismiss();
@@ -80,19 +106,35 @@ export function useAddFundsForm(
     async (amount: BigNumber) => {
       try {
         if (allowance?.lt(amount) && approve.writeAsync) {
-          await approve.writeAsync();
+          const tx = await approve.writeAsync();
+          await tx.wait();
         }
 
-        if (addChildAndFunds.writeAsync) {
+        if (addChildAndFunds.writeAsync && child?.child?.initialCeiling) {
           await addChildAndFunds.writeAsync({
             recklesslySetUnpreparedArgs: addChild
-              ? ['5000000000000000000', '604800', childAddress, amount]
-              : [amount, childAddress],
+              ? [
+                  parseUnits(
+                    child.child.initialCeiling.toString(),
+                    erc20.data?.decimals,
+                  ),
+                  child.child.initialPeriodicity,
+                  child.address,
+                  amount,
+                ]
+              : [amount, child?.address],
           });
         }
       } catch (e) {}
     },
-    [addChildAndFunds, approve, allowance, childAddress, addChild],
+    [
+      addChildAndFunds,
+      approve,
+      allowance,
+      child?.address,
+      addChild,
+      child?.child,
+    ],
   );
 
   return { approveAndAddChild };

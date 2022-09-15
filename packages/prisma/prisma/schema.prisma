@@ -65,6 +65,9 @@ model Child {
 
   parent       Parent @relation(fields: [parentUserId], references: [userId])
   parentUserId String
+
+  initialPeriodicity String?
+  initialCeiling     Int?
 }
 
 // Matic Grant

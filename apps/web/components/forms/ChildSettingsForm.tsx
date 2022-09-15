@@ -1,6 +1,7 @@
 import { faAngleLeft, faWrench } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { RadioGroup } from '@headlessui/react';
+import type { BigNumber } from 'ethers';
 import { formatUnits } from 'ethers/lib/utils';
 import { PocketFaucet } from 'pocket-contract/typechain-types';
 import { useEffect, useMemo, useState } from 'react';
@@ -21,6 +22,10 @@ type FormValues = z.infer<typeof ChildSettingsSchema>;
 
 type ChildSettingsFormProps = {
   config: ContractMethodReturn<PocketFaucet, 'childToConfig'>;
+  initialConfig: {
+    periodicity: BigNumber;
+    ceiling: BigNumber;
+  };
   withdrawFundsFromChild: () => void;
   changeConfig: (amount: FormValues) => Promise<void>;
   returnFn: () => void;
@@ -30,6 +35,7 @@ type ChildSettingsFormProps = {
 function ChildSettingsForm({
   config,
   withdrawFundsFromChild,
+  initialConfig,
   changeConfig,
   returnFn,
   isLoading,
@@ -59,8 +65,8 @@ function ChildSettingsForm({
   } = useZodForm({
     schema: ChildSettingsSchema,
     defaultValues: {
-      periodicity: formatUnits(config.periodicity, 0).toString(),
-      ceiling: Number(formatUnits(config.ceiling, erc20.data?.decimals)),
+      periodicity: formatUnits(initialConfig.periodicity, 0).toString(),
+      ceiling: Number(formatUnits(initialConfig.ceiling, erc20.data?.decimals)),
     },
   });
 
