@@ -52,7 +52,7 @@ export function useAddFundsForm(
       );
     },
     onSuccess: () => {
-      toast.info(intl.formatMessage({ id: 'add-child-and-funds.pending' }), {
+      toast.info(intl.formatMessage({ id: 'transaction.pending' }), {
         isLoading: true,
       });
       returnFn();
