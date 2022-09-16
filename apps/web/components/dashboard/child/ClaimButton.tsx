@@ -54,7 +54,7 @@ const ClaimButton: React.FC<ClaimButtonProps> = ({ disabled, children }) => {
     return (
       <button
         disabled={true}
-        className="relative flex cursor-not-allowed items-center justify-center overflow-hidden whitespace-nowrap rounded-md bg-dark-lightest px-4 py-3 text-bright dark:bg-dark-lightest"
+        className="relative flex items-center justify-center overflow-hidden whitespace-nowrap rounded-md bg-primary px-4 py-3 text-bright opacity-40 dark:bg-primary"
       >
         {children}
       </button>

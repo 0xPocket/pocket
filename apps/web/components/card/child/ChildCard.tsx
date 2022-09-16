@@ -47,12 +47,12 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
   }, [now, nextClaim]);
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col space-y-4">
       <h2>
         <FormattedMessage id="card.child.title" />
       </h2>
       <div
-        className={`${className} container-classic h-4/5 min-h-[260px] rounded-lg p-8`}
+        className={`${className} container-classic h-4/5 min-h-[260px] flex-grow rounded-lg p-8`}
       >
         <div className={'flex h-full flex-col justify-between'}>
           <div className={'flex flex-row justify-between'}>

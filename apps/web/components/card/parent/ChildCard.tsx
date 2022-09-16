@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 import FormattedMessage from '../../common/FormattedMessage';
+import { Spinner } from '../../common/Spinner';
 
 type ChildCardProps = {
   child: UserChild;
@@ -15,26 +16,21 @@ type ChildCardProps = {
 };
 
 function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
-  const { mutate: resendEmail } = trpc.useMutation(
-    'parent.resendChildVerificationEmail',
-    {
-      onError: (e) => {
-        toast.error(
-          <FormattedMessage id="dashboard.parent.card.email-error" />,
-        );
-      },
-      onSuccess: () => {
-        toast.success(
-          <FormattedMessage
-            id="dashboard.parent.card.email-sent-to"
-            values={{
-              email: child.email,
-            }}
-          />,
-        );
-      },
+  const resendEmail = trpc.useMutation('parent.resendChildVerificationEmail', {
+    onError: (e) => {
+      toast.error(<FormattedMessage id="dashboard.parent.card.email-error" />);
     },
-  );
+    onSuccess: () => {
+      toast.success(
+        <FormattedMessage
+          id="dashboard.parent.card.email-sent-to"
+          values={{
+            email: child.email,
+          }}
+        />,
+      );
+    },
+  });
 
   return (
     <div
@@ -48,15 +44,20 @@ function ChildCard({ child, hasLink = false, className }: ChildCardProps) {
           </div>
         </div>
         {child?.child?.status !== 'ACTIVE' ? (
-          <p>
-            <FormattedMessage id="dashboard.parent.card.email-sent" />
-            <button
-              className="third-btn"
-              onClick={() => resendEmail({ userId: child.id })}
-            >
-              <FormattedMessage id="dashboard.parent.card.send-new" />
-            </button>
-          </p>
+          <span>
+            <FormattedMessage id="dashboard.parent.card.email-sent" />{' '}
+            {resendEmail.status === 'idle' && (
+              <a onClick={() => resendEmail.mutate({ userId: child.id })}>
+                <FormattedMessage id="dashboard.parent.card.send-new" />
+              </a>
+            )}
+            {resendEmail.status === 'loading' && <Spinner />}
+            {resendEmail.status === 'success' && (
+              <span className="text-success">
+                <FormattedMessage id="auth.email.resent" />
+              </span>
+            )}
+          </span>
         ) : !hasLink ? (
           <Link
             //TODO : change mumbai to mainet

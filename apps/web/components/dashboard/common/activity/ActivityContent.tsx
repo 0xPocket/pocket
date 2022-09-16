@@ -7,18 +7,24 @@ import { TransactionsTable } from './TransactionsTable';
 import { useGetClaimsQuery } from '../../../../hooks/useGetClaimsQuery';
 import { useTransactionsQuery } from '../../../../hooks/useTransactionsQuery';
 import FormattedMessage from '../../../common/FormattedMessage';
+import { useGetDepositsQuery } from '../../../../hooks/useGetDepositsQuery';
 
 type ActivityContentProps = {
   childAddress: string;
-  userType: string;
+  parentAddress: string;
 };
 
-function ActivityContent({ childAddress, userType }: ActivityContentProps) {
+function ActivityContent({
+  childAddress,
+  parentAddress,
+}: ActivityContentProps) {
   const { isLoading: isTxLoading, data: txList } =
     useTransactionsQuery(childAddress);
-  const { data: logs, isLoading: isLogLoading } = useGetClaimsQuery(
+  const { data: claims, isLoading: isClaimsLoading } =
+    useGetClaimsQuery(childAddress);
+  const { data: deposits, isLoading: isDepositsLoading } = useGetDepositsQuery(
     childAddress,
-    userType,
+    parentAddress,
   );
 
   return (
@@ -30,15 +36,7 @@ function ActivityContent({ childAddress, userType }: ActivityContentProps) {
           </h2>
           <ActivityTabHeaders
             leftHeader={<FormattedMessage id="transactions" />}
-            rightHeader={
-              <FormattedMessage
-                id={
-                  userType === 'Parent'
-                    ? 'dashboard.common.activity.header.topups'
-                    : 'dashboard.common.activity.header.claims'
-                }
-              />
-            }
+            rightHeader={<FormattedMessage id="piggybank" />}
           />
         </div>
         <Tab.Panels className="container-classic relative flex-grow overflow-x-hidden overflow-y-scroll rounded-lg px-8">
@@ -51,8 +49,8 @@ function ActivityContent({ childAddress, userType }: ActivityContentProps) {
           </Tab.Panel>
 
           <Tab.Panel>
-            {!isLogLoading && logs ? (
-              <EventsTable logs={logs} />
+            {!isClaimsLoading && !isDepositsLoading && claims && deposits ? (
+              <EventsTable logs={[...claims, ...deposits]} />
             ) : (
               <FontAwesomeIcon className="m-3 w-full" icon={faSpinner} spin />
             )}

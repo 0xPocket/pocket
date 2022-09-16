@@ -28,7 +28,6 @@ export async function useVerificationToken(
     const token = await prisma.verificationToken.delete({
       where: { identifier_token },
     });
-
     return token;
   } catch (error) {
     if ((error as Prisma.PrismaClientKnownRequestError).code === 'P2025')

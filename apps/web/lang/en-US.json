@@ -20,6 +20,8 @@
   "value": "Value",
   "report": "Report",
   "claim": "Claim",
+  "claim.noun": "Claim",
+  "deposit.noun": "Deposit",
   "next": "Next",
   "prev": "Prev",
   "date": "Date",
@@ -32,6 +34,7 @@
   "transactions": "Transactions",
   "subject": "Subject",
   "optional": "(optional)",
+  "piggybank": "PiggyBank",
 
   "auth.email.connect": "Connect with your email",
   "auth.email.verify": "Please verify your email with the link we sent you.",
@@ -41,6 +44,7 @@
   "auth.wallet.signMessage": "Sign message",
 
   "card.child.title": "My account",
+  "card.child.swapper": "Swapper",
 
   "card.child.piggyBank.title": "In my PiggyBank",
 
@@ -132,6 +136,7 @@
   "footer.tell-more": "What's the issue ?",
   "footer.my-message": "My message",
   "footer.contact-us": "Contact us",
+  "footer.contact.success": "Message sent ! We'll get back at you as soon as possible.",
 
   "add-child-and-funds.error": "Deposit failed: {message}. If the problem persits, please contact us.",
   "add-child-and-funds.success": "Successfull deposit !",

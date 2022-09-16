@@ -20,6 +20,8 @@
   "value": "Valeur",
   "report": "Signaler",
   "claim": "Retirer",
+  "claim.noun": "Retrait",
+  "deposit.noun": "Dépôt",
   "next": "Suivant",
   "prev": "Précédent",
   "date": "Date",
@@ -32,6 +34,7 @@
   "transactions": "Transactions",
   "subject": "Sujet",
   "optional": "(optionnel)",
+  "piggybank": "Tirelire",
 
   "auth.email.connect": "Se connecter avec son email",
   "auth.email.verify": "Vérifiez votre email avec le lien envoyé s'il vous plait.",
@@ -41,6 +44,7 @@
   "auth.wallet.signMessage": "Signer le message",
 
   "card.child.title": "Mon compte",
+  "card.child.swapper": "Swapper",
 
   "card.child.piggyBank.title": "Dans ma tirelire",
 
@@ -132,6 +136,7 @@
   "footer.tell-more": "Quel est le problème ?",
   "footer.my-message": "Mon message",
   "footer.contact-us": "Contactez-nous",
+  "footer.contact.success": "Message envoyé ! Nous reviendrons vers vous le plus tôt possible.",
 
   "add-child-and-funds.error": "Le dépôt a échoué: {message}. Si le probléme persiste, contactez-nous s'il vous plaît.",
   "add-child-and-funds.success": "Le depôt est un succès !",

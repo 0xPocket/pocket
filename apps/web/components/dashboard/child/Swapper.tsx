@@ -3,6 +3,7 @@ import { SwapWidgetProps, Theme } from '@uniswap/widgets';
 import { env } from 'config/env/client';
 import dynamic from 'next/dynamic';
 import { useIntl } from 'react-intl';
+import FormattedMessage from '../../common/FormattedMessage';
 
 const SwapWidget = dynamic<SwapWidgetProps>(
   () => import('@uniswap/widgets').then((mod) => mod.SwapWidget),
@@ -48,13 +49,19 @@ function Swapper({}: SwapperProps) {
       };
 
   return (
-    <SwapWidget
-      theme={theme}
-      defaultInputTokenAddress={env.ERC20_ADDRESS}
-      jsonRpcUrlMap={jsonrpcmap}
-      locale={mapLanguage[intl.locale as 'fr' | 'en']}
-      hideConnectionUI
-    />
+    <div className="space-y-4">
+      <h2>
+        <FormattedMessage id="card.child.swapper" />
+      </h2>
+      <SwapWidget
+        theme={theme}
+        defaultInputTokenAddress={env.ERC20_ADDRESS}
+        jsonRpcUrlMap={jsonrpcmap}
+        locale={mapLanguage[intl.locale as 'fr' | 'en']}
+        width={'100%'}
+        hideConnectionUI
+      />
+    </div>
   );
 }
 

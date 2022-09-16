@@ -2,49 +2,50 @@ import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
+  getSortedRowModel,
+  SortingState,
   useReactTable,
 } from '@tanstack/react-table';
 import moment from 'moment';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import FormattedMessage from '../../../common/FormattedMessage';
+import { Event } from '../../../../hooks/useGetClaimsQuery';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faArrowDownLong,
+  faArrowUpLong,
+} from '@fortawesome/free-solid-svg-icons';
 
 type EventTableProps = {
   logs: Event[];
 };
 
-type Event = {
-  symbol: string;
-  value: string;
-  timestamp: number;
+const getBadge = (category: Event['category']) => {
+  switch (category) {
+    case 'Claim':
+      return (
+        <span className="cat-badge-green">
+          <FormattedMessage id="claim.noun" />{' '}
+          <FontAwesomeIcon icon={faArrowDownLong} />
+        </span>
+      );
+    case 'Deposit':
+      return (
+        <span className="cat-badge-blue">
+          <FormattedMessage id="deposit.noun" />{' '}
+          <FontAwesomeIcon icon={faArrowUpLong} />
+        </span>
+      );
+  }
 };
 
 const columnHelper = createColumnHelper<Event>();
 
-const columns = [
-  columnHelper.accessor('timestamp', {
-    header: () => (
-      <span>
-        <FormattedMessage id="date" />
-      </span>
-    ),
-    cell: (info) => <span>{moment(info.getValue() * 1000).fromNow()}</span>,
-    id: 'Date',
-  }),
-
-  columnHelper.accessor((row) => `${row.value} ${row.symbol}`, {
-    header: () => (
-      <span>
-        <FormattedMessage id="amount" />
-      </span>
-    ),
-    cell: (info) => <div className="text-right">{info.getValue()}</div>,
-    id: 'Amount',
-  }),
-];
-
 function EventsTable({ logs }: EventTableProps) {
   const intl = useIntl();
+
+  const [data] = useState([...logs]);
 
   const columns = useMemo(
     () => [
@@ -73,14 +74,31 @@ function EventsTable({ logs }: EventTableProps) {
         cell: (info) => <div className="text-right">{info.getValue()}</div>,
         id: 'Amount',
       }),
+      columnHelper.accessor('category', {
+        header: () => (
+          <span>
+            <FormattedMessage id="category" />
+          </span>
+        ),
+        cell: (info) => (
+          <div className="text-right">{getBadge(info.getValue())}</div>
+        ),
+        id: 'Category',
+      }),
     ],
     [intl],
   );
 
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: 'Date', desc: true },
+  ]);
+
   const table = useReactTable({
-    data: logs,
+    data: data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    state: { sorting },
   });
 
   return (

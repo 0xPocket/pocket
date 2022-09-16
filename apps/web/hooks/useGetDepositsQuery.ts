@@ -1,31 +1,25 @@
 import { useQuery } from 'react-query';
-import { useAccount, useProvider } from 'wagmi';
+import { useProvider } from 'wagmi';
 import { useSmartContract } from '../contexts/contract';
 import { formatUnits } from 'ethers/lib/utils';
 import { useMemo } from 'react';
-
-export type Event = {
-  symbol: string;
-  value: string;
-  timestamp: number;
-  category: 'Claim' | 'Deposit';
-};
-
-export const useGetClaimsQuery = (address: string) => {
+import { Event } from './useGetClaimsQuery';
+export const useGetDepositsQuery = (
+  childAddress: string,
+  parentAddress: string,
+) => {
   const provider = useProvider();
   const { pocketContract } = useSmartContract();
   const { erc20 } = useSmartContract();
 
   const eventFilter = useMemo(() => {
-    return pocketContract.filters['FundsClaimed(uint256,address,uint256)'](
-      null,
-      address,
-      null,
-    );
-  }, [address, pocketContract.filters]);
+    return pocketContract.filters[
+      'FundsAdded(uint256,address,uint256,address)'
+    ](null, parentAddress, null, childAddress);
+  }, [childAddress, pocketContract.filters, parentAddress]);
 
   return useQuery(
-    ['child.claims', address],
+    ['child.deposit', childAddress],
     async () =>
       await provider.getLogs({
         fromBlock: 0x1a27777,
@@ -50,7 +44,7 @@ export const useGetClaimsQuery = (address: string) => {
             ).toString(),
             symbol: erc20.data!.symbol,
             timestamp: ev.args[0].toNumber(),
-            category: 'Claim',
+            category: 'Deposit',
           });
         }
         return parsed.reverse();
