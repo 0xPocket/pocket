@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { trpc } from '../../utils/trpc';
 import FormattedMessage from '../../components/common/FormattedMessage';
+import { Spinner } from '../../components/common/Spinner';
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.id as string;
@@ -26,6 +27,7 @@ function Account({
     { address },
   ]);
 
+  if (!child) return null;
   return (
     <MainWrapper>
       <SectionContainer>
