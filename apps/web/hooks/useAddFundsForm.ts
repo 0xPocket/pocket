@@ -19,7 +19,7 @@ export function useAddFundsForm(
   const { address } = useAccount();
   const intl = useIntl();
 
-  const { data: allowance } = useContractRead({
+  const { data: allowance, refetch: refetchAllowance } = useContractRead({
     contract: erc20.contract,
     functionName: 'allowance',
     args: [address!, env.NEXT_PUBLIC_CONTRACT_ADDRESS],
@@ -35,10 +35,11 @@ export function useAddFundsForm(
       toast.info(intl.formatMessage({ id: 'transaction.pending' }), {
         isLoading: true,
       });
+      refetchAllowance();
     },
-    onError: (e) => {
+    onError: () => {
       toast.error(
-        intl.formatMessage({ id: 'approve.fail' }, { message: e.message }),
+        intl.formatMessage({ id: 'add-child-and-funds.approve-fail' }),
       );
     },
   });
