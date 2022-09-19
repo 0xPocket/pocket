@@ -1,6 +1,6 @@
-import { ThemeToggler } from '@lib/ui';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { ThemeToggler } from './ThemeToggler';
 
 type HeaderProps = {};
 

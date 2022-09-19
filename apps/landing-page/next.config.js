@@ -2,7 +2,7 @@ const dotenv = require('dotenv');
 
 dotenv.config({ path: '../../.env' });
 
-const withTM = require('next-transpile-modules')(['@lib/ui']);
+const withTM = require('next-transpile-modules')([]);
 
 if (
   !process.env.NEXT_PUBLIC_RECAPTCHA_PUBLIC_KEY ||
