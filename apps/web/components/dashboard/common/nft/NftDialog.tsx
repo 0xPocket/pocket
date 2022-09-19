@@ -23,7 +23,7 @@ function NftDialog({ nft, isOpen, setIsOpen }: NftDialogProps) {
           <Link
             href={`https://opensea.io/assets/matic/${nft.contract.address}/${nft.tokenId}`}
           >
-            <a className="inline-block">
+            <a className="inline-block" target="_blank">
               <FontAwesomeIcon
                 icon={faArrowUpRightFromSquare}
                 className="mr-2"
