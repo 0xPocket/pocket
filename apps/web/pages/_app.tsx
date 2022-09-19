@@ -4,7 +4,6 @@ import { SmartContractProvider } from '../contexts/contract';
 import { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { ThemeProvider } from '@lib/ui';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { AlchemyProvider } from '../contexts/alchemy';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
@@ -27,6 +26,7 @@ import fr from '../lang/fr.json';
 import en from '../lang/en-US.json';
 import { useRouter } from 'next/router';
 import { IntlProvider } from 'react-intl';
+import { ThemeProvider } from '../contexts/theme';
 
 const messages = { fr, 'en-US': en };
 export type IntlMessageID = keyof typeof en;
@@ -78,15 +78,15 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   );
 
   return (
-    <IntlProvider
-      locale={locale as 'fr' | 'en-US'}
-      messages={messages[locale as 'fr' | 'en-US']}
-    >
-      <WagmiConfig client={wagmiClient}>
-        <SessionProvider session={session}>
-          <MagicAuthProvider>
-            <AlchemyProvider>
-              <ThemeProvider>
+    <ThemeProvider>
+      <IntlProvider
+        locale={locale as 'fr' | 'en-US'}
+        messages={messages[locale as 'fr' | 'en-US']}
+      >
+        <WagmiConfig client={wagmiClient}>
+          <SessionProvider session={session}>
+            <MagicAuthProvider>
+              <AlchemyProvider>
                 <SmartContractProvider>
                   <Component {...pageProps} />
                   <ToastContainer
@@ -96,12 +96,12 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
                   />
                   <ReactQueryDevtools />
                 </SmartContractProvider>
-              </ThemeProvider>
-            </AlchemyProvider>
-          </MagicAuthProvider>
-        </SessionProvider>
-      </WagmiConfig>
-    </IntlProvider>
+              </AlchemyProvider>
+            </MagicAuthProvider>
+          </SessionProvider>
+        </WagmiConfig>
+      </IntlProvider>
+    </ThemeProvider>
   );
 }
 

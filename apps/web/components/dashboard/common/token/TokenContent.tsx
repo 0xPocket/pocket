@@ -1,16 +1,15 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CovalentReturn } from '@lib/types/interfaces';
 import axios from 'axios';
 import { useQuery } from 'react-query';
 import { toast } from 'react-toastify';
 import TokenTable from './TokenTable';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PieChartComp from './PieChart';
 import { env } from 'config/env/client';
 import { trpc } from '../../../../utils/trpc';
 import TokenReportPopup from './TokenReportPopup';
 import FormattedMessage from '../../../common/FormattedMessage';
 import { BigNumber, ethers } from 'ethers';
+import { Spinner } from '../../../common/Spinner';
 // import PieChartComp from './PieChart';
 
 type TokenContentProps = {
@@ -62,9 +61,7 @@ function TokenContent({ childAddress }: TokenContentProps) {
         <FormattedMessage id="dashboard.common.token.balance" />
       </h2>
       <div className="container-classic flex flex-col rounded-lg p-8">
-        {isLoading && (
-          <FontAwesomeIcon icon={faSpinner} spin className="m-auto" />
-        )}
+        {isLoading && <Spinner />}
         {!isLoading && data?.items && data?.items.length === 0 && (
           <p className="my-8 w-full text-center text-xl">
             <FormattedMessage id="dashboard.common.token.empty" />

@@ -1,10 +1,10 @@
 import { OwnedNft } from 'alchemy-sdk';
-import { DialogPopupWrapper } from '@lib/ui';
 import Link from 'next/link';
 import { Dispatch, SetStateAction } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 import FormattedMessage from '../../../common/FormattedMessage';
+import { DialogPopupWrapper } from '../../../common/wrappers/DialogsWrapper';
 
 type NftDialogProps = {
   nft: OwnedNft;

@@ -1,4 +1,3 @@
-import { Button } from '@lib/ui';
 import React, { ReactNode } from 'react';
 import { toast } from 'react-toastify';
 import {
@@ -62,14 +61,14 @@ const ClaimButton: React.FC<ClaimButtonProps> = ({ disabled, children }) => {
   }
 
   return (
-    <Button
+    <button
       disabled={!claim.write}
-      action={() => {
+      onClick={() => {
         if (claim.write) claim.write();
       }}
     >
       {children}
-    </Button>
+    </button>
   );
 };
 
