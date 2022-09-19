@@ -11,6 +11,7 @@ import { useZodForm } from '../../utils/useZodForm';
 import { useEffect } from 'react';
 import FormattedMessage from '../common/FormattedMessage';
 import { useIntl } from 'react-intl';
+import Image from 'next/future/image';
 
 type AddFundsFormProps = {
   child: UserChild;
@@ -123,11 +124,19 @@ function AddFundsForm({
         <button
           type="submit"
           value="Send"
-          className="success-btn disabled:disabled-btn"
+          className="relative"
+          // className=" success-btn disabled:disabled-btn relative"
           disabled={isLoading}
         >
-          <FontAwesomeIcon icon={faPaperPlane} className="mr-2" />
-          <FormattedMessage id="send" />
+          <Image
+            src={'/assets/piggy.png'}
+            width={500}
+            height={500}
+            alt={'piggy'}
+            className={' face right-0 h-32 w-32 '}
+          ></Image>
+          {/* <FontAwesomeIcon icon={faPaperPlane} className="mr-2" /> */}
+          {/* <FormattedMessage id="send" /> */}
         </button>
       </div>
     </form>

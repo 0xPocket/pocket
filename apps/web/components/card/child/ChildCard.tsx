@@ -3,7 +3,7 @@ import useContractRead from '../../../hooks/useContractRead';
 import moment from 'moment';
 import { useMemo } from 'react';
 import ClaimButton from '../../dashboard/child/ClaimButton';
-import BaseTokenBalance from '../../common/BaseTokenBalance';
+import BaseTokenBalance from './BaseTokenBalance';
 import PocketMoney from './PocketMoney';
 import FormattedMessage from '../../common/FormattedMessage';
 import { useIntl } from 'react-intl';

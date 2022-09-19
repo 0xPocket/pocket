@@ -12,6 +12,7 @@ import ChildSettingsForm from '../../forms/ChildSettingsForm';
 import Balance from './Balance';
 import { parseUnits } from 'ethers/lib/utils';
 import { BigNumber } from 'ethers';
+import Image from 'next/future/image';
 
 type RightTabProps = {
   child: UserChild;
