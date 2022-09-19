@@ -3,13 +3,13 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Question from '../components/form/Question';
+import Introduction from '../components/form/Introduction';
 import Conclusion from '../components/form/Conclusion';
 import AnimationLayer from '../components/form/AnimationLayer';
 import QuestionText from '../components/form/QuestionText';
 import MainContainer from '../components/containers/MainContainer';
 import { useMutation } from 'react-query';
 import { useRouter } from 'next/router';
-import ReCAPTCHA from 'react-google-recaptcha';
 
 export const formSchema = z.object({
   email: z.string().email(),
@@ -20,7 +20,6 @@ export const formSchema = z.object({
     .enum(['Oui, via un compte bancaire', 'Oui, en éspèces', 'Non'])
     .optional(),
   contact: z.enum(['Oui', 'Non']).optional(),
-  captcha: z.string().nullish(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -36,7 +35,6 @@ function Index() {
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
   });
-  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   const [step, setStep] = useState(1);
   const submitRef = useRef<HTMLInputElement>(null);
@@ -50,11 +48,7 @@ function Index() {
   );
 
   const onSubmit = async (data: FormValues) => {
-    const token = await recaptchaRef.current?.executeAsync();
-    mutation.mutate({
-      ...data,
-      captcha: token,
-    });
+    mutation.mutate(data);
   };
 
   useEffect(() => {
@@ -123,30 +117,12 @@ function Index() {
     }
   }, [step, questions, handleSubmit]);
 
-  const onReCAPTCHAChange = (captchaCode: string | null) => {
-    // If the reCAPTCHA code is null or undefined indicating that
-    // the reCAPTCHA was expired then return early
-    if (!captchaCode || !recaptchaRef) {
-      return;
-    }
-    // Reset the reCAPTCHA so that it can be executed again if user
-    // submits another email.
-    recaptchaRef.current?.reset();
-  };
-
   return (
     <MainContainer>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="relative h-screen overflow-hidden"
       >
-        <ReCAPTCHA
-          ref={recaptchaRef}
-          size="invisible"
-          sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_PUBLIC_KEY!}
-          hidden={true}
-          onChange={onReCAPTCHAChange}
-        />
         <AnimationLayer show={step === 0} questionsLength={questions.length}>
           {/* <Introduction onClick={() => setStep((step) => step + 1)} /> */}
         </AnimationLayer>

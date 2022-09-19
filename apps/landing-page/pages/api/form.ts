@@ -5,53 +5,21 @@ import { prisma } from '../../lib/prisma';
 
 type Data = z.infer<typeof formSchema>;
 
-type reCaptchaResponse = {
-  success: boolean;
-  challenge_ts: string;
-  hostname: string;
-};
-
-async function validateCaptcha(captcha: string | null | undefined) {
-  if (!captcha) {
-    return false;
-  }
-  return fetch(
-    `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${captcha}`,
-    {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
-      },
-      method: 'POST',
-    },
-  ).then((response) =>
-    (response.json() as Promise<reCaptchaResponse>).then(
-      (data) => data.success,
-    ),
-  );
-}
-
 const form = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
     const data = req.body as Data;
     try {
+      console.log(data);
       const validation = formSchema.parse(data);
-      const captchaValidation = await validateCaptcha(data.captcha);
-
-      if (!captchaValidation) {
-        return res.status(400).json({ error: 'Invalid captcha' });
-      }
-
       await prisma.survey.upsert({
         where: {
           email: validation.email,
         },
         create: {
-          email: validation.email,
-          contact: validation.contact,
+          ...validation,
         },
-        update: { email: validation.email, contact: validation.contact },
+        update: { ...validation },
       });
-
       return res.status(201).json({ message: 'Success !' });
     } catch (e) {
       console.log(e);

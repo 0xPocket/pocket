@@ -1,4 +1,5 @@
 import BackedBySection from '../components/BackedBySection';
+import Carrousel from '../components/Carrousel';
 import MainContainer from '../components/containers/MainContainer';
 import Footer from '../components/Footer';
 import HeroSection from '../components/HeroSection';
