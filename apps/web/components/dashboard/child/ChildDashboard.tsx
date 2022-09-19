@@ -14,9 +14,7 @@ const ChildDashboard: React.FC = () => {
     <div className="space-y-20">
       <div className="grid grid-cols-2 gap-8">
         <ChildCard childAddress={address} className="col-span-1" />
-        <div className="flex justify-center">
-          <Swapper />
-        </div>
+        <div className="flex justify-center">{/* <Swapper /> */}</div>
       </div>
       <div className="grid grid-cols-2 gap-8">
         <NftContent childAddress={address!} fill_nbr={6} />
