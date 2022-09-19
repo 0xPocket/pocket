@@ -2,7 +2,8 @@ import { faEnvelope, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useRef } from 'react';
+import ReCAPTCHA from 'react-google-recaptcha';
 import { useForm } from 'react-hook-form';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useMutation } from 'react-query';
@@ -22,6 +23,7 @@ const CallToAction: React.FC = () => {
 
   const router = useRouter();
   const intl = useIntl();
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
   const email_placeholder = intl.formatMessage({ id: 'calltoaction.email' });
 
   const mutation = useMutation(
@@ -42,7 +44,22 @@ const CallToAction: React.FC = () => {
   );
 
   const onSubmit = async (data: FormValues) => {
-    mutation.mutate(data);
+    const token = await recaptchaRef.current?.executeAsync();
+    mutation.mutate({
+      ...data,
+      captcha: token,
+    });
+  };
+
+  const onReCAPTCHAChange = (captchaCode: string | null) => {
+    // If the reCAPTCHA code is null or undefined indicating that
+    // the reCAPTCHA was expired then return early
+    if (!captchaCode || !recaptchaRef) {
+      return;
+    }
+    // Reset the reCAPTCHA so that it can be executed again if user
+    // submits another email.
+    recaptchaRef.current?.reset();
   };
 
   return (
@@ -51,6 +68,13 @@ const CallToAction: React.FC = () => {
         onSubmit={handleSubmit(onSubmit)}
         className="relative flex h-14 max-w-md items-center justify-end rounded-lg border border-bright-darkest bg-bright text-white-darker dark:border-none md:mt-8"
       >
+        <ReCAPTCHA
+          ref={recaptchaRef}
+          size="invisible"
+          sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_PUBLIC_KEY!}
+          hidden={true}
+          onChange={onReCAPTCHAChange}
+        />
         <div className="absolute left-0">
           <FontAwesomeIcon icon={faEnvelope} className="px-4 opacity-70" />
           <input

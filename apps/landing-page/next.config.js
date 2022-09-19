@@ -4,6 +4,13 @@ dotenv.config({ path: '../../.env' });
 
 const withTM = require('next-transpile-modules')(['@lib/ui']);
 
+if (
+  !process.env.NEXT_PUBLIC_RECAPTCHA_PUBLIC_KEY ||
+  !process.env.RECAPTCHA_SECRET_KEY
+) {
+  throw new Error('Missing reCAPTCHA keys');
+}
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   i18n: {
