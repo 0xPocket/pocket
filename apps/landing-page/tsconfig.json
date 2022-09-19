@@ -2,6 +2,7 @@
   "extends": "tsconfig/nextjs.json",
   "include": [
     "../../packages/types/**/*.ts",
+    "../../packages/config/**/*.js",
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
