@@ -14,7 +14,11 @@ export default function Web() {
   return (
     <MainWrapper>
       <SectionContainer>
-        {isLoading && <Spinner />}
+        {isLoading && (
+          <div className="flex h-[50vh] items-center justify-center">
+            <Spinner />
+          </div>
+        )}
         {data && (
           <div className="mb-12 flex items-center space-x-4">
             <FontAwesomeIcon icon={faAngleRight} />

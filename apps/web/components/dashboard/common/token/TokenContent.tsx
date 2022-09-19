@@ -40,8 +40,6 @@ function TokenContent({ childAddress }: TokenContentProps) {
           ...data,
           items:
             data.items.filter((token) => {
-              console.log(token);
-
               return (
                 BigNumber.from(token.balance).gt(
                   ethers.utils.parseUnits('1', 6),
