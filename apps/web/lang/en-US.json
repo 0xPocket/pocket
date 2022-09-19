@@ -1,0 +1,150 @@
+{
+  "dashboard.title": "My children",
+  "dashboard.addChild": "Add a child",
+
+  "loading": "Loading",
+  "signIn": "Sign in",
+  "disconnect": "Disconnect",
+  "signout": "Logout",
+  "submit": "Submit",
+  "name": "Name",
+  "email": "Email",
+  "return": "return",
+  "send": "Send",
+  "apply": "Apply",
+  "balance": "Balance",
+  "periodicity": "Periodicity",
+  "ceiling": "Ceiling",
+  "weekly": "Weekly",
+  "monthly": "Monthly",
+  "value": "Value",
+  "report": "Report",
+  "claim": "Claim",
+  "claim.noun": "Claim",
+  "deposit.noun": "Deposit",
+  "next": "Next",
+  "prev": "Prev",
+  "date": "Date",
+  "activity": "Activity",
+  "amount": "Amount",
+  "category": "Category",
+  "settings": "Settings",
+  "claimable": "Claimable",
+  "or": "or",
+  "transactions": "Transactions",
+  "subject": "Subject",
+  "optional": "(optional)",
+  "piggybank": "PiggyBank",
+
+  "auth.email.connect": "Connect with your email",
+  "auth.email.verify": "Please verify your email with the link we sent you.",
+  "auth.email.resent": "New email sent !",
+  "auth.email.resend": "Didn't received any email? Click here to resend a new one.",
+  "auth.wallet.connect": "Link wallet",
+  "auth.wallet.signMessage": "Sign message",
+
+  "card.child.title": "My account",
+  "card.child.swapper": "Swapper",
+
+  "card.child.piggyBank.title": "In my PiggyBank",
+
+  "card.child.piggyBank.status.nothing": "Nothing to claim",
+  "card.child.piggyBank.status.next": "Next claim in",
+
+  "card.parent.status": "A set-up email has been sent to",
+  "card.parent.piggyBank.addFunds": "Add funds",
+
+  "dashboard.child.claim.fail": "Claim failed.",
+  "dashboard.child.claim.pending": "Claim pending, please hang on !",
+  "dashbaord.child.claim.success": "Successfull claim !",
+
+  "dashboard.child.claimMatic.pending": "Claim matic pending, please hang on !",
+  "dashboard.child.claimMatic.success": "Transaction succeeded !",
+  "dashboard.child.claimMatic.title": "You can claim your Matic !",
+  "dashboard.child.claimMatic.message": "To start your journey into web3, we grant you some Matic to pay fees for your first transaction.",
+
+  "verify-email.email-verified": "Your email is now verified !",
+  "verify-email.redirect": "You will be redirect in few seconds...",
+  "verify-email.problem": "If the problem persists, contact us.",
+
+  "common.welcome": "Welcome to Pocket !",
+
+  "onboarding.connect-wallet": "Connect with your favorite wallet",
+  "onboarding.more-info": "We need some more infos !",
+
+  "route.dashboard": "dashboard",
+
+  "add-account.how-to": "How to add a new account ?",
+  "add-account.step1": "Complete this form with your child infos and his recurrent pocket money parameters.",
+  "add-account.step2": "An email will be send to the address, follow the few steps to create the child account.",
+  "add-account.step3": "The account is set and you're ready to go !",
+
+  "connect.parent": "I'm a parent",
+  "connect.child": "I'm a child",
+
+  "account.not-found": "User not found",
+
+  "wallet.my-wallet": "My wallet",
+  "wallet.funds": "Available funds",
+  "wallet.top-up": "Top-Up",
+  "wallet.clipboard": "Address copied to clipboard !",
+
+  "header.open-options": "Open options",
+
+  "child-form.info": "Your child infos",
+  "child-form.created": "Account created !",
+
+  "funds-form.amount-required": "Amount is required",
+  "funds-form.minimum": "Minimum amount is 1",
+  "funds-form.insufficient": "Insufficient funds",
+  "funds-form.add-funds-to": "Add funds to {name} account",
+
+  "dashboard.common.activity.header.topups": "Your topups",
+  "dashboard.common.activity.header.claims": "Your claims",
+  "dashboard.common.activity.events.empty": "No transactions to display.",
+
+  "dashboard.common.activity.tx.empty": "No transactions to display.",
+
+  "dashboard.common.nft.seeMore": "See more",
+  "dashboard.common.nft.title": "NFTs Library",
+  "dashboard.common.nft.fail": "Could not retrieve user's NFT",
+
+  "dashboard.common.nft.opensea": "See on OpenSea",
+
+  "dashboard.common.token.fail": "Could not retrieve user's token",
+  "dashboard.common.token.balance": "Tokens' balance",
+  "dashboard.common.token.empty": "No token to display.",
+
+  "dashboard.common.token.report.sent": "Report sent !",
+  "dashboard.common.token.report.send": "Report a suspicious token !",
+  "dashboard.common.token.report.select": "Select a token",
+
+  "dashboard.common.token.table.header.tokenName": "Token Name",
+
+  "dashboard.parent.childAccountStatus": "Your child has not validated his account ! He should check his email...",
+
+  "dashboard.parent.card.email-sent": "We sent an email to validate your child account.",
+  "dashboard.parent.card.send-new": "Send a new one.",
+  "dashboard.parent.card.see-on-polygon": "See on polygonscan",
+  "dashboard.parent.card.email-error": "An error occured, if the problem persits contact us",
+  "dashboard.parent.card.email-sent-to": "Email sent to {email}",
+  "dashboard.parent.card.go-to": "Go to {name}'s profile",
+
+  "footer.rightReserved": "2022 Pocket",
+  "footer.report-bug": "Report a bug",
+  "footer.report-success": "Thank you for the report, we'll get back to you asap if needed !",
+  "footer.tell-more": "What's the issue ?",
+  "footer.my-message": "My message",
+  "footer.contact-us": "Contact us",
+  "footer.contact.success": "Message sent ! We'll get back at you as soon as possible.",
+
+  "add-child-and-funds.error": "Deposit failed: {message}. If the problem persits, please contact us.",
+  "add-child-and-funds.success": "Successfull deposit !",
+  "add-child-and-funds.approve": "Approve failed: {message}. If the problem persits, please contact us.",
+  "add-child-and-funds.approve-success": "Approve success! Please accept the following transaction.",
+
+  "add-child-or-change-config.error": "Changing config failed: {message}. If the problem persists, contact us.",
+  "add-child-or-change-config.success": "Configuration sets successfully !",
+
+  "transaction.pending": "Transaction pending, please hang on !"
+}

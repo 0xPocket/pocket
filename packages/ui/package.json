@@ -4,20 +4,21 @@
   "description": "A collection of shared components and styles",
   "main": "index.ts",
   "license": "MIT",
+  "sideEffects": false,
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.1.1",
-    "@fortawesome/free-brands-svg-icons": "^6.1.1",
-    "@fortawesome/free-solid-svg-icons": "^6.1.1",
+    "@fortawesome/fontawesome-svg-core": "^6.1.2",
+    "@fortawesome/free-brands-svg-icons": "^6.1.2",
+    "@fortawesome/free-solid-svg-icons": "^6.1.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "next": "12.2.0",
+    "next": "12.2.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-hook-form": "^7.33.1",
-    "react-spring": "^9.4.5"
+    "react-hook-form": "^7.34.1",
+    "react-spring": "^9.5.2"
   },
   "devDependencies": {
-    "@types/react": "18.0.14",
-    "@types/react-dom": "18.0.5",
+    "@types/react": "18.0.20",
+    "@types/react-dom": "18.0.6",
     "config": "*",
     "tsconfig": "*",
     "typescript": "^4.7.3"

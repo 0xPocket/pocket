@@ -36,6 +36,7 @@ class ParentTester extends ParentContract {
 
   getActive = async (address: string) => {
     const [active, , , , ,] = await this.getChildConfig(address);
+
     return active;
   };
 
@@ -82,11 +83,36 @@ class ParentTester extends ParentContract {
       .addChild(ceiling, periodicity, childAddr);
   };
 
-  addStdChildAndSend = async (address: string, tokenAddr: string) => {
-    const ceiling = ethers.utils.parseUnits(
-      '10',
-      await getDecimals(tokenAddr, this.signer)
+  addChildAndFundsAndSend = async (
+    ceiling: BigNumberish,
+    periodicity: BigNumberish,
+    childAddr: string,
+    amount: BigNumberish,
+    token: string,
+    whale: string | null
+  ) => {
+    if (whale != null) {
+      await setErc20Balance(token, this.signer, amount.toString(), whale);
+
+      await setAllowance(
+        token,
+        this.signer,
+        this.contract.address,
+        amount.toString()
+      );
+    }
+
+    const amountWithDeci = await stringToDecimalsVersion(
+      token,
+      amount.toString()
     );
+    await this.contract
+      .connect(this.signer)
+      .addChildAndFunds(ceiling, periodicity, childAddr, amountWithDeci);
+  };
+
+  addStdChildAndSend = async (address: string, tokenAddr: string) => {
+    const ceiling = ethers.utils.parseUnits('10', await getDecimals(tokenAddr));
     const periodicity = constants.TIME.WEEK;
     await this.contract
       .connect(this.signer)
@@ -99,19 +125,13 @@ class ParentTester extends ParentContract {
     token: string,
     whale: string
   ) => {
-    const amountWithDeci = await stringToDecimalsVersion(
-      token,
-      this.signer,
-      amount
-    );
     await setErc20Balance(token, this.signer, amount, whale);
-    await setAllowance(
-      constants.TOKEN_POLY.JEUR,
-      this.signer,
-      this.contract.address,
-      amountWithDeci.toString()
+    await setAllowance(token, this.signer, this.contract.address, amount);
+
+    await this.addFunds(
+      await stringToDecimalsVersion(token, amount),
+      childAddress
     );
-    await this.addFunds(amountWithDeci.toString(), childAddress);
   };
 
   calculateClaimable = async (childAddr: string) => {

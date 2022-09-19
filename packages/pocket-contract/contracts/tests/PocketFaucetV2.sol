@@ -30,6 +30,8 @@ contract PocketFaucetV2 is AccessControlUpgradeable {
 
     mapping(address => address[]) public parentToChildren;
     mapping(address => Config) public childToConfig;
+    address[] public childrenList;
+
     uint256 public newVar;
 
     function initialize(address token) public initializer {

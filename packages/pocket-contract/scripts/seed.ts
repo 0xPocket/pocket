@@ -1,42 +1,59 @@
-import { Wallet, providers } from 'ethers';
-import { ParentContract } from '../ts/Parent';
-import { setErc20Balance } from '../utils/ERC20';
+import { getDecimals, setAllowance, setErc20Balance } from '../utils/ERC20';
 import * as constants from '../utils/constants';
-
-const ELON_MUSK = {
-  publicKey: '0x70997970c51812dc3a010c7d01b50e0d17dc79c8',
-  privateKey:
-    '0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d',
-};
-
-const DAMIAN_MUSK = {
-  publicKey: '0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc',
-  privateKey:
-    '0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a',
-};
+import { parseUnits } from 'ethers/lib/utils';
+import { ethers } from 'hardhat';
+import { PocketFaucet__factory } from '../typechain-types';
+import { env } from 'config/env/server';
 
 async function main() {
-  const provider = new providers.JsonRpcProvider('http://localhost:8545');
-  const parentWallet = new Wallet(
-    ELON_MUSK.privateKey, // Elon Musk's Wallet
-    provider
-  );
-  const parent = new ParentContract(
-    process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string,
-    parentWallet
+  if (env.NEXT_PUBLIC_NETWORK !== 'localhost') {
+    console.log('Skipping seeding on non localhost network');
+    return;
+  }
+
+  const tokenDecimals = await getDecimals(env.ERC20_ADDRESS);
+  const parent = await ethers.getSigner(constants.ELON_MUSK.address);
+  const faucet = PocketFaucet__factory.connect(
+    env.NEXT_PUBLIC_CONTRACT_ADDRESS,
+    parent
   );
 
-  const tx = await parent.addChild(20, 0, DAMIAN_MUSK.publicKey); // Damian Musk's Wallet
-  const res = await provider.sendTransaction(tx);
+  await faucet.addChild(
+    parseUnits('100', tokenDecimals),
+    1 * 1 * 5 * 6000,
+    constants.LOLA_MUSK.address
+  );
+  await faucet.addChild(
+    parseUnits('10', tokenDecimals),
+    1 * 1 * 5 * 60,
+    constants.DAMIAN_MUSK.address
+  );
 
-  // Transfer some USDT to Elon Musk
   await setErc20Balance(
-    constants.TOKEN_POLY.USDC,
-    parentWallet,
+    constants.CHOSEN_TOKEN,
+    parent,
     '3000',
-    constants.WHALES_POLY.USDC
+    constants.CHOSEN_WHALE
   );
 
+  await setAllowance(
+    constants.CHOSEN_TOKEN,
+    parent,
+    env.NEXT_PUBLIC_CONTRACT_ADDRESS,
+    parseUnits('10', tokenDecimals).toString()
+  );
+
+  await faucet.addFunds(
+    parseUnits('10', tokenDecimals),
+    constants.LOLA_MUSK.address
+  );
+
+  await setAllowance(
+    constants.CHOSEN_TOKEN,
+    parent,
+    env.NEXT_PUBLIC_CONTRACT_ADDRESS,
+    '0'
+  );
   console.log('Contract seeding complete !');
 }
 

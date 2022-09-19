@@ -4,8 +4,6 @@ type SectionContainerProps = {
 
 export function SectionContainer({ children }: SectionContainerProps) {
   return (
-    <section className="container relative mx-auto my-12 min-h-screen ">
-      {children}
-    </section>
+    <section className="container relative mx-auto my-12 ">{children}</section>
   );
 }

@@ -12,16 +12,17 @@ import ParentTester from '../helpers/ParentTester';
 describe('Deploy and tests on proxy functions', function () {
   let child1: Wallet;
   let parent1: ParentTester;
-  let provider: providers.JsonRpcProvider;
   let parent1Wallet: Wallet;
   let PocketFaucet_factory: PocketFaucet__factory, pocketFaucet: PocketFaucet;
   let PocketFaucetV2_factory: PocketFaucetV2__factory;
-  const tokenAddr = constants.TOKEN_POLY.USDC;
+  const tokenAddr = constants.CHOSEN_TOKEN;
 
   before(async function () {
-    provider = new providers.JsonRpcProvider('http://localhost:8545');
-    child1 = new Wallet(constants.FAMILY_ACCOUNT.child1, provider);
-    parent1Wallet = new Wallet(constants.FAMILY_ACCOUNT.parent1, provider);
+    child1 = new Wallet(constants.FAMILY_ACCOUNT.child1, ethers.provider);
+    parent1Wallet = new Wallet(
+      constants.FAMILY_ACCOUNT.parent1,
+      ethers.provider
+    );
 
     PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
     pocketFaucet = (await upgrades.deployProxy(PocketFaucet_factory, [
@@ -35,7 +36,7 @@ describe('Deploy and tests on proxy functions', function () {
   });
 
   it('Should retrieve child and childConfig after upgrade', async function () {
-    await parent1.addStdChildAndSend(child1.address, constants.TOKEN_POLY.USDC);
+    await parent1.addStdChildAndSend(child1.address, tokenAddr);
     const children = await parent1.getChildren();
     const conf = await parent1.getChildConfig(child1.address);
     await upgrades.upgradeProxy(pocketFaucet.address, PocketFaucetV2_factory);

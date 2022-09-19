@@ -1,13 +1,12 @@
 import * as dotenv from 'dotenv';
-
 import { HardhatUserConfig } from 'hardhat/config';
 import '@nomiclabs/hardhat-ethers';
-// import '@nomiclabs/hardhat-etherscan';
+import '@nomicfoundation/hardhat-network-helpers';
 import '@nomiclabs/hardhat-waffle';
 import '@typechain/hardhat';
-// import "hardhat-gas-reporter";
-// import "solidity-coverage";
 import '@openzeppelin/hardhat-upgrades';
+import NETWORK_CONFIG from 'config/network';
+// import TEST from 'config/env/client';
 
 dotenv.config({
   path: '../../.env',
@@ -31,30 +30,24 @@ const config: HardhatUserConfig = {
   networks: {
     hardhat: {
       forking: {
-        url:
-          'https://polygon-mainnet.g.alchemy.com/v2/' +
-          process.env.NEXT_PUBLIC_KEY_ALCHEMY_POLYGON,
+        url: NETWORK_CONFIG['polygon-mainnet'].RPC_URL,
       },
-      chainId: 137,
+      chainId: NETWORK_CONFIG.localhost.CHAIN_ID,
     },
     polygon: {
-      url:
-        'https://polygon-mainnet.g.alchemy.com/v2/' +
-        process.env.NEXT_PUBLIC_KEY_ALCHEMY_POLYGON,
-      accounts:
-        process.env.PRIVATE_KEY_POLYGON !== undefined
-          ? [process.env.PRIVATE_KEY_POLYGON]
-          : [],
-      chainId: 137,
+      url: NETWORK_CONFIG['polygon-mainnet'].RPC_URL,
+      chainId: NETWORK_CONFIG['polygon-mainnet'].CHAIN_ID,
+    },
+    mumbai: {
+      url: NETWORK_CONFIG['polygon-mumbai'].RPC_URL,
+      chainId: NETWORK_CONFIG['polygon-mumbai'].CHAIN_ID,
+      gasPrice: 40000000000,
+      gas: 3000000,
+      accounts: [
+        '0x8a08140e5dd7eb70af23b28f53fe24a133b708d18368361cd3d55ddfc7cc9ee7',
+      ],
     },
   },
-  //   gasReporter: {
-  //     enabled: process.env.REPORT_GAS !== undefined,
-  //     currency: "USD",
-  //   },
-  //   etherscan: {
-  //     apiKey: process.env.ETHERSCAN_API_KEY,
-  //   },
 };
 
 export default config;

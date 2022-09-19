@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
 }
 
 datasource db {
@@ -12,77 +13,151 @@ datasource db {
 
 // User
 
-model UserParent {
-  id            String            @id @default(cuid())
-  firstName     String
-  lastName      String
-  email         String            @unique
+enum UserType {
+  Parent
+  Child
+}
+
+enum AccountType {
+  Magic
+  Ethereum
+}
+
+model User {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  name      String?
+  address   String?  @unique
+  newUser   Boolean  @default(true)
+
+  accountType   AccountType @default(Ethereum)
+  email         String?     @unique
   emailVerified DateTime?
-  account       Account?
-  children      UserChild[]
-  wallet        UserParentWallet?
+
+  type        UserType
+  parent      Parent?
+  child       Child?
+  maticGrants MaticGrant[]
+  BugReport   Ticket[]
+  Contact     Contact[]
 }
 
-model UserChild {
-  id           String       @id @default(cuid())
-  firstName    String
-  lastName     String
-  username     String?      @unique
-  email        String       @unique
-  status       ChildStatus  @default(INVITED)
-  web3Account  Web3Account?
-  userParent   UserParent   @relation(fields: [userParentId], references: [id])
-  userParentId String
-}
+model Parent {
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @id @unique
 
-// Wallet
-
-model UserParentWallet {
-  id                  String     @id @default(cuid())
-  publicKey           String
-  encryptedPrivateKey String?
-  userParent          UserParent @relation(fields: [userParentId], references: [id])
-  userParentId        String     @unique
-}
-
-// Authentication Account
-
-model Web3Account {
-  id      String    @id @default(cuid())
-  address String    @unique
-  nonce   String
-  user    UserChild @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId  String    @unique
-}
-
-model Account {
-  id                String     @id @default(cuid())
-  type              AuthType
-  provider          String
-  providerAccountId String?
-  refresh_token     String?
-  access_token      String?
-  password          String?
-  expiresAt         Int?
-  tokenType         TokenType?
-  scope             String?
-  user              UserParent @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId            String     @unique
-}
-
-model Session {
-  id        String   @id
-  sid       String   @unique
-  data      String
-  expiresAt DateTime
+  maticGrants Int     @default(0)
+  ramp        Ramp[]
+  children    Child[]
 }
 
 enum ChildStatus {
   INVITED
-  LINKED
-  PENDING
   ACTIVE
-  LOCKED
+}
+
+model Child {
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @id @unique
+
+  status     ChildStatus @default(INVITED)
+  activities Activity[]
+
+  parent       Parent @relation(fields: [parentUserId], references: [userId])
+  parentUserId String
+
+  initialPeriodicity String?
+  initialCeiling     Int?
+}
+
+// Matic Grant
+
+model MaticGrant {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  amount    String
+  hash      String?
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+}
+
+// User Parent Ramp
+
+enum RampStatus {
+  CREATED
+  RELEASED
+  RETURNED
+  ERROR
+}
+
+model Ramp {
+  id           Int        @id @default(autoincrement())
+  rampId       String     @unique
+  createdAt    DateTime   @default(now())
+  cryptoAmount String
+  cryptoAsset  String
+  fiatValue    Float
+  fiatCurrency String
+  appliedFee   Float
+  status       RampStatus
+  userParent   Parent     @relation(fields: [userParentId], references: [userId])
+  userParentId String
+}
+
+// Authentication Account
+
+model Activity {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  fromAddress   String
+  toAddress     String?
+  blockNum      String
+  hash          String
+  category      String
+  value         Float
+  asset         String?
+  erc721TokenId String?
+  child         Child    @relation(fields: [childUserId], references: [userId])
+  childUserId   String
+}
+
+// Verification Token
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model BlacklistToken {
+  address  String  @id @unique
+  verified Boolean @default(true)
+}
+
+// FORMS
+
+model Ticket {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  fromURL   String
+  subject   String?
+  desc      String
+  resolved  Boolean  @default(false)
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+}
+
+model Contact {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  name      String
+  email     String
+  subject   String?
+  desc      String
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
 }
 
 // Survey ?
@@ -96,15 +171,4 @@ model Survey {
   contact         String?
   email           String   @unique
   createdAt       DateTime @default(now())
-}
-
-// Auth Enums
-
-enum AuthType {
-  oauth
-  credentials
-}
-
-enum TokenType {
-  Bearer
 }

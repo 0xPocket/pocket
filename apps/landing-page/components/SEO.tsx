@@ -11,8 +11,8 @@ function SEO({}: SEOProps) {
   const alt = intl.formatMessage({ id: 'head.alt' });
   const img_url =
     intl.locale === 'fr'
-      ? 'https://gopocket.fr/assets/PocketOGImage.png'
-      : 'https://gopocket.fr/assets/PocketOGImage_en.png';
+      ? 'https://pocket-eu.s3.eu-west-3.amazonaws.com/PocketOGImage.png'
+      : 'https://pocket-eu.s3.eu-west-3.amazonaws.com/PocketOGImage_en.png';
 
   return (
     <NextSeo

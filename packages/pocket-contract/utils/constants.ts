@@ -1,3 +1,10 @@
+import { env } from 'config/env/client';
+import * as dotenv from 'dotenv';
+
+dotenv.config({
+  path: '../../.env',
+});
+
 export const HH_ACCOUNT = {
   account0:
     '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80',
@@ -50,17 +57,23 @@ export const FAMILY_ACCOUNT = {
   child3: HH_ACCOUNT.account15,
 };
 
-export const TOKEN_POLY = {
-  JEUR: '0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c',
-  USDC: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
-  USDT: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
+export const WHALES = {
+  'eth-rinkeby': '0xe2e0256d6785d49ec7badcd1d44adbd3f6b0ab58',
+  'polygon-mainnet': '0xf977814e90da44bfa03b6295a0616a897441acec',
+  'polygon-mumbai': '0xe41c53eb9fce0ac9d204d4f361e28a8f28559d54',
+  localhost: '0xf977814e90da44bfa03b6295a0616a897441acec',
 };
 
-export const WHALES_POLY = {
-  USDC: '0xf977814e90da44bfa03b6295a0616a897441acec',
-  USDT: '0xe7804c37c13166ff0b37f5ae0bb07a3aebb6e245',
-  JEUR: '0xc4fcbb58e36e8f5c3b0e904cb20c3947af246891',
+export const ERROR_MSG = {
+  'eth-rinkeby': 'balance too low',
+  'polygon-mainnet': 'ERC20: transfer amount exceeds balance',
+  'polygon-mumbai': 'ERC20: transfer amount exceeds balance',
+  localhost: 'ERC20: transfer amount exceeds balance',
 };
+
+export const CHOSEN_TOKEN = env.ERC20_ADDRESS;
+export const CHOSEN_WHALE = WHALES[env.NEXT_PUBLIC_NETWORK];
+export const CHOSEN_ERRORMSG = ERROR_MSG[env.NEXT_PUBLIC_NETWORK];
 
 export const RDM_ADDRESS = [
   '0xf977814e90da44bfa01b6295a0616a897441acec',
@@ -87,11 +100,36 @@ export const RDM_ADDRESS = [
   '0xf977814e90da44bfa01b6495a0616a897441acec',
 ];
 
-export const RPC_URL = {
-  LOCAL: 'http://localhost:8545',
-};
-
 export const TIME = {
   WEEK: 604800,
   DAY: 86400,
+};
+
+export const DAMIAN_MUSK = {
+  address: '0x1CBd3b2770909D4e10f157cABC84C7264073C9Ec',
+  privateKey:
+    '0x47c99abed3324a2707c28affff1267e45918ec8c3f20b8aa892e8b065d2942dd',
+};
+
+export const XAVIER_MUSK = {
+  address: '0xdF3e18d64BC6A983f673Ab319CCaE4f1a57C7097',
+  privateKey:
+    '0xc526ee95bf44d8fc405a158bb884d9d1238d99f0612e9f33d006bb0789009aaa',
+};
+
+export const LOLA_MUSK = {
+  address: '0xcd3B766CCDd6AE721141F452C550Ca635964ce71',
+  privateKey:
+    '0x8166f546bab6da521a8369cab06c5d2b9e46670292d85c875ee9ec20e84ffb61',
+};
+
+export const ELON_MUSK = {
+  address: '0xBcd4042DE499D14e55001CcbB24a551F3b954096',
+  privateKey:
+    '0xf214f2b2cd398c806f84e317254e0f0b801d0643303237d97a22a48e01628897',
+};
+
+export const CONTRACT_OWNER = {
+  privateKey:
+    '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80',
 };

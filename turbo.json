@@ -1,30 +1,31 @@
 {
   "$schema": "https://turborepo.org/schema.json",
+  "globalDependencies": [".env", "./packages/prisma/.env", "$ANALYZE"],
   "pipeline": {
-    "@lib/prisma#generate": {
+    "@lib/prisma#build": {
+      "cache": false,
       "inputs": ["./prisma/schema.prisma", ".env"],
-      "dependsOn": ["$DATABASE_URL"]
+      "dependsOn": ["$DATABASE_URL"],
+      "outputs": ["./../../node_modules/@prisma/client"]
     },
     "@lib/prisma#deploy": {
-      "dependsOn": ["generate"],
+      "dependsOn": ["build"],
       "inputs": ["./prisma/migrations/**/*.sql"],
       "cache": false,
       "outputs": []
     },
-    "@lib/prisma#seed": {
-      "dependsOn": ["deploy"],
-      "cache": false
+    "@lib/prisma#push": {
+      "dependsOn": ["build"],
+      "inputs": ["./prisma/migrations/**/*.sql"],
+      "cache": false,
+      "outputs": []
     },
     "pocket-contract#build": {
-      "inputs": ["./contracts/**/*.sol"],
+      "inputs": ["**/*.sol"],
       "outputs": ["./artifacts/**/*", "./typechain-types/**/*", "./cache/**/*"]
     },
     "pocket-contract#deploy": {
       "dependsOn": ["build"],
-      "cache": false
-    },
-    "pocket-contract#seed": {
-      "dependsOn": ["build", "deploy"],
       "cache": false
     },
     "fork": {
@@ -34,15 +35,19 @@
       "dependsOn": ["^clean"],
       "cache": false
     },
-    "landing-page#build": {
-			"cache": false
-    },
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["@lib/prisma#deploy", "^build"],
       "outputs": ["dist/**", ".next/**"]
     },
     "dev": {
-      "dependsOn": ["//#env-check", "@lib/prisma#seed", "pocket-contract#seed"],
+      "dependsOn": ["@lib/prisma#push", "pocket-contract#deploy"],
+      "cache": false
+    },
+    "reset": {
+      "cache": false
+    },
+    "dev-testnet": {
+      "dependsOn": ["@lib/prisma#push"],
       "cache": false
     },
     "start": {
@@ -52,14 +57,7 @@
       "outputs": []
     },
     "test": {
-      "dependsOn": ["^test"]
-    },
-    "test:e2e": {
-      "cache": false
-    },
-    "//#env-check": {
-      "inputs": ["./.env.example", "./.env"],
-      "outputs": ["./.env"]
+      "outputs": []
     }
   }
 }
