@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { z } from 'zod';
 import { formSchema } from '../survey';
 import { prisma } from '../../lib/prisma';
-import { env } from 'config/env/server';
 
 type Data = z.infer<typeof formSchema>;
 
@@ -17,7 +16,7 @@ async function validateCaptcha(captcha: string | null | undefined) {
     return false;
   }
   return fetch(
-    `https://www.google.com/recaptcha/api/siteverify?secret=${env.RECAPTCHA_SECRET_KEY}&response=${captcha}`,
+    `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${captcha}`,
     {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',

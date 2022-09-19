@@ -1,7 +1,6 @@
 import { faEnvelope, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { env } from 'config/env/client';
 import { useRouter } from 'next/router';
 import React, { useRef } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
@@ -72,7 +71,7 @@ const CallToAction: React.FC = () => {
         <ReCAPTCHA
           ref={recaptchaRef}
           size="invisible"
-          sitekey={env.NEXT_PUBLIC_RECAPTCHA_PUBLIC_KEY}
+          sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_PUBLIC_KEY!}
           hidden={true}
           onChange={onReCAPTCHAChange}
         />

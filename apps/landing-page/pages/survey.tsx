@@ -10,7 +10,6 @@ import MainContainer from '../components/containers/MainContainer';
 import { useMutation } from 'react-query';
 import { useRouter } from 'next/router';
 import ReCAPTCHA from 'react-google-recaptcha';
-import { env } from 'config/env/client';
 
 export const formSchema = z.object({
   email: z.string().email(),
@@ -144,7 +143,7 @@ function Index() {
         <ReCAPTCHA
           ref={recaptchaRef}
           size="invisible"
-          sitekey={env.NEXT_PUBLIC_RECAPTCHA_PUBLIC_KEY}
+          sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_PUBLIC_KEY!}
           hidden={true}
           onChange={onReCAPTCHAChange}
         />
