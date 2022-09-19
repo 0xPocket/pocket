@@ -34,7 +34,6 @@
     "zod": "^3.19.0"
   },
   "devDependencies": {
-    "@lib/ui": "*",
     "@types/node": "^18.7.15",
     "@types/react": "18.0.20",
     "@types/react-google-recaptcha": "^2.1.5",

@@ -1,4 +1,3 @@
-import { DialogPopupWrapper } from '@lib/ui';
 import { Dispatch, FC, useEffect } from 'react';
 import { useZodForm } from '../../utils/useZodForm';
 import { trpc } from '../../utils/trpc';
@@ -10,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import FormattedMessage from '../common/FormattedMessage';
 import { useIntl } from 'react-intl';
+import { DialogPopupWrapper } from '../common/wrappers/DialogsWrapper';
 
 type ContactDialogProps = {
   isOpen: boolean;
@@ -18,15 +18,13 @@ type ContactDialogProps = {
 
 const ContactDialog: FC<ContactDialogProps> = ({ isOpen, setIsOpen }) => {
   const { user } = useMagic();
-  const { register, handleSubmit, setValue } = useZodForm({
+  const { register, handleSubmit, setValue, formState } = useZodForm({
     schema: ContactSchema['submit'],
   });
 
   const contact = trpc.useMutation(['contact.submit'], {
     onSuccess: () => {
-      toast.success(
-        `Message sent ! We'll get back at you as soon as possible.`,
-      );
+      toast.success(<FormattedMessage id="footer.contact.success" />);
       setIsOpen(false);
     },
     onError: (e) => {
@@ -61,7 +59,19 @@ const ContactDialog: FC<ContactDialogProps> = ({ isOpen, setIsOpen }) => {
               <InputText label="Name" register={register('name')} />
             )}
             {!user?.email && (
-              <InputText label="Email" register={register('email')} />
+              <>
+                <InputText
+                  label="Email"
+                  type="email"
+                  register={register('email')}
+                />
+                {/* {formState.errors.email && (
+                  <span className="absolute bottom-0 right-0 translate-y-full rounded border border-danger bg-danger/20 p-1 px-2 text-xs text-white">
+                    {formState.errors.email.message}
+                  </span>
+                )} */}
+              </>
+              // TODO : change message error display
             )}
           </div>
         )}

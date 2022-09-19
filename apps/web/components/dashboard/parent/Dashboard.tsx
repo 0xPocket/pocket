@@ -4,10 +4,13 @@ import { UserChild } from '@lib/types/interfaces';
 import ChildCard from '../../card/parent/ChildCard';
 import ActivityContent from '../common/activity/ActivityContent';
 import FormattedMessage from '../../common/FormattedMessage';
+import { useAccount } from 'wagmi';
 
 type AccountDashboardProps = { child: UserChild };
 
 function AccountDashboard({ child }: AccountDashboardProps) {
+  const { address } = useAccount();
+
   return child.address ? (
     <div className="space-y-20">
       <div className="grid grid-cols-6 gap-8">
@@ -15,7 +18,12 @@ function AccountDashboard({ child }: AccountDashboardProps) {
       </div>
       <div className="grid grid-cols-2 gap-8">
         <NftContent childAddress={child.address} fill_nbr={6} />
-        <ActivityContent childAddress={child.address!} userType="Parent" />
+        {address && (
+          <ActivityContent
+            childAddress={child.address}
+            parentAddress={address}
+          />
+        )}
       </div>
       <TokenContent childAddress={child.address} />
     </div>

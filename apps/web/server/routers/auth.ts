@@ -26,7 +26,7 @@ export const authRouter = createProtectedRouter()
           id: ctx.session.user.id,
         },
         include: {
-          child: true,
+          child: { include: { parent: { include: { user: true } } } },
           parent: true,
         },
       });

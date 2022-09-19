@@ -4,10 +4,10 @@ import {
   faThumbsUp,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { SectionContainer } from '@lib/ui';
 import FormattedMessage from '../components/common/FormattedMessage';
-import AddChildForm from '../components/forms/AddChildForm';
-import MainWrapper from '../components/wrappers/MainWrapper';
+import AddChildForm from '../components/dashboard/parent/AddChildForm';
+import MainWrapper from '../components/common/wrappers/MainWrapper';
+import SectionContainer from '../components/common/wrappers/SectionContainer';
 
 type AddAccountProps = {};
 

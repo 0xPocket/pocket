@@ -2,14 +2,14 @@ import { faAngleLeft, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { UserChild } from '@lib/types/interfaces';
 import { formatUnits, parseUnits } from 'ethers/lib/utils';
-import { useSmartContract } from '../../contexts/contract';
-import useContractRead from '../../hooks/useContractRead';
+import { useSmartContract } from '../../../contexts/contract';
+import useContractRead from '../../../hooks/useContractRead';
 import { useAccount } from 'wagmi';
 import type { BigNumber } from 'ethers';
 import { z } from 'zod';
-import { useZodForm } from '../../utils/useZodForm';
+import { useZodForm } from '../../../utils/useZodForm';
 import { useEffect } from 'react';
-import FormattedMessage from '../common/FormattedMessage';
+import FormattedMessage from '../../common/FormattedMessage';
 import { useIntl } from 'react-intl';
 import Image from 'next/future/image';
 
@@ -125,7 +125,7 @@ function AddFundsForm({
           type="submit"
           value="Send"
           className="relative"
-          // className=" success-btn disabled:disabled-btn relative"
+          // className=" success-btn disabled:disabled-btn"
           disabled={isLoading}
         >
           <Image

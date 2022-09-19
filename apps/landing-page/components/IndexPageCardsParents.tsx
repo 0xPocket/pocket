@@ -3,10 +3,10 @@ import {
   faGear,
   faMessage,
 } from '@fortawesome/free-solid-svg-icons';
-import { IndexCardAnimation } from '@lib/ui';
 import { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Waypoint } from 'react-waypoint';
+import { IndexCardAnimation } from './animations/IndexCardAnimation';
 import IndexCard from './IndexCard';
 
 function IndexPageCardsParents() {

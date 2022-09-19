@@ -52,19 +52,19 @@
   }
 
   .success-btn {
-    @apply base-btn bg-primary  text-bright;
+    @apply base-btn bg-primary  text-bright disabled-btn;
   }
 
   .danger-btn {
-    @apply base-btn bg-danger  text-bright;
+    @apply base-btn bg-danger  text-bright disabled-btn;
   }
 
   .action-btn {
-    @apply base-btn bg-primary  text-bright;
+    @apply base-btn bg-primary  text-bright disabled-btn;
   }
 
   .disabled-btn {
-    @apply action-btn cursor-not-allowed opacity-25;
+    @apply disabled:cursor-not-allowed disabled:opacity-40;
   }
 
   .third-btn {

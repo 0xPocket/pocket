@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTheme } from '../../contexts/theme';
+import { useTheme } from '../contexts/theme';
 
 export function ThemeToggler({ className }: { className?: string }) {
   const { dark, toggleDark } = useTheme();

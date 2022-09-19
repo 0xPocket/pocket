@@ -1,4 +1,4 @@
-import MainWrapper from '../components/wrappers/MainWrapper';
+import MainWrapper from '../components/common/wrappers/MainWrapper';
 import { Spinner } from '../components/common/Spinner';
 import { useMagic } from '../contexts/auth';
 import { Tab } from '@headlessui/react';

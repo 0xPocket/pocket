@@ -1,4 +1,3 @@
-import { Button } from '@lib/ui';
 import React, { ReactNode } from 'react';
 import { toast } from 'react-toastify';
 import {
@@ -50,26 +49,16 @@ const ClaimButton: React.FC<ClaimButtonProps> = ({ disabled, children }) => {
     },
   });
 
-  if (disabled) {
-    return (
-      <button
-        disabled={true}
-        className="relative flex cursor-not-allowed items-center justify-center overflow-hidden whitespace-nowrap rounded-md bg-dark-lightest px-4 py-3 text-bright dark:bg-dark-lightest"
-      >
-        {children}
-      </button>
-    );
-  }
-
   return (
-    <Button
-      disabled={!claim.write || claim.isLoading}
-      action={() => {
+    <button
+      disabled={disabled || !claim.write || claim.isLoading}
+      className="action-btn"
+      onClick={() => {
         if (claim.write) claim.write();
       }}
     >
       {children}
-    </Button>
+    </button>
   );
 };
 

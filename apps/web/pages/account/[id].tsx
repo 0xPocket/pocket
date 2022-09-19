@@ -1,5 +1,4 @@
-import MainWrapper from '../../components/wrappers/MainWrapper';
-import { SectionContainer } from '@lib/ui';
+import MainWrapper from '../../components/common/wrappers/MainWrapper';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import AccountDashboard from '../../components/dashboard/parent/Dashboard';
 import Link from 'next/link';
@@ -30,29 +29,27 @@ function Account({
   if (!child) return null;
   return (
     <MainWrapper>
-      <SectionContainer>
-        <div className="mb-12 flex items-center space-x-4">
-          <FontAwesomeIcon icon={faAngleRight} />
-          <Link href="/">
-            <a>
-              <FormattedMessage id="route.dashboard" />
-            </a>
-          </Link>
-          <p>{`>`}</p>
-          <p>{child?.name}</p>
+      <div className="mb-12 flex items-center space-x-4">
+        <FontAwesomeIcon icon={faAngleRight} />
+        <Link href="/">
+          <a>
+            <FormattedMessage id="route.dashboard" />
+          </a>
+        </Link>
+        <p>{`>`}</p>
+        <p>{child?.name}</p>
+      </div>
+      {isLoading ? (
+        <>
+          <FormattedMessage id="loading" />
+        </>
+      ) : child ? (
+        <AccountDashboard child={child} />
+      ) : (
+        <div>
+          <FormattedMessage id="account.not-found" />
         </div>
-        {isLoading ? (
-          <>
-            <FormattedMessage id="loading" />
-          </>
-        ) : child ? (
-          <AccountDashboard child={child} />
-        ) : (
-          <div>
-            <FormattedMessage id="account.not-found" />
-          </div>
-        )}
-      </SectionContainer>
+      )}
     </MainWrapper>
   );
 }
