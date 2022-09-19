@@ -78,8 +78,6 @@ export async function grantMaticToChild(child: UserChild) {
     value: AMOUNT_TO_SEND_TO_CHILD,
   };
 
-  console.log('before fee');
-
   const feeData = await getPriorityFeeData();
 
   if (!feeData) {
@@ -88,8 +86,6 @@ export async function grantMaticToChild(child: UserChild) {
       message: 'Server error',
     });
   }
-
-  console.log('before update');
 
   await prisma.parent.update({
     where: {
@@ -102,16 +98,12 @@ export async function grantMaticToChild(child: UserChild) {
     },
   });
 
-  console.log('after update');
-
   const maticGrant = await prisma.maticGrant.create({
     data: {
       userId: child.id,
       amount: AMOUNT_TO_SEND_TO_CHILD.toHexString(),
     },
   });
-
-  console.log('before tx');
 
   const tx = await wallet
     .sendTransaction({
@@ -137,8 +129,6 @@ export async function grantMaticToChild(child: UserChild) {
           },
         }),
       ]);
-
-      console.log('bfr thow');
 
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',
