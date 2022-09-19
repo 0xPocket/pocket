@@ -114,11 +114,7 @@ function AddFundsForm({ child, addFunds, returnFn }: AddFundsFormProps) {
           <FontAwesomeIcon icon={faAngleLeft} className="mr-2" />
           <FormattedMessage id="return" />
         </button>
-        <button
-          type="submit"
-          value="Send"
-          className="success-btn disabled:disabled-btn"
-        >
+        <button type="submit" value="Send" className="success-btn">
           <FontAwesomeIcon icon={faPaperPlane} className="mr-2" />
           <FormattedMessage id="send" />
         </button>

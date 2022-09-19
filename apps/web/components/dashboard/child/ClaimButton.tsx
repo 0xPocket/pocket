@@ -49,20 +49,10 @@ const ClaimButton: React.FC<ClaimButtonProps> = ({ disabled, children }) => {
     },
   });
 
-  if (disabled) {
-    return (
-      <button
-        disabled={true}
-        className="relative flex items-center justify-center overflow-hidden whitespace-nowrap rounded-md bg-primary px-4 py-3 text-bright opacity-40 dark:bg-primary"
-      >
-        {children}
-      </button>
-    );
-  }
-
   return (
     <button
-      disabled={!claim.write}
+      disabled={disabled || !claim.write}
+      className="action-btn"
       onClick={() => {
         if (claim.write) claim.write();
       }}
