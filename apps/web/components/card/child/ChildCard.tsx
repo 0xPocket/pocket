@@ -2,12 +2,13 @@ import { useSmartContract } from '../../../contexts/contract';
 import useContractRead from '../../../hooks/useContractRead';
 import moment from 'moment';
 import { useMemo } from 'react';
-import { useQuery } from 'wagmi';
 import ClaimButton from '../../dashboard/child/ClaimButton';
 import BaseTokenBalance from '../../common/BaseTokenBalance';
 import PocketMoney from './PocketMoney';
 import FormattedMessage from '../../common/FormattedMessage';
 import { useIntl } from 'react-intl';
+import { ethers } from 'ethers';
+import { useQuery } from 'react-query';
 
 type ChildCardProps = {
   childAddress: string;
@@ -16,7 +17,7 @@ type ChildCardProps = {
 };
 
 function ChildCard({ childAddress, className }: ChildCardProps) {
-  const { pocketContract } = useSmartContract();
+  const { pocketContract, erc20 } = useSmartContract();
   const intl = useIntl();
 
   const { data: config } = useContractRead({
@@ -26,25 +27,56 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
     enabled: !!childAddress,
     watch: true,
   });
+  const { data: now, refetch } = useQuery(['now'], () => new Date(), {});
 
-  const { data: now } = useQuery(['now'], () => moment(), {
-    refetchInterval: 1000,
+  const { data: claimableAmount } = useContractRead({
+    contract: pocketContract,
+    functionName: 'computeClaimable',
+    args: [childAddress],
+    enabled: !!childAddress,
+    watch: true,
+    onSuccess: () => refetch(),
   });
 
   const nextClaim = useMemo(() => {
     if (!config) return;
-    const lastClaim = config[3];
-    const periodicity = config[4];
-    return moment(lastClaim.mul(1000).toNumber()).add(
-      periodicity.toNumber(),
+    return moment(config.lastClaim.mul(1000).toNumber()).add(
+      config.periodicity.toNumber(),
       'seconds',
     );
   }, [config]);
 
   const canClaim = useMemo(() => {
-    if (!now) return false;
-    return moment(nextClaim) < now;
-  }, [now, nextClaim]);
+    if (!claimableAmount) return false;
+    return !claimableAmount.isZero();
+  }, [claimableAmount]);
+
+  const textClaim = useMemo(() => {
+    if (!canClaim && !config?.balance.isZero())
+      return (
+        <>
+          <FormattedMessage id="card.child.piggyBank.status.next" />{' '}
+          {moment
+            .duration(moment().diff(nextClaim))
+            .locale(intl.locale)
+            .humanize() + '...'}
+        </>
+      );
+    else if (!canClaim || !claimableAmount)
+      return <FormattedMessage id="card.child.piggyBank.status.nothing" />;
+    return (
+      <>
+        <FormattedMessage id="withdraw" />
+        {' ' +
+          ethers.utils.formatUnits(
+            claimableAmount.toString(),
+            erc20.data?.decimals,
+          ) +
+          '$'}
+      </>
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canClaim, config, claimableAmount, erc20, nextClaim, intl, now]);
 
   return (
     <div className="space-y-4">
@@ -59,25 +91,7 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
             <BaseTokenBalance />
             <PocketMoney value={config?.balance} />
           </div>
-          {config && (
-            <ClaimButton disabled={!canClaim || config[1].isZero()}>
-              {!canClaim || config[1].isZero() ? (
-                config[1].isZero() ? (
-                  <FormattedMessage id="card.child.piggyBank.status.nothing" />
-                ) : (
-                  <>
-                    <FormattedMessage id="card.child.piggyBank.status.next" />{' '}
-                    {moment
-                      .duration(moment().diff(nextClaim))
-                      .locale(intl.locale)
-                      .humanize() + '...'}
-                  </>
-                )
-              ) : (
-                <FormattedMessage id="claim" />
-              )}
-            </ClaimButton>
-          )}
+          <ClaimButton disabled={!canClaim}>{textClaim}</ClaimButton>
         </div>
       </div>
     </div>

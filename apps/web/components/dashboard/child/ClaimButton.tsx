@@ -6,7 +6,6 @@ import {
   usePrepareContractWrite,
   useWaitForTransaction,
 } from 'wagmi';
-// import useContractWrite from '../../../hooks/useContractWrite';
 import { useSmartContract } from '../../../contexts/contract';
 import FormattedMessage from '../../common/FormattedMessage';
 
@@ -22,6 +21,7 @@ const ClaimButton: React.FC<ClaimButtonProps> = ({ disabled, children }) => {
     addressOrName: pocketContract.address,
     contractInterface: pocketContract.interface,
     functionName: 'claim',
+    enabled: !!pocketContract,
   });
 
   const claim = useContractWrite({
@@ -63,7 +63,7 @@ const ClaimButton: React.FC<ClaimButtonProps> = ({ disabled, children }) => {
 
   return (
     <Button
-      disabled={!claim.write}
+      disabled={!claim.write || claim.isLoading}
       action={() => {
         if (claim.write) claim.write();
       }}

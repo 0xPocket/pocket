@@ -27,6 +27,7 @@ function RightTab({ child }: RightTabProps) {
     functionName: 'childToConfig',
     args: [child.address!],
     enabled: !!child.address,
+    watch: true,
   });
 
   const { approveAndAddChild } = useAddFundsForm(
