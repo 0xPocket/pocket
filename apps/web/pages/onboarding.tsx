@@ -1,4 +1,4 @@
-import MainWrapper from '../components/wrappers/MainWrapper';
+import MainWrapper from '../components/common/wrappers/MainWrapper';
 import { Spinner } from '../components/common/Spinner';
 import { trpc } from '../utils/trpc';
 import { useRouter } from 'next/router';

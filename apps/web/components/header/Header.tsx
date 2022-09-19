@@ -1,7 +1,7 @@
-import { Header } from '@lib/ui';
 import { useMagic } from '../../contexts/auth';
 import WalletPopover from '../wallet/WalletPopover';
 import DropdownMenu from './DropdownMenu';
+import { Header } from '../common/HeaderComponent';
 
 function GlobalHeader() {
   const { loggedIn } = useMagic();

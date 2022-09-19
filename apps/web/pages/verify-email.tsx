@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { FC, useEffect } from 'react';
 import FormattedMessage from '../components/common/FormattedMessage';
 import { Spinner } from '../components/common/Spinner';
-import MainWrapper from '../components/wrappers/MainWrapper';
+import MainWrapper from '../components/common/wrappers/MainWrapper';
 import { trpc } from '../utils/trpc';
 
 const VerifyChild: FC = () => {

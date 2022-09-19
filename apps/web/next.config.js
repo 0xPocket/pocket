@@ -12,7 +12,6 @@ require('config/env/server');
 
 const withTM = require('next-transpile-modules')([
   '@pocket/emails',
-  '@lib/ui',
   'pocket-contract',
 ]);
 

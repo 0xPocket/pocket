@@ -2,11 +2,11 @@ import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Listbox, Transition } from '@headlessui/react';
 import { CovalentItem } from '@lib/types/interfaces';
-import { DialogPopupWrapper } from '@lib/ui';
 import { FC, Fragment, useState } from 'react';
 import { toast } from 'react-toastify';
 import { trpc } from '../../../../utils/trpc';
 import FormattedMessage from '../../../common/FormattedMessage';
+import { DialogPopupWrapper } from '../../../common/wrappers/DialogsWrapper';
 
 type TokenReportPopupProps = {
   items: CovalentItem[];

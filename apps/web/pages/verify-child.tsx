@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { FC, useEffect } from 'react';
 import FormattedMessage from '../components/common/FormattedMessage';
 import OnBoardingStepper from '../components/onboarding/child/OnBoarding';
-import MainWrapper from '../components/wrappers/MainWrapper';
+import MainWrapper from '../components/common/wrappers/MainWrapper';
 import { useMagic } from '../contexts/auth';
 import { useIsMounted } from '../hooks/useIsMounted';
 

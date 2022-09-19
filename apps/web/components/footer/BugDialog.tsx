@@ -1,4 +1,3 @@
-import { DialogPopupWrapper } from '@lib/ui';
 import type { Dispatch, FC } from 'react';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
@@ -10,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBug, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import FormattedMessage from '../common/FormattedMessage';
 import { useIntl } from 'react-intl';
+import { DialogPopupWrapper } from '../common/wrappers/DialogsWrapper';
 
 type BugDialogProps = {
   isOpen: boolean;

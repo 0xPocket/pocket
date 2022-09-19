@@ -1,8 +1,8 @@
-import { useTheme } from '@lib/ui/src/Theme/ThemeContext';
 import { SwapWidgetProps, Theme } from '@uniswap/widgets';
 import { env } from 'config/env/client';
 import dynamic from 'next/dynamic';
 import { useIntl } from 'react-intl';
+import { useTheme } from '../../../contexts/theme';
 import FormattedMessage from '../../common/FormattedMessage';
 
 const SwapWidget = dynamic<SwapWidgetProps>(

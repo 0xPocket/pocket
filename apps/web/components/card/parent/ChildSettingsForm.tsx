@@ -7,11 +7,11 @@ import { PocketFaucet } from 'pocket-contract/typechain-types';
 import { useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { z } from 'zod';
-import { useSmartContract } from '../../contexts/contract';
-import { ContractMethodReturn } from '../../hooks/useContractRead';
-import { useZodForm } from '../../utils/useZodForm';
-import FormattedMessage from '../common/FormattedMessage';
-import { Spinner } from '../common/Spinner';
+import { useSmartContract } from '../../../contexts/contract';
+import { ContractMethodReturn } from '../../../hooks/useContractRead';
+import { useZodForm } from '../../../utils/useZodForm';
+import FormattedMessage from '../../common/FormattedMessage';
+import { Spinner } from '../../common/Spinner';
 
 const ChildSettingsSchema = z.object({
   ceiling: z.number({ invalid_type_error: 'Ceiling is required' }).min(1),
