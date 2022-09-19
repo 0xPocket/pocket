@@ -57,12 +57,7 @@ function ChildSettingsForm({
   );
 
   const { erc20 } = useSmartContract();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setValue,
-  } = useZodForm({
+  const { register, handleSubmit, setValue } = useZodForm({
     schema: ChildSettingsSchema,
     defaultValues: {
       periodicity: formatUnits(initialConfig.periodicity, 0).toString(),
@@ -156,7 +151,7 @@ function ChildSettingsForm({
             <FontAwesomeIcon icon={faAngleLeft} className="mr-2" />
             <FormattedMessage id="return" />
           </button>
-          <button type="submit" className="success-btn">
+          <button type="submit" className="success-btn" disabled={isLoading}>
             <FontAwesomeIcon icon={faWrench} className="mr-2" />
             {isLoading ? <Spinner /> : <FormattedMessage id="apply" />}
           </button>

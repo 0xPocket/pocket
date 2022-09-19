@@ -138,5 +138,8 @@ export function useAddFundsForm(
     ],
   );
 
-  return { approveAndAddChild };
+  return {
+    approveAndAddChild,
+    isLoading: approve.isLoading || addChildAndFunds.isLoading,
+  };
 }
