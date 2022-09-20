@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAccount, useBalance } from 'wagmi';
-import { useSmartContract } from '../../../contexts/contract';
-import FormattedMessage from '../../common/FormattedMessage';
+import { useSmartContract } from '../../contexts/contract';
+import FormattedMessage from './FormattedMessage';
 
 const BaseTokenBalance: React.FC = () => {
   const { address } = useAccount();

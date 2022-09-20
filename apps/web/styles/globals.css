@@ -77,24 +77,24 @@
 
   /* inputs */
   .input-text {
-    @apply block w-full appearance-none border-b  bg-transparent py-2.5  px-0 text-sm  focus:outline-none focus:ring-0 disabled:cursor-not-allowed disabled:bg-gray disabled:bg-opacity-20;
+    @apply block w-full appearance-none border-b  bg-transparent py-2.5  px-0 text-sm  focus:outline-none focus:ring-0 disabled:bg-gray disabled:bg-opacity-20 disabled:cursor-not-allowed;
   }
 
-  .input-number {
-    @apply without-ring mr-2 w-full appearance-none bg-transparent text-right text-4xl outline-none;
-  }
+	.input-number {
+		@apply without-ring w-full appearance-none bg-transparent mr-2 text-right text-4xl outline-none
+	}
 
-  .input-radio {
-    @apply relative flex cursor-pointer items-center justify-center rounded-lg border  px-3 py-2 shadow-sm focus:outline-none;
-  }
+	.input-radio {
+		@apply relative flex items-center justify-center cursor-pointer rounded-lg border  px-3 py-2 shadow-sm focus:outline-none;
+	}
 
-  .input-radio-checked {
-    @apply input-radio border border-primary bg-primary text-white;
-  }
+	.input-radio-checked {
+		@apply input-radio border border-primary bg-primary text-white;
+	}
 
-  .input-radio-unchecked {
-    @apply input-radio border border-primary text-primary;
-  }
+	.input-radio-unchecked {
+		@apply input-radio border border-primary text-primary;
+	}
 
   /* badge */
   .cat-badge {
@@ -177,38 +177,8 @@
     }
   }
 
-  /* toastify */
-  .toast-container {
-    @apply container-classic  text-dark-lightest  dark:text-white !important;
-  }
-
-  .face:hover {
-    animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-    transform: translate3d(0, 0, 0);
-    backface-visibility: hidden;
-    perspective: 1000px;
-    /* transform: rotate(360deg); */
-  }
-
-  @keyframes shake {
-    0% {
-      transform: rotate(0deg);
-    }
-
-    /* 20% {
-      transform: translate3d(2px, 0, 0);
-      transform: rotate(-72deg);
-    }
-
-
-
-    70% {
-      transform: translate3d(0px, 0, 0);
-      transform: rotate(-252deg);
-    } */
-
-    100% {
-      transform: rotate(-360deg);
-    }
-  }
+	/* toastify */
+	.toast-container {
+		@apply container-classic  text-dark-lightest  dark:text-white !important;
+	}
 }
