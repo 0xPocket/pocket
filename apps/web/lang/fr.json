@@ -146,5 +146,8 @@
   "add-child-or-change-config.error": "Le changement de configuration a échoué: {message}. Si le problème persiste, contactez-nous.",
   "add-child-or-change-config.success": "Le changement de configuration est un succès !",
 
-  "transaction.pending": "Transaction en attente, merci de patienter !"
+  "transaction.pending": "Transaction en attente, merci de patienter !",
+
+	"tooltip.wallet.erc20": "Nous utilisons l'USDC de Polygon",
+	"tooltip.wallet.matic": "Le Matic sert à payer les frais de transaction sur la blockchain"
 }
