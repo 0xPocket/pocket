@@ -73,7 +73,7 @@ function TokenContent({ childAddress }: TokenContentProps) {
               <div className="aspect-square w-1/5">
                 <PieChartComp tokenList={data.items} />
               </div>
-              <div className="flex w-4/5 items-start overflow-y-scroll">
+              <div className="flex w-4/5 items-start overflow-y-auto">
                 <TokenTable tokenList={data.items} />
               </div>
             </div>

@@ -20,6 +20,7 @@
   "value": "Valeur",
   "report": "Signaler",
   "claim": "Retirer",
+  "withdraw": "Retirer",
   "claim.noun": "Retrait",
   "deposit.noun": "Dépôt",
   "next": "Suivant",
@@ -65,7 +66,7 @@
 
   "verify-email.email-verified": "Votre email est verifié !",
   "verify-email.redirect": "Vous allez être redirigé dans quelques instants...",
-  "verify-email.problem": "Si le problème persiste, contactez nous.",
+  "verify-email.problem": "Si le problème persiste, veuillez nous contacter.",
 
   "common.welcome": "Bienvenue sur Pocket !",
 
@@ -126,7 +127,7 @@
   "dashboard.parent.card.email-sent": "Nous avons envoyé un email a votre enfant.",
   "dashboard.parent.card.send-new": "Renvoyer un email.",
   "dashboard.parent.card.see-on-polygon": "Voir sur polygonscan",
-  "dashboard.parent.card.email-error": "Une erreur s'est produite, si le problème persiste, contactez nous.",
+  "dashboard.parent.card.email-error": "Une erreur s'est produite, si le problème persiste, veuillez nous contacter.",
   "dashboard.parent.card.email-sent-to": "Email envoyé à {email}",
   "dashboard.parent.card.go-to": "Aller sur le profil de {name}",
 
@@ -138,12 +139,12 @@
   "footer.contact-us": "Contactez-nous",
   "footer.contact.success": "Message envoyé ! Nous reviendrons vers vous le plus tôt possible.",
 
-  "add-child-and-funds.error": "Le dépôt a échoué: {message}. Si le probléme persiste, contactez-nous s'il vous plaît.",
+  "add-child-and-funds.error": "Le dépôt a échoué. Si le probléme persiste, veuillez nous contacter.",
   "add-child-and-funds.success": "Le depôt est un succès !",
-  "add-child-and-funds.approve": "L'opération a échoué: {message}. Si le probléme persiste, contactez-nous s'il vous plaît.",
+  "add-child-and-funds.approve-fail": "L'approbation des fonds a échoué. Si le probléme persiste, veuillez nous contacter.",
   "add-child-and-funds.approve-success": "L'opération est un succès! Merci d'accepter la transaction suivante.",
 
-  "add-child-or-change-config.error": "Le changement de configuration a échoué: {message}. Si le problème persiste, contactez-nous.",
+  "add-child-or-change-config.error": "Le changement de configuration a échoué: {message}. Si le problème persiste, veuillez nous contacter.",
   "add-child-or-change-config.success": "Le changement de configuration est un succès !",
 
   "transaction.pending": "Transaction en attente, merci de patienter !"

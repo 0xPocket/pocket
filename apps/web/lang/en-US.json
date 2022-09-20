@@ -20,6 +20,7 @@
   "value": "Value",
   "report": "Report",
   "claim": "Claim",
+  "withdraw": "Withdraw",
   "claim.noun": "Claim",
   "deposit.noun": "Deposit",
   "next": "Next",
@@ -138,12 +139,12 @@
   "footer.contact-us": "Contact us",
   "footer.contact.success": "Message sent ! We'll get back at you as soon as possible.",
 
-  "add-child-and-funds.error": "Deposit failed: {message}. If the problem persits, please contact us.",
+  "add-child-and-funds.error": "Deposit failed. If the problem persits, please contact us.",
   "add-child-and-funds.success": "Successfull deposit !",
-  "add-child-and-funds.approve": "Approve failed: {message}. If the problem persits, please contact us.",
+  "add-child-and-funds.approve-fail": "Approve failed. If the problem persits, please contact us.",
   "add-child-and-funds.approve-success": "Approve success! Please accept the following transaction.",
 
-  "add-child-or-change-config.error": "Changing config failed: {message}. If the problem persists, contact us.",
+  "add-child-or-change-config.error": "Changing config failed. If the problem persists, contact us.",
   "add-child-or-change-config.success": "Configuration sets successfully !",
 
   "transaction.pending": "Transaction pending, please hang on !"

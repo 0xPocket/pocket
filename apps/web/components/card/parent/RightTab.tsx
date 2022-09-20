@@ -27,9 +27,10 @@ function RightTab({ child }: RightTabProps) {
     functionName: 'childToConfig',
     args: [child.address!],
     enabled: !!child.address,
+    watch: true,
   });
 
-  const { approveAndAddChild } = useAddFundsForm(
+  const { approveAndAddChild, isLoading: isLoadingAddFunds } = useAddFundsForm(
     child,
     !!config?.lastClaim.isZero(),
     () => {
@@ -38,14 +39,11 @@ function RightTab({ child }: RightTabProps) {
     },
   );
 
-  const { changeConfig, isLoading } = useChildSettingsForm(
-    child.address,
-    !!config?.lastClaim.isZero(),
-    () => {
+  const { changeConfig, isLoading: isLoadingChildSetting } =
+    useChildSettingsForm(child.address, !!config?.lastClaim.isZero(), () => {
       refetchConfig();
       setSelectedIndex(0);
-    },
-  );
+    });
 
   const { write: withdrawFundsFromChild } = useContractWrite({
     mode: 'recklesslyUnprepared',
@@ -109,6 +107,7 @@ function RightTab({ child }: RightTabProps) {
             <AddFundsForm
               child={child}
               addFunds={approveAndAddChild}
+              isLoading={isLoadingAddFunds}
               returnFn={() => {
                 setSelectedIndex(0);
               }}
@@ -122,7 +121,7 @@ function RightTab({ child }: RightTabProps) {
               initialConfig={initialConfig}
               config={config}
               withdrawFundsFromChild={withdrawFundsFromChild}
-              isLoading={isLoading}
+              isLoading={isLoadingChildSetting}
               returnFn={() => {
                 setSelectedIndex(0);
               }}

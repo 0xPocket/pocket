@@ -32,7 +32,6 @@ function AccountStatus({ child }: AccountStatusProps) {
   if (child!.child!.status === 'ACTIVE') return null;
   return (
     <div
-      className="cursor-pointer"
       onMouseEnter={() => setShow(true)}
       onMouseLeave={() => setShow(false)}
       ref={setReferenceElement}
