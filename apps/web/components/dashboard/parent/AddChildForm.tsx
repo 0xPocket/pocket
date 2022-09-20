@@ -6,7 +6,14 @@ import { trpc } from '../../../utils/trpc';
 import { ParentSchema } from '../../../server/schemas';
 import InputText from '../../common/InputText';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCoins,
+  faMoneyBill1Wave,
+  faPerson,
+  faPiggyBank,
+  faPlus,
+  faUserPlus,
+} from '@fortawesome/free-solid-svg-icons';
 import FormattedMessage from '../../common/FormattedMessage';
 import { RadioGroup } from '@headlessui/react';
 import { useEffect, useMemo, useState } from 'react';
@@ -67,10 +74,10 @@ function AddChildForm() {
       className="container-classic flex flex-col gap-4 rounded-lg p-8"
     >
       <h2 className="">
-        <FontAwesomeIcon icon={faPlus} className="mr-4" />
+        <FontAwesomeIcon icon={faUserPlus} className="mr-4" />
         <FormattedMessage id="child-form.info" />
       </h2>
-      <div className="flex flex-grow flex-col justify-evenly">
+      <div className="flex flex-grow flex-col justify-evenly gap-4">
         <InputText
           label={<FormattedMessage id="name" />}
           register={register('name')}
@@ -79,6 +86,10 @@ function AddChildForm() {
           label={<FormattedMessage id="email" />}
           register={register('email')}
         />
+        <h2 className="mt-4">
+          <FontAwesomeIcon icon={faCoins} className="mr-4" />
+          <FormattedMessage id="account.settings" />
+        </h2>
         <table>
           <tbody className="flex flex-col space-y-4">
             <tr className="flex items-center space-x-8">
@@ -131,7 +142,7 @@ function AddChildForm() {
           </tbody>
         </table>
         <button disabled={addChild.isLoading} className="action-btn">
-          <FormattedMessage id="send" />
+          <FormattedMessage id="submit" />
         </button>
       </div>
     </form>

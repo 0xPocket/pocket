@@ -3,10 +3,13 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const dotenv = require('dotenv');
 const { withAxiom } = require('next-axiom');
+const { compareLang } = require('./lang/compareLang');
 
 dotenv.config({ path: '../../.env' });
 
 require('config/env/server');
+
+compareLang();
 
 // const withPlugins = require('next-compose-plugins');
 
@@ -21,10 +24,10 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-	i18n :{
-		locales: ['en-US', 'fr'],
+  i18n: {
+    locales: ['en-US', 'fr'],
     defaultLocale: 'en-US',
-	},
+  },
   reactStrictMode: true,
   experimental: {
     images: { allowFutureImage: true },

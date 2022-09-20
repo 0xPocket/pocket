@@ -20,7 +20,7 @@ function AddAccount({}: AddAccountProps) {
             <h2 className="text-center">
               <FormattedMessage id="add-account.how-to" />
             </h2>
-            <ol className="flex flex-col gap-16 text-xl">
+            <ol className="text-l flex flex-col gap-16">
               <li className="flex items-center gap-4">
                 <FontAwesomeIcon icon={faPenToSquare} size="2x" />
                 <FormattedMessage id="add-account.step1" />
