@@ -20,6 +20,9 @@ function MainTabPanel({}: MainTabPanelProps) {
     enabled: !!erc20.data,
     watch: true,
   });
+  const { data: maticBalance } = useBalance({
+    addressOrName: address,
+  });
 
   return (
     <div className="flex w-full flex-col gap-6">
@@ -52,12 +55,15 @@ function MainTabPanel({}: MainTabPanelProps) {
           <div className="flex items-end gap-2">
             <h2>{data?.formatted}</h2>
             <span className="text-3xl font-bold">$</span>
-            <Tooltip
-              message="We currently use Polygon's USDC"
-              placement="top"
-            />
+            <Tooltip placement="top">{`We currently use Polygon's USDC`}</Tooltip>
           </div>
         )}
+        <div className="flex items-end text-xs text-gray">
+          <p>
+            {maticBalance?.formatted.slice(0, 6)} {maticBalance?.symbol}
+          </p>
+          <Tooltip placement="top">{`Matic is used to pay network fees`}</Tooltip>
+        </div>
       </div>
       <button onClick={showRamp} className="action-btn">
         <FormattedMessage id="wallet.top-up" />
