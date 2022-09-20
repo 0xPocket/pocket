@@ -7,7 +7,6 @@ import {
   faRightFromBracket,
 } from '@fortawesome/free-solid-svg-icons';
 import { useMagic } from '../../contexts/auth';
-import { useRouter } from 'next/router';
 import FormattedMessage from '../common/FormattedMessage';
 import LangToggler from './LangToggler';
 import { ThemeToggler } from './ThemeToggler';

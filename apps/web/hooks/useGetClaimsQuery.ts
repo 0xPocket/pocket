@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query';
-import { useAccount, useProvider } from 'wagmi';
+import { useProvider } from 'wagmi';
 import { useSmartContract } from '../contexts/contract';
 import { formatUnits } from 'ethers/lib/utils';
 import { useMemo } from 'react';

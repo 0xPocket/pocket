@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { FC, useCallback } from 'react';
-import { Connector, useAccount, useConnect, useNetwork } from 'wagmi';
+import { type Connector, useAccount, useConnect, useNetwork } from 'wagmi';
 
 type EthereumProvidersProps = {
   callback?: (address: string, chainId: number) => void;
