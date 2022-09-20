@@ -5,6 +5,7 @@ import useRamp from '../../hooks/useRamp';
 import FormattedMessage from '../common/FormattedMessage';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClipboard } from '@fortawesome/free-solid-svg-icons';
+import Tooltip from '../common/Tooltip';
 
 type MainTabPanelProps = {};
 
@@ -50,7 +51,11 @@ function MainTabPanel({}: MainTabPanelProps) {
         ) : (
           <div className="flex items-end gap-2">
             <h2>{data?.formatted}</h2>
-            <span>{data?.symbol}</span>
+            <span className="text-3xl font-bold">$</span>
+            <Tooltip
+              message="We currently use Polygon's USDC"
+              placement="top"
+            />
           </div>
         )}
       </div>
