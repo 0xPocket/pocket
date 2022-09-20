@@ -7,7 +7,6 @@ import {
   faRightFromBracket,
 } from '@fortawesome/free-solid-svg-icons';
 import { useMagic } from '../../contexts/auth';
-import { useRouter } from 'next/router';
 import FormattedMessage from '../common/FormattedMessage';
 import LangToggler from './LangToggler';
 import { ThemeToggler } from './ThemeToggler';
@@ -35,13 +34,9 @@ const DropdownMenu: FC = ({}) => {
       >
         <Menu.Items className="container-classic absolute right-0 mt-2 flex w-56 origin-top-right flex-col items-center rounded-md p-4">
           <div className="flex w-full items-center justify-evenly py-2">
-            <Menu.Item>
-              <LangToggler />
-            </Menu.Item>
+            <LangToggler />
             <div className="h-6  border-l"></div>
-            <Menu.Item>
-              <ThemeToggler />
-            </Menu.Item>
+            <ThemeToggler />
           </div>
 
           <Menu.Item>
