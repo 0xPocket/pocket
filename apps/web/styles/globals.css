@@ -218,6 +218,6 @@
 	}
 
 	.tooltip-container{
-		@apply bg-gray text-white px-3 py-1 rounded-md shadow-sm
+		@apply bg-gray text-white px-3 py-1 rounded-md text-base;
 	}
 }

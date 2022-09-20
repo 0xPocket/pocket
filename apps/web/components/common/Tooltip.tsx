@@ -1,15 +1,15 @@
 import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Placement, placements } from '@popperjs/core';
-import { FC, useState } from 'react';
+import { Placement } from '@popperjs/core';
+import { FC, ReactNode, useState } from 'react';
 import { usePopper } from 'react-popper';
 
 type TooltipProps = {
-  message: string;
+  children?: ReactNode;
   placement?: Placement;
 };
 
-const Tooltip: FC<TooltipProps> = ({ message, placement = 'top' }) => {
+const Tooltip: FC<TooltipProps> = ({ children, placement = 'top' }) => {
   const [referenceElement, setReferenceElement] = useState<HTMLElement | null>(
     null,
   );
@@ -20,6 +20,12 @@ const Tooltip: FC<TooltipProps> = ({ message, placement = 'top' }) => {
   const { styles, attributes } = usePopper(referenceElement, popperElement, {
     placement: placement,
     modifiers: [
+      {
+        name: 'computeStyles',
+        options: {
+          adaptive: false, // true by default
+        },
+      },
       {
         name: 'offset',
         options: {
@@ -48,7 +54,7 @@ const Tooltip: FC<TooltipProps> = ({ message, placement = 'top' }) => {
           className="tooltip-container"
           {...attributes.popper}
         >
-          {message}
+          {children}
           <div id="arrow" ref={setArrowElement} style={styles.arrow} />
         </div>
       )}
