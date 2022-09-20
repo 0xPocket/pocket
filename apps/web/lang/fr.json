@@ -51,7 +51,8 @@
   "card.child.piggyBank.status.nothing": "Rien à retirer",
   "card.child.piggyBank.status.next": "Prochain retrait dans",
 
-  "card.parent.status": "Un email de configuration a été envoyé à",
+	"card.parent.status.invited": "Un email de configuration a été envoyé à {email}",
+  "card.parent.status.active": "Ce compte est actif",
   "card.parent.piggyBank.addFunds": "Ajouter des fonds",
 
   "dashboard.child.claim.fail": "Le retrait a échoué.",

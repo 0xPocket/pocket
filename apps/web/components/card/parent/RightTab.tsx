@@ -9,9 +9,9 @@ import FormattedMessage from '../../common/FormattedMessage';
 import useContractRead from '../../../hooks/useContractRead';
 import AddFundsForm from './AddFundsForm';
 import ChildSettingsForm from './ChildSettingsForm';
-import Balance from './Balance';
 import { parseUnits } from 'ethers/lib/utils';
 import { BigNumber } from 'ethers';
+import MainPanel from './MainPanel';
 
 type RightTabProps = {
   child: UserChild;
@@ -69,7 +69,7 @@ function RightTab({ child }: RightTabProps) {
               erc20.data?.decimals,
             ),
     };
-  }, [config]);
+  }, [config, erc20, child]);
 
   if (!config) {
     return null;
@@ -98,7 +98,7 @@ function RightTab({ child }: RightTabProps) {
       <Tab.Panels as="div" className="h-full">
         <Tab.Panel as={'div'} className="h-full">
           <div className="flex h-full flex-col items-end justify-between">
-            <Balance
+            <MainPanel
               value={config?.balance}
               setSelectedIndex={setSelectedIndex}
             />

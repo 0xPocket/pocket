@@ -77,7 +77,6 @@ function AddFundsForm({ child, addFunds, returnFn }: AddFundsFormProps) {
     >
       <div className="flex flex-col items-end">
         <label htmlFor="topup">
-          {' '}
           <FormattedMessage
             id="funds-form.add-funds-to"
             values={{

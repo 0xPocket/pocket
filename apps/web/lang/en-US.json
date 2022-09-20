@@ -51,7 +51,8 @@
   "card.child.piggyBank.status.nothing": "Nothing to claim",
   "card.child.piggyBank.status.next": "Next claim in",
 
-  "card.parent.status": "A set-up email has been sent to",
+  "card.parent.status.invited": "A set-up email has been sent to {email}",
+  "card.parent.status.active": "This account is up and running",
   "card.parent.piggyBank.addFunds": "Add funds",
 
   "dashboard.child.claim.fail": "Claim failed.",

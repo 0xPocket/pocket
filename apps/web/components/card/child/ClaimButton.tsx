@@ -39,12 +39,10 @@ const ClaimButton: React.FC<ClaimButtonProps> = ({ disabled, children }) => {
     hash: claim.data?.hash,
     onSuccess: () => {
       toast.dismiss();
-
       toast.success(<FormattedMessage id="dashbaord.child.claim.success" />);
     },
     onError: () => {
       toast.dismiss();
-
       toast.error(<FormattedMessage id="dashboard.child.claim.fail" />);
     },
   });
@@ -52,7 +50,7 @@ const ClaimButton: React.FC<ClaimButtonProps> = ({ disabled, children }) => {
   return (
     <button
       disabled={disabled || !claim.write}
-      className="action-btn"
+      className="action-btn min-w-[200px]"
       onClick={() => {
         if (claim.write) claim.write();
       }}
