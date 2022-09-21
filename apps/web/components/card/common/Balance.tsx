@@ -1,25 +1,27 @@
 import type { BigNumber } from 'ethers';
 import { formatUnits } from 'ethers/lib/utils';
+import type { FC } from 'react';
 import { useSmartContract } from '../../../contexts/contract';
 import FormattedMessage from '../../common/FormattedMessage';
 
 type BalanceProps = {
-  value: BigNumber | undefined;
+  balance: BigNumber | undefined;
 };
 
-function PocketMoney({ value }: BalanceProps) {
+const Balance: FC<BalanceProps> = ({ balance }) => {
   const { erc20 } = useSmartContract();
 
   return (
-    <div>
+    <div className="flex flex-col items-end">
       <p>
-        <FormattedMessage id="card.child.piggyBank.title" />
+        <FormattedMessage id="claimable" />
       </p>
       <span className="text-4xl">
-        {value ? formatUnits(value, erc20.data?.decimals).toString() : '0'} $
+        {balance ? formatUnits(balance, erc20.data?.decimals).toString() : '0'}{' '}
+        $
       </span>
     </div>
   );
-}
+};
 
-export default PocketMoney;
+export default Balance;

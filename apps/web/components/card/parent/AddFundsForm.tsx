@@ -83,7 +83,6 @@ function AddFundsForm({
     >
       <div className="flex flex-col items-end">
         <label htmlFor="topup">
-          {' '}
           <FormattedMessage
             id="funds-form.add-funds-to"
             values={{

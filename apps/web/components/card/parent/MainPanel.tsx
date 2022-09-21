@@ -4,30 +4,19 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { BigNumber } from 'ethers';
-import { formatUnits } from 'ethers/lib/utils';
 import { Dispatch, SetStateAction } from 'react';
-import { useSmartContract } from '../../../contexts/contract';
 import FormattedMessage from '../../common/FormattedMessage';
+import Balance from '../common/Balance';
 
-type BalanceProps = {
+type MainPanelProps = {
   value: BigNumber | undefined;
   setSelectedIndex: Dispatch<SetStateAction<number>>;
 };
 
-function Balance({ value, setSelectedIndex }: BalanceProps) {
-  const { erc20 } = useSmartContract();
-
+function MainPanel({ value, setSelectedIndex }: MainPanelProps) {
   return (
     <>
-      <div className="flex flex-col items-end">
-        <p>
-          <FormattedMessage id="claimable" />
-        </p>
-        <span className="text-4xl">
-          {value ? formatUnits(value, erc20.data?.decimals).toString() : '0'} $
-        </span>
-      </div>
-
+      <Balance balance={value} />
       <div className="flex space-x-4">
         <button onClick={() => setSelectedIndex(2)} className="third-btn">
           <FontAwesomeIcon icon={faGear} className="mr-2" />
@@ -42,4 +31,4 @@ function Balance({ value, setSelectedIndex }: BalanceProps) {
   );
 }
 
-export default Balance;
+export default MainPanel;
