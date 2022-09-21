@@ -23,7 +23,11 @@ function ChildrenMozaic() {
         </button>
       </div>
       <div className="grid grid-cols-2 gap-4">
-        {isLoading && <Spinner />}
+        {/* {isLoading && (
+          <div className=" mx-auto ">
+            <Spinner />
+          </div>
+        )} */}
         {!isLoading && (
           <>
             {data?.map((child) => (
