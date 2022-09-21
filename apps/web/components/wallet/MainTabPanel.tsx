@@ -5,6 +5,8 @@ import useRamp from '../../hooks/useRamp';
 import FormattedMessage from '../common/FormattedMessage';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClipboard } from '@fortawesome/free-solid-svg-icons';
+import Tooltip from '../common/Tooltip';
+import { trpc } from '../../utils/trpc';
 
 type MainTabPanelProps = {};
 
@@ -19,6 +21,12 @@ function MainTabPanel({}: MainTabPanelProps) {
     enabled: !!erc20.data,
     watch: true,
   });
+  const { data: maticBalance } = useBalance({
+    addressOrName: address,
+  });
+  const { data: userData, isLoading: userDataLoading } = trpc.useQuery([
+    'auth.session',
+  ]);
 
   return (
     <div className="flex w-full flex-col gap-6">
@@ -50,13 +58,26 @@ function MainTabPanel({}: MainTabPanelProps) {
         ) : (
           <div className="flex items-end gap-2">
             <h2>{data?.formatted}</h2>
-            <span>{data?.symbol}</span>
+            <span className="text-3xl font-bold">$</span>
+            <Tooltip placement="top">
+              <FormattedMessage id="tooltip.wallet.erc20" />
+            </Tooltip>
           </div>
         )}
+        <div className="flex items-end text-xs text-gray">
+          <p>
+            {maticBalance?.formatted.slice(0, 6)} {maticBalance?.symbol}
+          </p>
+          <Tooltip placement="top">
+            <FormattedMessage id="tooltip.wallet.matic" />
+          </Tooltip>
+        </div>
       </div>
-      <button onClick={showRamp} className="action-btn">
-        <FormattedMessage id="wallet.top-up" />
-      </button>
+      {!userDataLoading && userData && userData.user.type === 'Parent' && (
+        <button onClick={showRamp} className="action-btn">
+          <FormattedMessage id="wallet.top-up" />
+        </button>
+      )}
     </div>
   );
 }
