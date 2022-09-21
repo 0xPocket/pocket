@@ -13,7 +13,7 @@ function PocketMoney({ value }: BalanceProps) {
   return (
     <div>
       <p>
-        <FormattedMessage id="card.child.piggyBank.title" />
+        <FormattedMessage id="piggybank" />
       </p>
       <span className="text-4xl">
         {value ? formatUnits(value, erc20.data?.decimals).toString() : '0'} $

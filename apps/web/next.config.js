@@ -3,13 +3,11 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const dotenv = require('dotenv');
 const { withAxiom } = require('next-axiom');
-const { compareLang } = require('./lang/compareLang');
 
 dotenv.config({ path: '../../.env' });
 
 require('config/env/server');
-
-compareLang();
+require('./lang/compareLang');
 
 // const withPlugins = require('next-compose-plugins');
 
