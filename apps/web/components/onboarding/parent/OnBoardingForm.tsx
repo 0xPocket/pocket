@@ -19,7 +19,6 @@ const OnBoardingForm: FC = () => {
     reValidateMode: 'onChange',
     schema: AuthSchema['onboard'],
   });
-  console.log(formState.errors);
 
   const onboardUser = trpc.useMutation('auth.onboard', {
     onError: (error) => {
@@ -61,6 +60,21 @@ const OnBoardingForm: FC = () => {
         register={register('email')}
         autoComplete="email"
       />
+      <div className="mb-4 flex items-center">
+        <input
+          type="checkbox"
+          required
+          className="text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded focus:ring-2"
+        />
+        <label className="text-gray-900 dark:text-gray-300 ml-2 text-sm font-medium">
+          <FormattedMessage id="onboarding.terms.confirm" />
+          <a href="">
+            <FormattedMessage id="onboarding.terms" />
+          </a>
+          <FormattedMessage id="onboarding.terms.confirm.end" />
+        </label>
+        {/*  TODO Formatted */}
+      </div>
       <button className="action-btn">
         <FormattedMessage id="submit" />
       </button>
