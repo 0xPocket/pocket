@@ -1,4 +1,4 @@
-import { Dispatch, FC, useEffect } from 'react';
+import { type Dispatch, type FC, useEffect } from 'react';
 import { useZodForm } from '../../utils/useZodForm';
 import { trpc } from '../../utils/trpc';
 import InputText from '../common/InputText';
@@ -18,7 +18,7 @@ type ContactDialogProps = {
 
 const ContactDialog: FC<ContactDialogProps> = ({ isOpen, setIsOpen }) => {
   const { user } = useMagic();
-  const { register, handleSubmit, setValue, formState } = useZodForm({
+  const { register, handleSubmit, setValue } = useZodForm({
     schema: ContactSchema['submit'],
   });
 

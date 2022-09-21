@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { type FC, useEffect } from 'react';
 import { useZodForm } from '../../../utils/useZodForm';
 import { trpc } from '../../../utils/trpc';
 import { AuthSchema } from '../../../server/schemas';

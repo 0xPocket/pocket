@@ -8,7 +8,7 @@ import { useApprove } from './useApprove';
 import useContractRead from './useContractRead';
 import { useIntl } from 'react-intl';
 import { UserChild } from '@lib/types/interfaces';
-import { formatUnits, parseUnits } from 'ethers/lib/utils';
+import { parseUnits } from 'ethers/lib/utils';
 
 export function useAddFundsForm(
   child: UserChild | null,

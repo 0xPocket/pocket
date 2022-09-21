@@ -3,7 +3,7 @@ import {
   faGear,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { BigNumber } from 'ethers';
+import type { BigNumber } from 'ethers';
 import { Dispatch, SetStateAction } from 'react';
 import FormattedMessage from '../../common/FormattedMessage';
 import Balance from '../common/Balance';

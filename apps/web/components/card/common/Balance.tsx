@@ -1,4 +1,4 @@
-import { BigNumber } from 'ethers';
+import type { BigNumber } from 'ethers';
 import { formatUnits } from 'ethers/lib/utils';
 import type { FC } from 'react';
 import { useSmartContract } from '../../../contexts/contract';

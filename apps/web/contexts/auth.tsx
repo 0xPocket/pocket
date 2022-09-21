@@ -82,6 +82,7 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
 
   useEffect(() => {
     function onDisconnect() {
+      console.log('onDisconnect');
       logout.mutate(true);
     }
     if (connector?.id !== 'magic' && nextAuthStatus === 'authenticated') {
@@ -89,7 +90,7 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
       connector?.on('change', onDisconnect);
     }
     return () => {
-      if (connector?.id !== 'magic' && nextAuthStatus === 'authenticated') {
+      if (connector?.id !== 'magic') {
         connector?.removeListener('disconnect', onDisconnect);
         connector?.removeListener('change', onDisconnect);
       }

@@ -1,5 +1,5 @@
 import { Tab } from '@headlessui/react';
-import { UserChild } from '@lib/types/interfaces';
+import type { UserChild } from '@lib/types/interfaces';
 import { useMemo, useState } from 'react';
 import { useContractWrite } from 'wagmi';
 import { useSmartContract } from '../../../contexts/contract';

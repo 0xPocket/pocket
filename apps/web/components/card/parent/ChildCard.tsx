@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import AccountStatus from './AccountStatus';
 import RightTab from './RightTab';
-import { UserChild } from '@lib/types/interfaces';
+import type { UserChild } from '@lib/types/interfaces';
 import FormattedMessage from '../../common/FormattedMessage';
 import LinkPolygonScan from '../common/LinkPolygonScan';
 import EmailStatus from './EmailStatus';

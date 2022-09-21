@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { toast } from 'react-toastify';
 import {
   useContractWrite,
@@ -20,7 +20,7 @@ const ClaimButton: React.FC<ClaimButtonProps> = ({ disabled, children }) => {
     addressOrName: pocketContract.address,
     contractInterface: pocketContract.interface,
     functionName: 'claim',
-    enabled: !!pocketContract,
+    enabled: !!pocketContract && !disabled,
   });
 
   const claim = useContractWrite({
