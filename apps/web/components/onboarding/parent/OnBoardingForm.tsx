@@ -68,12 +68,11 @@ const OnBoardingForm: FC = () => {
         />
         <label className="text-gray-900 dark:text-gray-300 ml-2 text-sm font-medium">
           <FormattedMessage id="onboarding.terms.confirm" />
-          <a href="">
+          <a href="/terms-and-conditions" target="_blank">
             <FormattedMessage id="onboarding.terms" />
           </a>
           <FormattedMessage id="onboarding.terms.confirm.end" />
         </label>
-        {/*  TODO Formatted */}
       </div>
       <button className="action-btn">
         <FormattedMessage id="submit" />

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { FC } from 'react';
-import MainWrapper from '../components/wrappers/MainWrapper';
+import MainWrapper from '../components/common/wrappers/MainWrapper';
 
 const termsAndConditions: FC = () => {
   return (
