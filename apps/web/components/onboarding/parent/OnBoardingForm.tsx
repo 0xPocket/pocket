@@ -60,10 +60,11 @@ const OnBoardingForm: FC = () => {
         register={register('email')}
         autoComplete="email"
       />
-      <div className="mb-4 flex items-center">
+      <div className="mt-2 flex items-center">
         <input
-          type="checkbox"
           required
+          type="checkbox"
+          {...register('terms')}
           className="text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded focus:ring-2"
         />
         <label className="text-gray-900 dark:text-gray-300 ml-2 text-sm font-medium">
@@ -72,6 +73,17 @@ const OnBoardingForm: FC = () => {
             <FormattedMessage id="onboarding.terms" />
           </a>
           <FormattedMessage id="onboarding.terms.confirm.end" />
+        </label>
+      </div>
+      <div className="mb-2 flex items-center">
+        <input
+          required
+          type="checkbox"
+          {...register('majority')}
+          className="text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded focus:ring-2"
+        />
+        <label className="text-gray-900 dark:text-gray-300 ml-2 text-sm font-medium">
+          <FormattedMessage id="onboarding.majority" />
         </label>
       </div>
       <button className="action-btn">
