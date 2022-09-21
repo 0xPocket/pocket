@@ -7,6 +7,7 @@ const { withAxiom } = require('next-axiom');
 dotenv.config({ path: '../../.env' });
 
 require('config/env/server');
+require('./lang/compareLang');
 
 // const withPlugins = require('next-compose-plugins');
 

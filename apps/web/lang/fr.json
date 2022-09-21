@@ -6,7 +6,7 @@
   "signIn": "Se connecter",
   "disconnect": "Se déconnecter",
   "signout": "Se déconnecter",
-  "submit": "Soumettre",
+  "submit": "Valider",
   "name": "Nom",
   "email": "Email",
   "return": "Retour",
@@ -36,6 +36,8 @@
   "subject": "Sujet",
   "optional": "(optionnel)",
   "piggybank": "Tirelire",
+  "account.settings": "Paramètres du compte",
+  "account": "Compte",
 
   "auth.email.connect": "Se connecter avec son email",
   "auth.email.verify": "Vérifiez votre email avec le lien envoyé s'il vous plait.",
@@ -47,7 +49,7 @@
   "card.child.title": "Mon compte",
   "card.child.swapper": "Swapper",
 
-  "card.child.piggyBank.title": "Dans ma tirelire",
+  "card.child.account.title": "Dans mon compte",
 
   "card.child.piggyBank.status.nothing": "Rien à retirer",
   "card.child.piggyBank.status.next": "Prochain retrait dans",
@@ -114,7 +116,7 @@
   "dashboard.common.nft.opensea": "Voir sur OpenSea",
 
   "dashboard.common.token.fail": "Une erreur s'est produite en récupérant les tokens.",
-  "dashboard.common.token.balance": "Ses tokens",
+  "dashboard.common.token.balance": "Balance des tokens",
   "dashboard.common.token.empty": "Pas de token à afficher.",
 
   "dashboard.common.token.report.sent": "Signalement envoyé !",

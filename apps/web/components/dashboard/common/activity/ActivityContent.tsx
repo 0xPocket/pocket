@@ -35,7 +35,7 @@ function ActivityContent({
           </h2>
           <ActivityTabHeaders
             leftHeader={<FormattedMessage id="transactions" />}
-            rightHeader={<FormattedMessage id="piggybank" />}
+            rightHeader={<FormattedMessage id="account" />}
           />
         </div>
         <Tab.Panels className="container-classic relative flex-grow overflow-y-auto overflow-x-hidden rounded-lg px-8">
