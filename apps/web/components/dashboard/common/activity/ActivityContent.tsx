@@ -38,7 +38,7 @@ function ActivityContent({
             rightHeader={<FormattedMessage id="piggybank" />}
           />
         </div>
-        <Tab.Panels className="container-classic relative flex-grow overflow-x-hidden overflow-y-scroll rounded-lg px-8">
+        <Tab.Panels className="container-classic relative flex-grow overflow-y-auto overflow-x-hidden rounded-lg px-8">
           <Tab.Panel>
             {!isTxLoading && txList ? (
               <TransactionsTable transactionsList={txList} />

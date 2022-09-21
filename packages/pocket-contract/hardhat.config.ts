@@ -6,6 +6,7 @@ import '@nomiclabs/hardhat-waffle';
 import '@typechain/hardhat';
 import '@openzeppelin/hardhat-upgrades';
 import NETWORK_CONFIG from 'config/network';
+// import 'solidity-coverage';
 // import TEST from 'config/env/client';
 
 dotenv.config({
@@ -29,6 +30,10 @@ const config: HardhatUserConfig = {
 
   networks: {
     hardhat: {
+      // mining: {
+      //   auto: false,
+      //   interval: 5000,
+      // },
       forking: {
         url: NETWORK_CONFIG['polygon-mainnet'].RPC_URL,
       },

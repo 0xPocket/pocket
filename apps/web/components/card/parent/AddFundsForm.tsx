@@ -15,10 +15,16 @@ import { useIntl } from 'react-intl';
 type AddFundsFormProps = {
   child: UserChild;
   addFunds: (amount: BigNumber) => Promise<void>;
+  isLoading: boolean;
   returnFn: () => void;
 };
 
-function AddFundsForm({ child, addFunds, returnFn }: AddFundsFormProps) {
+function AddFundsForm({
+  child,
+  addFunds,
+  returnFn,
+  isLoading,
+}: AddFundsFormProps) {
   const { erc20 } = useSmartContract();
   const { address } = useAccount();
   const intl = useIntl();
@@ -113,7 +119,12 @@ function AddFundsForm({ child, addFunds, returnFn }: AddFundsFormProps) {
           <FontAwesomeIcon icon={faAngleLeft} className="mr-2" />
           <FormattedMessage id="return" />
         </button>
-        <button type="submit" value="Send" className="success-btn">
+        <button
+          type="submit"
+          value="Send"
+          className="success-btn"
+          disabled={isLoading}
+        >
           <FontAwesomeIcon icon={faPaperPlane} className="mr-2" />
           <FormattedMessage id="send" />
         </button>

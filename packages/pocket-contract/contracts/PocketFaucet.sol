@@ -220,7 +220,7 @@ contract PocketFaucet is AccessControlUpgradeable {
         address child
     ) public _areRelated(msg.sender, child) {
         Config storage conf = childToConfig[child];
-        require(periodicity != 0, '!changeConfig: periodicity cannot be 0');
+        require(periodicity != 0, "!changeConfig: periodicity cannot be 0");
         conf.ceiling = ceiling;
         conf.periodicity = periodicity;
         emit ConfigChanged(conf.active, conf.ceiling, child);
@@ -290,21 +290,18 @@ contract PocketFaucet is AccessControlUpgradeable {
     }
 
     /// @dev Computes the amount of token the child can claim.
-    /// @param conf is the configuration of the child.
-    function _calculateClaimable(Config storage conf)
-        internal
+    /// @param child is the child for which we compute the claimable amount.
+    function computeClaimable(address child)
+        public view
         returns (uint256)
     {
-        require(
-            conf.lastClaim + conf.periodicity <= block.timestamp,
-            '!calculateClaimable: period is not finished'
-        );
-        uint256 claimable;
+        Config memory conf = childToConfig[child];
+        if (conf.lastClaim + conf.periodicity > block.timestamp)
+            return 0;
         uint256 nbPeriod = (block.timestamp - conf.lastClaim) /
             conf.periodicity;
-        claimable = conf.ceiling * nbPeriod;
-        conf.lastClaim = conf.lastClaim + conf.periodicity * nbPeriod;
-        return (claimable > conf.balance ? conf.balance : claimable);
+        uint256 claimable = conf.ceiling * nbPeriod;
+        return (claimable < conf.balance ? claimable : conf.balance);
     }
 
     /// @notice You will receive the pocket money your parent deposited for you.
@@ -317,7 +314,12 @@ contract PocketFaucet is AccessControlUpgradeable {
             '!claim: account is inactive'
         );
 
-        uint256 claimable = _calculateClaimable(conf);
+        uint256 claimable = computeClaimable(msg.sender);
+        require(claimable != 0, "!claim: nothing to claim");
+        uint256 nbPeriod = (block.timestamp - conf.lastClaim) /
+            conf.periodicity;
+        conf.lastClaim = conf.lastClaim + conf.periodicity * nbPeriod;
+
         conf.balance -= claimable;
         IERC20Upgradeable(baseToken).safeTransfer(msg.sender, claimable);
         emit FundsClaimed(block.timestamp, msg.sender, claimable);

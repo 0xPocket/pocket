@@ -19,7 +19,7 @@ function ChildrenMozaic() {
           <FormattedMessage id="dashboard.title" />
         </h1>
         <button onClick={() => testwebhookramp.mutate()} className="danger-btn">
-          Test webhook
+          Granter
         </button>
       </div>
       <div className="grid grid-cols-2 gap-4">

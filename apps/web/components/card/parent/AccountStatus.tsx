@@ -42,7 +42,6 @@ function AccountStatus({ child }: AccountStatusProps) {
 
   return (
     <div
-      className="cursor-pointer"
       onMouseEnter={() => setShow(true)}
       onMouseLeave={() => setShow(false)}
       ref={setReferenceElement}
