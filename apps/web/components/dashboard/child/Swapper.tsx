@@ -1,4 +1,4 @@
-import { SwapWidgetProps, Theme } from '@uniswap/widgets';
+import type { SwapWidgetProps, Theme } from '@uniswap/widgets';
 import { env } from 'config/env/client';
 import dynamic from 'next/dynamic';
 import { useIntl } from 'react-intl';

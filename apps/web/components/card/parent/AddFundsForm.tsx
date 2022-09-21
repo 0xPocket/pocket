@@ -1,6 +1,6 @@
 import { faAngleLeft, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { UserChild } from '@lib/types/interfaces';
+import type { UserChild } from '@lib/types/interfaces';
 import { formatUnits, parseUnits } from 'ethers/lib/utils';
 import { useSmartContract } from '../../../contexts/contract';
 import useContractRead from '../../../hooks/useContractRead';
@@ -83,7 +83,6 @@ function AddFundsForm({
     >
       <div className="flex flex-col items-end">
         <label htmlFor="topup">
-          {' '}
           <FormattedMessage
             id="funds-form.add-funds-to"
             values={{

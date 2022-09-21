@@ -7,12 +7,21 @@ import ChildCard from '../../card/child/ChildCard';
 import Swapper from './Swapper';
 import ClaimMaticModal from './ClaimMaticModal';
 import { trpc } from '../../../utils/trpc';
+import { Spinner } from '../../common/Spinner';
 
 const ChildDashboard: React.FC = () => {
   const { address } = useAccount();
   const { data } = trpc.useQuery(['auth.me']);
 
-  return address ? (
+  if (!address) {
+    return (
+      <div className="flex h-[50vh] items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
+
+  return (
     <div className="space-y-20">
       <div className="grid grid-cols-2 gap-8">
         <ChildCard childAddress={address} className="col-span-1" />
@@ -30,8 +39,6 @@ const ChildDashboard: React.FC = () => {
       <TokenContent childAddress={address!} />
       <ClaimMaticModal />
     </div>
-  ) : (
-    <div></div>
   );
 };
 

@@ -27,9 +27,6 @@ const nextConfig = {
     defaultLocale: 'en-US',
   },
   reactStrictMode: true,
-  experimental: {
-    images: { allowFutureImage: true },
-  },
   images: {
     domains: ['logos.covalenthq.com'],
   },

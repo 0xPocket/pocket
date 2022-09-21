@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import { trpc } from '../../utils/trpc';
 import FormattedMessage from '../common/FormattedMessage';
 import { Spinner } from '../common/Spinner';

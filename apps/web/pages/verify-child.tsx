@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { FC, useEffect } from 'react';
+import { type FC, useEffect } from 'react';
 import FormattedMessage from '../components/common/FormattedMessage';
 import OnBoardingStepper from '../components/onboarding/child/OnBoarding';
 import MainWrapper from '../components/common/wrappers/MainWrapper';

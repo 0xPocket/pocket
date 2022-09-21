@@ -1,12 +1,14 @@
 import MainWrapper from '../../components/common/wrappers/MainWrapper';
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import type {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from 'next';
 import AccountDashboard from '../../components/dashboard/parent/Dashboard';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { trpc } from '../../utils/trpc';
 import FormattedMessage from '../../components/common/FormattedMessage';
-import { Spinner } from '../../components/common/Spinner';
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.id as string;

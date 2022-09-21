@@ -2,13 +2,14 @@ import { useSmartContract } from '../../../contexts/contract';
 import useContractRead from '../../../hooks/useContractRead';
 import moment from 'moment';
 import { useMemo } from 'react';
-import ClaimButton from '../../dashboard/child/ClaimButton';
-import BaseTokenBalance from '../../common/BaseTokenBalance';
-import PocketMoney from './PocketMoney';
 import FormattedMessage from '../../common/FormattedMessage';
 import { useIntl } from 'react-intl';
 import { ethers } from 'ethers';
 import { useQuery } from 'react-query';
+import { trpc } from '../../../utils/trpc';
+import ClaimButton from './ClaimButton';
+import Balance from '../common/Balance';
+import LinkPolygonScan from '../common/LinkPolygonScan';
 
 type ChildCardProps = {
   childAddress: string;
@@ -19,6 +20,10 @@ type ChildCardProps = {
 function ChildCard({ childAddress, className }: ChildCardProps) {
   const { pocketContract, erc20 } = useSmartContract();
   const intl = useIntl();
+
+  const { data: userData, isLoading: userDataLoading } = trpc.useQuery([
+    'auth.session',
+  ]);
 
   const { data: config } = useContractRead({
     contract: pocketContract,
@@ -84,14 +89,19 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
         <FormattedMessage id="card.child.title" />
       </h2>
       <div
-        className={`${className} container-classic h-4/5 min-h-[260px] flex-grow rounded-lg p-8`}
+        className={`${className} container-classic grid h-full grid-cols-2 rounded-lg p-8`}
       >
-        <div className={'flex h-full flex-col justify-between'}>
-          <div className={'flex flex-row justify-between'}>
-            <BaseTokenBalance />
-            <PocketMoney value={config?.balance} />
-          </div>
-          <ClaimButton disabled={!canClaim}>{textClaim}</ClaimButton>
+        <div className="flex h-full flex-col items-start justify-between">
+          <h1>{userData?.user.name}</h1>
+          <LinkPolygonScan address={childAddress} />
+        </div>
+        <div className="flex h-full flex-col items-end justify-between">
+          <Balance balance={config?.balance} />
+          {config && (
+            <ClaimButton disabled={!canClaim || config[1].isZero()}>
+              {textClaim}
+            </ClaimButton>
+          )}
         </div>
       </div>
     </div>
