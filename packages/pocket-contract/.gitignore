@@ -7,4 +7,4 @@ typechain-types
 *.env
 
 # OpenZeppelin version control for proxies
-.openzeppelin
+.openzeppelin/unknown-1337.json
