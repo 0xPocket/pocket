@@ -35,7 +35,6 @@ export function useAddFundsForm(
       toast.info(intl.formatMessage({ id: 'transaction.pending' }), {
         isLoading: true,
       });
-      refetchAllowance();
     },
     onError: () => {
       toast.error(
@@ -83,6 +82,7 @@ export function useAddFundsForm(
       toast.success(
         intl.formatMessage({ id: 'add-child-and-funds.approve-success' }),
       );
+      refetchAllowance();
     },
   });
 
@@ -107,8 +107,8 @@ export function useAddFundsForm(
     async (amount: BigNumber) => {
       try {
         if (allowance?.lt(amount) && approve.writeAsync) {
-          const tx = await approve.writeAsync();
-          await tx.wait();
+          await approve.writeAsync();
+          // await tx.wait();
         }
 
         if (addChildAndFunds.writeAsync && child?.child?.initialCeiling) {
@@ -135,6 +135,7 @@ export function useAddFundsForm(
       child?.address,
       addChild,
       child?.child,
+      erc20.data?.decimals,
     ],
   );
 
