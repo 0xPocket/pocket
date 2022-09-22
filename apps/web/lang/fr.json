@@ -54,7 +54,7 @@
   "card.child.piggyBank.status.nothing": "Rien à retirer",
   "card.child.piggyBank.status.next": "Prochain retrait dans",
 
-	"card.parent.status.invited": "Un email de configuration a été envoyé à {email}",
+  "card.parent.status.invited": "Un email de configuration a été envoyé à {email}",
   "card.parent.status.active": "Ce compte est actif",
   "card.parent.piggyBank.addFunds": "Ajouter des fonds",
 
@@ -155,7 +155,8 @@
   "add-child-or-change-config.success": "Le changement de configuration est un succès !",
 
   "transaction.pending": "Transaction en attente, merci de patienter !",
+  "transaction.next": "Veuillez confirmer la transaction suivante.",
 
-	"tooltip.wallet.erc20": "Nous utilisons l'USDC de Polygon",
-	"tooltip.wallet.matic": "Le Matic sert à payer les frais de transaction sur la blockchain"
+  "tooltip.wallet.erc20": "Nous utilisons l'USDC de Polygon",
+  "tooltip.wallet.matic": "Le Matic sert à payer les frais de transaction sur la blockchain"
 }
