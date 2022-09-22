@@ -21,12 +21,12 @@ import { splitLink } from '@trpc/client/links/splitLink';
 import { withTRPC } from '@trpc/next';
 import { env } from 'config/env/client';
 import { SessionProvider } from 'next-auth/react';
-// import { SessionProvider } from 'next-auth/react';
 import fr from '../lang/fr.json';
 import en from '../lang/en-US.json';
 import { useRouter } from 'next/router';
 import { IntlProvider } from 'react-intl';
 import { ThemeProvider } from '../contexts/theme';
+import { TermsModal } from '../components/common/TermsModal';
 
 const messages = { fr, 'en-US': en };
 export type IntlMessageID = keyof typeof en;
@@ -89,6 +89,7 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
               <AlchemyProvider>
                 <SmartContractProvider>
                   <Component {...pageProps} />
+                  <TermsModal />
                   <ToastContainer
                     toastClassName="toast-container"
                     position="bottom-right"
