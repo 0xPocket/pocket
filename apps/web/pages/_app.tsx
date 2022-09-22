@@ -25,7 +25,6 @@ import en from '../lang/en-US.json';
 import { useRouter } from 'next/router';
 import { IntlProvider } from 'react-intl';
 import { ThemeProvider } from '../contexts/theme';
-import { TermsModal } from '../components/common/TermsModal';
 import type { Session } from 'next-auth';
 
 const messages = { fr, 'en-US': en };
@@ -88,7 +87,6 @@ function App({
             <MagicAuthProvider>
               <SmartContractProvider>
                 <Component {...pageProps} />
-                <TermsModal />
                 <ToastContainer
                   toastClassName="toast-container"
                   position="bottom-right"

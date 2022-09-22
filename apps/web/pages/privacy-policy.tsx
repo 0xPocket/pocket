@@ -4,7 +4,7 @@ import MainWrapper from '../components/common/wrappers/MainWrapper';
 
 const PrivacyPolicy: FC = () => {
   return (
-    <MainWrapper>
+    <MainWrapper noTermsModal>
       <div className="container-classic container mx-auto flex flex-col gap-4 rounded-xl p-8">
         <h1>Privacy policy</h1>
         <p>
@@ -37,79 +37,7 @@ const PrivacyPolicy: FC = () => {
           practices of companies that we do not own or control, or to
           individuals that we do not employ or manage.
         </p>
-        <div className="wpembed-index">
-          <h3>Table of contents</h3>
-          <ol className="wpembed-index">
-            <li>
-              <a href="#collection-of-personal-information">
-                Collection of personal information
-              </a>
-            </li>
-            <li>
-              <a href="#privacy-of-children">Privacy of children</a>
-            </li>
-            <li>
-              <a href="#use-and-processing-of-collected-information">
-                Use and processing of collected information
-              </a>
-            </li>
-            <li>
-              <a href="#payment-processing">Payment processing</a>
-            </li>
-            <li>
-              <a href="#managing-information">Managing information</a>
-            </li>
-            <li>
-              <a href="#disclosure-of-information">Disclosure of information</a>
-            </li>
-            <li>
-              <a href="#retention-of-information">Retention of information</a>
-            </li>
-            <li>
-              <a href="#transfer-of-information">Transfer of information</a>
-            </li>
-            <li>
-              <a href="#data-protection-rights-under-the-gdpr">
-                Data protection rights under the GDPR
-              </a>
-            </li>
-            <li>
-              <a href="#how-to-exercise-your-rights">
-                How to exercise your rights
-              </a>
-            </li>
-            <li>
-              <a href="#data-analytics">Data analytics</a>
-            </li>
-            <li>
-              <a href="#do-not-track-signals">Do Not Track signals</a>
-            </li>
-            <li>
-              <a href="#email-marketing">Email marketing</a>
-            </li>
-            <li>
-              <a href="#affiliate-links">Affiliate links</a>
-            </li>
-            <li>
-              <a href="#links-to-other-resources">Links to other resources</a>
-            </li>
-            <li>
-              <a href="#information-security">Information security</a>
-            </li>
-            <li>
-              <a href="#data-breach">Data breach</a>
-            </li>
-            <li>
-              <a href="#changes-and-amendments">Changes and amendments</a>
-            </li>
-            <li>
-              <a href="#acceptance-of-this-policy">Acceptance of this policy</a>
-            </li>
-            <li>
-              <a href="#contacting-us">Contacting us</a>
-            </li>
-          </ol>
-        </div>
+
         <h2 id="collection-of-personal-information">
           Collection of personal information
         </h2>

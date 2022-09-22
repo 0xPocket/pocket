@@ -1,10 +1,9 @@
-import Link from 'next/link';
 import type { FC } from 'react';
 import MainWrapper from '../components/common/wrappers/MainWrapper';
 
 const termsAndConditions: FC = () => {
   return (
-    <MainWrapper>
+    <MainWrapper noTermsModal>
       <div className="container-classic container mx-auto flex flex-col gap-4 rounded-xl p-8">
         <h1>Terms and conditions</h1>
         <p>
@@ -30,67 +29,7 @@ const termsAndConditions: FC = () => {
           not physically signed by you, and it governs your use of the Website
           and Services.
         </p>
-        <div className="wpembed-index">
-          <h3>Table of contents</h3>
-          <ol className="wpembed-index">
-            <li>
-              <a href="#accounts-and-membership">Accounts and membership</a>
-            </li>
-            <li>
-              <a href="#user-content">User content</a>
-            </li>
-            <li>
-              <a href="#billing-and-payments">Billing and payments</a>
-            </li>
-            <li>
-              <a href="#accuracy-of-information">Accuracy of information</a>
-            </li>
-            <li>
-              <a href="#third-party-services">Third party services</a>
-            </li>
-            <li>
-              <a href="#backups">Backups</a>
-            </li>
-            <li>
-              <a href="#links-to-other-resources">Links to other resources</a>
-            </li>
-            <li>
-              <a href="#important-notice-regarding-digital-assets">
-                IMPORTANT NOTICE REGARDING DIGITAL ASSETS
-              </a>
-            </li>
-            <li>
-              <a href="#important-information">IMPORTANT INFORMATION</a>
-            </li>
-            <li>
-              <a href="#prohibited-uses">Prohibited uses</a>
-            </li>
-            <li>
-              <a href="#disclaimer-of-warranty">Disclaimer of warranty</a>
-            </li>
-            <li>
-              <a href="#limitation-of-liability">Limitation of liability</a>
-            </li>
-            <li>
-              <a href="#indemnification">Indemnification</a>
-            </li>
-            <li>
-              <a href="#severability">Severability</a>
-            </li>
-            <li>
-              <a href="#dispute-resolution">Dispute resolution</a>
-            </li>
-            <li>
-              <a href="#changes-and-amendments">Changes and amendments</a>
-            </li>
-            <li>
-              <a href="#acceptance-of-these-terms">Acceptance of these terms</a>
-            </li>
-            <li>
-              <a href="#contacting-us">Contacting us</a>
-            </li>
-          </ol>
-        </div>
+
         <h2 id="accounts-and-membership">Accounts and membership</h2>
         <p>
           You must be at least 13 years of age to use the Website and Services.
@@ -411,19 +350,6 @@ const termsAndConditions: FC = () => {
           </a>
         </p>
         <p>This document was last updated on September 14, 2022</p>
-        <p className="madewith">
-          <Link href="https://www.websitepolicies.com/?via=madewithbadge">
-            <a target="_blank">
-              <img
-                width="200"
-                height="25"
-                alt="Made with WebsitePolicies"
-                src="https://cdn.websitepolicies.io/img/badge.png"
-                srcSet="https://cdn.websitepolicies.io/img/badge_2x.png 2x"
-              />
-            </a>
-          </Link>
-        </p>
       </div>
     </MainWrapper>
   );
