@@ -1,4 +1,7 @@
-import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCircleQuestion,
+  IconDefinition,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Placement } from '@popperjs/core';
 import { FC, ReactNode, useState } from 'react';
@@ -7,9 +10,18 @@ import { usePopper } from 'react-popper';
 type TooltipProps = {
   children?: ReactNode;
   placement?: Placement;
+  icon?: IconDefinition;
+  iconColor?: string;
+  size?: string;
 };
 
-const Tooltip: FC<TooltipProps> = ({ children, placement = 'top' }) => {
+const Tooltip: FC<TooltipProps> = ({
+  children,
+  placement = 'top',
+  icon = faCircleQuestion,
+  iconColor = '',
+  size = '6',
+}) => {
   const [referenceElement, setReferenceElement] = useState<HTMLElement | null>(
     null,
   );
@@ -42,9 +54,9 @@ const Tooltip: FC<TooltipProps> = ({ children, placement = 'top' }) => {
         ref={setReferenceElement}
         onMouseEnter={() => setShow(true)}
         onMouseLeave={() => setShow(false)}
-        className="flex h-6 w-6 items-center justify-center opacity-60"
+        className={`text-${iconColor} flex h-${size} w-${size} items-center justify-center`}
       >
-        <FontAwesomeIcon icon={faCircleQuestion} />
+        <FontAwesomeIcon icon={icon} />
       </div>
       {show && (
         <div
