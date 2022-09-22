@@ -11,16 +11,14 @@ type TooltipProps = {
   children?: ReactNode;
   placement?: Placement;
   icon?: IconDefinition;
-  iconColor?: string;
-  size?: string;
+  className?: string;
 };
 
 const Tooltip: FC<TooltipProps> = ({
   children,
   placement = 'top',
   icon = faCircleQuestion,
-  iconColor = '',
-  size = '6',
+  className = '',
 }) => {
   const [referenceElement, setReferenceElement] = useState<HTMLElement | null>(
     null,
@@ -41,7 +39,7 @@ const Tooltip: FC<TooltipProps> = ({
       {
         name: 'offset',
         options: {
-          offset: [0, 6],
+          offset: [0, 10],
         },
       },
       { name: 'arrow', options: { element: arrowElement } },
@@ -54,7 +52,7 @@ const Tooltip: FC<TooltipProps> = ({
         ref={setReferenceElement}
         onMouseEnter={() => setShow(true)}
         onMouseLeave={() => setShow(false)}
-        className={`text-${iconColor} flex h-${size} w-${size} items-center justify-center`}
+        className={`${className} flex items-center justify-center`}
       >
         <FontAwesomeIcon icon={icon} />
       </div>
