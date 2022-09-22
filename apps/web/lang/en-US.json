@@ -72,9 +72,9 @@
 
   "onboarding.connect-wallet": "Connect with your favorite wallet",
   "onboarding.more-info": "We need some more infos !",
-  "onboarding.terms.confirm": "By signing up, you confirm you have read and agree to Pocket's ",
-  "onboarding.terms": "Terms of use",
-  "onboarding.terms.confirm.end": ".",
+  "onboarding.terms.confirm": "By signing up, you confirm you have read and agree to Pocket's {privacy} and {terms}.",
+  "onboarding.privacy": "Privacy policy",
+  "onboarding.terms": "Terms and conditions",
   "onboarding.majority": "I certified being over 18 years old.",
 
   "route.dashboard": "dashboard",

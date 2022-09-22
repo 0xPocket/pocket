@@ -68,11 +68,21 @@ const OnBoardingForm: FC = () => {
           className="text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded focus:ring-2"
         />
         <label className="text-gray-900 dark:text-gray-300 ml-2 text-sm font-medium">
-          <FormattedMessage id="onboarding.terms.confirm" />
-          <a href="/terms-and-conditions" target="_blank">
-            <FormattedMessage id="onboarding.terms" />
-          </a>
-          <FormattedMessage id="onboarding.terms.confirm.end" />
+          <FormattedMessage
+            id="onboarding.terms.confirm"
+            values={{
+              privacy: (
+                <a href="/privacy-policy" target="_blank">
+                  <FormattedMessage id="onboarding.privacy" />
+                </a>
+              ),
+              terms: (
+                <a href="/terms-and-conditions" target="_blank">
+                  <FormattedMessage id="onboarding.terms" />
+                </a>
+              ),
+            }}
+          />
         </label>
       </div>
       <div className="mb-2 flex items-center">
