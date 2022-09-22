@@ -32,7 +32,7 @@ export function useAddFundsForm(
     amount:
       '0xf000000000000000000000000000000000000000000000000000000000000000',
     onSuccess: () => {
-      toast.info(intl.formatMessage({ id: 'transaction.pending' }), {
+      toast.info(intl.formatMessage({ id: 'transaction.next' }), {
         isLoading: true,
       });
     },
@@ -50,6 +50,13 @@ export function useAddFundsForm(
     functionName: addChild ? 'addChildAndFunds' : 'addFunds',
     // ! TEMPORARY. necessary on testnet
     overrides: { gasLimit: '3000000' },
+    onSuccess: () => {
+      toast.dismiss();
+      toast.info(intl.formatMessage({ id: 'transaction.pending' }), {
+        isLoading: true,
+      });
+      returnFn();
+    },
     onError: (e) => {
       toast.error(
         intl.formatMessage(
@@ -58,18 +65,11 @@ export function useAddFundsForm(
         ),
       );
     },
-    onSuccess: () => {
-      toast.info(intl.formatMessage({ id: 'transaction.pending' }), {
-        isLoading: true,
-      });
-      returnFn();
-    },
   });
 
   useWaitForTransaction({
     hash: approve.data?.hash,
     onError: (e) => {
-      toast.dismiss();
       toast.error(
         intl.formatMessage(
           { id: 'add-child-and-funds.approve' },
@@ -78,7 +78,6 @@ export function useAddFundsForm(
       );
     },
     onSuccess: () => {
-      toast.dismiss();
       toast.success(
         intl.formatMessage({ id: 'add-child-and-funds.approve-success' }),
       );
@@ -108,7 +107,6 @@ export function useAddFundsForm(
       try {
         if (allowance?.lt(amount) && approve.writeAsync) {
           await approve.writeAsync();
-          // await tx.wait();
         }
 
         if (addChildAndFunds.writeAsync && child?.child?.initialCeiling) {
