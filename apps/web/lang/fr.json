@@ -6,7 +6,7 @@
   "signIn": "Se connecter",
   "disconnect": "Se déconnecter",
   "signout": "Se déconnecter",
-  "submit": "Soumettre",
+  "submit": "Valider",
   "name": "Nom",
   "email": "Email",
   "return": "Retour",
@@ -36,6 +36,8 @@
   "subject": "Sujet",
   "optional": "(optionnel)",
   "piggybank": "Tirelire",
+  "account.settings": "Paramètres du compte",
+  "account": "Compte",
 
   "auth.email.connect": "Se connecter avec son email",
   "auth.email.verify": "Vérifiez votre email avec le lien envoyé s'il vous plait.",
@@ -47,12 +49,13 @@
   "card.child.title": "Mon compte",
   "card.child.swapper": "Swapper",
 
-  "card.child.piggyBank.title": "Dans ma tirelire",
+  "card.child.account.title": "Dans mon compte",
 
   "card.child.piggyBank.status.nothing": "Rien à retirer",
   "card.child.piggyBank.status.next": "Prochain retrait dans",
 
-  "card.parent.status": "Un email de configuration a été envoyé à",
+	"card.parent.status.invited": "Un email de configuration a été envoyé à {email}",
+  "card.parent.status.active": "Ce compte est actif",
   "card.parent.piggyBank.addFunds": "Ajouter des fonds",
 
   "dashboard.child.claim.fail": "Le retrait a échoué.",
@@ -117,7 +120,7 @@
   "dashboard.common.nft.opensea": "Voir sur OpenSea",
 
   "dashboard.common.token.fail": "Une erreur s'est produite en récupérant les tokens.",
-  "dashboard.common.token.balance": "Ses tokens",
+  "dashboard.common.token.balance": "Balance des tokens",
   "dashboard.common.token.empty": "Pas de token à afficher.",
 
   "dashboard.common.token.report.sent": "Signalement envoyé !",
@@ -151,5 +154,8 @@
   "add-child-or-change-config.error": "Le changement de configuration a échoué: {message}. Si le problème persiste, veuillez nous contacter.",
   "add-child-or-change-config.success": "Le changement de configuration est un succès !",
 
-  "transaction.pending": "Transaction en attente, merci de patienter !"
+  "transaction.pending": "Transaction en attente, merci de patienter !",
+
+	"tooltip.wallet.erc20": "Nous utilisons l'USDC de Polygon",
+	"tooltip.wallet.matic": "Le Matic sert à payer les frais de transaction sur la blockchain"
 }

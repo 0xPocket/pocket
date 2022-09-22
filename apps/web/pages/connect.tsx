@@ -30,7 +30,7 @@ function Connect() {
 
   return (
     <MainWrapper>
-      <div className="mx-auto flex max-w-sm flex-col items-center justify-center gap-8 text-center">
+      <div className="mx-auto flex max-w-md flex-col items-center justify-center gap-8 text-center">
         <h1 className="mb-4">
           <FormattedMessage id="common.welcome" />
         </h1>

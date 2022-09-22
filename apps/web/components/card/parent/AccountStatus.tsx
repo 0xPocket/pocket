@@ -17,6 +17,17 @@ function getIcon(status: ChildStatus) {
   }
 }
 
+function getMessage(status: ChildStatus, email: string) {
+  switch (status) {
+    case 'ACTIVE':
+      return <FormattedMessage id="card.parent.status.active" />;
+    case 'INVITED':
+      return (
+        <FormattedMessage id="card.parent.status.invited" values={{ email }} />
+      );
+  }
+}
+
 function AccountStatus({ child }: AccountStatusProps) {
   const [show, setShow] = useState(false);
   const [referenceElement, setReferenceElement] =
@@ -29,7 +40,6 @@ function AccountStatus({ child }: AccountStatusProps) {
     placement: 'top',
   });
 
-  if (child!.child!.status === 'ACTIVE') return null;
   return (
     <div
       onMouseEnter={() => setShow(true)}
@@ -44,7 +54,7 @@ function AccountStatus({ child }: AccountStatusProps) {
           {...attributes.popper}
           className="rounded-md bg-primary p-1 text-sm"
         >
-          <FormattedMessage id="card.parent.status" /> {child!.email}
+          {getMessage(child!.child!.status, child.email!)}
         </div>
       )}
     </div>

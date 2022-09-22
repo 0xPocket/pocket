@@ -1,12 +1,19 @@
 import { useInfiniteQuery } from 'react-query';
 import { toast } from 'react-toastify';
-import { useAlchemy } from '../../../../contexts/alchemy';
-import {} from 'alchemy-sdk';
+import { Alchemy } from 'alchemy-sdk';
+import type { Network } from 'alchemy-sdk';
 import NftCard from './NftCard';
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import FormattedMessage from '../../../common/FormattedMessage';
+import { env } from 'config/env/client';
+
+const alchemy = new Alchemy({
+  apiKey: env.ALCHEMY_KEY, // Replace with your Alchemy API Key.
+  network: env.NETWORK_KEY as Network, // Replace with your network.
+  maxRetries: 10,
+});
 
 type NftContentProps = {
   childAddress: string;
@@ -14,7 +21,6 @@ type NftContentProps = {
 };
 
 function NftContent({ childAddress, fill_nbr = 0 }: NftContentProps) {
-  const { alchemy } = useAlchemy();
   const [page, setPage] = useState(0);
 
   const {

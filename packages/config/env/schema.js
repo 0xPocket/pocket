@@ -17,6 +17,7 @@ const serverSchema = z.object({
   POCKET_PRIVATE_KEY: z.string(),
   QUERY_DEBUG: z.string().optional(),
   VERCEL_URL: z.string().optional(),
+  ANALYZE: z.string().optional(),
 });
 
 /**
@@ -29,7 +30,6 @@ const clientSchema = z.object({
   NEXT_PUBLIC_NETWORK: z.enum([
     "polygon-mainnet",
     "polygon-mumbai",
-    "eth-rinkeby",
     "localhost",
   ]),
   NEXT_PUBLIC_CONTRACT_ADDRESS: z.string(),

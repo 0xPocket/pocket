@@ -1,5 +1,10 @@
-import { DetailedHTMLProps, FC, InputHTMLAttributes, useId } from 'react';
-import { UseFormRegisterReturn } from 'react-hook-form';
+import {
+  type DetailedHTMLProps,
+  type FC,
+  type InputHTMLAttributes,
+  useId,
+} from 'react';
+import type { UseFormRegisterReturn } from 'react-hook-form';
 
 type InputTextProps = {
   label: React.ReactElement | string;

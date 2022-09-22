@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { toast } from 'react-toastify';
 import {
   useContractWrite,
@@ -20,7 +20,7 @@ const ClaimButton: React.FC<ClaimButtonProps> = ({ disabled, children }) => {
     addressOrName: pocketContract.address,
     contractInterface: pocketContract.interface,
     functionName: 'claim',
-    enabled: !!pocketContract,
+    enabled: !!pocketContract && !disabled,
   });
 
   const claim = useContractWrite({
@@ -39,12 +39,10 @@ const ClaimButton: React.FC<ClaimButtonProps> = ({ disabled, children }) => {
     hash: claim.data?.hash,
     onSuccess: () => {
       toast.dismiss();
-
       toast.success(<FormattedMessage id="dashbaord.child.claim.success" />);
     },
     onError: () => {
       toast.dismiss();
-
       toast.error(<FormattedMessage id="dashboard.child.claim.fail" />);
     },
   });
@@ -52,7 +50,7 @@ const ClaimButton: React.FC<ClaimButtonProps> = ({ disabled, children }) => {
   return (
     <button
       disabled={disabled || !claim.write || claim.isLoading}
-      className="action-btn"
+      className="action-btn min-w-[50%]"
       onClick={() => {
         if (claim.write) claim.write();
       }}

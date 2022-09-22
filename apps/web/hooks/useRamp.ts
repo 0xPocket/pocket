@@ -24,7 +24,7 @@ function useRamp() {
     })
       .on('*', (event) => console.log(event))
       .show();
-  }, [user]);
+  }, [user, address]);
 
   return { showRamp };
 }

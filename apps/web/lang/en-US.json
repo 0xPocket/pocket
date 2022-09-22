@@ -36,6 +36,8 @@
   "subject": "Subject",
   "optional": "(optional)",
   "piggybank": "PiggyBank",
+  "account.settings": "Account settings",
+  "account": "Account",
 
   "auth.email.connect": "Connect with your email",
   "auth.email.verify": "Please verify your email with the link we sent you.",
@@ -47,12 +49,13 @@
   "card.child.title": "My account",
   "card.child.swapper": "Swapper",
 
-  "card.child.piggyBank.title": "In my PiggyBank",
+  "card.child.account.title": "In my account",
 
   "card.child.piggyBank.status.nothing": "Nothing to claim",
   "card.child.piggyBank.status.next": "Next claim in",
 
-  "card.parent.status": "A set-up email has been sent to",
+  "card.parent.status.invited": "A set-up email has been sent to {email}",
+  "card.parent.status.active": "This account is up and running",
   "card.parent.piggyBank.addFunds": "Add funds",
 
   "dashboard.child.claim.fail": "Claim failed.",
@@ -151,5 +154,8 @@
   "add-child-or-change-config.error": "Changing config failed. If the problem persists, contact us.",
   "add-child-or-change-config.success": "Configuration sets successfully !",
 
-  "transaction.pending": "Transaction pending, please hang on !"
+  "transaction.pending": "Transaction pending, please hang on !",
+
+	"tooltip.wallet.erc20": "We currently use Polygon's USDC",
+	"tooltip.wallet.matic": "Matic is used to pay transaction fees on the blockchain"
 }

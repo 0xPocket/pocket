@@ -1,10 +1,10 @@
-import { OAuthProvider } from '@magic-ext/oauth';
-import { MagicSDKAdditionalConfiguration } from '@magic-sdk/provider';
+import type { OAuthProvider } from '@magic-ext/oauth';
+import type { MagicSDKAdditionalConfiguration } from '@magic-sdk/provider';
 import { normalizeChainId } from '@wagmi/core';
-import { ethers, Signer } from 'ethers';
+import { type Signer, providers } from 'ethers';
 import { getAddress } from 'ethers/lib/utils';
 import { Magic } from 'magic-sdk';
-import { Chain, Connector, UserRejectedRequestError } from 'wagmi';
+import { type Chain, Connector, UserRejectedRequestError } from 'wagmi';
 
 const IS_SERVER = typeof window === 'undefined';
 
@@ -159,9 +159,7 @@ export class MagicConnector extends Connector {
   }
 
   async getSigner(): Promise<Signer> {
-    const provider = new ethers.providers.Web3Provider(
-      await this.getProvider(),
-    );
+    const provider = new providers.Web3Provider(await this.getProvider());
     return provider.getSigner();
   }
 

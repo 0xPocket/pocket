@@ -84,10 +84,7 @@ export function TransactionsTable({
       columnHelper.accessor('hash', {
         cell: (info) => (
           <div className="w-full text-right">
-            <Link
-              //TODO : change mumbai to mainet
-              href={`https://mumbai.polygonscan.com/tx/${info.getValue()}`}
-            >
+            <Link href={`https://polygonscan.com/tx/${info.getValue()}`}>
               <a target="_blank" rel="noopener noreferrer">
                 <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
               </a>

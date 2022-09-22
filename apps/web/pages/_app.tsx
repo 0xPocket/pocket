@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import { AlchemyProvider } from '../contexts/alchemy';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
@@ -27,6 +26,7 @@ import { useRouter } from 'next/router';
 import { IntlProvider } from 'react-intl';
 import { ThemeProvider } from '../contexts/theme';
 import { TermsModal } from '../components/common/TermsModal';
+import type { Session } from 'next-auth';
 
 const messages = { fr, 'en-US': en };
 export type IntlMessageID = keyof typeof en;
@@ -42,7 +42,10 @@ const { chains, provider } = configureChains(
   ],
 );
 
-function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppProps<{ session: Session }>) {
   const { locale } = useRouter();
 
   const [wagmiClient] = useState(() =>
@@ -61,9 +64,6 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
         new MagicConnector({
           options: {
             apiKey: env.NEXT_PUBLIC_MAGIC_LINK_PUBLIC_KEY,
-            // oauthOptions: {
-            //   providers: ['facebook', 'google'],
-            // },
             additionalMagicOptions: {
               network: {
                 rpcUrl: env.RPC_URL,
@@ -86,18 +86,16 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
         <WagmiConfig client={wagmiClient}>
           <SessionProvider session={session}>
             <MagicAuthProvider>
-              <AlchemyProvider>
-                <SmartContractProvider>
-                  <Component {...pageProps} />
-                  <TermsModal />
-                  <ToastContainer
-                    toastClassName="toast-container"
-                    position="bottom-right"
-                    autoClose={3000}
-                  />
-                  <ReactQueryDevtools />
-                </SmartContractProvider>
-              </AlchemyProvider>
+              <SmartContractProvider>
+                <Component {...pageProps} />
+                <TermsModal />
+                <ToastContainer
+                  toastClassName="toast-container"
+                  position="bottom-right"
+                  autoClose={3000}
+                />
+                <ReactQueryDevtools />
+              </SmartContractProvider>
             </MagicAuthProvider>
           </SessionProvider>
         </WagmiConfig>

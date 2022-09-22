@@ -1,7 +1,12 @@
 import { useQuery } from 'react-query';
-import { useAlchemy } from '../contexts/alchemy';
 import type { AssetTransfersResponseWithMetadata } from '@lib/types/interfaces';
-import { AssetTransfersCategory, AssetTransfersOrder } from 'alchemy-sdk';
+import {
+  Alchemy,
+  AssetTransfersCategory,
+  AssetTransfersOrder,
+  type Network,
+} from 'alchemy-sdk';
+import { env } from 'config/env/client';
 
 const staticAssetTransfersParams = {
   excludeZeroValue: false,
@@ -16,6 +21,12 @@ const staticAssetTransfersParams = {
   ],
   order: AssetTransfersOrder.DESCENDING,
 };
+
+const alchemy = new Alchemy({
+  apiKey: env.ALCHEMY_KEY, // Replace with your Alchemy API Key.
+  network: env.NETWORK_KEY as Network, // Replace with your network.
+  maxRetries: 10,
+});
 
 // async function fetchTransactions(alchemy: Alchemy, fromAddress: string) {
 //   let tx: AssetTransfersResultWithMetadata[] = [];
@@ -33,8 +44,6 @@ const staticAssetTransfersParams = {
 // }
 
 export const useTransactionsQuery = (address: string) => {
-  const { alchemy } = useAlchemy();
-
   return useQuery(
     ['child.transactions-content', address],
     () => {

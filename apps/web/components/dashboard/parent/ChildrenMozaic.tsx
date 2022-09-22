@@ -31,7 +31,7 @@ function ChildrenMozaic() {
         {!isLoading && (
           <>
             {data?.map((child) => (
-              <ChildCard key={child.id} child={child} hasLink />
+              <ChildCard key={child.id} child={child} />
             ))}
             <div
               onClick={() => router.push('/add-account')}
