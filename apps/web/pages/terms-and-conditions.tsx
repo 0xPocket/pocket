@@ -95,24 +95,26 @@ const termsAndConditions: FC = () => {
         <p>
           You must be at least 13 years of age to use the Website and Services.
           By using the Website and Services and by agreeing to this Agreement
-          you warrant and represent that you are at least 13 years of age. If
-          you create an account on the Website, you are responsible for
-          maintaining the security of your account and you are fully responsible
-          for all activities that occur under the account and any other actions
-          taken in connection with it. We may, but have no obligation to,
-          monitor and review new accounts before you may sign in and start using
-          the Services. Providing false contact information of any kind may
-          result in the termination of your account. You must immediately notify
-          us of any unauthorized uses of your account or any other breaches of
-          security. We will not be liable for any acts or omissions by you,
-          including any damages of any kind incurred as a result of such acts or
-          omissions. We may suspend, disable, or delete your account (or any
-          part thereof) if we determine that you have violated any provision of
-          this Agreement or that your conduct or content would tend to damage
-          our reputation and goodwill. If we delete your account for the
-          foregoing reasons, you may not re-register for our Services. We may
-          block your email address and Internet protocol address to prevent
-          further registration.
+          you warrant and represent that you are at least 13 years of age. You
+          must be 18 years old or more to buy cryptocurrencies through our
+          services or through the one provided by one of the third party on our
+          website. If you create an account on the Website, you are responsible
+          for maintaining the security of your account and you are fully
+          responsible for all activities that occur under the account and any
+          other actions taken in connection with it. We may, but have no
+          obligation to, monitor and review new accounts before you may sign in
+          and start using the Services. Providing false contact information of
+          any kind may result in the termination of your account. You must
+          immediately notify us of any unauthorized uses of your account or any
+          other breaches of security. We will not be liable for any acts or
+          omissions by you, including any damages of any kind incurred as a
+          result of such acts or omissions. We may suspend, disable, or delete
+          your account (or any part thereof) if we determine that you have
+          violated any provision of this Agreement or that your conduct or
+          content would tend to damage our reputation and goodwill. If we delete
+          your account for the foregoing reasons, you may not re-register for
+          our Services. We may block your email address and Internet protocol
+          address to prevent further registration.
         </p>
         <h2 id="user-content">User content</h2>
         <p>
