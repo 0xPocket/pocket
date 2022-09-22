@@ -17,6 +17,7 @@ const serverSchema = z.object({
   POCKET_PRIVATE_KEY: z.string(),
   QUERY_DEBUG: z.string().optional(),
   VERCEL_URL: z.string().optional(),
+  ANALYZE: z.string().optional(),
 });
 
 /**

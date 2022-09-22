@@ -4,7 +4,7 @@ const us = require('./en-US.json');
 const usKeys = Object.keys(us);
 const frKeys = Object.keys(fr);
 
-console.log('ℹ️  Language Keys Checker :\n');
+console.log('ℹ️  Language Keys Checking...');
 usKeys.forEach((key) => {
   if (us[key] == '') {
     console.error('❌ Be careful', key, 'in us is empty');
@@ -22,5 +22,3 @@ frKeys.forEach((key) => {
     console.error('❌ Missing', key, 'in us');
   }
 });
-
-console.log('');

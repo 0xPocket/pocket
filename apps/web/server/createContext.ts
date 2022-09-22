@@ -6,7 +6,6 @@ import { authOptions } from './next-auth';
 
 import { GetServerSidePropsContext } from 'next';
 import type { Logger } from 'next-axiom';
-import { getCurrentLocale } from './getCurrentLocale';
 
 /**
  * Creates context for an incoming request
@@ -27,7 +26,6 @@ export const createContext = async (
     req,
     res,
     log: logger,
-    locale: req ? getCurrentLocale(req) : undefined,
     session,
   };
 };
