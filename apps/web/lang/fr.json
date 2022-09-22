@@ -75,6 +75,10 @@
 
   "onboarding.connect-wallet": "Connectez-vous avec votre wallet préféré",
   "onboarding.more-info": "Nous avons besoin de plus d'informations !",
+  "onboarding.terms.confirm": "Vous confirmez avoir lu et accepté les {terms} et la {privacy} de Pocket.",
+  "onboarding.privacy": "Politique de confidentialité",
+  "onboarding.terms": "Conditions d'utilisation",
+  "onboarding.majority": "Je certifie avoir plus de 18 ans.",
 
   "route.dashboard": "tableau de bord",
 

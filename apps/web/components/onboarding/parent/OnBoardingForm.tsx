@@ -14,12 +14,11 @@ const OnBoardingForm: FC = () => {
   const utils = trpc.useContext();
   const router = useRouter();
 
-  const { register, handleSubmit, formState, setValue } = useZodForm({
+  const { register, handleSubmit, setValue } = useZodForm({
     mode: 'onChange',
     reValidateMode: 'onChange',
     schema: AuthSchema['onboard'],
   });
-  console.log(formState.errors);
 
   const onboardUser = trpc.useMutation('auth.onboard', {
     onError: (error) => {
@@ -61,6 +60,17 @@ const OnBoardingForm: FC = () => {
         register={register('email')}
         autoComplete="email"
       />
+      <div className="mb-2 flex items-center">
+        <input
+          required
+          type="checkbox"
+          {...register('majority')}
+          className="text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded focus:ring-2"
+        />
+        <label className="text-gray-900 dark:text-gray-300 ml-2 text-sm font-medium">
+          <FormattedMessage id="onboarding.majority" />
+        </label>
+      </div>
       <button className="action-btn">
         <FormattedMessage id="submit" />
       </button>

@@ -2,12 +2,14 @@ import Footer from '../../footer/Footer';
 import Header from '../../header/Header';
 import BackgoundSplit from '../BackgoundSplit';
 import type { FC } from 'react';
+import { TermsModal } from '../TermsModal';
 
 type MainWrapperProps = {
   children: React.ReactNode;
   noHeader?: boolean;
   noFooter?: boolean;
   noContainer?: boolean;
+  noTermsModal?: boolean;
 };
 
 const MainWrapper: FC<MainWrapperProps> = ({
@@ -15,6 +17,7 @@ const MainWrapper: FC<MainWrapperProps> = ({
   noHeader = false,
   noFooter = false,
   noContainer = false,
+  noTermsModal = false,
 }) => {
   if (noContainer)
     return (
@@ -24,6 +27,7 @@ const MainWrapper: FC<MainWrapperProps> = ({
         <BackgoundSplit className="-top-80 -left-96" />
         <BackgoundSplit className="-bottom-[50vh] -right-96" />
         {!noFooter && <Footer className="absolute bottom-0 left-0 right-0" />}
+        {!noTermsModal && <TermsModal />}
       </div>
     );
 
@@ -34,6 +38,7 @@ const MainWrapper: FC<MainWrapperProps> = ({
       <BackgoundSplit className="-top-80 -left-96" />
       <BackgoundSplit className="-bottom-[50vh] -right-96" />
       {!noFooter && <Footer className="absolute bottom-0 left-0 right-0" />}
+      {!noTermsModal && <TermsModal />}
     </div>
   );
 };
