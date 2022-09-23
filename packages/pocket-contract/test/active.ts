@@ -17,7 +17,6 @@ describe('Testing active param change', function () {
     child1 = new Wallet(constants.FAMILY_ACCOUNT.child1, ethers.provider);
     child2 = new Wallet(constants.FAMILY_ACCOUNT.child2, ethers.provider);
 
-    console.log();
     PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
     pocketFaucet = (await upgrades.deployProxy(PocketFaucet_factory, [
       tokenAddr,

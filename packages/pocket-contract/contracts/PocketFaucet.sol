@@ -4,7 +4,7 @@ pragma solidity ^0.8.9;
 import '@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol';
 import '@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol';
 import '@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol';
-import '@openzeppelin/contracts-upgradeable/metatx/ERC2771ContextUpgradeable.sol';
+import './ERC2771ContextUpgradeableCustom.sol';
 import 'hardhat/console.sol';
 
 /// @title A pocket money faucet
@@ -50,6 +50,10 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
         address parent;
     }
 
+    function newFx() public pure returns (uint) {
+        return 12;
+    }
+
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() ERC2771ContextUpgradeable(address(0)) {}
 
@@ -60,7 +64,7 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
     function initialize(address token, address trustedForwarder) public initializer {
         baseToken = token;
         __AccessControl_init_unchained();
-        _setupRole(WITHDRAW_ROLE, msg.sender);
+        _setupRole(WITHDRAW_ROLE, _msgSender());
         ERC2771ContextUpgradeable._trustedForwarder = trustedForwarder;
     }
 
@@ -125,7 +129,7 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
         }
 
         IERC20Upgradeable(baseToken).safeTransfer(
-            msg.sender,
+            _msgSender(),
             childToConfig[child].balance
         );
         delete childToConfig[child];
@@ -163,13 +167,13 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
         conf.lastClaim = block.timestamp - periodicity;
         conf.ceiling = ceiling;
         conf.periodicity = periodicity;
-        conf.parent = msg.sender;
+        conf.parent = _msgSender();
         conf.active = true;
         childToConfig[child] = conf;
-        parentToChildren[msg.sender].push(child);
+        parentToChildren[_msgSender()].push(child);
 
         childrenList.push(child);
-        emit ChildAdded(msg.sender, child);
+        emit ChildAdded(_msgSender(), child);
     }
 
     /// @notice Add a child to a parent address + add funds to the child account.
@@ -192,7 +196,7 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
     /// @dev This function properly updates the parentToChildren array by removing the address of the child and making sure there is no gap inside the array.
     function removeChild(address child)
         external
-        _areRelated(msg.sender, child)
+        _areRelated(_msgSender(), child)
     {
         Config memory childConfig = childToConfig[child];
 
@@ -208,7 +212,7 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
         }
 
         IERC20Upgradeable(baseToken).safeTransfer(
-            msg.sender,
+            _msgSender(),
             childToConfig[child].balance
         );
 
@@ -221,7 +225,7 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
     /// @param child the child to activate or desactivate the account.
     function setActive(bool active, address child)
         public
-        _areRelated(msg.sender, child)
+        _areRelated(_msgSender(), child)
     {
         Config storage conf = childToConfig[child];
         conf.active = active;
@@ -237,7 +241,7 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
         uint256 ceiling,
         uint256 periodicity,
         address child
-    ) public _areRelated(msg.sender, child) {
+    ) public _areRelated(_msgSender(), child) {
         Config storage conf = childToConfig[child];
         require(periodicity != 0, "!changeConfig: periodicity cannot be 0");
         conf.ceiling = ceiling;
@@ -250,7 +254,7 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
     /// @param newAddr is the new address of your child.
     function changeChildAddress(address oldAddr, address newAddr)
         public
-        _areRelated(msg.sender, oldAddr)
+        _areRelated(_msgSender(), oldAddr)
     {
         Config memory conf = childToConfig[oldAddr];
         require(
@@ -276,17 +280,17 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
     /// @param child is the address of the child.
     function addFunds(uint256 amount, address child)
         public
-        _areRelated(msg.sender, child)
+        _areRelated(_msgSender(), child)
     {
         IERC20Upgradeable(baseToken).safeTransferFrom(
-            msg.sender,
+            _msgSender(),
             address(this),
             amount
         );
 
         childToConfig[child].balance += amount;
 
-        emit FundsAdded(block.timestamp, msg.sender, amount, child);
+        emit FundsAdded(block.timestamp, _msgSender(), amount, child);
     }
 
     /// @notice You will withdraw `amount` from your child account `child`. If amount is 0, it will wihdraw all its balance.
@@ -294,7 +298,7 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
     /// @param child is the address of the child.
     function withdrawFundsFromChild(uint256 amount, address child)
         public
-        _areRelated(msg.sender, child)
+        _areRelated(_msgSender(), child)
     {
         Config storage conf = childToConfig[child];
         uint256 childBalance = conf.balance;
@@ -304,8 +308,8 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
         );
         if (amount == 0) amount = childBalance;
         conf.balance -= amount;
-        IERC20Upgradeable(baseToken).safeTransfer(msg.sender, amount);
-        emit FundsWithdrawn(msg.sender, amount, child);
+        IERC20Upgradeable(baseToken).safeTransfer(_msgSender(), amount);
+        emit FundsWithdrawn(_msgSender(), amount, child);
     }
 
     /// @dev Computes the amount of token the child can claim.
@@ -325,33 +329,33 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
 
     /// @notice You will receive the pocket money your parent deposited for you.
     function claim() public {
-        Config storage conf = childToConfig[msg.sender];
+        Config storage conf = childToConfig[_msgSender()];
         require(conf.active, '!claim: not active');
         require(conf.balance > 0, '!claim: null balance');
         require(
-            childToConfig[msg.sender].active == true,
+            childToConfig[_msgSender()].active == true,
             '!claim: account is inactive'
         );
 
-        uint256 claimable = computeClaimable(msg.sender);
+        uint256 claimable = computeClaimable(_msgSender());
         require(claimable != 0, "!claim: nothing to claim");
         uint256 nbPeriod = (block.timestamp - conf.lastClaim) /
             conf.periodicity;
         conf.lastClaim = conf.lastClaim + conf.periodicity * nbPeriod;
 
         conf.balance -= claimable;
-        IERC20Upgradeable(baseToken).safeTransfer(msg.sender, claimable);
-        emit FundsClaimed(block.timestamp, msg.sender, claimable);
+        IERC20Upgradeable(baseToken).safeTransfer(_msgSender(), claimable);
+        emit FundsClaimed(block.timestamp, _msgSender(), claimable);
     }
 
-    /// @notice You will change your address from `msg.sender` to `newAddr`
+    /// @notice You will change your address from `_msgSender()` to `newAddr`
     /// @param newAddr is the address of the child.
     function changeParentAddr(address newAddr) public {
         require(
-            msg.sender != newAddr,
+            _msgSender() != newAddr,
             '!changeParentAddr : cannot change to same addr'
         );
-        address[] storage children = parentToChildren[msg.sender];
+        address[] storage children = parentToChildren[_msgSender()];
         uint256 nbChildren = children.length;
 
         for (int256 i = int256(nbChildren) - 1; i >= 0; i--) {
@@ -359,12 +363,12 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
             parentToChildren[newAddr].push(children[uint256(i)]);
             children.pop();
         }
-        emit ParentChanged(msg.sender, newAddr);
+        emit ParentChanged(_msgSender(), newAddr);
     }
 
     function withdrawCoin(uint256 amount) public onlyRole(WITHDRAW_ROLE) {
         if (amount == 0) amount = address(this).balance;
-        payable(msg.sender).transfer(amount);
+        payable(_msgSender()).transfer(amount);
         emit CoinWithdrawed(amount);
     }
 

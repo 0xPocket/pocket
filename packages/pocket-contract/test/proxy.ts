@@ -11,6 +11,7 @@ import * as constants from '../utils/constants';
 import { Contract } from 'ethers';
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 import { abi as proxyAbi } from '../artifacts/@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol/ProxyAdmin.json';
+import config from 'config/network';
 
 describe('Deploy and tests on proxy functions', function () {
   const ___log = console.log;
@@ -37,6 +38,7 @@ describe('Deploy and tests on proxy functions', function () {
     PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
     pocketFaucet = (await upgrades.deployProxy(PocketFaucet_factory, [
       constants.CHOSEN_TOKEN,
+      config.localhost.TRUSTED_FORWARDER,
     ])) as PocketFaucet;
     await pocketFaucet.deployed();
 

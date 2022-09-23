@@ -5,6 +5,7 @@ import { Wallet } from 'ethers';
 import ParentTester from '../helpers/ParentTester';
 import * as constants from '../utils/constants';
 import { PocketFaucet__factory, PocketFaucet } from '../typechain-types';
+import config from 'config/network';
 import { getERC20Balance } from '../utils/ERC20';
 import { ChildContract } from '../ts/Child';
 import goForwardNDays from '../utils/goForward';
@@ -21,6 +22,7 @@ describe('Testing to claim funds as child', function () {
     PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
     pocketFaucet = (await upgrades.deployProxy(PocketFaucet_factory, [
       tokenAddr,
+      config.localhost.TRUSTED_FORWARDER,
     ])) as PocketFaucet;
     await pocketFaucet.deployed();
     child1Wallet = new Wallet(constants.FAMILY_ACCOUNT.child1, ethers.provider);

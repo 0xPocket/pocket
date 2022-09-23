@@ -5,6 +5,7 @@ import { providers, Wallet } from 'ethers';
 import ParentTester from '../helpers/ParentTester';
 import * as constants from '../utils/constants';
 import { PocketFaucet__factory, PocketFaucet } from '../typechain-types';
+import config from 'config/network';
 
 describe('Testing rm child', function () {
   let child1: Wallet;
@@ -21,6 +22,7 @@ describe('Testing rm child', function () {
     PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
     pocketFaucet = (await upgrades.deployProxy(PocketFaucet_factory, [
       tokenAddr,
+      config.localhost.TRUSTED_FORWARDER,
     ])) as PocketFaucet;
     await pocketFaucet.deployed();
     parent1Wallet = new Wallet(
