@@ -1,6 +1,7 @@
 import { ethers, upgrades } from 'hardhat';
 import { readFileSync, writeFileSync } from 'fs';
 import { env } from 'config/env/server';
+import config from 'config/network';
 
 function replaceEnvInString(
   envName: string,
@@ -30,13 +31,13 @@ async function main() {
   const PocketFaucet = await ethers.getContractFactory('PocketFaucet');
   const pocketFaucet = await upgrades.deployProxy(PocketFaucet, [
     env.ERC20_ADDRESS,
+    config['polygon-mumbai'].TRUSTED_FORWARDER,
   ]);
   await pocketFaucet.deployed();
 
-  console.log('Contract deployed to ', pocketFaucet.address);
+  console.log('Proxy deployed to ', pocketFaucet.address);
 
   const file = readFileSync('../../.env');
-
   writeFileSync(
     '../../.env',
     replaceEnvInString(
@@ -45,6 +46,7 @@ async function main() {
       file.toString()
     )
   );
+  process.exit(0);
 }
 
 main().catch((error) => {
