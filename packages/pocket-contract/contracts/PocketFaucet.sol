@@ -4,17 +4,20 @@ pragma solidity ^0.8.9;
 import '@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol';
 import '@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol';
 import '@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol';
+import '@openzeppelin/contracts-upgradeable/metatx/ERC2771ContextUpgradeable.sol';
+import 'hardhat/console.sol';
 
 /// @title A pocket money faucet
 /// @author Guillaume Dupont, Sami Darnaud
 /// @custom:experimental This is an experimental contract. It should not be used in production.
 
-contract PocketFaucet is AccessControlUpgradeable {
+contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     bytes32 public constant WITHDRAW_ROLE = keccak256('WITHDRAW_ROLE');
 
     address public baseToken;
+
     mapping(address => address[]) public parentToChildren;
     mapping(address => Config) public childToConfig;
 
@@ -47,10 +50,26 @@ contract PocketFaucet is AccessControlUpgradeable {
         address parent;
     }
 
-    function initialize(address token) public initializer {
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() ERC2771ContextUpgradeable(address(0)) {}
+
+    function setTrustedForwarder(address trustedForwarder) public onlyRole(WITHDRAW_ROLE) {
+       ERC2771ContextUpgradeable._trustedForwarder = trustedForwarder;
+    }
+    
+    function initialize(address token, address trustedForwarder) public initializer {
         baseToken = token;
         __AccessControl_init_unchained();
         _setupRole(WITHDRAW_ROLE, msg.sender);
+        ERC2771ContextUpgradeable._trustedForwarder = trustedForwarder;
+    }
+
+    function _msgSender() internal view virtual override(ContextUpgradeable, ERC2771ContextUpgradeable) returns (address sender) {
+        sender = ERC2771ContextUpgradeable._msgSender();
+    }
+
+    function _msgData() internal view virtual override(ContextUpgradeable, ERC2771ContextUpgradeable) returns (bytes calldata) {
+        return ERC2771ContextUpgradeable._msgData();
     }
 
     /// @notice This checks that the child address and parent address are properly bind in the contract.

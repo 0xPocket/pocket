@@ -34,8 +34,8 @@ class ChildContract {
   // getClaimable()
 
   // Child functions
-  claim = () => {
-    return this.contract.claim();
+  claim = async () => {
+    return await this.contract.claim();
   };
 }
 

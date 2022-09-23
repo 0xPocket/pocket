@@ -46,7 +46,8 @@ describe('Testing to claim funds as child', function () {
       constants.CHOSEN_WHALE
     );
 
-    await child1.claim();
+    const tx = await child1.claim();
+    await tx.wait();
     await expect(child1.claim()).to.be.revertedWith('!claim: null balance');
   });
 
@@ -60,7 +61,8 @@ describe('Testing to claim funds as child', function () {
       constants.CHOSEN_WHALE
     );
     await goForwardNDays(8);
-    await child1.claim();
+    const tx = await child1.claim();
+    await tx.wait();
     const balanceAfter = await getERC20Balance(tokenAddr, child1.address);
     const diff = balanceAfter.sub(balanceBefore);
     assert(
@@ -70,7 +72,6 @@ describe('Testing to claim funds as child', function () {
   });
 
   it('Should claim 5 times the ceiling', async function () {
-    const balanceBefore = await getERC20Balance(tokenAddr, child1.address);
     const ceiling = await parent1.getChildCeiling(child1Wallet.address);
     const diffExpected = ceiling.mul(5);
     await parent1.addFundsToChild(
@@ -79,8 +80,10 @@ describe('Testing to claim funds as child', function () {
       tokenAddr,
       constants.CHOSEN_WHALE
     );
+    const balanceBefore = await getERC20Balance(tokenAddr, child1.address);
     await goForwardNDays(7 * 5 + 1);
-    await child1.claim();
+    const tx = await child1.claim();
+    await tx.wait();
     const balanceAfter = await getERC20Balance(tokenAddr, child1.address);
     const diff = balanceAfter.sub(balanceBefore);
 
@@ -91,7 +94,8 @@ describe('Testing to claim funds as child', function () {
   });
 
   it('Should claim exactly balance', async function () {
-    await parent1.contract.withdrawFundsFromChild(0, child1.address);
+    let tx = await parent1.contract.withdrawFundsFromChild(0, child1.address);
+    await tx.wait();
     const balanceBefore = await getERC20Balance(tokenAddr, child1.address);
     await parent1.addFundsToChild(
       child1.address,
@@ -101,7 +105,8 @@ describe('Testing to claim funds as child', function () {
     );
     const diffExpected = await parent1.getChildBalance(child1Wallet.address);
     await goForwardNDays(7 * 5);
-    await child1.claim();
+    tx = await child1.claim();
+    await tx.wait();
     const balanceAfter = await getERC20Balance(tokenAddr, child1.address);
     const diff = balanceAfter.sub(balanceBefore);
     assert(
@@ -123,7 +128,8 @@ describe('Testing to claim funds as child', function () {
     await parent1.changeConfig('100', newPeriodicity, child1.address);
     await goForwardNDays(7 * 5);
     const diffExpected = await parent1.calculateClaimable(child1.address);
-    await child1.claim();
+    const tx = await child1.claim();
+    await tx.wait();
     const balanceAfter = await getERC20Balance(tokenAddr, child1.address);
     const diff = balanceAfter.sub(balanceBefore);
     assert(
@@ -145,7 +151,8 @@ describe('Testing to claim funds as child', function () {
     await parent1.changeConfig('100', newPeriodicity, child1.address);
     await goForwardNDays(7 * 5);
     const diffExpected = await parent1.calculateClaimable(child1.address);
-    await child1.claim();
+    const tx = await child1.claim();
+    await tx.wait();
     const balanceAfter = await getERC20Balance(tokenAddr, child1.address);
     const diff = balanceAfter.sub(balanceBefore);
     assert(
@@ -162,7 +169,8 @@ describe('Testing to claim funds as child', function () {
       tokenAddr,
       constants.CHOSEN_WHALE
     );
-    await parent1.setActive(false, child1.address);
+    const tx = await parent1.setActive(false, child1.address);
+    await tx.wait();
     await expect(child1.claim()).to.be.revertedWith('!claim: not active');
   });
 
@@ -175,11 +183,14 @@ describe('Testing to claim funds as child', function () {
       tokenAddr,
       constants.CHOSEN_WHALE
     );
-    await parent1.setActive(false, child1.address);
-    await parent1.setActive(true, child1.address);
+    let tx = await parent1.setActive(false, child1.address);
+    await tx.wait();
+    tx = await parent1.setActive(true, child1.address);
+    await tx.wait();
     await goForwardNDays(7 * 5);
     const diffExpected = await parent1.calculateClaimable(child1.address);
-    await child1.claim();
+    tx = await child1.claim();
+    await tx.wait();
     const balanceAfter = await getERC20Balance(tokenAddr, child1.address);
     const diff = balanceAfter.sub(balanceBefore);
     assert(

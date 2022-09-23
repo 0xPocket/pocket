@@ -69,12 +69,16 @@ describe('Testing withdraw', function () {
   // });
 
   it('should withdraw 10 ether', async function () {
-    await adminWallet.sendTransaction({
+    let tx = await adminWallet.sendTransaction({
       to: pocketFaucet.address,
       value: ethers.utils.parseEther('10'),
     });
+    await tx.wait();
     const balanceBefore = await ethers.provider.getBalance(adminWallet.address);
-    await adminContract.withdrawCoin(ethers.utils.parseEther('10').toString());
+    tx = await adminContract.withdrawCoin(
+      ethers.utils.parseEther('10').toString()
+    );
+    await tx.wait();
     const balanceAfter = await ethers.provider.getBalance(adminWallet.address);
     assert(balanceAfter.gt(balanceBefore), 'Amount of token did not increase');
   });

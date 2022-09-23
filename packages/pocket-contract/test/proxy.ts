@@ -55,11 +55,6 @@ describe('Deploy and tests on proxy functions', function () {
   });
 
   it('Should have set good admin for proxy + owner of proxyAdmin', async function () {
-    console.log('here');
-    console.log(
-      'proxyAdmin.connect(admin).owner()',
-      await proxyAdmin.connect(admin).owner()
-    );
     expect(await proxyAdmin.connect(admin).owner()).to.be.equal(admin.address);
     expect(
       await proxyAdmin.connect(admin).getProxyAdmin(pocketFaucet.address)
@@ -77,14 +72,15 @@ describe('Deploy and tests on proxy functions', function () {
 
     it('Should change proxyAdmin owner', async function () {
       mute();
-      console.log(testAccount1.address);
       await upgrades.admin.transferProxyAdminOwnership(testAccount1.address);
-
       unmute();
       expect(await proxyAdmin.connect(testAccount1).owner()).to.be.equal(
         testAccount1.address
       );
-      await proxyAdmin.connect(testAccount1).transferOwnership(admin.address);
+      const tx = await proxyAdmin
+        .connect(testAccount1)
+        .transferOwnership(admin.address);
+      await tx.wait();
       expect(await proxyAdmin.connect(admin).owner()).to.be.equal(
         admin.address
       );
@@ -122,7 +118,11 @@ describe('Deploy and tests on proxy functions', function () {
       const pocketV1Addr = await upgrades.erc1967.getImplementationAddress(
         pocketFaucet.address
       );
-      await upgrades.upgradeProxy(pocketFaucet.address, PocketFaucetV2_factory);
+      const tx = await upgrades.upgradeProxy(
+        pocketFaucet.address,
+        PocketFaucetV2_factory
+      );
+      await tx.deployed();
       expect(pocketV1Addr).to.not.be.equal(
         await upgrades.erc1967.getImplementationAddress(pocketFaucet.address)
       );

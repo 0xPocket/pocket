@@ -68,9 +68,10 @@ class ParentTester extends ParentContract {
     periodicity: BigNumberish,
     childAddr: string
   ) => {
-    await this.contract
+    const tx = await this.contract
       .connect(this.signer)
       .changeConfig(ceiling, periodicity, childAddr);
+    await tx.wait();
   };
 
   addChildAndSend = async (
@@ -78,9 +79,10 @@ class ParentTester extends ParentContract {
     periodicity: BigNumberish,
     childAddr: string
   ) => {
-    await this.contract
+    const tx = await this.contract
       .connect(this.signer)
       .addChild(ceiling, periodicity, childAddr);
+    await tx.wait();
   };
 
   addChildAndFundsAndSend = async (
@@ -106,17 +108,20 @@ class ParentTester extends ParentContract {
       token,
       amount.toString()
     );
-    await this.contract
+    const tx = await this.contract
       .connect(this.signer)
       .addChildAndFunds(ceiling, periodicity, childAddr, amountWithDeci);
+    await tx.wait();
   };
 
   addStdChildAndSend = async (address: string, tokenAddr: string) => {
     const ceiling = ethers.utils.parseUnits('10', await getDecimals(tokenAddr));
     const periodicity = constants.TIME.WEEK;
-    await this.contract
+
+    const tx = await this.contract
       .connect(this.signer)
       .addChild(ceiling, periodicity, address);
+    await tx.wait();
   };
 
   addFundsToChild = async (
@@ -128,10 +133,11 @@ class ParentTester extends ParentContract {
     await setErc20Balance(token, this.signer, amount, whale);
     await setAllowance(token, this.signer, this.contract.address, amount);
 
-    await this.addFunds(
+    const tx = await this.addFunds(
       await stringToDecimalsVersion(token, amount),
       childAddress
     );
+    await tx.wait();
   };
 
   calculateClaimable = async (childAddr: string) => {

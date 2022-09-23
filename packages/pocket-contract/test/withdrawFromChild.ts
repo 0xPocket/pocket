@@ -46,7 +46,8 @@ describe('Testing to withdraw funds from child account as parent', function () {
   it('Should withdraw all child fund', async function () {
     const diffExpected = await parent1.getChildBalance(child1.address);
     const tokenBefore = await getERC20Balance(tokenAddr, parent1Wallet.address);
-    await parent1.contract.withdrawFundsFromChild(0, child1.address);
+    const tx = await parent1.contract.withdrawFundsFromChild(0, child1.address);
+    await tx.wait();
     const tokenAfter = await getERC20Balance(tokenAddr, parent1Wallet.address);
     const diff = tokenAfter.sub(tokenBefore);
 
@@ -72,7 +73,11 @@ describe('Testing to withdraw funds from child account as parent', function () {
     const childBalance = await parent1.getChildBalance(child1.address);
     const diffExpected = childBalance.div(2);
     const tokenBefore = await getERC20Balance(tokenAddr, parent1Wallet.address);
-    await parent1.contract.withdrawFundsFromChild(diffExpected, child1.address);
+    const tx = await parent1.contract.withdrawFundsFromChild(
+      diffExpected,
+      child1.address
+    );
+    await tx.wait();
     const tokenAfter = await getERC20Balance(tokenAddr, parent1Wallet.address);
     const diff = tokenAfter.sub(tokenBefore);
     assert(

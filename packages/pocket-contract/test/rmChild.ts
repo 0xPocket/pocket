@@ -32,7 +32,8 @@ describe('Testing rm child', function () {
 
   it('Should remove child1', async function () {
     await parent1.addStdChildAndSend(child1.address, tokenAddr);
-    await parent1.removeChild(child1.address);
+    const tx = await parent1.removeChild(child1.address);
+    await tx.wait();
     assert(
       (await parent1.checkChildIsInit(child1.address)) === false,
       'Child 1 is still related to parent1'
@@ -52,10 +53,13 @@ describe('Testing rm child', function () {
     await parent1.addStdChildAndSend(constants.RDM_ADDRESS[2], tokenAddr);
     await parent1.addStdChildAndSend(constants.RDM_ADDRESS[3], tokenAddr);
     await parent1.addStdChildAndSend(constants.RDM_ADDRESS[4], tokenAddr);
-    await parent1.removeChild(constants.RDM_ADDRESS[1]);
-    await parent1.removeChild(constants.RDM_ADDRESS[4]);
+    let tx = await parent1.removeChild(constants.RDM_ADDRESS[1]);
+    await tx.wait();
+    tx = await parent1.removeChild(constants.RDM_ADDRESS[4]);
+    await tx.wait();
     await parent1.addStdChildAndSend(constants.RDM_ADDRESS[1], tokenAddr);
-    await parent1.removeChild(constants.RDM_ADDRESS[0]);
+    tx = await parent1.removeChild(constants.RDM_ADDRESS[0]);
+    await tx.wait();
 
     assert(
       (await parent1.checkChildIsInit(constants.RDM_ADDRESS[4])) === false &&
