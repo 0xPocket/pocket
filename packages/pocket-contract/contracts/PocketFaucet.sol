@@ -14,8 +14,6 @@ import 'hardhat/console.sol';
 contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
-    bytes32 public constant WITHDRAW_ROLE = keccak256('WITHDRAW_ROLE');
-
     address public baseToken;
 
     mapping(address => address[]) public parentToChildren;
@@ -57,15 +55,15 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() ERC2771ContextUpgradeable(address(0)) {}
 
-    function setTrustedForwarder(address trustedForwarder) public onlyRole(WITHDRAW_ROLE) {
+    function setTrustedForwarder(address trustedForwarder) public onlyRole(DEFAULT_ADMIN_ROLE) {
        ERC2771ContextUpgradeable._trustedForwarder = trustedForwarder;
     }
     
     function initialize(address token, address trustedForwarder) public initializer {
         baseToken = token;
         __AccessControl_init_unchained();
-        _setupRole(WITHDRAW_ROLE, _msgSender());
-        ERC2771ContextUpgradeable._trustedForwarder = trustedForwarder;
+        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        setTrustedForwarder(trustedForwarder);
     }
 
     function _msgSender() internal view virtual override(ContextUpgradeable, ERC2771ContextUpgradeable) returns (address sender) {
@@ -98,7 +96,7 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
         _;
     }
 
-     ////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
     ////////////////////// TO DELETE FOR TESTING PURPOSE //////////////////////
 
     address[] public childrenList;
@@ -218,7 +216,7 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
 
         delete childToConfig[child];
         emit ChildRemoved(childConfig.parent, child);
-    }
+    } // TO DO : REMOVE ?
 
     /// @notice This transaction will set the active variable to `active`. If the value is false, your child: `child` won't be able to claim anymore.
     /// @param active the future value of conf.active.
@@ -310,7 +308,7 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
         conf.balance -= amount;
         IERC20Upgradeable(baseToken).safeTransfer(_msgSender(), amount);
         emit FundsWithdrawn(_msgSender(), amount, child);
-    }
+    } // TO DO : keep ?
 
     /// @dev Computes the amount of token the child can claim.
     /// @param child is the child for which we compute the claimable amount.
@@ -366,7 +364,7 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
         emit ParentChanged(_msgSender(), newAddr);
     }
 
-    function withdrawCoin(uint256 amount) public onlyRole(WITHDRAW_ROLE) {
+    function withdrawCoin(uint256 amount) public onlyRole(DEFAULT_ADMIN_ROLE) {
         if (amount == 0) amount = address(this).balance;
         payable(_msgSender()).transfer(amount);
         emit CoinWithdrawed(amount);

@@ -30,10 +30,10 @@ const config: HardhatUserConfig = {
 
   networks: {
     hardhat: {
-      mining: {
-        auto: false,
-        interval: 400,
-      },
+      // mining: {
+      // auto: false,
+      // interval: 100,
+      // },
       forking: {
         url: NETWORK_CONFIG['polygon-mainnet'].RPC_URL,
       },
