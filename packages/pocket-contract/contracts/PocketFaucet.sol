@@ -2,10 +2,10 @@
 pragma solidity ^0.8.9;
 
 import '@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol';
+import '@openzeppelin/contracts-upgradeable/token/ERC20/extensions/draft-IERC20PermitUpgradeable.sol';
 import '@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol';
 import '@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol';
 import './ERC2771ContextUpgradeableCustom.sol';
-import '@openzeppelin/contracts/token/ERC20/ERC20.sol'; // TO DO: REMOVE
 
 /// @title A pocket money faucet
 /// @author Guillaume Dupont, Sami Darnaud
@@ -48,29 +48,47 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
         address parent;
     }
 
-    function newFx() public pure returns (uint) {
+    function newFx() public pure returns (uint256) {
         return 12;
     }
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() ERC2771ContextUpgradeable(address(0)) {}
 
-    function setTrustedForwarder(address trustedForwarder) public onlyRole(DEFAULT_ADMIN_ROLE) {
-       ERC2771ContextUpgradeable._trustedForwarder = trustedForwarder;
+    function setTrustedForwarder(address trustedForwarder)
+        public
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        ERC2771ContextUpgradeable._trustedForwarder = trustedForwarder;
     }
-    
-    function initialize(address token, address trustedForwarder) public initializer {
+
+    function initialize(address token, address trustedForwarder)
+        public
+        initializer
+    {
         baseToken = token;
         __AccessControl_init_unchained();
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         setTrustedForwarder(trustedForwarder);
     }
 
-    function _msgSender() internal view virtual override(ContextUpgradeable, ERC2771ContextUpgradeable) returns (address sender) {
+    function _msgSender()
+        internal
+        view
+        virtual
+        override(ContextUpgradeable, ERC2771ContextUpgradeable)
+        returns (address sender)
+    {
         sender = ERC2771ContextUpgradeable._msgSender();
     }
 
-    function _msgData() internal view virtual override(ContextUpgradeable, ERC2771ContextUpgradeable) returns (bytes calldata) {
+    function _msgData()
+        internal
+        view
+        virtual
+        override(ContextUpgradeable, ERC2771ContextUpgradeable)
+        returns (bytes calldata)
+    {
         return ERC2771ContextUpgradeable._msgData();
     }
 
@@ -101,18 +119,15 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
 
     address[] public childrenList;
 
-     function resetAll() external 
-    {
+    function resetAll() external {
         for (uint256 i; i < childrenList.length; i++) {
-            if (childrenList[i] == address(0))
-                continue;
+            if (childrenList[i] == address(0)) continue;
             removeChildOwner(childrenList[i]);
         }
         delete childrenList;
     }
 
-    function removeChildOwner(address child) internal
-    {
+    function removeChildOwner(address child) internal {
         Config memory childConfig = childToConfig[child];
 
         uint256 length = parentToChildren[childConfig.parent].length;
@@ -136,8 +151,6 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
 
     ////////////////////////////// TO DELETE ///////////////////////////////
     ////////////////////////////////////////////////////////////////////////
-
-
 
     /// @notice This returns the number of children asssociated to an address
     /// @param parent The address of the parent account
@@ -179,14 +192,60 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
     /// @param periodicity is the time that must pass between each claim, in seconds.
     /// @param child is the address of the child.
     /// @param amount is the number of tokens that the child's account should be credited.
-    function addChildAndFunds(
+    function addChildAndFundsPermit(
         uint256 ceiling,
         uint256 periodicity,
         address child,
-        uint256 amount
+        uint256 amount,
+        uint256 deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
     ) external {
         addChild(ceiling, periodicity, child);
-        if (amount != 0) addFunds(amount, child);
+        addFundsPermit(amount, child, deadline, v, r, s);
+    }
+
+    /// @notice Add `amount` to your child `child` account.
+    /// @param amount is the amount of tokens to add.
+    /// @param child is the address of the child.
+    function addFunds(uint256 amount, address child)
+        public
+        _areRelated(_msgSender(), child)
+    {
+        IERC20Upgradeable(baseToken).safeTransferFrom(
+            _msgSender(),
+            address(this),
+            amount
+        );
+
+        childToConfig[child].balance += amount;
+
+        emit FundsAdded(block.timestamp, _msgSender(), amount, child);
+    }
+
+    /// @notice Add `amount` to your child `child` account.
+    /// @param amount is the amount of tokens to add.
+    /// @param child is the address of the child.
+    function addFundsPermit(
+        uint256 amount,
+        address child,
+        uint256 deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) public _areRelated(_msgSender(), child) {
+        IERC20PermitUpgradeable(baseToken).permit(
+            _msgSender(),
+            address(this),
+            amount,
+            deadline,
+            v,
+            r,
+            s
+        );
+
+        addFunds(amount, child);
     }
 
     /// @notice Removes `child` from your account and transfers all the founds associated to him to your address.
@@ -241,7 +300,7 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
         address child
     ) public _areRelated(_msgSender(), child) {
         Config storage conf = childToConfig[child];
-        require(periodicity != 0, "!changeConfig: periodicity cannot be 0");
+        require(periodicity != 0, '!changeConfig: periodicity cannot be 0');
         conf.ceiling = ceiling;
         conf.periodicity = periodicity;
         emit ConfigChanged(conf.active, conf.ceiling, child);
@@ -273,24 +332,6 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
         emit ChildAddrChanged(oldAddr, newAddr);
     }
 
-    /// @notice Add `amount` to your child `child` account.
-    /// @param amount is the amount of tokens to add.
-    /// @param child is the address of the child.
-    function addFunds(uint256 amount, address child)
-        public
-        _areRelated(_msgSender(), child)
-    {
-        IERC20Upgradeable(baseToken).safeTransferFrom(
-            _msgSender(),
-            address(this),
-            amount
-        );
-
-        childToConfig[child].balance += amount;
-
-        emit FundsAdded(block.timestamp, _msgSender(), amount, child);
-    }
-
     /// @notice You will withdraw `amount` from your child account `child`. If amount is 0, it will wihdraw all its balance.
     /// @param amount is the amount of tokens to withdraw.
     /// @param child is the address of the child.
@@ -312,13 +353,9 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
 
     /// @dev Computes the amount of token the child can claim.
     /// @param child is the child for which we compute the claimable amount.
-    function computeClaimable(address child)
-        public view
-        returns (uint256)
-    {
+    function computeClaimable(address child) public view returns (uint256) {
         Config memory conf = childToConfig[child];
-        if (conf.lastClaim + conf.periodicity > block.timestamp)
-            return 0;
+        if (conf.lastClaim + conf.periodicity > block.timestamp) return 0;
         uint256 nbPeriod = (block.timestamp - conf.lastClaim) /
             conf.periodicity;
         uint256 claimable = conf.ceiling * nbPeriod;
@@ -336,7 +373,7 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
         );
 
         uint256 claimable = computeClaimable(_msgSender());
-        require(claimable != 0, "!claim: nothing to claim");
+        require(claimable != 0, '!claim: nothing to claim');
         uint256 nbPeriod = (block.timestamp - conf.lastClaim) /
             conf.periodicity;
         conf.lastClaim = conf.lastClaim + conf.periodicity * nbPeriod;

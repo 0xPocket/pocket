@@ -23,7 +23,6 @@ describe('Testing active param change', function () {
       config.localhost.TRUSTED_FORWARDER,
     ])) as PocketFaucet;
     pocketFaucet.deployed();
-    console.log(await pocketFaucet._trustedForwarder());
     await pocketFaucet.deployed();
     parent1 = new ParentTester(
       pocketFaucet.address,
