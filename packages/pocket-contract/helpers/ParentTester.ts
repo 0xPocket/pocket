@@ -104,14 +104,15 @@ class ParentTester extends ParentContract {
       );
     }
 
-    const amountWithDeci = await stringToDecimalsVersion(
-      token,
-      amount.toString()
-    );
-    const tx = await this.contract
-      .connect(this.signer)
-      .addChildAndFunds(ceiling, periodicity, childAddr, amountWithDeci);
-    await tx.wait();
+    // TO DO : fix for new implementation
+    // const amountWithDeci = await stringToDecimalsVersion(
+    //   token,
+    //   amount.toString()
+    // );
+    // const tx = await this.contract
+    //   .connect(this.signer)
+    //   .addChildAndFundsPermit(ceiling, periodicity, childAddr, amountWithDeci);
+    // await tx.wait();
   };
 
   addStdChildAndSend = async (address: string, tokenAddr: string) => {
