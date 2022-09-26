@@ -1,13 +1,11 @@
 import { BigNumberish, Signer, Wallet } from 'ethers';
 import { PocketFaucet__factory, PocketFaucet } from '../typechain-types';
+import config from 'config/network';
 
 // import
 class ParentContract {
-  // library: any;
-  // abi: any;
   address: string;
   signer: Signer;
-  // signer: any;
   contract: PocketFaucet;
 
   constructor(address: string, signer: Wallet) {

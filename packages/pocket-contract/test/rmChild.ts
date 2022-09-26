@@ -5,6 +5,7 @@ import { providers, Wallet } from 'ethers';
 import ParentTester from '../helpers/ParentTester';
 import * as constants from '../utils/constants';
 import { PocketFaucet__factory, PocketFaucet } from '../typechain-types';
+import config from 'config/network';
 
 describe('Testing rm child', function () {
   let child1: Wallet;
@@ -21,6 +22,7 @@ describe('Testing rm child', function () {
     PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
     pocketFaucet = (await upgrades.deployProxy(PocketFaucet_factory, [
       tokenAddr,
+      config.localhost.TRUSTED_FORWARDER,
     ])) as PocketFaucet;
     await pocketFaucet.deployed();
     parent1Wallet = new Wallet(
@@ -32,7 +34,8 @@ describe('Testing rm child', function () {
 
   it('Should remove child1', async function () {
     await parent1.addStdChildAndSend(child1.address, tokenAddr);
-    await parent1.removeChild(child1.address);
+    const tx = await parent1.removeChild(child1.address);
+    await tx.wait();
     assert(
       (await parent1.checkChildIsInit(child1.address)) === false,
       'Child 1 is still related to parent1'
@@ -52,10 +55,13 @@ describe('Testing rm child', function () {
     await parent1.addStdChildAndSend(constants.RDM_ADDRESS[2], tokenAddr);
     await parent1.addStdChildAndSend(constants.RDM_ADDRESS[3], tokenAddr);
     await parent1.addStdChildAndSend(constants.RDM_ADDRESS[4], tokenAddr);
-    await parent1.removeChild(constants.RDM_ADDRESS[1]);
-    await parent1.removeChild(constants.RDM_ADDRESS[4]);
+    let tx = await parent1.removeChild(constants.RDM_ADDRESS[1]);
+    await tx.wait();
+    tx = await parent1.removeChild(constants.RDM_ADDRESS[4]);
+    await tx.wait();
     await parent1.addStdChildAndSend(constants.RDM_ADDRESS[1], tokenAddr);
-    await parent1.removeChild(constants.RDM_ADDRESS[0]);
+    tx = await parent1.removeChild(constants.RDM_ADDRESS[0]);
+    await tx.wait();
 
     assert(
       (await parent1.checkChildIsInit(constants.RDM_ADDRESS[4])) === false &&

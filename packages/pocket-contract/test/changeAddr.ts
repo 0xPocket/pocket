@@ -5,6 +5,7 @@ import { Wallet } from 'ethers';
 import ParentTester from '../helpers/ParentTester';
 import * as constants from '../utils/constants';
 import { PocketFaucet__factory, PocketFaucet } from '../typechain-types';
+import config from 'config/network';
 import goForwardNDays from '../utils/goForward';
 import {
   getERC20Balance,
@@ -27,6 +28,7 @@ describe('Testing addr changement', function () {
     PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
     pocketFaucet = (await upgrades.deployProxy(PocketFaucet_factory, [
       tokenAddr,
+      config.localhost.TRUSTED_FORWARDER,
     ])) as PocketFaucet;
     await pocketFaucet.deployed();
     parent1Wallet = new Wallet(
@@ -49,7 +51,8 @@ describe('Testing addr changement', function () {
   });
 
   it('Should change child1 to child2 for parent1', async function () {
-    await parent1.changeChildAddress(child1.address, child2.address);
+    const tx = await parent1.changeChildAddress(child1.address, child2.address);
+    await tx.wait();
     const child1IsInit = await parent1.checkChildIsInit(child1.address);
     const child2IsInit = await parent1.checkChildIsInit(child2.address);
     assert(
@@ -74,8 +77,10 @@ describe('Testing addr changement', function () {
       pocketFaucet.address,
       toSend.toString()
     );
-    await parent1.addFunds(toSend, child2.address);
-    await pocketFaucet.connect(child2).claim({ gasLimit: 3000000 });
+    let tx = await parent1.addFunds(toSend, child2.address);
+    await tx.wait();
+    tx = await pocketFaucet.connect(child2).claim({ gasLimit: 3000000 });
+    await tx.wait();
     assert(
       tokenBefore.lt(await getERC20Balance(tokenAddr, child2.address)),
       'Child2 number of token did not increased'
@@ -83,7 +88,8 @@ describe('Testing addr changement', function () {
   });
 
   it('Should change parent1 to parent2', async function () {
-    await parent1.changeParentAddress(parent2.address);
+    const tx = await parent1.changeParentAddress(parent2.address);
+    await tx.wait();
     const child1IsInit = await parent2.checkChildIsInit(child1.address);
     const child2IsInit = await parent2.checkChildIsInit(child2.address);
     const nbChildParent1 = await parent1.getNbChildren();
@@ -94,7 +100,7 @@ describe('Testing addr changement', function () {
     );
   });
 
-  it('Should reverse because trying to change to same address is not possible', async function () {
+  it('Should revert because trying to change to same address is not possible', async function () {
     await expect(
       parent1.changeParentAddress(parent1.address)
     ).to.be.revertedWith('!changeParentAddr : cannot change to same addr');
@@ -121,7 +127,8 @@ describe('Testing addr changement', function () {
   });
 
   it('Should reverse because trying to change to same address is not possible', async function () {
-    await parent1.changeParentAddress(parent2.address);
+    const tx = await parent1.changeParentAddress(parent2.address);
+    await tx.wait();
     const nbChildParent1 = await parent1.getNbChildren();
     const nbChildParent2 = await parent2.getNbChildren();
     assert(

@@ -1,5 +1,6 @@
 import { Wallet } from 'ethers';
 import { PocketFaucet__factory, PocketFaucet } from '../typechain-types';
+import config from 'config/network';
 
 class AdminContract {
   library: any;

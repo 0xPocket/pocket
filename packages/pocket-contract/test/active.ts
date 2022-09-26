@@ -5,6 +5,7 @@ import { Wallet } from 'ethers';
 import ParentTester from '../helpers/ParentTester';
 import * as constants from '../utils/constants';
 import { PocketFaucet__factory, PocketFaucet } from '../typechain-types';
+import config from 'config/network';
 
 describe('Testing active param change', function () {
   let child1: Wallet, child2: Wallet;
@@ -19,7 +20,10 @@ describe('Testing active param change', function () {
     PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
     pocketFaucet = (await upgrades.deployProxy(PocketFaucet_factory, [
       tokenAddr,
+      config.localhost.TRUSTED_FORWARDER,
     ])) as PocketFaucet;
+    pocketFaucet.deployed();
+    console.log(await pocketFaucet._trustedForwarder());
     await pocketFaucet.deployed();
     parent1 = new ParentTester(
       pocketFaucet.address,
@@ -35,7 +39,8 @@ describe('Testing active param change', function () {
 
   it('Should change child1 active variable value', async function () {
     const activeBefore = await parent1.getActive(child1.address);
-    await parent1.setActive(false, child1.address);
+    const tx = await parent1.setActive(false, child1.address);
+    await tx.wait();
     const activeAfter = await parent1.getActive(child1.address);
     assert(activeAfter != activeBefore, 'Active value did not change');
   });
@@ -48,10 +53,12 @@ describe('Testing active param change', function () {
 
   it('Should change child2 active variable value 2 times', async function () {
     const activeBefore = await parent2.getActive(child2.address);
-    await parent2.setActive(false, child2.address);
+    let tx = await parent2.setActive(false, child2.address);
+    await tx.wait();
     const activeAfter = await parent2.getActive(child2.address);
     assert(activeAfter !== activeBefore, 'Active value did not change');
-    await parent2.setActive(true, child2.address);
+    tx = await parent2.setActive(true, child2.address);
+    await tx.wait();
     const activeBack = await parent2.getActive(child2.address);
     assert(
       activeBack === activeBefore,
@@ -59,9 +66,3 @@ describe('Testing active param change', function () {
     );
   });
 });
-
-// claim
-// changeAddr
-// proxy
-// upgrade contract
-// withdraw from child
