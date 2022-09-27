@@ -164,5 +164,7 @@
 	"titles.connect": "Connection",
 	"titles.dashboard": "Dashboard",
 	"titles.onboard": "Enregistrement",
-	"titles.email-verification": "Verification d'email"
+	"titles.email-verification": "Verification d'email",
+	"titles.privacy-policy": "Politique de confidentialité",
+	"titles.terms-conditions": "Conditions générales d'utilisation"
 }

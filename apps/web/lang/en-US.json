@@ -165,5 +165,7 @@
 	"titles.connect": "Connect",
 	"titles.dashboard": "Dashboard",
 	"titles.onboard": "Onboard",
-	"titles.email-verification": "Email verification"
+	"titles.email-verification": "Email verification",
+	"titles.privacy-policy": "Privacy policy",
+	"titles.terms-conditions": "Terms and conditions"
 }
