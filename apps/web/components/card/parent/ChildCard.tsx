@@ -5,7 +5,7 @@ import type { UserChild } from '@lib/types/interfaces';
 import FormattedMessage from '../../common/FormattedMessage';
 import LinkPolygonScan from '../common/LinkPolygonScan';
 import EmailStatus from './EmailStatus';
-import MetaMaskProfilePicture from '../../common/MetaMaskProfilePicture';
+import MetaMaskProfilePicture from '../common/MetaMaskProfilePicture';
 
 type ChildCardProps = {
   child: UserChild;
