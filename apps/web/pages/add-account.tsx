@@ -6,13 +6,16 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import FormattedMessage from '../components/common/FormattedMessage';
 import AddChildForm from '../components/dashboard/parent/AddChildForm';
-import MainWrapper from '../components/common/wrappers/MainWrapper';
+import PageWrapper from '../components/common/wrappers/PageWrapper';
+import TitleHelper from '../components/common/TitleHelper';
 
 type AddAccountProps = {};
 
 function AddAccount({}: AddAccountProps) {
   return (
-    <MainWrapper>
+    <PageWrapper>
+      <TitleHelper id="titles.add-account" />
+
       <div className="mt-28 grid grid-cols-2 gap-28">
         <div className="relative flex flex-col space-y-14 p-8">
           <h2 className="text-center">
@@ -35,7 +38,7 @@ function AddAccount({}: AddAccountProps) {
         </div>
         <AddChildForm />
       </div>
-    </MainWrapper>
+    </PageWrapper>
   );
 }
 

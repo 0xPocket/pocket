@@ -2,7 +2,8 @@ import { useRouter } from 'next/router';
 import { type FC, useEffect } from 'react';
 import FormattedMessage from '../components/common/FormattedMessage';
 import { Spinner } from '../components/common/Spinner';
-import MainWrapper from '../components/common/wrappers/MainWrapper';
+import TitleHelper from '../components/common/TitleHelper';
+import PageWrapper from '../components/common/wrappers/PageWrapper';
 import { trpc } from '../utils/trpc';
 
 const VerifyChild: FC = () => {
@@ -30,36 +31,42 @@ const VerifyChild: FC = () => {
 
   if (mutation.status === 'success') {
     return (
-      <MainWrapper>
+      <PageWrapper>
+        <TitleHelper id="titles.onboard" />
+
         <div className="flex flex-col items-center justify-center gap-2 text-3xl font-bold">
           <FormattedMessage id="verify-email.email-verified" />
           <p className="text-sm font-thin">
             <FormattedMessage id="verify-email.redirect" />
           </p>
         </div>
-      </MainWrapper>
+      </PageWrapper>
     );
   }
 
   if (mutation.isError) {
     return (
-      <MainWrapper>
+      <PageWrapper>
+        <TitleHelper id="titles.email-verification" />
+
         <div className="flex flex-col items-center justify-center gap-8 font-bold">
           <p>{mutation.error.message}</p>
           <p className="text-sm font-thin">
             <FormattedMessage id="verify-email.problem" />
           </p>
         </div>
-      </MainWrapper>
+      </PageWrapper>
     );
   }
 
   return (
-    <MainWrapper>
+    <PageWrapper>
+      <TitleHelper id="titles.email-verification" />
+
       <div className="flex h-screen flex-col items-center justify-center gap-8">
         <Spinner />
       </div>
-    </MainWrapper>
+    </PageWrapper>
   );
 };
 

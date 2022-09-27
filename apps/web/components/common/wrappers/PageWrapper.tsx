@@ -3,14 +3,14 @@ import Header from '../../header/Header';
 import BackgoundSplit from '../BackgoundSplit';
 import type { FC } from 'react';
 
-type MainWrapperProps = {
+type PageWrapperProps = {
   children: React.ReactNode;
   noHeader?: boolean;
   noFooter?: boolean;
   noContainer?: boolean;
 };
 
-const MainWrapper: FC<MainWrapperProps> = ({
+const PageWrapper: FC<PageWrapperProps> = ({
   children,
   noHeader = false,
   noFooter = false,
@@ -31,4 +31,4 @@ const MainWrapper: FC<MainWrapperProps> = ({
   );
 };
 
-export default MainWrapper;
+export default PageWrapper;

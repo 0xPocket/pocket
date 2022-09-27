@@ -1,4 +1,4 @@
-import MainWrapper from '../../components/common/wrappers/MainWrapper';
+import PageWrapper from '../../components/common/wrappers/PageWrapper';
 import type {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
@@ -7,6 +7,7 @@ import AccountDashboard from '../../components/dashboard/parent/Dashboard';
 import { trpc } from '../../utils/trpc';
 import FormattedMessage from '../../components/common/FormattedMessage';
 import Breadcrumb from '../../components/common/Breadcrumb';
+import TitleHelper from '../../components/common/TitleHelper';
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.id as string;
@@ -28,7 +29,9 @@ function Account({
 
   if (!child) return null;
   return (
-    <MainWrapper>
+    <PageWrapper>
+      <TitleHelper title={child.name!} />
+
       <Breadcrumb routes={[{ name: child.name!, path: null }]} />
       {isLoading ? (
         <>
@@ -41,7 +44,7 @@ function Account({
           <FormattedMessage id="account.not-found" />
         </div>
       )}
-    </MainWrapper>
+    </PageWrapper>
   );
 }
 

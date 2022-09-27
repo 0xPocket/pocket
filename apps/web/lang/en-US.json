@@ -153,5 +153,12 @@
   "transaction.pending": "Transaction pending, please hang on !",
 
 	"tooltip.wallet.erc20": "We currently use Polygon's USDC",
-	"tooltip.wallet.matic": "Matic is used to pay transaction fees on the blockchain"
+	"tooltip.wallet.matic": "Matic is used to pay transaction fees on the blockchain",
+
+	 
+	"titles.add-account": "Add an account",
+	"titles.connect": "Connect",
+	"titles.dashboard": "Dashboard",
+	"titles.onboard": "Onboard",
+	"titles.email-verification": "Email verification"
 }
