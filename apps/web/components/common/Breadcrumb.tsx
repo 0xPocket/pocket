@@ -14,17 +14,6 @@ type BreadcrumbProps = {
   routes: route[];
 };
 
-const generateRoute = (route: route, lastEl: boolean) => {
-  console.log();
-
-  return (
-    <>
-      {route.path ? <a href={route.path}>{route.name}</a> : <p>{route.name}</p>}
-      {!lastEl && <FontAwesomeIcon icon={faAngleRight} />}
-    </>
-  );
-};
-
 const Breadcrumb: FC<BreadcrumbProps> = ({ routes }) => {
   return (
     <div className="mb-12 flex items-center space-x-4">
@@ -35,9 +24,9 @@ const Breadcrumb: FC<BreadcrumbProps> = ({ routes }) => {
         </title>
       </Head>
       {routes.length === 0 ? (
-        <>
+        <p>
           <FontAwesomeIcon icon={faHome} className="mr-2" /> Home
-        </>
+        </p>
       ) : (
         <>
           <Link href="/">
@@ -49,9 +38,20 @@ const Breadcrumb: FC<BreadcrumbProps> = ({ routes }) => {
         </>
       )}
 
-      {routes.map((route, i) => {
-        return generateRoute(route, i === routes.length - 1);
-      })}
+      {routes.map((route, i) => (
+        <div key={i} className="flex items-center">
+          {route.path ? (
+            <Link href={route.path}>
+              <a>{route.name}</a>
+            </Link>
+          ) : (
+            <p>{route.name}</p>
+          )}
+          {i !== routes.length - 1 && (
+            <FontAwesomeIcon icon={faAngleRight} className="ml-4" />
+          )}
+        </div>
+      ))}
     </div>
   );
 };
