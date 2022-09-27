@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useMagic } from '../../contexts/auth';
 import BugDialog from './BugDialog';
 import ContactDialog from './ContactDialog';
+import Link from 'next/link';
 
 type FooterProps = React.DetailedHTMLProps<
   React.HTMLAttributes<HTMLElement>,
@@ -18,6 +19,16 @@ function Footer(props: FooterProps) {
     <footer {...props}>
       <div className="flex items-center justify-center gap-4 py-2 text-base">
         <p>&copy; 2022 Pocket</p>
+        <Link href="/privacy-policy">
+          <a>
+            <FormattedMessage id="onboarding.privacy" />
+          </a>
+        </Link>
+        <Link href="/terms-and-conditions">
+          <a>
+            <FormattedMessage id="onboarding.terms" />
+          </a>
+        </Link>
         <a onClick={() => setContactOpen(true)}>Contact</a>
         {loggedIn && (
           <a className="text-danger" onClick={() => setBugOpen(true)}>

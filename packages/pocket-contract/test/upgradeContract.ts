@@ -6,8 +6,9 @@ import {
   PocketFaucetV2__factory,
 } from '../typechain-types';
 import * as constants from '../utils/constants';
-import { providers, Wallet } from 'ethers';
+import { Wallet } from 'ethers';
 import ParentTester from '../helpers/ParentTester';
+import config from 'config/network';
 
 describe('Deploy and tests on proxy functions', function () {
   let child1: Wallet;
@@ -27,6 +28,7 @@ describe('Deploy and tests on proxy functions', function () {
     PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
     pocketFaucet = (await upgrades.deployProxy(PocketFaucet_factory, [
       tokenAddr,
+      config.localhost.TRUSTED_FORWARDER,
     ])) as PocketFaucet;
     await pocketFaucet.deployed();
 

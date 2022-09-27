@@ -68,13 +68,17 @@
   "dashboard.child.claimMatic.message": "To start your journey into web3, we grant you some Matic to pay fees for your first transaction.",
 
   "verify-email.email-verified": "Your email is now verified !",
-  "verify-email.redirect": "You will be redirect in few seconds...",
+  "verify-email.redirect": "You will be redirected in few seconds...",
   "verify-email.problem": "If the problem persists, contact us.",
 
   "common.welcome": "Welcome to Pocket !",
 
   "onboarding.connect-wallet": "Connect with your favorite wallet",
   "onboarding.more-info": "We need some more infos !",
+  "onboarding.terms.confirm": "By signing up, you confirm you have read and agree to Pocket's {privacy} and {terms}.",
+  "onboarding.privacy": "Privacy policy",
+  "onboarding.terms": "Terms and conditions",
+  "onboarding.majority": "I certified being over 18 years old.",
 
   "route.dashboard": "dashboard",
 
@@ -151,6 +155,7 @@
   "add-child-or-change-config.success": "Configuration sets successfully !",
 
   "transaction.pending": "Transaction pending, please hang on !",
+  "transaction.next": "Please approve the next transaction",
 
 	"tooltip.wallet.erc20": "We currently use Polygon's USDC",
 	"tooltip.wallet.matic": "Matic is used to pay transaction fees on the blockchain",

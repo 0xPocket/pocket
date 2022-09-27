@@ -11,7 +11,6 @@ import { createCtx } from '../utils/createContext';
 import type { MagicConnector } from '../utils/MagicConnector';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import type { CustomSessionUser } from 'next-auth';
-import { trpc } from '../utils/trpc';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { env } from 'config/env/client';
@@ -37,15 +36,19 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
   const queryClient = useQueryClient();
   const [magic, setMagic] = useState<MagicConnector>();
   const { connectors, connectAsync } = useConnect();
-  const { status: nextAuthStatus } = useSession();
-  const { data, status } = trpc.useQuery(['auth.session'], {
-    staleTime: 0,
-    enabled: isConnected && nextAuthStatus === 'authenticated',
-    retry: false,
-  });
   const router = useRouter();
   const [reconnect, setReconnect] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const { chain } = useNetwork();
+  const { switchNetwork } = useSwitchNetwork();
+
+  const { status: nextAuthStatus, data } = useSession();
+  // const { data, status } = trpc.useQuery(['auth.session'], {
+  //   staleTime: 0,
+  //   enabled: isConnected && nextAuthStatus === 'authenticated',
+  //   retry: false,
+  // });
 
   const magicConnect = useMutation(async () => magic?.getDidToken(), {
     onSuccess: async (didToken) => {
@@ -64,18 +67,13 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
     },
   });
 
-  const { chain } = useNetwork();
-  const { switchNetwork } = useSwitchNetwork();
-
   const logout = useMutation<void, unknown, boolean>(() => disconnectAsync(), {
     onSuccess: async (_, redirect) => {
-      console.log('on success');
       queryClient.removeQueries();
       signOut({ redirect: false }).then(() => {
         if (redirect) {
           router.push('/connect');
         }
-        console.log('sign out');
       });
     },
   });
@@ -85,21 +83,40 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
       console.log('onDisconnect');
       logout.mutate(true);
     }
-    if (connector?.id !== 'magic' && nextAuthStatus === 'authenticated') {
+    function onChange({ account }: { account?: string }) {
+      console.log('onChange');
+      if (
+        account &&
+        account.toLowerCase() !== data?.user.address?.toLowerCase()
+      ) {
+        onDisconnect();
+      }
+    }
+    if (connector?.id !== 'magic') {
       connector?.on('disconnect', onDisconnect);
-      connector?.on('change', onDisconnect);
+      connector?.on('change', onChange as any);
     }
     return () => {
       if (connector?.id !== 'magic') {
         connector?.removeListener('disconnect', onDisconnect);
-        connector?.removeListener('change', onDisconnect);
+        connector?.removeListener('change', onChange as any);
       }
     };
-  }, [logout, connector, router, queryClient, nextAuthStatus]);
+  }, [
+    logout,
+    connector,
+    router,
+    queryClient,
+    nextAuthStatus,
+    data?.user.address,
+  ]);
 
   // RECONNECTING STATE
   useEffect(() => {
-    if (wagmiStatus === 'reconnecting' && !reconnect) {
+    if (
+      wagmiStatus === 'reconnecting' ||
+      (wagmiStatus === 'connecting' && !reconnect)
+    ) {
       setLoading(true);
       setReconnect(true);
       return;
@@ -112,11 +129,21 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
     }
 
     if (wagmiStatus === 'disconnected' && reconnect) {
-      logout.mutate(true);
+      if (nextAuthStatus === 'authenticated') {
+        logout.mutate(true);
+      }
       setLoading(false);
       setReconnect(false);
     }
-  }, [wagmiStatus, reconnect, router, magicConnect, connector, logout]);
+  }, [
+    wagmiStatus,
+    reconnect,
+    router,
+    magicConnect,
+    connector,
+    logout,
+    nextAuthStatus,
+  ]);
 
   // WE GET THE MAGIC CONNECTOR HERE
   useEffect(() => {
@@ -126,6 +153,7 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
     }
   }, [connectors]);
 
+  // WE FORCE SWITCH NETWORK HERE
   useEffect(() => {
     if (
       connector?.id !== 'magic' &&
@@ -139,7 +167,8 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
   return (
     <MagicAuthContextProvider
       value={{
-        loggedIn: status === 'success' && data.user && isConnected,
+        loggedIn:
+          nextAuthStatus === 'authenticated' && data?.user && isConnected,
         loading: logout.isLoading || loading,
         signInWithEmail: async (email: string) => {
           setLoading(true);

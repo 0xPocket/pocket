@@ -2,12 +2,14 @@ import Footer from '../../footer/Footer';
 import Header from '../../header/Header';
 import BackgoundSplit from '../BackgoundSplit';
 import type { FC } from 'react';
+import { TermsModal } from '../TermsModal';
 
 type PageWrapperProps = {
   children: React.ReactNode;
   noHeader?: boolean;
   noFooter?: boolean;
   noContainer?: boolean;
+  noTermsModal?: boolean;
 };
 
 const PageWrapper: FC<PageWrapperProps> = ({
@@ -15,6 +17,7 @@ const PageWrapper: FC<PageWrapperProps> = ({
   noHeader = false,
   noFooter = false,
   noContainer = false,
+  noTermsModal = false,
 }) => {
   return (
     <div className="relative min-h-screen overflow-hidden px-4 pb-20">
@@ -27,6 +30,7 @@ const PageWrapper: FC<PageWrapperProps> = ({
       <BackgoundSplit className="-top-80 -left-96" />
       <BackgoundSplit className="-bottom-[50vh] -right-96" />
       {!noFooter && <Footer className="absolute bottom-0 left-0 right-0" />}
+      {!noTermsModal && <TermsModal />}
     </div>
   );
 };

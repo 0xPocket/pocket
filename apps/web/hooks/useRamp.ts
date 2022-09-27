@@ -11,11 +11,14 @@ function useRamp() {
   // console.log(env.NEXT_PUBLIC_APP_URL);
   const showRamp = useCallback(() => {
     new RampInstantSDK({
-      hostLogoUrl: 'https://gopocket.fr/favicon.ico',
-      url: 'https://ri-widget-staging.firebaseapp.com/',
+      hostLogoUrl:
+        'https://pocket-eu.s3.eu-west-3.amazonaws.com/PocketLogoText.png',
+      url:
+        env.NEXT_PUBLIC_NETWORK !== 'polygon-mainnet'
+          ? 'https://ri-widget-staging.firebaseapp.com/'
+          : undefined,
       hostAppName: 'Pocket',
       fiatCurrency: 'EUR',
-      fiatValue: '15',
       swapAsset: 'MATIC_USDC',
       userAddress: address,
       userEmailAddress: user?.email || undefined,

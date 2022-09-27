@@ -56,7 +56,7 @@
     "recharts": "2.1.12",
     "siwe": "^1.1.6",
     "superjson": "^1.10.0",
-    "wagmi": "^0.6.5",
+    "wagmi": "^0.6.7",
     "zod": "^3.19.0"
   },
   "devDependencies": {
@@ -64,7 +64,7 @@
     "@types/jsonwebtoken": "^8.5.8",
     "@types/node": "^18.7.15",
     "@types/react": "18.0.20",
-    "autoprefixer": "^10.4.11",
+    "autoprefixer": "^10.4.12",
     "config": "*",
     "next-transpile-modules": "9.0.0",
     "postcss": "^8.4.16",

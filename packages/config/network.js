@@ -3,7 +3,7 @@
 const chain = require("wagmi/chains");
 
 /**
- * @type {{ [k in 'polygon-mainnet' | "polygon-mumbai" | "localhost"]: { ERC20_ADDRESS: string; CHAIN_ID: number; ALCHEMY_KEY: string; RPC_URL: string; NETWORK_KEY: 'polygon-mainnet' | "polygon-mumbai"; WAGMI_CHAIN: import('wagmi').Chain } }}
+ * @type {{ [k in 'polygon-mainnet' | "polygon-mumbai" | "localhost"]: { ERC20_ADDRESS: string; CHAIN_ID: number; ALCHEMY_KEY: string; RPC_URL: string; NETWORK_KEY: 'polygon-mainnet' | "polygon-mumbai"; WAGMI_CHAIN: import('wagmi').Chain ; TRUSTED_FORWARDER: string } }}
  **/
 const NETWORK_CONFIG = {
   "polygon-mainnet": {
@@ -14,6 +14,7 @@ const NETWORK_CONFIG = {
       "https://polygon-mainnet.g.alchemy.com/v2/3yzPlXcA41Y49wI2INbE3q8kLi19ME2U",
     NETWORK_KEY: "polygon-mainnet",
     WAGMI_CHAIN: chain.polygon,
+    TRUSTED_FORWARDER: "0x86C80a8aa58e0A4fa09A69624c31Ab2a6CAD56b8",
   },
   "polygon-mumbai": {
     ERC20_ADDRESS: "0xe11a86849d99f524cac3e7a0ec1241828e332c62",
@@ -23,14 +24,16 @@ const NETWORK_CONFIG = {
       "https://polygon-mumbai.g.alchemy.com/v2/BabbJEHqMsfVRZT86Wd-S2hhlvteU79q",
     NETWORK_KEY: "polygon-mumbai",
     WAGMI_CHAIN: chain.polygonMumbai,
+    TRUSTED_FORWARDER: "0x9399BB24DBB5C4b782C70c2969F58716Ebbd6a3b",
   },
   localhost: {
     ERC20_ADDRESS: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
-    CHAIN_ID: 137,
+    CHAIN_ID: 1337,
     ALCHEMY_KEY: "3yzPlXcA41Y49wI2INbE3q8kLi19ME2U",
     RPC_URL: "http://localhost:8545",
     NETWORK_KEY: "polygon-mainnet",
     WAGMI_CHAIN: chain.polygon,
+    TRUSTED_FORWARDER: "0x86C80a8aa58e0A4fa09A69624c31Ab2a6CAD56b8",
   },
 };
 

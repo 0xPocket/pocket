@@ -6,6 +6,7 @@ import ParentTester from '../helpers/ParentTester';
 import { AdminContract } from '../ts/Admin';
 import * as constants from '../utils/constants';
 import { PocketFaucet__factory, PocketFaucet } from '../typechain-types';
+import config from 'config/network';
 import { getERC20Balance, sendErc20 } from '../utils/ERC20';
 
 describe('Testing withdraw', function () {
@@ -24,6 +25,7 @@ describe('Testing withdraw', function () {
     PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
     pocketFaucet = (await upgrades.deployProxy(PocketFaucet_factory, [
       tokenAddr,
+      config.localhost.TRUSTED_FORWARDER,
     ])) as PocketFaucet;
     await pocketFaucet.deployed();
     parent1Wallet = new Wallet(
@@ -69,12 +71,16 @@ describe('Testing withdraw', function () {
   // });
 
   it('should withdraw 10 ether', async function () {
-    await adminWallet.sendTransaction({
+    let tx = await adminWallet.sendTransaction({
       to: pocketFaucet.address,
       value: ethers.utils.parseEther('10'),
     });
+    await tx.wait();
     const balanceBefore = await ethers.provider.getBalance(adminWallet.address);
-    await adminContract.withdrawCoin(ethers.utils.parseEther('10').toString());
+    tx = await adminContract.withdrawCoin(
+      ethers.utils.parseEther('10').toString()
+    );
+    await tx.wait();
     const balanceAfter = await ethers.provider.getBalance(adminWallet.address);
     assert(balanceAfter.gt(balanceBefore), 'Amount of token did not increase');
   });

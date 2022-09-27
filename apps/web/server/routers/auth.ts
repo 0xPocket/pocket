@@ -36,6 +36,14 @@ export const authRouter = createProtectedRouter()
     input: AuthSchema.onboard,
     resolve: async ({ ctx, input }) => {
       ctx.log.info('onboard', input);
+
+      if (!input.majority) {
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'You must be over 18 years old',
+        });
+      }
+
       const user = await prisma.user.findUnique({
         where: {
           id: ctx.session.user.id,

@@ -15,11 +15,12 @@ export async function setErc20Balance(
     tokenAddr,
     ERC20Abi
   ) as IERC20MetadataUpgradeable;
-  await account.sendTransaction({
+  const tx = await account.sendTransaction({
     to: whaleAddr,
     value: ethers.utils.parseEther('1'),
   });
 
+  await tx.wait();
   const balance = await tokenContract
     .connect(account)
     .balanceOf(await account.getAddress());
@@ -90,9 +91,10 @@ export async function setAllowance(
     ERC20Abi,
     account
   ) as IERC20MetadataUpgradeable;
-  return await tokenContract
+  const tx = await tokenContract
     .connect(account)
     .approve(receiver, await stringToDecimalsVersion(tokenAddr, amount));
+  await tx.wait();
 }
 
 export async function getERC20Balance(tokenAddr: string, address: string) {
