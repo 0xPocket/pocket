@@ -112,38 +112,38 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
   ]);
 
   // RECONNECTING STATE
-  useEffect(() => {
-    if (
-      wagmiStatus === 'reconnecting' ||
-      (wagmiStatus === 'connecting' && !reconnect)
-    ) {
-      setLoading(true);
-      setReconnect(true);
-      return;
-    }
+  // useEffect(() => {
+  //   if (
+  //     wagmiStatus === 'reconnecting' ||
+  //     (wagmiStatus === 'connecting' && !reconnect)
+  //   ) {
+  //     setLoading(true);
+  //     setReconnect(true);
+  //     return;
+  //   }
 
-    if (wagmiStatus === 'connected' && reconnect) {
-      setReconnect(false);
-      if (connector.id === 'magic') return magicConnect.mutate();
-      setLoading(false);
-    }
+  //   if (wagmiStatus === 'connected' && reconnect) {
+  //     setReconnect(false);
+  //     if (connector.id === 'magic') return magicConnect.mutate();
+  //     setLoading(false);
+  //   }
 
-    if (wagmiStatus === 'disconnected' && reconnect) {
-      if (nextAuthStatus === 'authenticated') {
-        logout.mutate(true);
-      }
-      setLoading(false);
-      setReconnect(false);
-    }
-  }, [
-    wagmiStatus,
-    reconnect,
-    router,
-    magicConnect,
-    connector,
-    logout,
-    nextAuthStatus,
-  ]);
+  //   if (wagmiStatus === 'disconnected' && reconnect) {
+  //     if (nextAuthStatus === 'authenticated') {
+  //       logout.mutate(true);
+  //     }
+  //     setLoading(false);
+  //     setReconnect(false);
+  //   }
+  // }, [
+  //   wagmiStatus,
+  //   reconnect,
+  //   router,
+  //   magicConnect,
+  //   connector,
+  //   logout,
+  //   nextAuthStatus,
+  // ]);
 
   // WE GET THE MAGIC CONNECTOR HERE
   useEffect(() => {

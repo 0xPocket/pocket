@@ -42,7 +42,7 @@
       "outputs": ["dist/**", ".next/**"]
     },
     "dev": {
-      "dependsOn": ["@lib/prisma#push", "pocket-contract#deploy"],
+      "dependsOn": ["@lib/prisma#push"],
       "cache": false
     },
     "reset": {

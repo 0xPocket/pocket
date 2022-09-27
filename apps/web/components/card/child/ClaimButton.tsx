@@ -1,11 +1,8 @@
+import { env } from 'config/env/client';
+import { PocketFaucetAbi } from 'pocket-contract/abi';
 import React, { type ReactNode } from 'react';
 import { toast } from 'react-toastify';
-import {
-  useContractWrite,
-  usePrepareContractWrite,
-  useWaitForTransaction,
-} from 'wagmi';
-import { useSmartContract } from '../../../contexts/contract';
+import { useSendMetaTx } from '../../../hooks/useSendMetaTx';
 import FormattedMessage from '../../common/FormattedMessage';
 
 type ClaimButtonProps = {
@@ -14,45 +11,30 @@ type ClaimButtonProps = {
 };
 
 const ClaimButton: React.FC<ClaimButtonProps> = ({ disabled, children }) => {
-  const { pocketContract } = useSmartContract();
-
-  const { config: claimConfig } = usePrepareContractWrite({
-    addressOrName: pocketContract.address,
-    contractInterface: pocketContract.interface,
+  const { write, isLoading } = useSendMetaTx({
+    contractAddress: env.NEXT_PUBLIC_CONTRACT_ADDRESS,
+    contractInterface: PocketFaucetAbi,
     functionName: 'claim',
-    enabled: !!pocketContract && !disabled,
-  });
-
-  const claim = useContractWrite({
-    ...claimConfig,
-    onError() {
-      toast.error(<FormattedMessage id="dashboard.child.claim.fail" />);
-    },
-    onSuccess: () => {
+    onMutate: () => {
       toast.info(<FormattedMessage id="dashboard.child.claim.pending" />, {
         isLoading: true,
       });
     },
-  });
-
-  useWaitForTransaction({
-    hash: claim.data?.hash,
+    onError() {
+      toast.error(<FormattedMessage id="dashboard.child.claim.fail" />);
+    },
     onSuccess: () => {
       toast.dismiss();
       toast.success(<FormattedMessage id="dashbaord.child.claim.success" />);
-    },
-    onError: () => {
-      toast.dismiss();
-      toast.error(<FormattedMessage id="dashboard.child.claim.fail" />);
     },
   });
 
   return (
     <button
-      disabled={disabled || !claim.write || claim.isLoading}
+      disabled={disabled || !write || isLoading}
       className="action-btn min-w-[50%]"
       onClick={() => {
-        if (claim.write) claim.write();
+        if (write) write([]);
       }}
     >
       {children}

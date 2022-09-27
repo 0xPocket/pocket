@@ -151,7 +151,11 @@ function ChildSettingsForm({
             <FontAwesomeIcon icon={faAngleLeft} className="mr-2" />
             <FormattedMessage id="return" />
           </button>
-          <button type="submit" className="success-btn" disabled={isLoading}>
+          <button
+            type="submit"
+            className="success-btn"
+            disabled={isLoading || !changeConfig}
+          >
             <FontAwesomeIcon icon={faWrench} className="mr-2" />
             {isLoading ? <Spinner /> : <FormattedMessage id="apply" />}
           </button>

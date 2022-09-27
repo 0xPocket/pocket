@@ -372,5 +372,9 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
         emit CoinWithdrawed(amount);
     }
 
+    fallback() external payable {
+      console.log('ouais ma gueule');
+    }
+
     receive() external payable {}
 }
