@@ -4,11 +4,9 @@ import type {
   InferGetServerSidePropsType,
 } from 'next';
 import AccountDashboard from '../../components/dashboard/parent/Dashboard';
-import Link from 'next/link';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { trpc } from '../../utils/trpc';
 import FormattedMessage from '../../components/common/FormattedMessage';
+import Breadcrumb from '../../components/common/Breadcrumb';
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.id as string;
@@ -31,16 +29,7 @@ function Account({
   if (!child) return null;
   return (
     <MainWrapper>
-      <div className="mb-12 flex items-center space-x-4">
-        <FontAwesomeIcon icon={faAngleRight} />
-        <Link href="/">
-          <a>
-            <FormattedMessage id="route.dashboard" />
-          </a>
-        </Link>
-        <p>{`>`}</p>
-        <p>{child?.name}</p>
-      </div>
+      <Breadcrumb routes={[{ name: child.name!, path: null }]} />
       {isLoading ? (
         <>
           <FormattedMessage id="loading" />

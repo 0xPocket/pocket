@@ -1,11 +1,9 @@
 import MainWrapper from '../components/common/wrappers/MainWrapper';
-import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { trpc } from '../utils/trpc';
 import { Spinner } from '../components/common/Spinner';
-import FormattedMessage from '../components/common/FormattedMessage';
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
+import Breadcrumb from '../components/common/Breadcrumb';
 
 const ChildrenMozaic = dynamic(
   () => import('../components/dashboard/parent/ChildrenMozaic'),
@@ -25,14 +23,7 @@ export default function Web() {
       {isLoading && <Spinner />}
 
       <Suspense fallback={<Spinner />}>
-        {data && (
-          <div className="mb-12 flex items-center space-x-4">
-            <FontAwesomeIcon icon={faAngleRight} />
-            <p>
-              <FormattedMessage id="route.dashboard" />
-            </p>
-          </div>
-        )}
+        {data && <Breadcrumb routes={[]} />}
         {data?.user.type === 'Parent' && <ChildrenMozaic />}
         {data?.user.type === 'Child' && <ChildDashboard />}
       </Suspense>
