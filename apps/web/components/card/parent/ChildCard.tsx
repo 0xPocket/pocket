@@ -18,8 +18,6 @@ function ChildCard({
   polygonscanLink = false,
   className,
 }: ChildCardProps) {
-  if (!child) return;
-
   return (
     <div
       className={`${className} container-classic grid min-h-[260px] grid-cols-2 rounded-lg p-8`}
