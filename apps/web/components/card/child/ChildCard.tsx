@@ -21,9 +21,7 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
   const { pocketContract, erc20 } = useSmartContract();
   const intl = useIntl();
 
-  const { data: userData, isLoading: userDataLoading } = trpc.useQuery([
-    'auth.session',
-  ]);
+  const { data: userData } = trpc.useQuery(['auth.session']);
 
   const { data: config } = useContractRead({
     contract: pocketContract,

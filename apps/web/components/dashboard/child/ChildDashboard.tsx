@@ -5,7 +5,6 @@ import TokenContent from '../common/token/TokenContent';
 import ActivityContent from '../common/activity/ActivityContent';
 import ChildCard from '../../card/child/ChildCard';
 import Swapper from './Swapper';
-import ClaimMaticModal from './ClaimMaticModal';
 import { trpc } from '../../../utils/trpc';
 import { Spinner } from '../../common/Spinner';
 
@@ -37,7 +36,6 @@ const ChildDashboard: React.FC = () => {
         )}
       </div>
       <TokenContent childAddress={address!} />
-      <ClaimMaticModal />
     </div>
   );
 };

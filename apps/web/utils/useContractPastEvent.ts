@@ -1,11 +1,12 @@
-import { Abi, ExtractAbiEventNames } from "abitype";
-import type { Event } from "ethers";
-import { useEffect, useState } from "react";
-import { useContract, useContractEvent, useProvider } from "wagmi";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { Abi, ExtractAbiEventNames } from 'abitype';
+import type { Event } from 'ethers';
+import { useEffect, useState } from 'react';
+import { useContract, useContractEvent, useProvider } from 'wagmi';
 
 type UseContractPastEventParams<
   TAbi extends Abi,
-  TEvent extends ExtractAbiEventNames<TAbi>
+  TEvent extends ExtractAbiEventNames<TAbi>,
 > = {
   addressOrName: string;
   contractInterface: TAbi;
@@ -13,15 +14,16 @@ type UseContractPastEventParams<
   reverse?: boolean;
 };
 
+// We need to type the return manually for now
 export function useContractPastEvent<
   TData,
   TAbi extends Abi = Abi,
-  TEventName extends ExtractAbiEventNames<TAbi> = ExtractAbiEventNames<TAbi>
+  TEventName extends ExtractAbiEventNames<TAbi> = ExtractAbiEventNames<TAbi>,
 >({
   addressOrName,
   contractInterface,
   eventName,
-  reverse = false,
+  reverse = true,
 }: UseContractPastEventParams<TAbi, TEventName>) {
   const [data, setData] = useState<TData[]>();
   const provider = useProvider();

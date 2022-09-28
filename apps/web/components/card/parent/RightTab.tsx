@@ -1,7 +1,7 @@
 import { Tab } from '@headlessui/react';
 import type { UserChild } from '@lib/types/interfaces';
 import { useMemo, useState } from 'react';
-import { useContractRead, useContractWrite } from 'wagmi';
+import { useContractWrite } from 'wagmi';
 import { useSmartContract } from '../../../contexts/contract';
 import { useAddFundsForm } from '../../../hooks/useAddFundsForm';
 import { useChildSettingsForm } from '../../../hooks/useChildSettingsForm';
@@ -11,8 +11,7 @@ import ChildSettingsForm from './ChildSettingsForm';
 import { parseUnits } from 'ethers/lib/utils';
 import { BigNumber } from 'ethers';
 import MainPanel from './MainPanel';
-import { PocketFaucetAbi } from 'pocket-contract/abi';
-import { env } from 'config/env/client';
+import useContractRead from '../../../hooks/useContractRead';
 
 type RightTabProps = {
   child: UserChild;
@@ -24,8 +23,7 @@ function RightTab({ child }: RightTabProps) {
   const { pocketContract, erc20 } = useSmartContract();
 
   const { data: config, refetch: refetchConfig } = useContractRead({
-    addressOrName: env.NEXT_PUBLIC_CONTRACT_ADDRESS,
-    contractInterface: PocketFaucetAbi,
+    contract: pocketContract,
     functionName: 'childToConfig',
     args: [child.address!],
     enabled: !!child.address,
