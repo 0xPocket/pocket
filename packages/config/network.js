@@ -28,7 +28,7 @@ const NETWORK_CONFIG = {
   },
   localhost: {
     ERC20_ADDRESS: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
-    CHAIN_ID: 1337,
+    CHAIN_ID: 137,
     ALCHEMY_KEY: "3yzPlXcA41Y49wI2INbE3q8kLi19ME2U",
     RPC_URL: "http://localhost:8545",
     NETWORK_KEY: "polygon-mainnet",

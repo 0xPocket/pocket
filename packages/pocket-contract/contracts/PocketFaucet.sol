@@ -157,12 +157,14 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
         uint256 periodicity,
         address child
     ) public {
+      console.log("addChild called");
         require(child != address(0), '!addChild: Address is null');
         require(
             childToConfig[child].parent == address(0),
             '!addChild: Child address already taken'
         );
         require(periodicity != 0, '!addChild: periodicity cannot be 0');
+        console.log("addChild passed require");
         Config memory conf;
         conf.lastClaim = block.timestamp - periodicity;
         conf.ceiling = ceiling;
@@ -242,6 +244,7 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
         uint256 periodicity,
         address child
     ) public _areRelated(_msgSender(), child) {
+        console.log("changeConfig called");
         Config storage conf = childToConfig[child];
         require(periodicity != 0, "!changeConfig: periodicity cannot be 0");
         conf.ceiling = ceiling;

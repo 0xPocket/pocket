@@ -9,6 +9,8 @@ import useContractRead from './useContractRead';
 import { useIntl } from 'react-intl';
 import { UserChild } from '@lib/types/interfaces';
 import { parseUnits } from 'ethers/lib/utils';
+import { useSendMetaTx } from './useSendMetaTx';
+import { usePermitTx } from './usePermitTx';
 
 export function useAddFundsForm(
   child: UserChild | null,
@@ -19,28 +21,33 @@ export function useAddFundsForm(
   const { address } = useAccount();
   const intl = useIntl();
 
-  const { data: allowance, refetch: refetchAllowance } = useContractRead({
-    contract: erc20.contract,
-    functionName: 'allowance',
-    args: [address!, env.NEXT_PUBLIC_CONTRACT_ADDRESS],
-    enabled: !!address,
-  });
+  // const { data: allowance, refetch: refetchAllowance } = useContractRead({
+  //   contract: erc20.contract,
+  //   functionName: 'allowance',
+  //   args: [address!, env.NEXT_PUBLIC_CONTRACT_ADDRESS],
+  //   enabled: !!address,
+  // });
 
-  const approve = useApprove({
-    erc20Address: erc20.contract.address,
-    spender: pocketContract.address,
-    amount:
-      '0xf000000000000000000000000000000000000000000000000000000000000000',
-    onSuccess: () => {
-      toast.info(intl.formatMessage({ id: 'transaction.next' }), {
-        isLoading: true,
-      });
-    },
-    onError: () => {
-      toast.error(
-        intl.formatMessage({ id: 'add-child-and-funds.approve-fail' }),
-      );
-    },
+  // const approve = useApprove({
+  //   erc20Address: erc20.contract.address,
+  //   spender: pocketContract.address,
+  //   amount:
+  //     '0xf000000000000000000000000000000000000000000000000000000000000000',
+  //   onSuccess: () => {
+  //     toast.info(intl.formatMessage({ id: 'transaction.next' }), {
+  //       isLoading: true,
+  //     });
+  //   },
+  //   onError: () => {
+  //     toast.error(
+  //       intl.formatMessage({ id: 'add-child-and-funds.approve-fail' }),
+  //     );
+  //   },
+  // });
+
+  const { signPermit } = usePermitTx({
+    contractAddress: erc20.contract.address,
+    contractInterface: erc20.contract.interface as any,
   });
 
   const addChildAndFunds = useContractWrite({
@@ -49,7 +56,6 @@ export function useAddFundsForm(
     contractInterface: pocketContract.interface,
     functionName: addChild ? 'addChildAndFunds' : 'addFunds',
     // ! TEMPORARY. necessary on testnet
-    overrides: { gasLimit: '3000000' },
     onSuccess: () => {
       toast.dismiss();
       toast.info(intl.formatMessage({ id: 'transaction.pending' }), {
@@ -67,23 +73,23 @@ export function useAddFundsForm(
     },
   });
 
-  useWaitForTransaction({
-    hash: approve.data?.hash,
-    onError: (e) => {
-      toast.error(
-        intl.formatMessage(
-          { id: 'add-child-and-funds.approve' },
-          { message: e.message },
-        ),
-      );
-    },
-    onSuccess: () => {
-      toast.success(
-        intl.formatMessage({ id: 'add-child-and-funds.approve-success' }),
-      );
-      refetchAllowance();
-    },
-  });
+  // useWaitForTransaction({
+  //   hash: approve.data?.hash,
+  //   onError: (e) => {
+  //     toast.error(
+  //       intl.formatMessage(
+  //         { id: 'add-child-and-funds.approve' },
+  //         { message: e.message },
+  //       ),
+  //     );
+  //   },
+  //   onSuccess: () => {
+  //     toast.success(
+  //       intl.formatMessage({ id: 'add-child-and-funds.approve-success' }),
+  //     );
+  //     refetchAllowance();
+  //   },
+  // });
 
   useWaitForTransaction({
     hash: addChildAndFunds.data?.hash,
@@ -105,11 +111,13 @@ export function useAddFundsForm(
   const approveAndAddChild = useCallback(
     async (amount: BigNumber) => {
       try {
-        if (allowance?.lt(amount) && approve.writeAsync) {
-          await approve.writeAsync();
-        }
+        const signature = await signPermit(address!, amount.toString());
 
-        if (addChildAndFunds.writeAsync && child?.child?.initialCeiling) {
+        if (
+          signature &&
+          addChildAndFunds.writeAsync &&
+          child?.child?.initialCeiling
+        ) {
           await addChildAndFunds.writeAsync({
             recklesslySetUnpreparedArgs: addChild
               ? [
@@ -128,9 +136,9 @@ export function useAddFundsForm(
     },
     [
       addChildAndFunds,
-      approve,
-      allowance,
       child?.address,
+      address,
+      signPermit,
       addChild,
       child?.child,
       erc20.data?.decimals,

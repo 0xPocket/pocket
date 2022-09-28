@@ -2,10 +2,15 @@
   "name": "pocket",
   "version": "0.0.1",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/@openzeppelin/contracts"
+    ]
+  },
   "scripts": {
     "clean": "turbo run clean && rm -rf node_modules && rm -rf .turbo",
     "dev": "turbo run dev --parallel",

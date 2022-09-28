@@ -48,7 +48,7 @@ const config: HardhatUserConfig = {
       forking: {
         url: NETWORK_CONFIG['polygon-mainnet'].RPC_URL,
       },
-      chainId: 1337, // DO NOT TOUCH
+      chainId: 137, // DO NOT TOUCH
     },
     polygon: {
       url: NETWORK_CONFIG['polygon-mainnet'].RPC_URL,

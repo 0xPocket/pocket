@@ -4,7 +4,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types';
 
 const ABI_EXPORT_PATH = './abi.ts';
 
-const TO_EXPORT = ['CustomForwarder', 'PocketFaucet'];
+const TO_EXPORT = ['PocketFaucet'];
 
 const func: DeployFunction = async function ({
   deployments,

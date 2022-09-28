@@ -8,21 +8,14 @@ dotenv.config({ path: '../../.env' });
 const func: DeployFunction = async function ({
   deployments,
   getNamedAccounts,
-  ethers,
 }: HardhatRuntimeEnvironment) {
   console.log(__dirname);
 
-  const { deploy, get, catchUnknownSigner } = deployments;
+  const { deploy } = deployments;
 
   const { deployer } = await getNamedAccounts();
 
-  console.log('the deployer', deployer);
-
-  const forwarder = await get('CustomForwarder');
-
-  console.log(env.ERC20_ADDRESS, forwarder.address);
-
-  const test = await deploy('PocketFaucet', {
+  await deploy('PocketFaucet', {
     from: deployer,
     log: true,
     autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks'
@@ -33,15 +26,11 @@ const func: DeployFunction = async function ({
       execute: {
         init: {
           methodName: 'initialize',
-          args: [env.ERC20_ADDRESS, forwarder.address],
+          args: [env.ERC20_ADDRESS, env.TRUSTED_FORWARDER],
         },
       },
     },
   });
-  const admin = await ethers.getContract('DefaultProxyAdmin');
-  console.log(await admin.owner());
-  console.log('deployer :', deployer);
 };
 export default func;
 func.tags = ['PocketFaucet'];
-func.dependencies = ['CustomForwarder'];

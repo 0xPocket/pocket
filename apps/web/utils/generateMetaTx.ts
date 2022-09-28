@@ -95,7 +95,6 @@ export async function generateMetaTransaction({
 
   const { EIP712Domain: _unused, ...types } = typeData.types;
 
-  console.log('typeData', typeData);
   return {
     domain: typeData.domain,
     types: types,

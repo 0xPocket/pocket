@@ -41,7 +41,7 @@ export function useSendMetaTx<
   const { address } = useAccount();
   const providerWagmi = useProvider();
   const [loading, setLoading] = useState(false);
-  const sendMetaTx = trpc.useMutation(['relayer.relay'], {
+  const sendMetaTx = trpc.useMutation(['relayer.forward'], {
     onSuccess: () => {
       onMutate?.();
     },
@@ -52,6 +52,7 @@ export function useSendMetaTx<
   const { isLoading, isError, isSuccess, status } = useWaitForTransaction({
     hash: sendMetaTx.data?.txHash,
     onSuccess: (data) => {
+      console.log(data);
       setLoading(false);
       onSuccess?.(data);
     },

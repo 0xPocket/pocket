@@ -31,6 +31,10 @@ const func: DeployFunction = async function ({
     .connect(deployerSigner)
     .registerDomainSeparator('Pocket', '0.0.1');
 
+  await forwarder
+    .connect(deployerSigner)
+    .registerDomainSeparator('USD Coin (PoS)', '2');
+
   console.log('test2');
 
   await execute(

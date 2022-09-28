@@ -6,7 +6,6 @@ import path from 'path';
 const ENV_PATH = path.resolve(__dirname, '../../../.env');
 
 const TO_UPDATE = {
-  CustomForwarder: 'NEXT_PUBLIC_TRUSTED_FORWARDER',
   PocketFaucet: 'NEXT_PUBLIC_CONTRACT_ADDRESS',
 };
 

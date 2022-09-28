@@ -202,7 +202,7 @@ export default function Web() {
   const { data: dataTest } = useContractPastEvent({
     addressOrName: env.TRUSTED_FORWARDER,
     contractInterface: CustomForwarderAbi,
-    eventName: 'RequestTypeRegistered',
+    eventName: 'DomainRegistered',
     reverse: true,
   });
 
