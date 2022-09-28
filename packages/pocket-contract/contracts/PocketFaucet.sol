@@ -6,6 +6,7 @@ import '@openzeppelin/contracts-upgradeable/token/ERC20/extensions/draft-IERC20P
 import '@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol';
 import '@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol';
 import './ERC2771ContextUpgradeableCustom.sol';
+import 'hardhat/console.sol';
 
 /// @title A pocket money faucet
 /// @author Guillaume Dupont, Sami Darnaud
@@ -168,14 +169,12 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
         uint256 periodicity,
         address child
     ) public {
-      console.log("addChild called");
         require(child != address(0), '!addChild: Address is null');
         require(
             childToConfig[child].parent == address(0),
             '!addChild: Child address already taken'
         );
         require(periodicity != 0, '!addChild: periodicity cannot be 0');
-        console.log("addChild passed require");
         Config memory conf;
         conf.lastClaim = block.timestamp - periodicity;
         conf.ceiling = ceiling;
@@ -301,7 +300,6 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
         uint256 periodicity,
         address child
     ) public _areRelated(_msgSender(), child) {
-        console.log("changeConfig called");
         Config storage conf = childToConfig[child];
         require(periodicity != 0, '!changeConfig: periodicity cannot be 0');
         conf.ceiling = ceiling;
@@ -408,10 +406,6 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
         if (amount == 0) amount = address(this).balance;
         payable(_msgSender()).transfer(amount);
         emit CoinWithdrawed(amount);
-    }
-
-    fallback() external payable {
-      console.log('ouais ma gueule');
     }
 
     receive() external payable {}

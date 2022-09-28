@@ -8,3 +8,7 @@ typechain-types
 
 # OpenZeppelin version control for proxies
 .openzeppelin/unknown-1337.json
+
+# Hardhat deploy
+deployments/localhost
+deployments/hardhat

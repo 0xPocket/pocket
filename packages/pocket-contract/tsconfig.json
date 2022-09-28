@@ -16,7 +16,7 @@
     "./typechain-types",
     "./test",
     "./scripts",
-    "./abi.ts",
+    "./abi",
     "./utils",
     "../../packages/config/**/*.js",
     "./deploy"

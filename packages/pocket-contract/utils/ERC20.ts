@@ -62,14 +62,7 @@ export async function setErc20Balancev2(
 
   await tx.wait();
 
-  console.log('erc20 balance 1');
-
-  // const balance = await tokenContract.balanceOf(to);
-  console.log('erc20 balance 1.5');
-
   const newAmount = await stringToDecimalsVersion(tokenAddr, amount);
-
-  console.log('erc20 balance 2');
 
   const tx2 = await tokenContract.connect(fromSigner).transfer(to, newAmount);
   await tx2.wait();
