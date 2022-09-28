@@ -11,6 +11,7 @@ import '@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol';
 import '@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol';
 import '@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable.sol';
 import '@opengsn/contracts/src/forwarder/Forwarder.sol';
+
 /// @title A pocket money faucet
 /// @author Guillaume Dupont, Sami Darnaud
 /// @custom:experimental This is an experimental contract. It should not be used in production.
@@ -54,29 +55,47 @@ contract PocketFaucetV2 is AccessControlUpgradeable, ERC2771ContextUpgradeable {
         address parent;
     }
 
-    function newFx() public pure returns (uint) {
+    function newFx() public pure returns (uint256) {
         return 12;
     }
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() ERC2771ContextUpgradeable(address(0)) {}
 
-    function setTrustedForwarder(address trustedForwarder) public onlyRole(WITHDRAW_ROLE) {
-       ERC2771ContextUpgradeable._trustedForwarder = trustedForwarder;
+    function setTrustedForwarder(address trustedForwarder)
+        public
+        onlyRole(WITHDRAW_ROLE)
+    {
+        ERC2771ContextUpgradeable._trustedForwarder = trustedForwarder;
     }
-    
-    function initialize(address token, address trustedForwarder) public initializer {
+
+    function initialize(address token, address trustedForwarder)
+        public
+        initializer
+    {
         baseToken = token;
         __AccessControl_init_unchained();
         _setupRole(WITHDRAW_ROLE, _msgSender());
         ERC2771ContextUpgradeable._trustedForwarder = trustedForwarder;
     }
 
-    function _msgSender() internal view virtual override(ContextUpgradeable, ERC2771ContextUpgradeable) returns (address sender) {
+    function _msgSender()
+        internal
+        view
+        virtual
+        override(ContextUpgradeable, ERC2771ContextUpgradeable)
+        returns (address sender)
+    {
         sender = ERC2771ContextUpgradeable._msgSender();
     }
 
-    function _msgData() internal view virtual override(ContextUpgradeable, ERC2771ContextUpgradeable) returns (bytes calldata) {
+    function _msgData()
+        internal
+        view
+        virtual
+        override(ContextUpgradeable, ERC2771ContextUpgradeable)
+        returns (bytes calldata)
+    {
         return ERC2771ContextUpgradeable._msgData();
     }
 
@@ -103,23 +122,21 @@ contract PocketFaucetV2 is AccessControlUpgradeable, ERC2771ContextUpgradeable {
     }
 
     function salut() public view {}
-     ////////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////
     ////////////////////// TO DELETE FOR TESTING PURPOSE //////////////////////
 
     address[] public childrenList;
 
-     function resetAll() external 
-    {
+    function resetAll() external {
         for (uint256 i; i < childrenList.length; i++) {
-            if (childrenList[i] == address(0))
-                continue;
+            if (childrenList[i] == address(0)) continue;
             removeChildOwner(childrenList[i]);
         }
         delete childrenList;
     }
 
-    function removeChildOwner(address child) internal
-    {
+    function removeChildOwner(address child) internal {
         Config memory childConfig = childToConfig[child];
 
         uint256 length = parentToChildren[childConfig.parent].length;
@@ -143,8 +160,6 @@ contract PocketFaucetV2 is AccessControlUpgradeable, ERC2771ContextUpgradeable {
 
     ////////////////////////////// TO DELETE ///////////////////////////////
     ////////////////////////////////////////////////////////////////////////
-
-
 
     /// @notice This returns the number of children asssociated to an address
     /// @param parent The address of the parent account
@@ -248,7 +263,7 @@ contract PocketFaucetV2 is AccessControlUpgradeable, ERC2771ContextUpgradeable {
         address child
     ) public _areRelated(_msgSender(), child) {
         Config storage conf = childToConfig[child];
-        require(periodicity != 0, "!changeConfig: periodicity cannot be 0");
+        require(periodicity != 0, '!changeConfig: periodicity cannot be 0');
         conf.ceiling = ceiling;
         conf.periodicity = periodicity;
         emit ConfigChanged(conf.active, conf.ceiling, child);
@@ -319,13 +334,9 @@ contract PocketFaucetV2 is AccessControlUpgradeable, ERC2771ContextUpgradeable {
 
     /// @dev Computes the amount of token the child can claim.
     /// @param child is the child for which we compute the claimable amount.
-    function computeClaimable(address child)
-        public view
-        returns (uint256)
-    {
+    function computeClaimable(address child) public view returns (uint256) {
         Config memory conf = childToConfig[child];
-        if (conf.lastClaim + conf.periodicity > block.timestamp)
-            return 0;
+        if (conf.lastClaim + conf.periodicity > block.timestamp) return 0;
         uint256 nbPeriod = (block.timestamp - conf.lastClaim) /
             conf.periodicity;
         uint256 claimable = conf.ceiling * nbPeriod;
@@ -343,7 +354,7 @@ contract PocketFaucetV2 is AccessControlUpgradeable, ERC2771ContextUpgradeable {
         );
 
         uint256 claimable = computeClaimable(_msgSender());
-        require(claimable != 0, "!claim: nothing to claim");
+        require(claimable != 0, '!claim: nothing to claim');
         uint256 nbPeriod = (block.timestamp - conf.lastClaim) /
             conf.periodicity;
         conf.lastClaim = conf.lastClaim + conf.periodicity * nbPeriod;

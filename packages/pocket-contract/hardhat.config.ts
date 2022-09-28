@@ -2,6 +2,7 @@ import * as dotenv from 'dotenv';
 import { HardhatUserConfig } from 'hardhat/config';
 import '@nomiclabs/hardhat-ethers';
 import '@nomicfoundation/hardhat-network-helpers';
+import '@nomiclabs/hardhat-waffle';
 import '@typechain/hardhat';
 import '@openzeppelin/hardhat-upgrades';
 import NETWORK_CONFIG from 'config/network';
@@ -43,7 +44,7 @@ const config: HardhatUserConfig = {
     hardhat: {
       mining: {
         auto: true,
-        interval: 1000,
+        interval: 5000,
       },
       forking: {
         url: NETWORK_CONFIG['polygon-mainnet'].RPC_URL,

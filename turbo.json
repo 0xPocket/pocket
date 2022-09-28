@@ -23,6 +23,7 @@
       "outputs": []
     },
     "pocket-contract#build": {
+      "cache": false,
       "inputs": ["**/*.sol"],
       "outputs": ["./artifacts/**/*", "./typechain-types/**/*", "./cache/**/*"]
     },
