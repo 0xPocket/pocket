@@ -1,6 +1,24 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Abi } from 'abitype';
 import { BigNumber, Contract, ContractInterface, providers } from 'ethers';
-import { EIP712Domain, ForwardRequest } from './TypedData';
+
+const EIP712Domain = [
+  { name: 'name', type: 'string' },
+  { name: 'version', type: 'string' },
+  { name: 'chainId', type: 'uint256' },
+  { name: 'verifyingContract', type: 'address' },
+];
+
+const ForwardRequest = [
+  { name: 'from', type: 'address' },
+  { name: 'to', type: 'address' },
+  { name: 'value', type: 'uint256' },
+  { name: 'gas', type: 'uint256' },
+  { name: 'nonce', type: 'uint256' },
+  { name: 'data', type: 'bytes' },
+  { name: 'validUntil', type: 'uint256' },
+];
 
 // get timestamp in seconds
 function getTimestamp() {

@@ -51,7 +51,10 @@ export function usePermitTx<TAbi extends Abi>({
         const signature = await signTypedDataAsync(toSign);
 
         setLoading(false);
-        return ethers.utils.splitSignature(signature);
+        return {
+          signature: ethers.utils.splitSignature(signature),
+          deadline: toSign.value.deadline,
+        };
       } catch (e) {
         const err = e as ProviderRpcError;
         setLoading(false);

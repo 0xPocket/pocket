@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   ProviderRpcError,
   useAccount,
@@ -8,11 +9,12 @@ import {
 import { useCallback, useState } from 'react';
 import type { Abi, ExtractAbiFunctionNames } from 'abitype';
 import type { ExtractAbiFunctionParams } from '../utils/abi-types';
-import { CustomForwarderAbi } from 'pocket-contract/abi';
 import { generateMetaTransaction } from '../utils/generateMetaTx';
 import { type providers } from 'ethers';
 import { trpc } from '../utils/trpc';
 import { env } from 'config/env/client';
+import type { TRPCError } from '@trpc/server';
+import { ForwarderAbi } from 'pocket-contract/abi';
 
 type UseSendMetaTx<
   TAbi extends Abi,
@@ -22,7 +24,7 @@ type UseSendMetaTx<
   contractAddress: string;
   functionName: TMethod;
   onSuccess?: (data: providers.TransactionReceipt) => void;
-  onError?: (err: Error) => void;
+  onError?: (err: Error | TRPCError) => void;
   onMutate?: () => void;
 };
 
@@ -45,6 +47,9 @@ export function useSendMetaTx<
     onSuccess: () => {
       onMutate?.();
     },
+    onError: (err) => {
+      onError?.(err as any);
+    },
   });
 
   const { signTypedDataAsync } = useSignTypedData();
@@ -52,7 +57,6 @@ export function useSendMetaTx<
   const { isLoading, isError, isSuccess, status } = useWaitForTransaction({
     hash: sendMetaTx.data?.txHash,
     onSuccess: (data) => {
-      console.log(data);
       setLoading(false);
       onSuccess?.(data);
     },
@@ -73,7 +77,7 @@ export function useSendMetaTx<
 
         const toSign = await generateMetaTransaction({
           forwarderAddress: env.TRUSTED_FORWARDER,
-          forwarderInterface: CustomForwarderAbi,
+          forwarderInterface: ForwarderAbi,
           contractAddress: contractAddress,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           contractInterface: contractInterface as any,
@@ -82,22 +86,19 @@ export function useSendMetaTx<
             name: 'Pocket',
             version: '0.0.1',
           },
-          chainId: 137,
+          chainId: env.CHAIN_ID,
           from: address,
           functionName,
           args,
         });
 
-        console.log('toSign', toSign);
-
         const signature = await signTypedDataAsync(toSign);
 
-        await sendMetaTx.mutateAsync({
+        return sendMetaTx.mutateAsync({
           signature: signature,
           request: toSign.value,
+          functionName,
         });
-
-        return;
       } catch (e) {
         const err = e as ProviderRpcError;
         setLoading(false);

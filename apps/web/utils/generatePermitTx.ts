@@ -1,4 +1,7 @@
-import { Abi } from 'abitype';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { Abi } from 'abitype';
+import { env } from 'config/env/client';
 import {
   BigNumber,
   Contract,
@@ -6,13 +9,20 @@ import {
   ethers,
   providers,
 } from 'ethers';
-import { Permit } from './TypedData';
 
 const EIP712Domain = [
   { name: 'name', type: 'string' },
   { name: 'version', type: 'string' },
   { name: 'verifyingContract', type: 'address' },
   { name: 'salt', type: 'bytes32' },
+];
+
+const Permit = [
+  { name: 'owner', type: 'address' },
+  { name: 'spender', type: 'address' },
+  { name: 'value', type: 'uint256' },
+  { name: 'nonce', type: 'uint256' },
+  { name: 'deadline', type: 'uint256' },
 ];
 
 // get timestamp in seconds
@@ -93,7 +103,11 @@ export async function generatePermitTx({
     spender,
     value,
   });
-  const typeData = getMetaTxTypeData(domain, 137, erc20Contract.address);
+  const typeData = getMetaTxTypeData(
+    domain,
+    env.CHAIN_ID,
+    erc20Contract.address,
+  );
 
   const { EIP712Domain: _unused, ...types } = typeData.types;
 
