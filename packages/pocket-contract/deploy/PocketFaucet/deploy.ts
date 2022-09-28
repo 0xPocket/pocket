@@ -9,8 +9,6 @@ const func: DeployFunction = async function ({
   deployments,
   getNamedAccounts,
 }: HardhatRuntimeEnvironment) {
-  console.log(__dirname);
-
   const { deploy } = deployments;
 
   const { deployer } = await getNamedAccounts();

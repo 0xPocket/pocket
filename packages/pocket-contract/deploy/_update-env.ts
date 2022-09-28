@@ -32,12 +32,7 @@ function updateEnvFile(environementKey: string, contractAddress: string) {
 const func: DeployFunction = async function ({
   deployments,
 }: HardhatRuntimeEnvironment) {
-  const { get, all } = deployments;
-
-  const deployed = await all();
-  for (const [name, deployment] of Object.entries(deployed)) {
-    console.log(name, deployment.address);
-  }
+  const { get } = deployments;
 
   for (const [name, envKey] of Object.entries(TO_UPDATE)) {
     const deployment = await get(name);
