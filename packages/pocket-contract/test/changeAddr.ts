@@ -77,7 +77,7 @@ describe('Testing addr changement', function () {
       pocketFaucet.address,
       toSend.toString()
     );
-    let tx = await parent1.addFunds(toSend, child2.address);
+    let tx = await parent1.addFunds(child2.address, toSend);
     await tx.wait();
     tx = await pocketFaucet.connect(child2).claim({ gasLimit: 3000000 });
     await tx.wait();
