@@ -352,7 +352,10 @@ const termsAndConditions: FC = () => {
             h&#101;llo&#64;g&#111;p&#111;cke&#116;&#46;&#102;r
           </a>
         </p>
-        <p>This document was last updated on September 14, 2022</p>
+        <p>
+          Pocket SAS - 913 798 617 - TVA FR 02913798617 - Hosted by Vercel Inc.
+          - This document was last updated on September 29, 2022
+        </p>
       </div>
     </PageWrapper>
   );
