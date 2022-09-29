@@ -43,8 +43,6 @@ export class MagicConnector extends Connector {
 
   magicOptions: Options;
 
-  userDetails: UserDetails | undefined;
-
   oauthProviders: OAuthProvider[];
 
   oauthCallbackUrl: string | undefined;
@@ -56,14 +54,6 @@ export class MagicConnector extends Connector {
     this.magicOptions = config.options;
     this.oauthProviders = config.options.oauthOptions?.providers || [];
     this.oauthCallbackUrl = config.options.oauthOptions?.callbackUrl;
-  }
-
-  setUserDetails(details: UserDetails) {
-    this.userDetails = details;
-  }
-
-  clearUserDetails() {
-    this.userDetails = undefined;
   }
 
   async connect() {
@@ -91,35 +81,27 @@ export class MagicConnector extends Connector {
         };
       }
 
-      if (!this.userDetails) {
-        throw new UserRejectedRequestError('Something went wrong');
-      }
+      // if (userDetails) {
+      //   const magic = this.getMagicSDK();
 
-      const userDetails = { ...this.userDetails };
+      //   if (userDetails.email) {
+      //     await magic.auth.loginWithMagicLink({
+      //       email: userDetails.email,
+      //     });
+      //   }
 
-      this.clearUserDetails();
+      //   const signer = await this.getSigner();
+      //   const account = await signer.getAddress();
 
-      if (userDetails) {
-        const magic = this.getMagicSDK();
-
-        if (userDetails.email) {
-          await magic.auth.loginWithMagicLink({
-            email: userDetails.email,
-          });
-        }
-
-        const signer = await this.getSigner();
-        const account = await signer.getAddress();
-
-        return {
-          account,
-          chain: {
-            id: await this.getChainId(),
-            unsupported: false,
-          },
-          provider,
-        };
-      }
+      //   return {
+      //     account,
+      //     chain: {
+      //       id: await this.getChainId(),
+      //       unsupported: false,
+      //     },
+      //     provider,
+      //   };
+      // }
 
       throw new UserRejectedRequestError('Something went wrong');
     } catch (error) {

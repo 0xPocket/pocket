@@ -1,6 +1,8 @@
-import type { FC } from 'react';
+import { FC, useMemo } from 'react';
+import { useConnect } from 'wagmi';
 import { z } from 'zod';
 import { useMagic } from '../../contexts/auth';
+import { MagicConnector } from '../../utils/MagicConnector';
 import { useZodForm } from '../../utils/useZodForm';
 import FormattedMessage from '../common/FormattedMessage';
 
@@ -9,17 +11,22 @@ const EmailSchema = z.object({
 });
 
 const EmailSignin: FC = () => {
-  const { signInWithEmail } = useMagic();
+  const { connectors } = useConnect();
   const { register, handleSubmit } = useZodForm({
     mode: 'all',
     reValidateMode: 'onChange',
     schema: EmailSchema,
   });
 
+  const magicConnector: MagicConnector = useMemo(
+    () => connectors.find((c) => c.id === 'magic'),
+    [connectors],
+  ) as MagicConnector;
+
   return (
     <form
       className="flex w-full flex-col items-center justify-center gap-4"
-      onSubmit={handleSubmit((data) => signInWithEmail(data.email))}
+      onSubmit={handleSubmit((data) => magicConnector.connect())}
     >
       <p>
         <FormattedMessage id="auth.email.connect" />

@@ -6,8 +6,6 @@ declare module 'next-auth' {
   type CustomSessionUser = DefaultSessionUser & {
     id: string;
     address: string | undefined;
-    newUser: boolean;
-    emailVerified: boolean;
     type: UserType;
   };
   interface Session {
@@ -16,8 +14,6 @@ declare module 'next-auth' {
 
   interface User {
     type: UserType;
-    newUser: boolean;
-    emailVerified: boolean;
     address: string;
   }
 }

@@ -28,22 +28,22 @@ const handler = (req: NextRequestWithAuth) => {
     return NextResponse.next();
   }
 
-  // New users or unverified users go to onboarding !
-  if (
-    (token.newUser || !token.emailVerified) &&
-    req.nextUrl.pathname !== '/onboarding'
-  ) {
-    return NextResponse.redirect(new URL('/onboarding', req.url));
-  }
+  // // New users or unverified users go to onboarding !
+  // if (
+  //   (token.newUser || !token.emailVerified) &&
+  //   req.nextUrl.pathname !== '/onboarding'
+  // ) {
+  //   return NextResponse.redirect(new URL('/onboarding', req.url));
+  // }
 
-  // Onboarding is locked for validated users
-  if (
-    !token.newUser &&
-    token.emailVerified &&
-    req.nextUrl.pathname === '/onboarding'
-  ) {
-    return NextResponse.redirect(new URL('/', req.url));
-  }
+  // // Onboarding is locked for validated users
+  // if (
+  //   !token.newUser &&
+  //   token.emailVerified &&
+  //   req.nextUrl.pathname === '/onboarding'
+  // ) {
+  //   return NextResponse.redirect(new URL('/', req.url));
+  // }
 
   // if (!token.emailVerified && req.nextUrl.pathname !== '/onboarding') {
   //   return NextResponse.redirect(new URL('/onboarding', req.url));
@@ -87,5 +87,5 @@ const middleware = withAuth(handler, {
 export default middleware;
 
 export const config = {
-  matcher: ['/', '/onboarding', '/add-account', '/account/:path*'],
+  matcher: ['/', '/add-account', '/account/:path*'],
 };

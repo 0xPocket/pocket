@@ -43,20 +43,11 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (!existingUser) {
-          const newUser = await prisma.user.create({
-            data: {
-              email: userMetadata.email,
-              emailVerified: new Date(),
-              address: userAddress,
-              type: 'Parent',
-              accountType: 'Magic',
-              parent: {
-                create: {},
-              },
-            },
-          });
+          throw new Error('User does not exist');
+        }
 
-          return newUser;
+        if (!existingUser.emailVerified) {
+          throw new Error('Email not verified');
         }
 
         if (existingUser.accountType !== 'Magic') {
@@ -111,18 +102,11 @@ export const authOptions: NextAuthOptions = {
         }
 
         if (!existingUser) {
-          const newUser = await prisma.user.create({
-            data: {
-              address: siwe.address,
-              type: 'Parent',
-              accountType: 'Ethereum',
-              parent: {
-                create: {},
-              },
-            },
-          });
+          throw new Error('User does not exist');
+        }
 
-          return newUser;
+        if (!existingUser.emailVerified) {
+          throw new Error('Email not verified');
         }
 
         if (existingUser?.accountType !== 'Ethereum') {
@@ -146,8 +130,6 @@ export const authOptions: NextAuthOptions = {
         user: {
           ...session.user,
           address: token.address,
-          emailVerified: !!token.emailVerified,
-          newUser: token.newUser,
           type: token.type,
           id: token.sub!,
         },
@@ -160,28 +142,28 @@ export const authOptions: NextAuthOptions = {
       // console.log("account", account);
       // console.log("user", user); // user from return
 
-      if (token.newUser || !token.emailVerified) {
-        const checkUser = await prisma.user.findUnique({
-          where: {
-            id: token.sub,
-          },
-        });
+      // if (token.newUser || !token.emailVerified) {
+      //   const checkUser = await prisma.user.findUnique({
+      //     where: {
+      //       id: token.sub,
+      //     },
+      //   });
 
-        if (!checkUser) {
-          return token;
-        }
+      //   if (!checkUser) {
+      //     return token;
+      //   }
 
-        return {
-          ...token,
-          email: checkUser.email,
-          address: checkUser.address || undefined,
-          type: checkUser.type,
-          name: checkUser.name,
-          newUser: checkUser.newUser,
-          emailVerified: !!checkUser.emailVerified,
-        };
-      }
-      // console.log("NO");
+      //   return {
+      //     ...token,
+      //     email: checkUser.email,
+      //     address: checkUser.address || undefined,
+      //     type: checkUser.type,
+      //     name: checkUser.name,
+      //     newUser: checkUser.newUser,
+      //     emailVerified: !!checkUser.emailVerified,
+      //   };
+      // }
+      // // console.log("NO");
 
       if (user) {
         // console.log('Wet set a the user from scratch');
@@ -192,8 +174,6 @@ export const authOptions: NextAuthOptions = {
           address: user.address,
           type: user.type,
           name: user.name,
-          newUser: user.newUser,
-          emailVerified: !!user.emailVerified,
         };
       }
 
