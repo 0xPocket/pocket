@@ -1,17 +1,71 @@
 import { RadioGroup } from '@headlessui/react';
+import { getCsrfToken } from 'next-auth/react';
 import { FC, useState } from 'react';
-import ChildSignin from '../components/auth/ChildSignin';
+import { useForm } from 'react-hook-form';
+import { SiweMessage } from 'siwe';
+import { useAccount, useNetwork, useSignMessage } from 'wagmi';
 import EmailSignin from '../components/auth/EmailSignin';
-import EthereumSignin from '../components/auth/EthereumSignin';
 import FormattedMessage from '../components/common/FormattedMessage';
 import InputText from '../components/common/InputText';
 import TitleHelper from '../components/common/TitleHelper';
 import PageWrapper from '../components/common/wrappers/PageWrapper';
-import OnBoardingForm from '../components/onboarding/parent/OnBoardingForm';
+import EthereumConnect from '../components/register/EthereumConnect';
+import { trpc } from '../utils/trpc';
 
+type FormData = {
+  userType: 'Parent' | 'Child';
+  connectionType: 'Magic' | 'Ethereum';
+  email: string;
+  name: string;
+  ageLimit: boolean;
+};
 const Register: FC = () => {
-  const [selected, setSelected] = useState('parent');
   const [step, setStep] = useState<number>(1);
+  const { address } = useAccount();
+  const { chain } = useNetwork();
+  const { signMessageAsync } = useSignMessage();
+
+  const { register, handleSubmit, setValue, getValues, formState, watch } =
+    useForm<FormData>({
+      mode: 'onChange',
+      reValidateMode: 'onChange',
+      defaultValues: {
+        userType: 'Parent',
+      },
+    });
+
+  const ethereumRegister = trpc.useMutation('register.ethereum');
+
+  const userType = watch('userType');
+
+  const onSubmit = async (data: FormData) => {
+    if (data.connectionType === 'Ethereum') {
+      const message = new SiweMessage({
+        domain: window.location.host,
+        address,
+        // HELP
+        statement: 'Sign this message to access Pocket.',
+        uri: window.location.origin,
+        version: '1',
+        chainId: chain?.id,
+        nonce: await getCsrfToken(),
+      });
+
+      const signature = await signMessageAsync({
+        message: message.prepareMessage(),
+      });
+
+      await ethereumRegister.mutateAsync({
+        message: JSON.stringify(message),
+        signature,
+        type: userType,
+        email: data.email,
+        name: data.name,
+      });
+
+      setStep(3);
+    }
+  };
 
   return (
     <PageWrapper>
@@ -49,12 +103,14 @@ const Register: FC = () => {
           {step === 1 && (
             <>
               <RadioGroup
-                value={selected}
-                onChange={setSelected}
+                value={userType}
+                onChange={(userType: 'Parent' | 'Child') => {
+                  setValue('userType', userType);
+                }}
                 className="flex items-center justify-center space-x-8"
               >
                 <RadioGroup.Option
-                  value="parent"
+                  value="Parent"
                   className={({ checked }) =>
                     checked ? 'input-radio-checked' : 'input-radio-unchecked'
                   }
@@ -62,7 +118,7 @@ const Register: FC = () => {
                   Parent
                 </RadioGroup.Option>
                 <RadioGroup.Option
-                  value="child"
+                  value="Child"
                   className={({ checked }) =>
                     checked ? 'input-radio-checked' : 'input-radio-unchecked'
                   }
@@ -71,7 +127,7 @@ const Register: FC = () => {
                 </RadioGroup.Option>
               </RadioGroup>
 
-              {selected === 'parent' && (
+              {userType === 'Parent' && (
                 <div className="flex flex-col items-center gap-4">
                   <EmailSignin />
                   <div className="flex w-72 items-center">
@@ -81,19 +137,31 @@ const Register: FC = () => {
                     </h2>
                     <div className="w-full border-b opacity-25"></div>
                   </div>
-                  <EthereumSignin type="Parent" />
+                  <EthereumConnect
+                    callback={() => {
+                      setStep(2);
+                      setValue('connectionType', 'Ethereum');
+                    }}
+                  />
                 </div>
               )}
-              {selected === 'child' && <EthereumSignin type="Child" />}
+              {userType === 'Child' && (
+                <EthereumConnect
+                  callback={() => {
+                    setStep(2);
+                    setValue('connectionType', 'Ethereum');
+                  }}
+                />
+              )}
               <button onClick={() => setStep(2)}>next</button>
             </>
           )}
           {step === 2 && (
             <form
               className="flex w-full min-w-[350px] flex-col items-center justify-center gap-4 text-left"
-              onSubmit={() => setStep(3)}
+              onSubmit={handleSubmit(onSubmit)}
             >
-              {/* <InputText
+              <InputText
                 label="Name"
                 register={register('name')}
                 autoComplete="name"
@@ -102,19 +170,21 @@ const Register: FC = () => {
                 label="Email"
                 register={register('email')}
                 autoComplete="email"
-              /> */}
+              />
               <div className="mb-2 flex items-center">
                 <input
                   required
                   type="checkbox"
-                  // {...register('majority')}
+                  {...register('ageLimit', {
+                    validate: (value) => value === true,
+                  })}
                   className="text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded focus:ring-2"
                 />
                 <label className="text-gray-900 dark:text-gray-300 ml-2 text-sm font-medium">
                   <FormattedMessage id="onboarding.majority" />
                 </label>
               </div>
-              <button className="action-btn">
+              <button className="action-btn" disabled={!formState.isValid}>
                 <FormattedMessage id="submit" />
               </button>
             </form>

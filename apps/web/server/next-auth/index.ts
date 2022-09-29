@@ -3,7 +3,6 @@ import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { Magic } from '@magic-sdk/admin';
 import { SiweMessage } from 'siwe';
-import { UserType } from '@prisma/client';
 import { prisma } from '../prisma';
 import { env } from 'config/env/server';
 
@@ -73,22 +72,13 @@ export const authOptions: NextAuthOptions = {
           type: 'text',
           placeholder: '0x0',
         },
-        type: {
-          label: 'Type',
-          type: 'text',
-          placeholder: 'Parent',
-        },
       },
       async authorize(credentials) {
         if (!credentials) {
           throw new Error('no credentials');
         }
 
-        const { message, signature, type } = credentials;
-
-        if (type !== UserType.Parent && type !== UserType.Child) {
-          throw new Error('Invalid User Type');
-        }
+        const { message, signature } = credentials;
 
         const siwe = new SiweMessage(JSON.parse(message || '{}'));
         await siwe.validate(signature || '');
@@ -97,20 +87,12 @@ export const authOptions: NextAuthOptions = {
           where: { address: siwe.address },
         });
 
-        if (!existingUser && type === UserType.Child) {
-          throw new Error('Your parent must create your account.');
-        }
-
         if (!existingUser) {
           throw new Error('User does not exist');
         }
 
         if (!existingUser.emailVerified) {
           throw new Error('Email not verified');
-        }
-
-        if (existingUser?.accountType !== 'Ethereum') {
-          throw new Error('Your email is linked to a Magic Wallet.');
         }
 
         return existingUser;

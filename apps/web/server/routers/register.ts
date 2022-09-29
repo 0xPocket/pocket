@@ -71,8 +71,8 @@ export const registerRouter = createRouter()
       const siwe = new SiweMessage(JSON.parse(input.message || '{}'));
       await siwe.validate(input.signature || '');
 
-      const existingUser = await prisma.user.findUnique({
-        where: { address: siwe.address },
+      const existingUser = await prisma.user.findFirst({
+        where: { OR: [{ email: input.email }, { address: siwe.address }] },
       });
 
       if (existingUser) {
@@ -84,6 +84,7 @@ export const registerRouter = createRouter()
       if (input.type === 'Parent') {
         newUser = await prisma.user.create({
           data: {
+            name: input.name,
             email: input.email,
             address: siwe.address,
             type: input.type,
