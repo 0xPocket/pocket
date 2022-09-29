@@ -27,13 +27,7 @@ function AddChildForm() {
     [intl],
   );
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setValue,
-    getValues,
-  } = useZodForm({
+  const { register, handleSubmit, setValue } = useZodForm({
     schema: ParentSchema['createChild'],
     defaultValues: {
       periodicity: periodicity_options[0].value,

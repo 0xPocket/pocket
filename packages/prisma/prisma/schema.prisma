@@ -34,21 +34,19 @@ model User {
   email         String?     @unique
   emailVerified DateTime?
 
-  type        UserType
-  parent      Parent?
-  child       Child?
-  maticGrants MaticGrant[]
-  BugReport   Ticket[]
-  Contact     Contact[]
+  type      UserType
+  parent    Parent?
+  child     Child?
+  BugReport Ticket[]
+  Contact   Contact[]
 }
 
 model Parent {
   user   User   @relation(fields: [userId], references: [id])
   userId String @id @unique
 
-  maticGrants Int     @default(0)
-  ramp        Ramp[]
-  children    Child[]
+  ramp     Ramp[]
+  children Child[]
 }
 
 enum ChildStatus {
@@ -68,17 +66,6 @@ model Child {
 
   initialPeriodicity String?
   initialCeiling     Int?
-}
-
-// Matic Grant
-
-model MaticGrant {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  amount    String
-  hash      String?
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
 }
 
 // User Parent Ramp

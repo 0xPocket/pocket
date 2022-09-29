@@ -4,6 +4,7 @@ import { abi as ERC20Abi } from '../artifacts/@openzeppelin/contracts-upgradeabl
 import { IERC20MetadataUpgradeable } from '../typechain-types/@openzeppelin/contracts-upgradeable/token/ERC20/extensions';
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 import { ethers } from 'hardhat';
+import hardhat from 'hardhat';
 
 export async function setErc20Balance(
   tokenAddr: string,
@@ -38,6 +39,50 @@ export async function setErc20Balance(
 
     await stopImpersonate(whaleAddr);
   }
+}
+
+export async function setErc20Balancev2(
+  tokenAddr: string,
+  from: string,
+  to: string,
+  amount: string
+) {
+  const tokenContract = new Contract(
+    tokenAddr,
+    ERC20Abi
+  ) as IERC20MetadataUpgradeable;
+
+  const { whale } = await hardhat.getNamedAccounts();
+  const fromSigner = await hardhat.ethers.getSigner(from);
+
+  const tx = await fromSigner.sendTransaction({
+    to: whale,
+    value: ethers.utils.parseEther('1'),
+  });
+
+  await tx.wait();
+
+  const newAmount = await stringToDecimalsVersion(tokenAddr, amount);
+
+  const tx2 = await tokenContract.connect(fromSigner).transfer(to, newAmount);
+  await tx2.wait();
+}
+
+export async function setAllowancev2(
+  tokenAddr: string,
+  from: string,
+  to: string,
+  amount: string
+) {
+  const tokenContract = new Contract(
+    tokenAddr,
+    ERC20Abi
+  ) as IERC20MetadataUpgradeable;
+  const fromSigner = await hardhat.ethers.getSigner(from);
+  const tx = await tokenContract
+    .connect(fromSigner)
+    .approve(to, await stringToDecimalsVersion(tokenAddr, amount));
+  await tx.wait();
 }
 
 export async function sendErc20(

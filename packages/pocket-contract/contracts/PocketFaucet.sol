@@ -6,6 +6,7 @@ import '@openzeppelin/contracts-upgradeable/token/ERC20/extensions/draft-IERC20P
 import '@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol';
 import '@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol';
 import './ERC2771ContextUpgradeableCustom.sol';
+import 'hardhat/console.sol';
 
 /// @title A pocket money faucet
 /// @author Guillaume Dupont, Sami Darnaud

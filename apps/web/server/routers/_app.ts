@@ -12,6 +12,7 @@ import { parentRouter } from './parent';
 import { ticketRouter } from './ticket';
 import { testRouter } from './test';
 import { tokenRouter } from './token';
+import { relayerRouter } from './relayer';
 
 /**
  * Create your application's root router
@@ -37,6 +38,7 @@ export const appRouter = createRouter()
   .merge('token.', tokenRouter)
   .merge('contact.', contactRouter)
   .merge('ticket.', ticketRouter)
+  .merge('relayer.', relayerRouter)
   .merge('test.', testRouter);
 
 export type AppRouter = typeof appRouter;

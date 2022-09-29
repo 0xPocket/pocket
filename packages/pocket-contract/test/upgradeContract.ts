@@ -7,7 +7,7 @@ import {
 } from '../typechain-types';
 import * as constants from '../utils/constants';
 import { Wallet } from 'ethers';
-import ParentTester from '../helpers/ParentTester';
+import ParentTester from '../ts/ParentTester';
 import config from 'config/network';
 
 describe('Deploy and tests on proxy functions', function () {

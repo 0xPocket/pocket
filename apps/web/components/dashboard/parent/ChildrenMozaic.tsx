@@ -4,13 +4,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { trpc } from '../../../utils/trpc';
 import FormattedMessage from '../../common/FormattedMessage';
-import { Spinner } from '../../common/Spinner';
 
 function ChildrenMozaic() {
   const router = useRouter();
 
   const { isLoading, data } = trpc.useQuery(['parent.children']);
-  const testwebhookramp = trpc.useMutation(['parent.testWebhookRamp']);
 
   return (
     <div className="flex flex-col space-y-12">
@@ -18,9 +16,6 @@ function ChildrenMozaic() {
         <h1>
           <FormattedMessage id="dashboard.title" />
         </h1>
-        <button onClick={() => testwebhookramp.mutate()} className="danger-btn">
-          Granter
-        </button>
       </div>
       <div className="grid grid-cols-2 gap-4">
         {/* {isLoading && (

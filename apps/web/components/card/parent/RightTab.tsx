@@ -6,12 +6,12 @@ import { useSmartContract } from '../../../contexts/contract';
 import { useAddFundsForm } from '../../../hooks/useAddFundsForm';
 import { useChildSettingsForm } from '../../../hooks/useChildSettingsForm';
 import FormattedMessage from '../../common/FormattedMessage';
-import useContractRead from '../../../hooks/useContractRead';
 import AddFundsForm from './AddFundsForm';
 import ChildSettingsForm from './ChildSettingsForm';
 import { parseUnits } from 'ethers/lib/utils';
 import { BigNumber } from 'ethers';
 import MainPanel from './MainPanel';
+import useContractRead from '../../../hooks/useContractRead';
 
 type RightTabProps = {
   child: UserChild;
@@ -27,6 +27,9 @@ function RightTab({ child }: RightTabProps) {
     functionName: 'childToConfig',
     args: [child.address!],
     enabled: !!child.address,
+    onError(err) {
+      console.error(err);
+    },
     watch: true,
   });
 

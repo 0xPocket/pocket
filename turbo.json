@@ -1,10 +1,11 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "globalDependencies": [".env", "./packages/prisma/.env", "$ANALYZE"],
+  "globalDependencies": [".env", "./packages/prisma/.env"],
+  "globalEnv": ["ANALYZE"],
   "pipeline": {
     "@lib/prisma#build": {
-      "inputs": ["./schema.prisma", "./prisma/schema.prisma"],
-      "dependsOn": ["$DATABASE_URL"],
+      "inputs": ["schema.prisma", "prisma/schema.prisma"],
+      "env": ["DATABASE_URL"],
       "outputs": [
         "../../node_modules/@prisma/client/**",
         "../../node_modules/.prisma/client/**"
@@ -12,24 +13,18 @@
     },
     "@lib/prisma#deploy": {
       "dependsOn": ["build"],
-      "inputs": ["./prisma/migrations/**/*.sql"],
-      "cache": false,
+      "env": ["DATABASE_URL"],
+      "inputs": ["prisma/migrations/**/*.sql"],
       "outputs": []
     },
     "@lib/prisma#push": {
       "dependsOn": ["build"],
-      "inputs": ["./prisma/migrations/**/*.sql"],
       "cache": false,
       "outputs": []
     },
     "pocket-contract#build": {
-      "cache": false,
       "inputs": ["**/*.sol"],
-      "outputs": ["./artifacts/**/*", "./typechain-types/**/*", "./cache/**/*"]
-    },
-    "pocket-contract#deploy": {
-      "dependsOn": ["build"],
-      "cache": false
+      "outputs": ["artifacts/**", "typechain-types/**", "cache/**", "abi/**"]
     },
     "fork": {
       "cache": false
@@ -43,7 +38,7 @@
       "outputs": ["dist/**", ".next/**"]
     },
     "dev": {
-      "dependsOn": ["@lib/prisma#push", "pocket-contract#deploy"],
+      "dependsOn": ["@lib/prisma#push"],
       "cache": false
     },
     "reset": {

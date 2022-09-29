@@ -2,7 +2,7 @@
 import { expect, assert } from 'chai';
 import { ethers, upgrades } from 'hardhat';
 import { providers, Wallet } from 'ethers';
-import ParentTester from '../helpers/ParentTester';
+import ParentTester from '../ts/ParentTester';
 import { AdminContract } from '../ts/Admin';
 import * as constants from '../utils/constants';
 import { PocketFaucet__factory, PocketFaucet } from '../typechain-types';

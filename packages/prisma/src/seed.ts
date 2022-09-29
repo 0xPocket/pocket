@@ -21,9 +21,7 @@ async function main() {
           where: {
             userId: "elonmusk",
           },
-          create: {
-            maticGrants: 5,
-          },
+          create: {},
         },
       },
     },
