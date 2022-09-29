@@ -8,6 +8,7 @@ import {
 } from 'pocket-contract/typechain-types';
 import { z } from 'zod';
 import { createProtectedRouter } from '../createRouter';
+import { getParsedEthersError } from '@enzoferey/ethers-error-parser';
 
 const provider = new providers.JsonRpcProvider(env.RPC_URL);
 const wallet = new Wallet(
@@ -64,14 +65,15 @@ export const relayerRouter = createProtectedRouter().mutation('forward', {
           PocketFaucetAbi,
         ).decodeFunctionResult(input.functionName, staticCall.ret);
       } catch (e) {
+        const error = getParsedEthersError(e as any);
         throw new TRPCError({
           code: 'BAD_REQUEST',
-          message: e as string,
+          message: error.context,
         });
       }
       throw new TRPCError({
         code: 'BAD_REQUEST',
-        message: 'Wrong transaction',
+        message: 'Error during the transaction',
       });
     }
 
