@@ -59,8 +59,8 @@ const func: DeployFunction = async function ({
       autoMine: true,
     },
     'addFunds',
-    parseUnits('10', tokenDecimals),
-    lola
+    lola,
+    parseUnits('10', tokenDecimals)
   );
 
   await setAllowancev2(

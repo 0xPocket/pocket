@@ -68,8 +68,8 @@ export function useAddFundsForm(
             ]);
           } else {
             await write([
-              amount.toBigInt(),
               child.address as `0x${string}`,
+              amount.toBigInt(),
               BigInt(deadline),
               signature.v,
               signature.r as `0x${string}`,
