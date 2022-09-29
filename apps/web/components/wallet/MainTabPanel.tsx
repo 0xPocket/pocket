@@ -1,19 +1,19 @@
 import { toast } from 'react-toastify';
 import { useAccount, useBalance } from 'wagmi';
 import { useSmartContract } from '../../contexts/contract';
-import useRamp from '../../hooks/useRamp';
 import FormattedMessage from '../common/FormattedMessage';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClipboard } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from '../common/Tooltip';
 import { trpc } from '../../utils/trpc';
+import useTransak from '../../hooks/useTransak';
 
 type MainTabPanelProps = {};
 
 function MainTabPanel({}: MainTabPanelProps) {
   const { address } = useAccount();
   const { erc20 } = useSmartContract();
-  const { showRamp } = useRamp();
+  const { showTransak } = useTransak();
   const { data, isLoading } = useBalance({
     addressOrName: address,
     token: erc20.data?.address,
@@ -74,7 +74,7 @@ function MainTabPanel({}: MainTabPanelProps) {
         </div>
       </div>
       {!userDataLoading && userData && userData.user.type === 'Parent' && (
-        <button onClick={showRamp} className="action-btn">
+        <button onClick={showTransak} className="action-btn">
           <FormattedMessage id="wallet.top-up" />
         </button>
       )}
