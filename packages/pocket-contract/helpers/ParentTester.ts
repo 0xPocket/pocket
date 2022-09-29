@@ -135,8 +135,8 @@ class ParentTester extends ParentContract {
     await setAllowance(token, this.signer, this.contract.address, amount);
 
     const tx = await this.addFunds(
-      await stringToDecimalsVersion(token, amount),
-      childAddress
+      childAddress,
+      await stringToDecimalsVersion(token, amount)
     );
     await tx.wait();
   };

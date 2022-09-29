@@ -89,8 +89,8 @@ class ParentContract {
     return this.contract.changeParentAddr(newAddr);
   };
 
-  addFunds = async (amountWithDecimals: BigNumberish, childAddr: string) => {
-    return this.contract.addFunds(amountWithDecimals, childAddr);
+  addFunds = async (childAddr: string, amountWithDecimals: BigNumberish) => {
+    return this.contract.addFunds(childAddr, amountWithDecimals);
   };
 }
 
