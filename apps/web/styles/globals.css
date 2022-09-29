@@ -220,4 +220,28 @@
 	.tooltip-container{
 		@apply bg-gray text-white px-3 py-1 rounded-md text-base;
 	}
+
+	.step {
+		@apply flex h-6 w-6 items-center justify-center rounded-full bg-dark-light border border-transparent transition-all;
+	}
+
+	.step.active {
+		@apply border-primary;
+	}
+
+	.step.completed {
+		@apply bg-primary;
+	}
+
+	.btw-step {
+		@apply h-1 flex-grow bg-dark-light;
+	}
+
+	.fill {
+		@apply bg-primary w-0 h-full transition-all duration-500;
+	}
+
+	.fill.completed {
+		@apply w-full;
+	}
 }
