@@ -121,7 +121,7 @@ export function useAddFundsForm(
                   child.address,
                   amount,
                 ]
-              : [amount, child?.address],
+              : [child?.address, amount],
           });
         }
       } catch (e) {}

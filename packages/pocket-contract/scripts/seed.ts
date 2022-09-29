@@ -44,8 +44,8 @@ async function main() {
   );
 
   await faucet.addFunds(
-    parseUnits('10', tokenDecimals),
-    constants.LOLA_MUSK.address
+    constants.LOLA_MUSK.address,
+    parseUnits('10', tokenDecimals)
   );
 
   await setAllowance(
