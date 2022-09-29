@@ -1,14 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Abi } from 'abitype';
 import { env } from 'config/env/client';
-import {
-  BigNumber,
-  Contract,
-  ContractInterface,
-  ethers,
-  providers,
-} from 'ethers';
+import { BigNumber, Contract, providers } from 'ethers';
+import { hexZeroPad } from 'ethers/lib/utils';
+import { ERC20PermitAbi } from 'pocket-contract/abi';
 
 const EIP712Domain = [
   { name: 'name', type: 'string' },
@@ -62,10 +55,7 @@ function getMetaTxTypeData(
     },
     domain: {
       ...domain,
-      salt: ethers.utils.hexZeroPad(
-        ethers.BigNumber.from(chainId).toHexString(),
-        32,
-      ),
+      salt: hexZeroPad(BigNumber.from(chainId).toHexString(), 32),
       verifyingContract,
     },
     primaryType: 'Permit',
@@ -74,29 +64,22 @@ function getMetaTxTypeData(
 
 type GeneratePermitTxParams = {
   erc20Address: string;
-  erc20Interface: ContractInterface | Abi;
   owner: string;
   spender: string;
   value: string;
   provider: providers.Provider;
   domain: Domain;
-  functionName: string;
 };
 
 export async function generatePermitTx({
   erc20Address,
-  erc20Interface,
   provider,
   owner,
   spender,
   value,
   domain,
 }: GeneratePermitTxParams) {
-  const erc20Contract = new Contract(
-    erc20Address,
-    erc20Interface as any,
-    provider,
-  );
+  const erc20Contract = new Contract(erc20Address, ERC20PermitAbi, provider);
 
   const request = await buildPermitRequest(erc20Contract, {
     owner,

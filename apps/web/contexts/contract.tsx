@@ -2,7 +2,6 @@ import { createContext, useContext, useMemo } from 'react';
 import { useAccount, useContract, useToken } from 'wagmi';
 import type {
   ERC20Permit,
-  IERC20,
   PocketFaucet,
 } from 'pocket-contract/typechain-types';
 import { env } from 'config/env/client';
@@ -14,7 +13,7 @@ interface SmartContractProviderProps {
 
 interface ISmartContractContext {
   erc20: {
-    contract: IERC20;
+    contract: ERC20Permit;
     data:
       | {
           address: string;

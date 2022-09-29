@@ -22,8 +22,6 @@ export function useAddFundsForm(
 
   const { signPermit, isLoading: permitIsLoading } = usePermitTx({
     contractAddress: erc20.contract.address,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    contractInterface: erc20.contract.interface as any,
   });
 
   const { write, isLoading } = useSendMetaTx({

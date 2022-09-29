@@ -5,29 +5,30 @@ import {
   useSignTypedData,
 } from 'wagmi';
 import { useCallback, useState } from 'react';
-import type { Abi } from 'abitype';
 import { ethers } from 'ethers';
 import { env } from 'config/env/client';
 import { generatePermitTx } from '../utils/generatePermitTx';
+import { useSmartContract } from '../contexts/contract';
 
-type UsePermitTx<TAbi extends Abi> = {
-  contractInterface: TAbi;
+type UsePermitTx = {
   contractAddress: string;
 };
 
-export function usePermitTx<TAbi extends Abi>({
-  contractInterface,
-  contractAddress,
-}: UsePermitTx<TAbi>) {
+export function usePermitTx({ contractAddress }: UsePermitTx) {
   const { address } = useAccount();
   const providerWagmi = useProvider();
   const [loading, setLoading] = useState(false);
+  const { erc20 } = useSmartContract();
 
-  const { signTypedDataAsync } = useSignTypedData();
+  const { signTypedDataAsync } = useSignTypedData({
+    onError: () => {
+      setLoading(false);
+    },
+  });
 
   const signPermit = useCallback(
     async (owner: string, value: string) => {
-      if (!address) {
+      if (!address || !erc20.data) {
         return;
       }
 
@@ -36,14 +37,12 @@ export function usePermitTx<TAbi extends Abi>({
 
         const toSign = await generatePermitTx({
           erc20Address: contractAddress,
-          erc20Interface: contractInterface,
-          functionName: 'permit',
           owner: owner,
           spender: env.NEXT_PUBLIC_CONTRACT_ADDRESS,
           value: value,
           provider: providerWagmi,
           domain: {
-            name: 'USD Coin (PoS)',
+            name: erc20.data.name,
             version: '1',
           },
         });
@@ -61,13 +60,7 @@ export function usePermitTx<TAbi extends Abi>({
         console.error('Error:', err.message);
       }
     },
-    [
-      address,
-      contractAddress,
-      contractInterface,
-      signTypedDataAsync,
-      providerWagmi,
-    ],
+    [address, contractAddress, erc20.data, signTypedDataAsync, providerWagmi],
   );
 
   return {
