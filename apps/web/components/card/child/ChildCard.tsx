@@ -10,6 +10,7 @@ import { trpc } from '../../../utils/trpc';
 import ClaimButton from './ClaimButton';
 import Balance from '../common/Balance';
 import LinkPolygonScan from '../common/LinkPolygonScan';
+import MetaMaskProfilePicture from '../common/MetaMaskProfilePicture';
 
 type ChildCardProps = {
   childAddress: string;
@@ -90,13 +91,20 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
         className={`${className} container-classic grid h-full grid-cols-2 rounded-lg p-8`}
       >
         <div className="flex h-full flex-col items-start justify-between">
-          <h1>{userData?.user.name}</h1>
+          <div className="flex items-center space-x-4">
+            <MetaMaskProfilePicture address={userData?.user.address} />
+            <div className="flex items-end space-x-4">
+              <h1 className="max-w-fit whitespace-nowrap">
+                {userData?.user.name}
+              </h1>
+            </div>
+          </div>
           <LinkPolygonScan address={childAddress} />
         </div>
         <div className="flex h-full flex-col items-end justify-between">
           <Balance balance={config?.balance} />
           {config && (
-            <ClaimButton disabled={!canClaim || config[1].isZero()}>
+            <ClaimButton disabled={!canClaim || config.balance.isZero()}>
               {textClaim}
             </ClaimButton>
           )}

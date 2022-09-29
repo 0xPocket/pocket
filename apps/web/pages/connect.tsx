@@ -1,4 +1,4 @@
-import MainWrapper from '../components/common/wrappers/MainWrapper';
+import PageWrapper from '../components/common/wrappers/PageWrapper';
 import { Spinner } from '../components/common/Spinner';
 import { useMagic } from '../contexts/auth';
 import { Tab } from '@headlessui/react';
@@ -7,6 +7,7 @@ import ChildSignin from '../components/auth/ChildSignin';
 import { Fragment, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import FormattedMessage from '../components/common/FormattedMessage';
+import TitleHelper from '../components/common/TitleHelper';
 
 function Connect() {
   const { loading, loggedIn } = useMagic();
@@ -20,16 +21,17 @@ function Connect() {
 
   if (loading) {
     return (
-      <MainWrapper>
+      <PageWrapper>
         <section className="flex min-h-[85vh] items-center justify-center">
           <Spinner />
         </section>
-      </MainWrapper>
+      </PageWrapper>
     );
   }
 
   return (
-    <MainWrapper>
+    <PageWrapper>
+      <TitleHelper id="titles.connect" />
       <div className="mx-auto flex max-w-md flex-col items-center justify-center gap-8 text-center">
         <h1 className="mb-4">
           <FormattedMessage id="common.welcome" />
@@ -61,7 +63,7 @@ function Connect() {
           </Tab.Panels>
         </Tab.Group>
       </div>
-    </MainWrapper>
+    </PageWrapper>
   );
 }
 

@@ -1,9 +1,12 @@
 import type { FC } from 'react';
-import MainWrapper from '../components/common/wrappers/MainWrapper';
+import TitleHelper from '../components/common/TitleHelper';
+import PageWrapper from '../components/common/wrappers/PageWrapper';
 
 const termsAndConditions: FC = () => {
   return (
-    <MainWrapper noTermsModal>
+    <PageWrapper noTermsModal>
+      <TitleHelper id="titles.terms-conditions" />
+
       <div className="container-classic container mx-auto flex flex-col gap-4 rounded-xl p-8">
         <h1>Terms and conditions</h1>
         <p>
@@ -349,9 +352,12 @@ const termsAndConditions: FC = () => {
             h&#101;llo&#64;g&#111;p&#111;cke&#116;&#46;&#102;r
           </a>
         </p>
-        <p>This document was last updated on September 14, 2022</p>
+        <p>
+          Pocket SAS - 913 798 617 - TVA FR 02913798617 - Hosted by Vercel Inc.
+          - This document was last updated on September 29, 2022
+        </p>
       </div>
-    </MainWrapper>
+    </PageWrapper>
   );
 };
 

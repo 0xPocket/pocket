@@ -26,7 +26,7 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
     event CoinWithdrawed(uint256 amount);
     event ConfigChanged(bool active, uint256 ceiling, address indexed child);
     event ParentChanged(address indexed oldAddr, address newAddr);
-    event FundsWithdrawn(address indexed parent, uint256 amount, address child);
+    event FundsWithdrawn(address indexed parent, uint256 amount, address indexed child);
     event ChildAddrChanged(address oldAddr, address newAddr);
     event FundsAdded(
         uint256 timestamp,
@@ -204,13 +204,13 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
         bytes32 s
     ) external {
         addChild(ceiling, periodicity, child);
-        addFundsPermit(amount, child, deadline, v, r, s);
+        addFundsPermit(child, amount, deadline, v, r, s);
     }
 
     /// @notice Add `amount` to your child `child` account.
     /// @param amount is the amount of tokens to add.
     /// @param child is the address of the child.
-    function addFunds(uint256 amount, address child)
+    function addFunds(address child, uint256 amount)
         public
         _areRelated(_msgSender(), child)
     {
@@ -229,8 +229,8 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
     /// @param amount is the amount of tokens to add.
     /// @param child is the address of the child.
     function addFundsPermit(
-        uint256 amount,
         address child,
+        uint256 amount,
         uint256 deadline,
         uint8 v,
         bytes32 r,
@@ -246,7 +246,7 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
             s
         );
 
-        addFunds(amount, child);
+        addFunds(child, amount);
     }
 
     /// @notice Removes `child` from your account and transfers all the founds associated to him to your address.
@@ -356,6 +356,7 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
     /// @param child is the child for which we compute the claimable amount.
     function computeClaimable(address child) public view returns (uint256) {
         Config memory conf = childToConfig[child];
+        if (conf.periodicity == 0) return 0;
         if (conf.lastClaim + conf.periodicity > block.timestamp) return 0;
         uint256 nbPeriod = (block.timestamp - conf.lastClaim) /
             conf.periodicity;

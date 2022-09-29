@@ -4,7 +4,7 @@ import BackgoundSplit from '../BackgoundSplit';
 import type { FC } from 'react';
 import { TermsModal } from '../TermsModal';
 
-type MainWrapperProps = {
+type PageWrapperProps = {
   children: React.ReactNode;
   noHeader?: boolean;
   noFooter?: boolean;
@@ -12,29 +12,21 @@ type MainWrapperProps = {
   noTermsModal?: boolean;
 };
 
-const MainWrapper: FC<MainWrapperProps> = ({
+const PageWrapper: FC<PageWrapperProps> = ({
   children,
   noHeader = false,
   noFooter = false,
   noContainer = false,
   noTermsModal = false,
 }) => {
-  if (noContainer)
-    return (
-      <div className="relative min-h-screen overflow-hidden px-4 pb-20">
-        {!noHeader && <Header />}
-        {children}
-        <BackgoundSplit className="-top-80 -left-96" />
-        <BackgoundSplit className="-bottom-[50vh] -right-96" />
-        {!noFooter && <Footer className="absolute bottom-0 left-0 right-0" />}
-        {!noTermsModal && <TermsModal />}
-      </div>
-    );
-
   return (
     <div className="relative min-h-screen overflow-hidden px-4 pb-20">
       {!noHeader && <Header />}
-      <div className="container relative mx-auto my-12">{children}</div>
+      {!noContainer ? (
+        <div className="container relative mx-auto my-12">{children}</div>
+      ) : (
+        children
+      )}
       <BackgoundSplit className="-top-80 -left-96" />
       <BackgoundSplit className="-bottom-[50vh] -right-96" />
       {!noFooter && <Footer className="absolute bottom-0 left-0 right-0" />}
@@ -43,4 +35,4 @@ const MainWrapper: FC<MainWrapperProps> = ({
   );
 };
 
-export default MainWrapper;
+export default PageWrapper;
