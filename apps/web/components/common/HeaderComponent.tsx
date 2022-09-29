@@ -1,6 +1,6 @@
-import Link from "next/link";
-import { useRouter } from "next/router";
-import React from "react";
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import React from 'react';
 
 type NavLinkProps = {
   children: string;
@@ -14,7 +14,7 @@ export function NavLink({ children, href, exact = false }: NavLinkProps) {
 
   return (
     <Link href={href}>
-      <a className={`${isActive ? "active" : "pasactive"} `}>{children}</a>
+      <a className={`${isActive && 'active'} `}>{children}</a>
     </Link>
   );
 }
@@ -23,7 +23,7 @@ type TitleProps = { children: React.ReactNode; href?: string };
 
 function Title({ children, href }: TitleProps) {
   return (
-    <Link href={href ? href : "/"} passHref>
+    <Link href={href ? href : '/'} passHref>
       <div className="cursor-pointer text-4xl font-bold">{children}</div>
     </Link>
   );
@@ -57,7 +57,7 @@ type HeaderProps = {
 
 export function Header({ children }: HeaderProps) {
   return (
-    <header className="flex">
+    <header className="z-50 flex">
       <div className="mx-8 flex h-28 w-full items-center justify-between">
         {children}
       </div>

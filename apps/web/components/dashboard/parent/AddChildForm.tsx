@@ -6,14 +6,7 @@ import { trpc } from '../../../utils/trpc';
 import { ParentSchema } from '../../../server/schemas';
 import InputText from '../../common/InputText';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faCoins,
-  faMoneyBill1Wave,
-  faPerson,
-  faPiggyBank,
-  faPlus,
-  faUserPlus,
-} from '@fortawesome/free-solid-svg-icons';
+import { faCoins, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import FormattedMessage from '../../common/FormattedMessage';
 import { RadioGroup } from '@headlessui/react';
 import { useEffect, useMemo, useState } from 'react';

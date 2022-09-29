@@ -1,9 +1,12 @@
 import type { FC } from 'react';
-import MainWrapper from '../components/common/wrappers/MainWrapper';
+import TitleHelper from '../components/common/TitleHelper';
+import PageWrapper from '../components/common/wrappers/PageWrapper';
 
 const termsAndConditions: FC = () => {
   return (
-    <MainWrapper noTermsModal>
+    <PageWrapper noTermsModal>
+      <TitleHelper id="titles.terms-conditions" />
+
       <div className="container-classic container mx-auto flex flex-col gap-4 rounded-xl p-8">
         <h1>Terms and conditions</h1>
         <p>
@@ -351,7 +354,7 @@ const termsAndConditions: FC = () => {
         </p>
         <p>This document was last updated on September 14, 2022</p>
       </div>
-    </MainWrapper>
+    </PageWrapper>
   );
 };
 

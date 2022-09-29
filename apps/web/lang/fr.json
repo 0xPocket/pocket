@@ -157,6 +157,14 @@
   "transaction.pending": "Transaction en attente, merci de patienter !",
   "transaction.next": "Veuillez confirmer la transaction suivante.",
 
-  "tooltip.wallet.erc20": "Nous utilisons l'USDC de Polygon",
-  "tooltip.wallet.matic": "Le Matic sert à payer les frais de transaction sur la blockchain"
+	"tooltip.wallet.erc20": "Nous utilisons l'USDC de Polygon",
+	"tooltip.wallet.matic": "Le Matic sert à payer les frais de transaction sur la blockchain",
+
+	"titles.add-account": "Ajouter un compte",
+	"titles.connect": "Connection",
+	"titles.dashboard": "Dashboard",
+	"titles.onboard": "Enregistrement",
+	"titles.email-verification": "Verification d'email",
+	"titles.privacy-policy": "Politique de confidentialité",
+	"titles.terms-conditions": "Conditions générales d'utilisation"
 }

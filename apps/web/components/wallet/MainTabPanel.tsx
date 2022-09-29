@@ -68,7 +68,7 @@ function MainTabPanel({}: MainTabPanelProps) {
           <p>
             {maticBalance?.formatted.slice(0, 6)} {maticBalance?.symbol}
           </p>
-          <Tooltip placement="top">
+          <Tooltip placement="top" className="ml-2">
             <FormattedMessage id="tooltip.wallet.matic" />
           </Tooltip>
         </div>

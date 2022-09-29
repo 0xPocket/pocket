@@ -1,10 +1,11 @@
-import MainWrapper from '../components/common/wrappers/MainWrapper';
+import PageWrapper from '../components/common/wrappers/PageWrapper';
 import { Spinner } from '../components/common/Spinner';
 import { trpc } from '../utils/trpc';
 import { useRouter } from 'next/router';
 import EmailVerification from '../components/auth/EmailVerification';
 import OnBoardingForm from '../components/onboarding/parent/OnBoardingForm';
 import FormattedMessage from '../components/common/FormattedMessage';
+import TitleHelper from '../components/common/TitleHelper';
 
 function OnBoarding() {
   const router = useRouter();
@@ -23,30 +24,36 @@ function OnBoarding() {
     (data?.user.emailVerified && !data?.user.newUser)
   ) {
     return (
-      <MainWrapper>
+      <PageWrapper>
+        <TitleHelper id="titles.onboard" />
+
         <div className="mx-auto flex max-w-md flex-col items-center justify-center gap-8 text-center">
           <div className="container-classic rounded-lg p-8">
             <Spinner />
           </div>
         </div>
-      </MainWrapper>
+      </PageWrapper>
     );
   }
 
   if (!data?.user.emailVerified && data?.user.name) {
     return (
-      <MainWrapper>
+      <PageWrapper>
+        <TitleHelper id="titles.email-verification" />
+
         <div className="mx-auto flex max-w-md flex-col items-center justify-center gap-8 text-center">
           <div className="container-classic rounded-lg p-8">
             <EmailVerification />
           </div>
         </div>
-      </MainWrapper>
+      </PageWrapper>
     );
   }
 
   return (
-    <MainWrapper>
+    <PageWrapper>
+      <TitleHelper id="titles.email-verification" />
+
       <div className="mx-auto flex  flex-col items-center justify-center gap-8 text-center">
         <h1 className="mb-4">
           <FormattedMessage id="onboarding.more-info" />
@@ -55,7 +62,7 @@ function OnBoarding() {
           <OnBoardingForm />
         </div>
       </div>
-    </MainWrapper>
+    </PageWrapper>
   );
 }
 

@@ -1,10 +1,9 @@
-import MainWrapper from '../../components/common/wrappers/MainWrapper';
+import PageWrapper from '../../components/common/wrappers/PageWrapper';
 import AccountDashboard from '../../components/dashboard/parent/Dashboard';
-import Link from 'next/link';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { trpc } from '../../utils/trpc';
 import FormattedMessage from '../../components/common/FormattedMessage';
+import Breadcrumb from '../../components/common/Breadcrumb';
+import TitleHelper from '../../components/common/TitleHelper';
 import { useRouter } from 'next/router';
 
 function Account() {
@@ -21,17 +20,10 @@ function Account() {
   if (!child) return null;
 
   return (
-    <MainWrapper>
-      <div className="mb-12 flex items-center space-x-4">
-        <FontAwesomeIcon icon={faAngleRight} />
-        <Link href="/">
-          <a>
-            <FormattedMessage id="route.dashboard" />
-          </a>
-        </Link>
-        <p>{`>`}</p>
-        <p>{child?.name}</p>
-      </div>
+    <PageWrapper>
+      <TitleHelper title={child.name!} />
+
+      <Breadcrumb routes={[{ name: child.name!, path: null }]} />
       {isLoading ? (
         <>
           <FormattedMessage id="loading" />
@@ -43,7 +35,7 @@ function Account() {
           <FormattedMessage id="account.not-found" />
         </div>
       )}
-    </MainWrapper>
+    </PageWrapper>
   );
 }
 

@@ -1,10 +1,13 @@
 import Link from 'next/link';
 import type { FC } from 'react';
-import MainWrapper from '../components/common/wrappers/MainWrapper';
+import TitleHelper from '../components/common/TitleHelper';
+import PageWrapper from '../components/common/wrappers/PageWrapper';
 
 const PrivacyPolicy: FC = () => {
   return (
-    <MainWrapper noTermsModal>
+    <PageWrapper noTermsModal>
+      <TitleHelper id="titles.privacy-policy" />
+
       <div className="container-classic container mx-auto flex flex-col gap-4 rounded-xl p-8">
         <h1>Privacy policy</h1>
         <p>
@@ -551,7 +554,7 @@ const PrivacyPolicy: FC = () => {
           </Link>
         </p>
       </div>
-    </MainWrapper>
+    </PageWrapper>
   );
 };
 
