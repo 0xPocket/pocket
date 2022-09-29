@@ -57,7 +57,7 @@ export function useChildSettingsForm(
               data.ceiling.toString(),
               erc20.data?.decimals,
             ).toBigInt(),
-            BigInt(300),
+            BigInt(data.periodicity),
             childAddress as `0x${string}`,
           ]);
         } else {
