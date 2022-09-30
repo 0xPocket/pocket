@@ -3,8 +3,8 @@ pragma solidity ^0.8.9;
 
 import '@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol';
 import '@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol';
-import '@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol';
 import '../ERC2771ContextUpgradeableCustom.sol';
+import '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
 import 'hardhat/console.sol';
 import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 import '@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol';
@@ -16,7 +16,7 @@ import '@opengsn/contracts/src/forwarder/Forwarder.sol';
 /// @author Guillaume Dupont, Sami Darnaud
 /// @custom:experimental This is an experimental contract. It should not be used in production.
 
-contract PocketFaucetV2 is AccessControlUpgradeable, ERC2771ContextUpgradeable {
+contract PocketFaucetV2 is OwnableUpgradeable, ERC2771ContextUpgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     bytes32 public constant WITHDRAW_ROLE = keccak256('WITHDRAW_ROLE');
@@ -62,10 +62,7 @@ contract PocketFaucetV2 is AccessControlUpgradeable, ERC2771ContextUpgradeable {
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() ERC2771ContextUpgradeable(address(0)) {}
 
-    function setTrustedForwarder(address trustedForwarder)
-        public
-        onlyRole(WITHDRAW_ROLE)
-    {
+    function setTrustedForwarder(address trustedForwarder) public onlyOwner {
         ERC2771ContextUpgradeable._trustedForwarder = trustedForwarder;
     }
 
@@ -74,8 +71,7 @@ contract PocketFaucetV2 is AccessControlUpgradeable, ERC2771ContextUpgradeable {
         initializer
     {
         baseToken = token;
-        __AccessControl_init_unchained();
-        _setupRole(WITHDRAW_ROLE, _msgSender());
+        __Ownable_init_unchained();
         ERC2771ContextUpgradeable._trustedForwarder = trustedForwarder;
     }
 
@@ -382,7 +378,7 @@ contract PocketFaucetV2 is AccessControlUpgradeable, ERC2771ContextUpgradeable {
         emit ParentChanged(_msgSender(), newAddr);
     }
 
-    function withdrawCoin(uint256 amount) public onlyRole(WITHDRAW_ROLE) {
+    function withdrawCoin(uint256 amount) public onlyOwner {
         if (amount == 0) amount = address(this).balance;
         payable(_msgSender()).transfer(amount);
         emit CoinWithdrawed(amount);
