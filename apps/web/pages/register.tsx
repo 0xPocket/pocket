@@ -1,15 +1,18 @@
 import { RadioGroup } from '@headlessui/react';
+import { Magic } from 'magic-sdk';
 import { getCsrfToken } from 'next-auth/react';
-import { FC, useState } from 'react';
+import { useRouter } from 'next/router';
+import { FC, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { SiweMessage } from 'siwe';
-import { useAccount, useNetwork, useSignMessage } from 'wagmi';
+import { useAccount, useConnect, useNetwork, useSignMessage } from 'wagmi';
 import EmailSignin from '../components/auth/EmailSignin';
 import FormattedMessage from '../components/common/FormattedMessage';
 import InputText from '../components/common/InputText';
 import TitleHelper from '../components/common/TitleHelper';
 import PageWrapper from '../components/common/wrappers/PageWrapper';
 import EthereumConnect from '../components/register/EthereumConnect';
+import { MagicConnector } from '../utils/MagicConnector';
 import { trpc } from '../utils/trpc';
 
 type FormData = {
@@ -19,9 +22,12 @@ type FormData = {
   name: string;
   ageLimit: boolean;
 };
+
 const Register: FC = () => {
+  const router = useRouter();
   const [step, setStep] = useState<number>(1);
   const { address } = useAccount();
+  const { connectors } = useConnect();
   const { chain } = useNetwork();
   const { signMessageAsync } = useSignMessage();
 
@@ -34,7 +40,25 @@ const Register: FC = () => {
       },
     });
 
+  const [magicSDK, setMagicSDK] = useState<Magic>();
+
+  console.log(router);
+
+  useEffect(() => {
+    setStep(
+      router.query.formStep ? Number(router.query.formStep as string) : 1,
+    );
+  }, [router.query.formStep]);
+
+  useEffect(() => {
+    const sdk = (
+      connectors.find((e) => e.id === 'magic') as MagicConnector
+    ).getMagicSDK();
+    setMagicSDK(sdk);
+  }, []);
+
   const ethereumRegister = trpc.useMutation('register.ethereum');
+  const magicLinkRegister = trpc.useMutation('register.magic');
 
   const userType = watch('userType');
 
@@ -43,7 +67,6 @@ const Register: FC = () => {
       const message = new SiweMessage({
         domain: window.location.host,
         address,
-        // HELP
         statement: 'Sign this message to access Pocket.',
         uri: window.location.origin,
         version: '1',
@@ -62,9 +85,25 @@ const Register: FC = () => {
         email: data.email,
         name: data.name,
       });
-
-      setStep(3);
+    } else if (data.connectionType === 'Magic') {
+      await magicSDK?.auth.loginWithMagicLink({
+        email: data.email,
+      });
+      const didToken = await magicSDK?.user.getIdToken();
+      if (!didToken) {
+        throw new Error('No DID token found.');
+      }
+      await magicLinkRegister.mutateAsync({
+        didToken: didToken,
+        email: data.email,
+        name: data.name,
+      });
     }
+    router.push(router.pathname, {
+      query: {
+        formState: 3,
+      },
+    });
   };
 
   return (
@@ -129,7 +168,22 @@ const Register: FC = () => {
 
               {userType === 'Parent' && (
                 <div className="flex flex-col items-center gap-4">
-                  <EmailSignin />
+                  <div className="flex gap-2">
+                    <button
+                      className={`action-btn flex-none`}
+                      onClick={() => {
+                        router.push(router.pathname, {
+                          query: {
+                            formState: 2,
+                          },
+                        });
+
+                        setValue('connectionType', 'Magic');
+                      }}
+                    >
+                      Connect with email
+                    </button>
+                  </div>
                   <div className="flex w-72 items-center">
                     <div className="w-full border-b opacity-25"></div>
                     <h2 className="mx-2 text-lg font-bold">
@@ -139,7 +193,12 @@ const Register: FC = () => {
                   </div>
                   <EthereumConnect
                     callback={() => {
-                      setStep(2);
+                      router.push(router.pathname, {
+                        query: {
+                          formState: 2,
+                        },
+                      });
+
                       setValue('connectionType', 'Ethereum');
                     }}
                   />
@@ -148,7 +207,10 @@ const Register: FC = () => {
               {userType === 'Child' && (
                 <EthereumConnect
                   callback={() => {
-                    setStep(2);
+                    router.push('/register', {
+                      query: { formStep: 2 },
+                    });
+
                     setValue('connectionType', 'Ethereum');
                   }}
                 />
