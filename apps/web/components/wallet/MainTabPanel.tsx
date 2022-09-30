@@ -7,6 +7,7 @@ import { faClipboard } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from '../common/Tooltip';
 import { trpc } from '../../utils/trpc';
 import useTransak from '../../hooks/useTransak';
+import { useSession } from 'next-auth/react';
 
 type MainTabPanelProps = {};
 
@@ -24,9 +25,7 @@ function MainTabPanel({}: MainTabPanelProps) {
   const { data: maticBalance } = useBalance({
     addressOrName: address,
   });
-  const { data: userData, isLoading: userDataLoading } = trpc.useQuery([
-    'auth.session',
-  ]);
+  const { data: userData, status } = useSession();
 
   return (
     <div className="flex w-full flex-col gap-6">
@@ -73,11 +72,13 @@ function MainTabPanel({}: MainTabPanelProps) {
           </Tooltip>
         </div>
       </div>
-      {!userDataLoading && userData && userData.user.type === 'Parent' && (
-        <button onClick={showTransak} className="action-btn">
-          <FormattedMessage id="wallet.top-up" />
-        </button>
-      )}
+      {status === 'authenticated' &&
+        userData &&
+        userData.user.type === 'Parent' && (
+          <button onClick={showTransak} className="action-btn">
+            <FormattedMessage id="wallet.top-up" />
+          </button>
+        )}
     </div>
   );
 }

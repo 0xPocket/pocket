@@ -88,6 +88,10 @@
 		@apply relative flex items-center justify-center cursor-pointer rounded-lg border  px-3 py-2 shadow-sm focus:outline-none;
 	}
 
+	.input-radio.big {
+		@apply w-1/2 py-4 text-xl;
+	}
+
 	.input-radio-checked {
 		@apply input-radio border border-primary bg-primary text-white;
 	}
@@ -146,6 +150,16 @@
   .without-ring {
     @apply focus:outline-0;
   }
+
+
+	/* providers icons */
+	.provider-container {
+		@apply relative flex aspect-square w-28 flex-col items-center justify-center gap-4 rounded-lg transition-all hover:bg-dark/50
+	}
+
+	.provider-img {
+		@apply flex h-12 w-12 items-center;
+	}
 
   /* skeleton */
   .skeleton {

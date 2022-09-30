@@ -1,5 +1,6 @@
+import { signIn } from 'next-auth/react';
 import { FC, useMemo } from 'react';
-import { useConnect } from 'wagmi';
+import { useAccount, useConnect } from 'wagmi';
 import { z } from 'zod';
 import { useMagic } from '../../contexts/auth';
 import { MagicConnector } from '../../utils/MagicConnector';
@@ -11,7 +12,8 @@ const EmailSchema = z.object({
 });
 
 const EmailSignin: FC = () => {
-  const { connectors } = useConnect();
+  const { connectors, connectAsync } = useConnect();
+  const { connector, isConnected } = useAccount();
   const { register, handleSubmit } = useZodForm({
     mode: 'all',
     reValidateMode: 'onChange',
@@ -23,10 +25,25 @@ const EmailSignin: FC = () => {
     [connectors],
   ) as MagicConnector;
 
+  const onSubmit = async (data: z.infer<typeof EmailSchema>) => {
+    const sdk = magicConnector.getMagicSDK();
+    await sdk.auth.loginWithMagicLink({
+      email: data.email,
+    });
+    const didToken = await magicConnector.getDidToken();
+    if (!didToken) {
+      throw new Error('No DID token found.');
+    }
+    if (!isConnected) {
+      await connectAsync({ connector: magicConnector });
+    }
+    signIn('magic', { token: didToken, callbackUrl: '/' });
+  };
+
   return (
     <form
       className="flex w-full flex-col items-center justify-center gap-4"
-      onSubmit={handleSubmit((data) => magicConnector.connect())}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <p>
         <FormattedMessage id="auth.email.connect" />

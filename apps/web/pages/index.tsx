@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
 import Breadcrumb from '../components/common/Breadcrumb';
 import TitleHelper from '../components/common/TitleHelper';
+import { useSession } from 'next-auth/react';
 
 const ChildrenMozaic = dynamic(
   () => import('../components/dashboard/parent/ChildrenMozaic'),
@@ -17,12 +18,12 @@ const ChildDashboard = dynamic(
 );
 
 export default function Web() {
-  const { data, isLoading } = trpc.useQuery(['auth.session']);
+  const { data, status } = useSession();
 
   return (
     <PageWrapper>
       <TitleHelper id="titles.dashboard" />
-      {isLoading && <Spinner />}
+      {status === 'loading' && <Spinner />}
 
       <Suspense fallback={<Spinner />}>
         {data && <Breadcrumb routes={[]} />}

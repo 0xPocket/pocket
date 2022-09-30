@@ -53,15 +53,6 @@ const EthereumSignin: FC<EthereumSigninProps> = ({ type }) => {
           message: JSON.stringify(message),
           signature,
           type: type,
-          redirect: false,
-        }).then(async (res) => {
-          if (res?.ok) {
-            await utils.invalidateQueries(['auth.me']);
-            router.push('/onboarding');
-          } else {
-            toast.error(res?.error);
-            setIsLoadingGlobal(false);
-          }
         });
       } catch (e) {
         setIsLoadingGlobal(false);
@@ -98,14 +89,6 @@ const EthereumSignin: FC<EthereumSigninProps> = ({ type }) => {
                 message,
                 signature,
                 type: type,
-                redirect: false,
-              }).then(async (res) => {
-                if (res?.ok) {
-                  router.push('/onboarding');
-                } else {
-                  toast.error(res?.error);
-                  setIsLoadingGlobal(false);
-                }
               })
             }
           />
