@@ -34,7 +34,7 @@ export class MagicConnector extends Connector {
 
   readonly id = 'magic';
 
-  readonly name = 'Magic';
+  readonly name = 'Email';
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   provider?: any;

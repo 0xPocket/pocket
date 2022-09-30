@@ -6,12 +6,11 @@ import { FC, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { SiweMessage } from 'siwe';
 import { useAccount, useConnect, useNetwork, useSignMessage } from 'wagmi';
-import EmailSignin from '../components/auth/EmailSignin';
 import FormattedMessage from '../components/common/FormattedMessage';
 import InputText from '../components/common/InputText';
 import TitleHelper from '../components/common/TitleHelper';
 import PageWrapper from '../components/common/wrappers/PageWrapper';
-import EthereumConnect from '../components/register/EthereumConnect';
+import ProviderList from '../components/register/ProviderList';
 import { MagicConnector } from '../utils/MagicConnector';
 import { trpc } from '../utils/trpc';
 
@@ -35,32 +34,27 @@ const Register: FC = () => {
     useForm<FormData>({
       mode: 'onChange',
       reValidateMode: 'onChange',
-      defaultValues: {
-        userType: 'Parent',
-      },
     });
 
   const [magicSDK, setMagicSDK] = useState<Magic>();
 
-  console.log(router);
+  const ethereumRegister = trpc.useMutation('register.ethereum');
+  const magicLinkRegister = trpc.useMutation('register.magic');
 
+  const userType = watch('userType');
+
+  // Router effect
   useEffect(() => {
-    setStep(
-      router.query.formStep ? Number(router.query.formStep as string) : 1,
-    );
-  }, [router.query.formStep]);
+    setStep(router.query.step ? parseInt(router.query.step as string) : 1);
+  }, [router]);
 
+  // Get magic sdk
   useEffect(() => {
     const sdk = (
       connectors.find((e) => e.id === 'magic') as MagicConnector
     ).getMagicSDK();
     setMagicSDK(sdk);
   }, []);
-
-  const ethereumRegister = trpc.useMutation('register.ethereum');
-  const magicLinkRegister = trpc.useMutation('register.magic');
-
-  const userType = watch('userType');
 
   const onSubmit = async (data: FormData) => {
     if (data.connectionType === 'Ethereum') {
@@ -99,11 +93,7 @@ const Register: FC = () => {
         name: data.name,
       });
     }
-    router.push(router.pathname, {
-      query: {
-        formState: 3,
-      },
-    });
+    router.push(router.pathname + '?step=3');
   };
 
   return (
@@ -166,56 +156,19 @@ const Register: FC = () => {
                 </RadioGroup.Option>
               </RadioGroup>
 
-              {userType === 'Parent' && (
-                <div className="flex flex-col items-center gap-4">
-                  <div className="flex gap-2">
-                    <button
-                      className={`action-btn flex-none`}
-                      onClick={() => {
-                        router.push(router.pathname, {
-                          query: {
-                            formState: 2,
-                          },
-                        });
-
-                        setValue('connectionType', 'Magic');
-                      }}
-                    >
-                      Connect with email
-                    </button>
-                  </div>
-                  <div className="flex w-72 items-center">
-                    <div className="w-full border-b opacity-25"></div>
-                    <h2 className="mx-2 text-lg font-bold">
-                      <FormattedMessage id="or" />
-                    </h2>
-                    <div className="w-full border-b opacity-25"></div>
-                  </div>
-                  <EthereumConnect
-                    callback={() => {
-                      router.push(router.pathname, {
-                        query: {
-                          formState: 2,
-                        },
-                      });
-
+              {userType && (
+                <ProviderList
+                  userType={userType}
+                  callback={(id) => {
+                    if (id === 'magic') {
+                      setValue('connectionType', 'Magic');
+                    } else {
                       setValue('connectionType', 'Ethereum');
-                    }}
-                  />
-                </div>
-              )}
-              {userType === 'Child' && (
-                <EthereumConnect
-                  callback={() => {
-                    router.push('/register', {
-                      query: { formStep: 2 },
-                    });
-
-                    setValue('connectionType', 'Ethereum');
+                    }
+                    router.push('/register' + '?step=2');
                   }}
                 />
               )}
-              <button onClick={() => setStep(2)}>next</button>
             </>
           )}
           {step === 2 && (

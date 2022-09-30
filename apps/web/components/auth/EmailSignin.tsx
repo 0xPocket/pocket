@@ -37,7 +37,7 @@ const EmailSignin: FC = () => {
     if (!isConnected) {
       await connectAsync({ connector: magicConnector });
     }
-    signIn('magic', { redirect: false, token: didToken });
+    signIn('magic', { token: didToken, callbackUrl: '/' });
   };
 
   return (

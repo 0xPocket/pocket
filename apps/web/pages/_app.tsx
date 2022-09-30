@@ -53,13 +53,6 @@ function App({
       provider,
       persister: null,
       connectors: [
-        new MetaMaskConnector({ chains }),
-        new WalletConnectConnector({
-          chains,
-          options: {
-            qrcode: true,
-          },
-        }),
         new MagicConnector({
           options: {
             apiKey: env.NEXT_PUBLIC_MAGIC_LINK_PUBLIC_KEY,
@@ -71,6 +64,13 @@ function App({
             },
           },
           chains: chains,
+        }),
+        new MetaMaskConnector({ chains }),
+        new WalletConnectConnector({
+          chains,
+          options: {
+            qrcode: true,
+          },
         }),
       ],
     }),
