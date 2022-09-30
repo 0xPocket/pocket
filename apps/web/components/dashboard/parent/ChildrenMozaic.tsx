@@ -4,11 +4,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { trpc } from '../../../utils/trpc';
 import FormattedMessage from '../../common/FormattedMessage';
+import PendingChildCard from '../../card/parent/PendingChildCard';
 
 function ChildrenMozaic() {
   const router = useRouter();
 
   const { isLoading, data } = trpc.useQuery(['parent.children']);
+  const { isLoading: pendingChildrenLoading, data: pendingChildren } =
+    trpc.useQuery(['parent.pendingChildren']);
 
   return (
     <div className="flex flex-col space-y-12">
@@ -18,15 +21,13 @@ function ChildrenMozaic() {
         </h1>
       </div>
       <div className="grid grid-cols-2 gap-4">
-        {/* {isLoading && (
-          <div className=" mx-auto ">
-            <Spinner />
-          </div>
-        )} */}
-        {!isLoading && (
+        {!isLoading && !pendingChildrenLoading && (
           <>
             {data?.map((child) => (
               <ChildCard key={child.id} child={child} />
+            ))}
+            {pendingChildren?.map((child) => (
+              <PendingChildCard key={child.id} child={child} />
             ))}
             <div
               onClick={() => router.push('/add-account')}

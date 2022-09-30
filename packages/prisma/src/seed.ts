@@ -50,7 +50,6 @@ async function main() {
             initialCeiling: 50,
             initialPeriodicity: "2592000",
             parentUserId: "elonmusk",
-            status: "ACTIVE",
           },
         },
       },
@@ -80,7 +79,6 @@ async function main() {
             initialCeiling: 50,
             initialPeriodicity: "2592000",
             parentUserId: "elonmusk",
-            status: "ACTIVE",
           },
         },
       },
@@ -110,10 +108,24 @@ async function main() {
             initialCeiling: 50,
             initialPeriodicity: "2592000",
             parentUserId: "elonmusk",
-            status: "ACTIVE",
           },
         },
       },
+    },
+    update: {},
+  });
+
+  await prisma.childConfig.upsert({
+    where: {
+      id: 0,
+    },
+    create: {
+      id: 0,
+      name: "Amber Heard",
+      email: "amberheard@gmail.com",
+      initialCeiling: 50,
+      initialPeriodicity: "2592000",
+      parentUserId: "elonmusk",
     },
     update: {},
   });

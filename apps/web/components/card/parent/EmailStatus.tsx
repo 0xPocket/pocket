@@ -1,4 +1,4 @@
-import { UserChild } from '@lib/types/interfaces';
+import { ChildConfig } from '@prisma/client';
 import type { FC } from 'react';
 import { toast } from 'react-toastify';
 import { trpc } from '../../../utils/trpc';
@@ -6,7 +6,7 @@ import FormattedMessage from '../../common/FormattedMessage';
 import { Spinner } from '../../common/Spinner';
 
 type EmailStatusProps = {
-  child: UserChild;
+  child: ChildConfig;
 };
 
 const EmailStatus: FC<EmailStatusProps> = ({ child }) => {
@@ -31,7 +31,7 @@ const EmailStatus: FC<EmailStatusProps> = ({ child }) => {
       <FormattedMessage id="dashboard.parent.card.email-sent" />
       {resendEmail.status === 'idle' && (
         <a
-          onClick={() => resendEmail.mutate({ userId: child.id })}
+          onClick={() => resendEmail.mutate({ id: child.id })}
           className="ml-2"
         >
           <FormattedMessage id="dashboard.parent.card.send-new" />

@@ -5,15 +5,13 @@ import {
   useVerificationToken,
 } from '../services/jwt';
 import { TRPCError } from '@trpc/server';
-import { unstable_getServerSession } from 'next-auth';
 import { createRouter } from '../createRouter';
-import { authOptions } from '../next-auth';
 import { prisma } from '../prisma';
 import { z } from 'zod';
 import { SiweMessage } from 'siwe';
 import { getCsrfToken } from 'next-auth/react';
 import { env } from 'config/env/server';
-import { addAddressToWebhook } from '../services/alchemy';
+// import { addAddressToWebhook } from '../services/alchemy';
 import { sendEmailWrapper } from '@pocket/emails';
 
 export const emailRouter = createRouter()
@@ -26,30 +24,16 @@ export const emailRouter = createRouter()
     }),
     resolve: async ({ ctx, input }) => {
       try {
-        const existingUser = await prisma.user.findUnique({
+        const childConfig = await prisma.childConfig.findUnique({
           where: {
             email: input.email,
           },
         });
 
-        if (!existingUser) {
+        if (!childConfig) {
           throw new TRPCError({
             code: 'BAD_REQUEST',
             message: 'User not found.',
-          });
-        }
-
-        if (existingUser.type === 'Parent') {
-          throw new TRPCError({
-            code: 'BAD_REQUEST',
-            message: 'User is a parent.',
-          });
-        }
-
-        if (existingUser.emailVerified || existingUser.newUser === false) {
-          throw new TRPCError({
-            code: 'BAD_REQUEST',
-            message: 'User already verified.',
           });
         }
 
@@ -78,30 +62,29 @@ export const emailRouter = createRouter()
           });
         }
 
-        const user = await prisma.user
-          .update({
-            where: {
-              email: input.email,
-            },
+        const [user] = await prisma.$transaction([
+          prisma.user.create({
             data: {
+              name: childConfig.name,
+              email: childConfig.email,
+              emailVerified: new Date(),
               address: fields.address,
-              newUser: false,
+              type: 'Child',
               child: {
-                update: {
-                  status: 'ACTIVE',
+                create: {
+                  initialCeiling: childConfig.initialCeiling,
+                  initialPeriodicity: childConfig.initialPeriodicity,
+                  parentUserId: childConfig.parentUserId,
                 },
               },
-              emailVerified: new Date(),
             },
-          })
-          .catch(() => {
-            throw new TRPCError({
-              code: 'BAD_REQUEST',
-              message: 'This wallet is already associated with an account.',
-            });
-          });
-
-        if (user.address) await addAddressToWebhook(user.address);
+          }),
+          prisma.childConfig.delete({
+            where: {
+              id: childConfig.id,
+            },
+          }),
+        ]);
 
         return user;
       } catch (e) {
@@ -114,10 +97,6 @@ export const emailRouter = createRouter()
             message: e.message,
           });
         }
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'Invalid invite.',
-        });
       }
     },
   })
@@ -126,7 +105,7 @@ export const emailRouter = createRouter()
       email: z.string(),
       token: z.string(),
     }),
-    resolve: async ({ ctx, input }) => {
+    resolve: async ({ input }) => {
       try {
         // eslint-disable-next-line react-hooks/rules-of-hooks
         const invite = await useVerificationToken({
@@ -148,15 +127,9 @@ export const emailRouter = createRouter()
             email: input.email,
           },
           data: {
-            newUser: false,
             emailVerified: new Date(),
           },
         });
-
-        // We force settings a new token
-        if (ctx.req && ctx.res) {
-          await unstable_getServerSession(ctx.req, ctx.res, authOptions);
-        }
 
         return user;
       } catch (e) {

@@ -1,12 +1,12 @@
-import { ChildStatus } from '.prisma/client';
 import { faCircleCheck, faEnvelope } from '@fortawesome/free-solid-svg-icons';
-import { UserChild } from '@lib/types/interfaces';
 import FormattedMessage from '../../common/FormattedMessage';
 import Tooltip from '../../common/Tooltip';
 
-type AccountStatusProps = { child: UserChild };
+type AccountStatus = 'ACTIVE' | 'INVITED';
 
-function getIcon(status: ChildStatus) {
+type AccountStatusProps = { email?: string; status: AccountStatus };
+
+function getIcon(status: AccountStatus) {
   switch (status) {
     case 'ACTIVE':
       return faCircleCheck;
@@ -15,7 +15,7 @@ function getIcon(status: ChildStatus) {
   }
 }
 
-function getMessage(status: ChildStatus, email: string) {
+function getMessage(status: AccountStatus, email?: string) {
   switch (status) {
     case 'ACTIVE':
       return <FormattedMessage id="card.parent.status.active" />;
@@ -26,12 +26,8 @@ function getMessage(status: ChildStatus, email: string) {
   }
 }
 
-function AccountStatus({ child }: AccountStatusProps) {
-  return (
-    <Tooltip icon={getIcon(child!.child!.status)}>
-      {getMessage(child!.child!.status, child.email!)}
-    </Tooltip>
-  );
+function AccountStatus({ email, status }: AccountStatusProps) {
+  return <Tooltip icon={getIcon(status)}>{getMessage(status, email)}</Tooltip>;
 }
 
 export default AccountStatus;

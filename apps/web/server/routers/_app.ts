@@ -10,7 +10,6 @@ import { contactRouter } from './contact';
 import { emailRouter } from './email';
 import { parentRouter } from './parent';
 import { ticketRouter } from './ticket';
-import { testRouter } from './test';
 import { tokenRouter } from './token';
 import { relayerRouter } from './relayer';
 import { registerRouter } from './register';
@@ -42,7 +41,6 @@ export const appRouter = createRouter()
   .merge('token.', tokenRouter)
   .merge('contact.', contactRouter)
   .merge('ticket.', ticketRouter)
-  .merge('relayer.', relayerRouter)
-  .merge('test.', testRouter);
+  .merge('relayer.', relayerRouter);
 
 export type AppRouter = typeof appRouter;

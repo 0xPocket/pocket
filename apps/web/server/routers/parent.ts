@@ -1,5 +1,4 @@
 import { sendEmailWrapper } from '@pocket/emails';
-import type { User } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import { env } from 'config/env/server';
 import { z } from 'zod';
@@ -49,39 +48,47 @@ export const parentRouter = createProtectedRouter()
       });
     },
   })
-  .mutation('resendChildVerificationEmail', {
-    input: z.object({
-      userId: z.string(),
-    }),
-    resolve: async ({ input }) => {
-      const child = await prisma.user.findUnique({
+  .query('pendingChildren', {
+    resolve: async ({ ctx }) => {
+      return prisma.childConfig.findMany({
         where: {
-          id: input.userId,
-        },
-        include: {
-          child: true,
+          parentUserId: ctx.session.user.id,
         },
       });
-      if (!child || !child.email) {
+    },
+  })
+  .mutation('resendChildVerificationEmail', {
+    input: z.object({
+      id: z.number(),
+    }),
+    resolve: async ({ input }) => {
+      const childConfig = await prisma.childConfig.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!childConfig) {
         throw new TRPCError({ code: 'NOT_FOUND' });
       }
+
       const token = generateVerificationToken();
       const ONE_DAY_IN_SECONDS = 86400;
       const expires = new Date(Date.now() + ONE_DAY_IN_SECONDS * 1000);
 
       await saveVerificationToken({
-        identifier: child.email,
+        identifier: childConfig.email,
         expires,
         token: hashToken(token),
       });
 
-      const params = new URLSearchParams({ token, email: child.email });
+      const params = new URLSearchParams({ token, email: childConfig.email });
 
       await sendEmailWrapper({
-        to: child.email,
+        to: childConfig.email,
         template: 'child_invitation',
         props: {
-          name: child.name!,
+          name: childConfig.name,
           link: `${env.APP_URL}/verify-child?${params}`,
         },
       });
@@ -100,61 +107,52 @@ export const parentRouter = createProtectedRouter()
         throw new TRPCError({ code: 'UNAUTHORIZED' });
       }
 
-      let child: User;
+      const userExists = await prisma.user.findUnique({
+        where: {
+          email: input.email,
+        },
+      });
 
-      try {
-        child = await prisma.user.create({
-          data: {
-            name: input.name,
-            email: input.email,
-            type: 'Child',
-            newUser: true,
-            child: {
-              create: {
-                initialCeiling: input.ceiling,
-                initialPeriodicity: input.periodicity,
-                parent: {
-                  connect: {
-                    userId: parent.id,
-                  },
-                },
-              },
-            },
-          },
-        });
-      } catch (e) {
-        console.log(e);
+      if (userExists) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
-          message: 'Child with this email already exists',
+          message: 'A user with that email already exists',
         });
       }
 
-      if (child) {
-        const token = generateVerificationToken();
+      const childConfig = await prisma.childConfig.create({
+        data: {
+          name: input.name,
+          email: input.email,
+          initialCeiling: input.ceiling,
+          initialPeriodicity: input.periodicity,
+          parentUserId: parent.id,
+        },
+      });
 
-        const ONE_DAY_IN_SECONDS = 86400;
-        const expires = new Date(Date.now() + ONE_DAY_IN_SECONDS * 1000);
+      const token = generateVerificationToken();
 
-        await saveVerificationToken({
-          identifier: input.email,
-          expires,
-          token: hashToken(token),
-        });
+      const ONE_DAY_IN_SECONDS = 86400;
+      const expires = new Date(Date.now() + ONE_DAY_IN_SECONDS * 1000);
 
-        const params = new URLSearchParams({ token, email: input.email });
+      await saveVerificationToken({
+        identifier: input.email,
+        expires,
+        token: hashToken(token),
+      });
 
-        await sendEmailWrapper({
-          to: child.email!,
-          template: 'child_invitation',
-          props: {
-            name: child.name!,
-            link: `${env.APP_URL}/verify-child?${params}`,
-          },
-        });
-      }
+      const params = new URLSearchParams({ token, email: input.email });
 
-      ctx.log.info('new child created', { child });
+      await sendEmailWrapper({
+        to: childConfig.email,
+        template: 'child_invitation',
+        props: {
+          name: childConfig.name,
+          link: `${env.APP_URL}/verify-child?${params}`,
+        },
+      });
+
+      ctx.log.info('new child created', { childConfig });
 
       return 'OK';
     },

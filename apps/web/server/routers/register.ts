@@ -48,6 +48,7 @@ export const registerRouter = createRouter()
 
       return prisma.user.create({
         data: {
+          name: input.name,
           email: userMetadata.email,
           emailVerified: new Date(),
           address: userAddress,
@@ -110,11 +111,6 @@ export const registerRouter = createRouter()
         //   },
         // });
         throw new Error('Not implemented');
-      }
-
-      // TODO: make email and name mandatory
-      if (!newUser.email || !newUser.name) {
-        throw new Error('No email');
       }
 
       const token = generateVerificationToken();
