@@ -41,16 +41,16 @@ const ProviderList: FC<ProviderListProps> = ({ callback, userType }) => {
 
   return (
     <>
-      <h2>Choose your connection method</h2>
-      {isLoading && <Spinner />}
-      <>
-        <div className={` flex w-full justify-center gap-8`}>
-          {filteredConnectors.map((connector) => (
-            <button
-              key={connector.id}
-              onClick={() => handleConnect(connector)}
-              className="provider-container"
-            >
+      <h3>Choose your connection method</h3>
+
+      <div className={` flex w-full justify-center gap-8`}>
+        {filteredConnectors.map((connector) => (
+          <button
+            key={connector.id}
+            onClick={() => handleConnect(connector)}
+            className="provider-container"
+          >
+            <div className="container-classic rounded-md p-8">
               <div className="provider-img">
                 <Image
                   src={`/assets/providers/${connector.id}.svg`}
@@ -59,11 +59,11 @@ const ProviderList: FC<ProviderListProps> = ({ callback, userType }) => {
                   alt={connector.name}
                 />
               </div>
-              {/* <p className="">{connector.name}</p> */}
-            </button>
-          ))}
-        </div>
-      </>
+            </div>
+            {/* <p className="">{connector.name}</p> */}
+          </button>
+        ))}
+      </div>
     </>
   );
 };

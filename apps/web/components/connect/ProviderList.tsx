@@ -86,56 +86,33 @@ const ProviderList: FC = () => {
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <p>
-        <FormattedMessage id="onboarding.connect-wallet" />
-      </p>
-      <div className={`grid w-full grid-cols-3 gap-4`}>
+    <>
+      <div className={` flex w-full justify-center gap-8`}>
         {connectors.map((connector) => (
           <button
             key={connector.id}
             onClick={() => handleConnect(connector)}
-            disabled={!connector.ready}
-            className="relative flex flex-col items-center justify-center gap-4 transition-all hover:scale-110"
+            className="provider-container"
           >
-            <Image
-              src={`/assets/providers/${connector.id}.svg`}
-              alt={connector.name}
-              className="h-8 w-8"
-              width={32}
-              height={32}
-            />
-            <p className="text-xs">{connector.name}</p>
+            <div className="container-classic rounded-md p-8">
+              <div className="provider-img">
+                <Image
+                  src={`/assets/providers/${connector.id}.svg`}
+                  width={128}
+                  height={128}
+                  alt={connector.name}
+                />
+              </div>
+            </div>
+            {/* <p className="">{connector.name}</p> */}
           </button>
         ))}
       </div>
+
       <DialogPopupWrapper isOpen={open} setIsOpen={setIsOpen}>
         <EmailModalForm closeModal={() => setIsOpen(false)} />
       </DialogPopupWrapper>
-      {/* {isLoading && <Spinner />} */}
-      {/* {isConnected && !isLoading && activeConnector?.id !== 'magic' && (
-        <div className="flex gap-4">
-          <button
-            className="third-btn"
-            onClick={(e) => {
-              e.preventDefault();
-              disconnect();
-            }}
-          >
-            <FormattedMessage id="disconnect" />
-          </button>
-          <SignMessage
-            callback={(message, signature) =>
-              signIn('ethereum', {
-                message,
-                signature,
-                type: type,
-              })
-            }
-          />
-        </div>
-      )} */}
-    </div>
+    </>
   );
 };
 

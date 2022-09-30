@@ -1,3 +1,5 @@
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/router';
 import { FC, Fragment } from 'react';
 
@@ -8,7 +10,7 @@ const Stepper: FC<StepperProps> = ({ step, nbrSteps }) => {
   const { pathname, push } = useRouter();
 
   return (
-    <div className="stepper flex w-full items-center justify-between pb-4">
+    <div className="stepper relative flex w-full items-center justify-between">
       {steps.map((el, i) => {
         if (i === 0) {
           return (

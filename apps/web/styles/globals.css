@@ -25,6 +25,10 @@
     @apply font-raleway text-3xl font-bold;
   }
 
+	h3 {
+		@apply font-raleway text-2xl;
+	}
+
   a {
     @apply without-ring cursor-pointer text-primary;
   }
@@ -89,7 +93,7 @@
 	}
 
 	.input-radio.big {
-		@apply w-1/2 py-4 text-xl;
+		@apply w-1/2 py-4 text-xl hover:bg-primary hover:text-white transition-all;
 	}
 
 	.input-radio-checked {
@@ -236,7 +240,7 @@
 	}
 
 	.step {
-		@apply flex h-6 w-6 items-center justify-center rounded-full bg-dark-light border border-transparent transition-all;
+		@apply flex h-6 w-6 items-center justify-center rounded-full bg-dark-light border border-transparent transition-all select-none;
 	}
 
 	.step.active {

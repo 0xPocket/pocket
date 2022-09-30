@@ -1,3 +1,5 @@
+import { faEnvelopeCircleCheck } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { RadioGroup } from '@headlessui/react';
 import { Magic } from 'magic-sdk';
 import { getCsrfToken } from 'next-auth/react';
@@ -105,17 +107,17 @@ const Register: FC = () => {
     <PageWrapper>
       <TitleHelper title="Register" />
       <div className="flex flex-col items-center">
-        <h1 className="pb-8">Register to Pocket</h1>
+        <div className="flex w-[512px] flex-col items-center gap-16">
+          <h1 className="">Register to Pocket</h1>
 
-        <div className="w-[512px]">
           <Stepper step={step} nbrSteps={4} />
           <div
-            className="container-classic mx-auto flex w-full flex-col justify-center gap-8 rounded-lg p-16
+            className=" mx-auto flex w-full flex-col justify-center gap-8 rounded-lg
 					text-center"
           >
             {step === 0 && (
               <>
-                <h2>Select your account type</h2>
+                <h3>Select your account type</h3>
                 <RadioGroup
                   value={userType}
                   className="flex items-center justify-center space-x-8"
@@ -166,30 +168,36 @@ const Register: FC = () => {
             )}
             {step === 2 && (
               <form
-                className="flex w-full min-w-[350px] flex-col items-center justify-center gap-4 text-left"
+                className="flex w-full min-w-[350px] flex-col items-center justify-center gap-8 text-left"
                 onSubmit={handleSubmit(onSubmit)}
               >
-                <InputText
-                  label="Name"
-                  register={register('name')}
-                  autoComplete="name"
-                />
-                <InputText
-                  label="Email"
-                  register={register('email')}
-                  autoComplete="email"
-                />
-                <div className="mb-2 flex items-center">
+                <h3>Complete your infos</h3>
+                <div className="flex min-w-[300px] flex-col gap-4">
+                  <InputText
+                    label="Name"
+                    register={register('name')}
+                    autoComplete="name"
+                  />
+                  <InputText
+                    label="Email"
+                    register={register('email')}
+                    autoComplete="email"
+                  />
+                </div>
+                <div className=" flex items-center">
                   <input
                     required
                     type="checkbox"
                     {...register('ageLimit', {
                       validate: (value) => value === true,
                     })}
-                    className="text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded focus:ring-2"
+                    className=" h-4 w-4 rounded focus:ring-2"
                   />
-                  <label className="text-gray-900 dark:text-gray-300 ml-2 text-sm font-medium">
-                    <FormattedMessage id="onboarding.majority" />
+                  <label className="ml-2 text-sm font-medium">
+                    {userType === 'Parent' && (
+                      <FormattedMessage id="onboarding.majority" />
+                    )}
+                    {userType === 'Child' && 'Je certifie blablabla'}
                   </label>
                 </div>
                 <button className="action-btn" disabled={!formState.isValid}>
@@ -198,10 +206,11 @@ const Register: FC = () => {
               </form>
             )}
             {step === 3 && connectionType === 'Ethereum' && (
-              <div className="flex flex-col items-center justify-center gap-4">
-                <h2>An email as been sent to {emailAddress} !</h2>
-                <p>Follow the instructions to finish your registration</p>
-                <div className="flex gap-2">
+              <div className="flex flex-col items-center justify-center gap-8">
+                <FontAwesomeIcon icon={faEnvelopeCircleCheck} size="3x" />
+                <h3>An email as been sent to {emailAddress} !</h3>
+                {/* <p>Follow the instructions to finish your registration</p> */}
+                <div className="flex gap-2 text-sm">
                   <p>{`Didn't receive ?`}</p>
                   {resendEmail.status !== 'success' && (
                     <a
@@ -217,8 +226,8 @@ const Register: FC = () => {
               </div>
             )}
             {step === 3 && connectionType === 'Magic' && (
-              <div className="flex flex-col items-center justify-center gap-4">
-                <h2>Your register is completed !</h2>
+              <div className="flex flex-col items-center justify-center gap-8">
+                <h3>Your register is completed !</h3>
                 <Link href="/connect">Go to connection page</Link>
               </div>
             )}
