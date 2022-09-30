@@ -1,12 +1,12 @@
 import { env } from 'config/env/client';
 import { useCallback } from 'react';
 import { useAccount } from 'wagmi';
-import { useMagic } from '../contexts/auth';
 import transakSDK from '@transak/transak-sdk';
+import { useSession } from 'next-auth/react';
 
 function useTransak() {
   const { address } = useAccount();
-  const { user } = useMagic();
+  const { data } = useSession();
 
   const showTransak = useCallback(() => {
     const transak = new transakSDK({
@@ -21,7 +21,7 @@ function useTransak() {
       walletAddress: address, // Your customer's wallet address
       themeColor: '0db0e9', // App theme color
       fiatCurrency: 'EUR', // If you want to limit fiat selection eg 'USD'
-      email: user?.email, // Your customer's email address
+      email: data?.user?.email, // Your customer's email address
       redirectURL: '',
     });
 
@@ -33,7 +33,7 @@ function useTransak() {
     });
 
     transak.init();
-  }, [user, address]);
+  }, [data?.user, address]);
 
   return { showTransak };
 }

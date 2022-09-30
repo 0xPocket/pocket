@@ -1,6 +1,6 @@
 import FormattedMessage from '../common/FormattedMessage';
 import React, { useState } from 'react';
-import { useMagic } from '../../contexts/auth';
+import { useAuth } from '../../contexts/auth';
 import BugDialog from './BugDialog';
 import ContactDialog from './ContactDialog';
 import Link from 'next/link';
@@ -13,7 +13,7 @@ type FooterProps = React.DetailedHTMLProps<
 function Footer(props: FooterProps) {
   const [contactOpen, setContactOpen] = useState(false);
   const [bugOpen, setBugOpen] = useState(false);
-  const { loggedIn } = useMagic();
+  const { loggedIn } = useAuth();
 
   return (
     <footer {...props}>

@@ -3,7 +3,7 @@ import { type FC, useEffect } from 'react';
 import FormattedMessage from '../components/common/FormattedMessage';
 import OnBoardingStepper from '../components/onboarding/child/OnBoarding';
 import PageWrapper from '../components/common/wrappers/PageWrapper';
-import { useMagic } from '../contexts/auth';
+import { useAuth } from '../contexts/auth';
 import { useIsMounted } from '../hooks/useIsMounted';
 import TitleHelper from '../components/common/TitleHelper';
 
@@ -11,7 +11,7 @@ const VerifyChild: FC = () => {
   return null;
   // const router = useRouter();
   // const isMounted = useIsMounted();
-  // const { signOut, loggedIn } = useMagic();
+  // const { signOut, loggedIn } = useAuth();
 
   // useEffect(() => {
   //   if (loggedIn) {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { useAccount, useDisconnect, useNetwork, useSwitchNetwork } from 'wagmi';
 import { createCtx } from '../utils/createContext';
@@ -7,26 +7,23 @@ import type { CustomSessionUser } from 'next-auth';
 import { useRouter } from 'next/router';
 import { env } from 'config/env/client';
 
-interface MagicAuthProviderProps {
+interface AuthProviderProps {
   children: React.ReactNode;
 }
 
-interface IMagicAuthContext {
+interface IAuthContext {
   loggedIn: boolean;
-  loading: boolean;
   signOut: (redirect?: boolean) => Promise<void>;
   user: CustomSessionUser | undefined;
 }
 
-export const [useMagic, MagicAuthContextProvider] =
-  createCtx<IMagicAuthContext>();
+export const [useAuth, AuthContextProvider] = createCtx<IAuthContext>();
 
-export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
+export const AuthProvider = ({ children }: AuthProviderProps) => {
   const { isConnected, connector } = useAccount();
   const { disconnectAsync } = useDisconnect();
   const queryClient = useQueryClient();
   const router = useRouter();
-  const [loading] = useState(false);
 
   const { chain } = useNetwork();
   const { switchNetwork } = useSwitchNetwork();
@@ -83,15 +80,14 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
   }, [chain, chain?.id, switchNetwork, connector]);
 
   return (
-    <MagicAuthContextProvider
+    <AuthContextProvider
       value={{
         loggedIn: nextAuthStatus === 'authenticated' && isConnected,
-        loading: logout.isLoading || loading,
         signOut: async (redirect = true) => logout.mutate(redirect),
         user: data?.user,
       }}
     >
       {children}
-    </MagicAuthContextProvider>
+    </AuthContextProvider>
   );
 };

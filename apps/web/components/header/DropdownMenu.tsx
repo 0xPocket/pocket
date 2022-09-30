@@ -6,13 +6,13 @@ import {
   faEllipsisVertical,
   faRightFromBracket,
 } from '@fortawesome/free-solid-svg-icons';
-import { useMagic } from '../../contexts/auth';
+import { useAuth } from '../../contexts/auth';
 import FormattedMessage from '../common/FormattedMessage';
 import LangToggler from './LangToggler';
 import { ThemeToggler } from './ThemeToggler';
 
 const DropdownMenu: FC = ({}) => {
-  const { signOut } = useMagic();
+  const { signOut } = useAuth();
 
   return (
     <Menu as="div" className="relative z-50 inline-block text-left">
