@@ -1,6 +1,7 @@
 import { Magic } from '@magic-sdk/admin';
 import { sendEmailWrapper } from '@pocket/emails';
 import { User } from '@prisma/client';
+import { TRPCError } from '@trpc/server';
 import { env } from 'config/env/server';
 import { SiweMessage } from 'siwe';
 import { z } from 'zod';
@@ -76,7 +77,10 @@ export const registerRouter = createRouter()
       });
 
       if (existingUser) {
-        throw new Error('User already exists');
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'This user already exists',
+        });
       }
 
       let newUser: User;

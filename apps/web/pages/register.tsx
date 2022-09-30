@@ -1,19 +1,21 @@
+import { faEnvelopeCircleCheck } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { RadioGroup } from '@headlessui/react';
-import { Magic } from 'magic-sdk';
-import { getCsrfToken } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { SiweMessage } from 'siwe';
-import { useAccount, useConnect, useNetwork, useSignMessage } from 'wagmi';
+import { toast } from 'react-toastify';
 import FormattedMessage from '../components/common/FormattedMessage';
 import InputText from '../components/common/InputText';
+import { Spinner } from '../components/common/Spinner';
 import TitleHelper from '../components/common/TitleHelper';
 import PageWrapper from '../components/common/wrappers/PageWrapper';
 import ProviderList from '../components/register/ProviderList';
 import Stepper from '../components/register/Stepper';
-import { MagicConnector } from '../utils/MagicConnector';
+import { useEthereumSiwe } from '../hooks/useEthereumSiwe';
+import { useMagicConnect } from '../hooks/useMagicConnect';
 import { trpc } from '../utils/trpc';
 
 type FormData = {
@@ -26,11 +28,9 @@ type FormData = {
 
 const Register: FC = () => {
   const router = useRouter();
-  const [step, setStep] = useState<number>(1);
-  const { address } = useAccount();
-  const { connectors } = useConnect();
-  const { chain } = useNetwork();
-  const { signMessageAsync } = useSignMessage();
+  const { status } = useSession();
+
+  const [step, setStep] = useState<number>(0);
 
   const { register, handleSubmit, setValue, formState, watch } =
     useForm<FormData>({
@@ -38,10 +38,27 @@ const Register: FC = () => {
       reValidateMode: 'onChange',
     });
 
-  const [magicSDK, setMagicSDK] = useState<Magic>();
+  const magicSignIn = useMagicConnect();
+  const ethereumSignMessage = useEthereumSiwe();
 
-  const ethereumRegister = trpc.useMutation('register.ethereum');
-  const magicLinkRegister = trpc.useMutation('register.magic');
+  const ethereumRegister = trpc.useMutation('register.ethereum', {
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onSuccess: () => {
+      router.push(router.pathname + '?step=3');
+    },
+  });
+
+  const magicLinkRegister = trpc.useMutation('register.magic', {
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onSuccess: () => {
+      router.push(router.pathname + '?step=3');
+    },
+  });
+
   const resendEmail = trpc.useMutation(['email.resendVerificationEmail']);
 
   const userType = watch('userType');
@@ -54,80 +71,68 @@ const Register: FC = () => {
   }, [router]);
 
   useEffect(() => {
+    if (status === 'authenticated') {
+      router.push('/');
+    }
+  }, [router, status]);
+
+  useEffect(() => {
     if (step > 0 && !userType) {
       router.push('/register?step=0');
     }
   }, [step, router, userType]);
 
-  // Get magic sdk
-  useEffect(() => {
-    const sdk = (
-      connectors.find((e) => e.id === 'magic') as MagicConnector
-    ).getMagicSDK();
-    setMagicSDK(sdk);
-  }, [connectors]);
+  const isLoading = useMemo(() => {
+    return (
+      ethereumRegister.isLoading ||
+      ethereumSignMessage.isLoading ||
+      magicLinkRegister.isLoading ||
+      magicSignIn.isLoading
+    );
+  }, [
+    ethereumRegister.isLoading,
+    ethereumSignMessage.isLoading,
+    magicLinkRegister.isLoading,
+    magicSignIn.isLoading,
+  ]);
 
   const onSubmit = async (data: FormData) => {
     if (data.connectionType === 'Ethereum') {
-      const message = new SiweMessage({
-        domain: window.location.host,
-        address,
-        statement: 'Sign this message to access Pocket.',
-        uri: window.location.origin,
-        version: '1',
-        chainId: chain?.id,
-        nonce: await getCsrfToken(),
-      });
+      const { message, signature } = await ethereumSignMessage.mutateAsync();
 
-      try {
-        const signature = await signMessageAsync({
-          message: message.prepareMessage(),
-        });
-
-        await ethereumRegister.mutateAsync({
-          message: JSON.stringify(message),
-          signature,
-          type: userType,
-          email: data.email,
-          name: data.name,
-        });
-      } catch (e) {
-        return;
-      }
-    } else if (data.connectionType === 'Magic') {
-      await magicSDK?.auth.loginWithMagicLink({
+      ethereumRegister.mutate({
+        message: JSON.stringify(message),
+        signature,
+        type: userType,
         email: data.email,
+        name: data.name,
       });
-      const didToken = await magicSDK?.user.getIdToken();
+    } else if (data.connectionType === 'Magic') {
+      const didToken = await magicSignIn.mutateAsync(data.email);
 
-      if (!didToken) {
-        throw new Error('No DID token found.');
-      }
-
-      await magicLinkRegister.mutateAsync({
+      magicLinkRegister.mutate({
         didToken: didToken,
         email: data.email,
         name: data.name,
       });
     }
-    router.push(router.pathname + '?step=3');
   };
 
   return (
     <PageWrapper>
       <TitleHelper title="Register" />
       <div className="flex flex-col items-center">
-        <h1 className="pb-8">Register to Pocket</h1>
+        <div className="flex w-[512px] flex-col items-center gap-16">
+          <h1 className="">Register to Pocket</h1>
 
-        <div className="w-[512px]">
           <Stepper step={step} nbrSteps={4} />
           <div
-            className="container-classic mx-auto flex w-full flex-col justify-center gap-8 rounded-lg p-16
+            className=" mx-auto flex w-full flex-col justify-center gap-8 rounded-lg
 					text-center"
           >
             {step === 0 && (
               <>
-                <h2>Select your account type</h2>
+                <h3>Select your account type</h3>
                 <RadioGroup
                   value={userType}
                   className="flex items-center justify-center space-x-8"
@@ -178,42 +183,53 @@ const Register: FC = () => {
             )}
             {step === 2 && (
               <form
-                className="flex w-full min-w-[350px] flex-col items-center justify-center gap-4 text-left"
+                className="flex w-full min-w-[350px] flex-col items-center justify-center gap-8 text-left"
                 onSubmit={handleSubmit(onSubmit)}
               >
-                <InputText
-                  label="Name"
-                  register={register('name')}
-                  autoComplete="name"
-                />
-                <InputText
-                  label="Email"
-                  register={register('email')}
-                  autoComplete="email"
-                />
-                <div className="mb-2 flex items-center">
+                <h3>Complete your infos</h3>
+                <div className="flex min-w-[300px] flex-col gap-4">
+                  <InputText
+                    label="Name"
+                    register={register('name')}
+                    autoComplete="name"
+                  />
+                  <InputText
+                    label="Email"
+                    register={register('email')}
+                    autoComplete="email"
+                  />
+                </div>
+                <div className=" flex items-center">
                   <input
                     required
                     type="checkbox"
                     {...register('ageLimit', {
                       validate: (value) => value === true,
                     })}
-                    className="text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded focus:ring-2"
+                    className=" h-4 w-4 rounded focus:ring-2"
                   />
-                  <label className="text-gray-900 dark:text-gray-300 ml-2 text-sm font-medium">
-                    <FormattedMessage id="onboarding.majority" />
+                  <label className="ml-2 text-sm font-medium">
+                    {userType === 'Parent' && (
+                      <FormattedMessage id="onboarding.majority" />
+                    )}
+                    {userType === 'Child' && 'Je certifie blablabla'}
                   </label>
                 </div>
-                <button className="action-btn" disabled={!formState.isValid}>
-                  <FormattedMessage id="submit" />
-                </button>
+                {isLoading ? (
+                  <Spinner />
+                ) : (
+                  <button className="action-btn" disabled={!formState.isValid}>
+                    <FormattedMessage id="submit" />
+                  </button>
+                )}
               </form>
             )}
             {step === 3 && connectionType === 'Ethereum' && (
-              <div className="flex flex-col items-center justify-center gap-4">
-                <h2>An email as been sent to {emailAddress} !</h2>
-                <p>Follow the instructions to finish your registration</p>
-                <div className="flex gap-2">
+              <div className="flex flex-col items-center justify-center gap-8">
+                <FontAwesomeIcon icon={faEnvelopeCircleCheck} size="3x" />
+                <h3>An email as been sent to {emailAddress} !</h3>
+                {/* <p>Follow the instructions to finish your registration</p> */}
+                <div className="flex gap-2 text-sm">
                   <p>{`Didn't receive ?`}</p>
                   {resendEmail.status !== 'success' && (
                     <a
@@ -229,8 +245,8 @@ const Register: FC = () => {
               </div>
             )}
             {step === 3 && connectionType === 'Magic' && (
-              <div className="flex flex-col items-center justify-center gap-4">
-                <h2>Your register is completed !</h2>
+              <div className="flex flex-col items-center justify-center gap-8">
+                <h3>Your register is completed !</h3>
                 <Link href="/connect">Go to connection page</Link>
               </div>
             )}

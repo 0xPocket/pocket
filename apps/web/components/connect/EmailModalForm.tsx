@@ -1,9 +1,9 @@
 import { signIn } from 'next-auth/react';
-import { FC, useMemo } from 'react';
+import { FC } from 'react';
 import { toast } from 'react-toastify';
 import { useAccount, useConnect } from 'wagmi';
 import { z } from 'zod';
-import { MagicConnector } from '../../utils/MagicConnector';
+import { useMagicConnect } from '../../hooks/useMagicConnect';
 import { trpc } from '../../utils/trpc';
 import { useZodForm } from '../../utils/useZodForm';
 import FormattedMessage from '../common/FormattedMessage';
@@ -24,16 +24,14 @@ const EmailModalForm: FC<EmailModalFormProps> = ({ closeModal }) => {
     reValidateMode: 'onChange',
     schema: EmailSchema,
   });
+
   const checkEmail = trpc.useMutation('connect.connect', {
     onError: (err) => {
       toast.error(err.message);
     },
   });
 
-  const magicConnector: MagicConnector = useMemo(
-    () => connectors.find((c) => c.id === 'magic'),
-    [connectors],
-  ) as MagicConnector;
+  const magicSignIn = useMagicConnect();
 
   const onSubmit = async (data: z.infer<typeof EmailSchema>) => {
     try {
@@ -45,18 +43,24 @@ const EmailModalForm: FC<EmailModalFormProps> = ({ closeModal }) => {
       return;
     }
 
-    const sdk = magicConnector.getMagicSDK();
-    await sdk.auth.loginWithMagicLink({
-      email: data.email,
-    });
-    const didToken = await magicConnector.getDidToken();
-    if (!didToken) {
-      throw new Error('No DID token found.');
-    }
+    const didToken = await magicSignIn.mutateAsync(data.email);
+
     if (!isConnected) {
-      await connectAsync({ connector: magicConnector });
+      await connectAsync({
+        connector: connectors.find((c) => c.id === 'magic'),
+      });
     }
-    signIn('magic', { token: didToken, callbackUrl: '/' });
+
+    signIn('magic', {
+      token: didToken,
+      redirect: false,
+    }).then((res) => {
+      if (res?.ok) {
+        window.location.href = '/';
+      } else {
+        toast.error(res?.error);
+      }
+    });
   };
 
   return (

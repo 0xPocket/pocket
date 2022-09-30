@@ -119,37 +119,7 @@ export const authOptions: NextAuthOptions = {
       return newSession;
     },
     jwt: async ({ token, user }) => {
-      // console.log('==== JWT CALLBACK ====');
-      // console.log("token", token); //name, email, picture, sub (id)
-      // console.log("account", account);
-      // console.log("user", user); // user from return
-
-      // if (token.newUser || !token.emailVerified) {
-      //   const checkUser = await prisma.user.findUnique({
-      //     where: {
-      //       id: token.sub,
-      //     },
-      //   });
-
-      //   if (!checkUser) {
-      //     return token;
-      //   }
-
-      //   return {
-      //     ...token,
-      //     email: checkUser.email,
-      //     address: checkUser.address || undefined,
-      //     type: checkUser.type,
-      //     name: checkUser.name,
-      //     newUser: checkUser.newUser,
-      //     emailVerified: !!checkUser.emailVerified,
-      //   };
-      // }
-      // // console.log("NO");
-
       if (user) {
-        // console.log('Wet set a the user from scratch');
-
         return {
           ...token,
           email: user.email,

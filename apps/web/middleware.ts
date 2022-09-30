@@ -28,32 +28,8 @@ const handler = (req: NextRequestWithAuth) => {
     return NextResponse.next();
   }
 
-  // // New users or unverified users go to onboarding !
-  // if (
-  //   (token.newUser || !token.emailVerified) &&
-  //   req.nextUrl.pathname !== '/onboarding'
-  // ) {
-  //   return NextResponse.redirect(new URL('/onboarding', req.url));
-  // }
-
-  // // Onboarding is locked for validated users
-  // if (
-  //   !token.newUser &&
-  //   token.emailVerified &&
-  //   req.nextUrl.pathname === '/onboarding'
-  // ) {
-  //   return NextResponse.redirect(new URL('/', req.url));
-  // }
-
-  // if (!token.emailVerified && req.nextUrl.pathname !== '/onboarding') {
-  //   return NextResponse.redirect(new URL('/onboarding', req.url));
-  // }
-
-  // Redirect if user type is not allowed
-
   const userType = token.type;
 
-  // User is not parent or child, allowed for anything
   if (!userRoutes[userType]) {
     return NextResponse.next();
   }

@@ -1,10 +1,7 @@
 import { type FC, useCallback, useMemo } from 'react';
 import { Connector, useAccount, useConnect } from 'wagmi';
-import { Spinner } from '../common/Spinner';
 import { useIsMounted } from '../../hooks/useIsMounted';
-import FormattedMessage from '../common/FormattedMessage';
 import Image from 'next/future/image';
-import { toast } from 'react-toastify';
 
 type ProviderListProps = {
   callback: (id: string) => void;
@@ -21,6 +18,7 @@ const ProviderList: FC<ProviderListProps> = ({ callback, userType }) => {
       }
     },
   });
+
   const { isConnected, connector: activeConnector } = useAccount();
 
   const handleConnect = useCallback(
@@ -48,15 +46,16 @@ const ProviderList: FC<ProviderListProps> = ({ callback, userType }) => {
 
   return (
     <>
-      <h2>Choose your connection method</h2>
-      <>
-        <div className={` flex w-full justify-center gap-8`}>
-          {filteredConnectors.map((connector) => (
-            <button
-              key={connector.id}
-              onClick={() => handleConnect(connector)}
-              className="provider-container"
-            >
+      <h3>Choose your connection method</h3>
+
+      <div className={` flex w-full justify-center gap-8`}>
+        {filteredConnectors.map((connector) => (
+          <button
+            key={connector.id}
+            onClick={() => handleConnect(connector)}
+            className="provider-container"
+          >
+            <div className="container-classic rounded-md p-8">
               <div className="provider-img">
                 <Image
                   src={`/assets/providers/${connector.id}.svg`}
@@ -65,10 +64,10 @@ const ProviderList: FC<ProviderListProps> = ({ callback, userType }) => {
                   alt={connector.name}
                 />
               </div>
-            </button>
-          ))}
-        </div>
-      </>
+            </div>
+          </button>
+        ))}
+      </div>
     </>
   );
 };
