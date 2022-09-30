@@ -54,12 +54,12 @@ export const MagicAuthProvider = ({ children }: MagicAuthProviderProps) => {
     }
     if (connector?.id !== 'magic') {
       connector?.on('disconnect', onDisconnect);
-      connector?.on('change', onChange as any);
+      connector?.on('change', onChange);
     }
     return () => {
       if (connector?.id !== 'magic') {
         connector?.removeListener('disconnect', onDisconnect);
-        connector?.removeListener('change', onChange as any);
+        connector?.removeListener('change', onChange);
       }
     };
   }, [

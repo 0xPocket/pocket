@@ -1,9 +1,10 @@
 import { signIn } from 'next-auth/react';
 import { FC, useMemo } from 'react';
+import { toast } from 'react-toastify';
 import { useAccount, useConnect } from 'wagmi';
 import { z } from 'zod';
-import { useMagic } from '../../contexts/auth';
 import { MagicConnector } from '../../utils/MagicConnector';
+import { trpc } from '../../utils/trpc';
 import { useZodForm } from '../../utils/useZodForm';
 import FormattedMessage from '../common/FormattedMessage';
 
@@ -11,13 +12,22 @@ const EmailSchema = z.object({
   email: z.string().email(),
 });
 
-const EmailSignin: FC = () => {
+type EmailModalFormProps = {
+  closeModal: () => void;
+};
+
+const EmailModalForm: FC<EmailModalFormProps> = ({ closeModal }) => {
+  const { isConnected } = useAccount();
   const { connectors, connectAsync } = useConnect();
-  const { connector, isConnected } = useAccount();
-  const { register, handleSubmit } = useZodForm({
+  const { register, handleSubmit, formState } = useZodForm({
     mode: 'all',
     reValidateMode: 'onChange',
     schema: EmailSchema,
+  });
+  const checkEmail = trpc.useMutation('connect.connect', {
+    onError: (err) => {
+      toast.error(err.message);
+    },
   });
 
   const magicConnector: MagicConnector = useMemo(
@@ -26,6 +36,15 @@ const EmailSignin: FC = () => {
   ) as MagicConnector;
 
   const onSubmit = async (data: z.infer<typeof EmailSchema>) => {
+    try {
+      await checkEmail.mutateAsync({
+        email: data.email,
+      });
+    } catch (e) {
+      closeModal();
+      return;
+    }
+
     const sdk = magicConnector.getMagicSDK();
     await sdk.auth.loginWithMagicLink({
       email: data.email,
@@ -41,26 +60,22 @@ const EmailSignin: FC = () => {
   };
 
   return (
-    <form
-      className="flex w-full flex-col items-center justify-center gap-4"
-      onSubmit={handleSubmit(onSubmit)}
-    >
-      <p>
-        <FormattedMessage id="auth.email.connect" />
-      </p>
-      <div className="flex gap-2">
-        <input
-          {...register('email')}
-          className="input-text"
-          autoComplete="email"
-          placeholder="my@email.com"
-        />
-        <button type="submit" className={`action-btn flex-none`}>
-          <FormattedMessage id="signIn" />
-        </button>
-      </div>
+    <form onSubmit={handleSubmit(onSubmit)} className="flex gap-4">
+      <input
+        {...register('email')}
+        className="input-text w-48"
+        autoComplete="email"
+        placeholder="my@email.com"
+      />
+      <button
+        type="submit"
+        className={`action-btn flex-none`}
+        disabled={!formState.isValid}
+      >
+        <FormattedMessage id="signIn" />
+      </button>
     </form>
   );
 };
 
-export default EmailSignin;
+export default EmailModalForm;

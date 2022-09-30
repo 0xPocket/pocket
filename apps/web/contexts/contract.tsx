@@ -6,6 +6,7 @@ import type {
 } from 'pocket-contract/typechain-types';
 import { env } from 'config/env/client';
 import { ERC20PermitAbi, PocketFaucetAbi } from 'pocket-contract/abi';
+import { useSession } from 'next-auth/react';
 
 interface SmartContractProviderProps {
   children: React.ReactNode;
@@ -38,10 +39,11 @@ export const SmartContractProvider = ({
   children,
 }: SmartContractProviderProps) => {
   const { isConnected } = useAccount();
+  const { status } = useSession();
 
   const { data: erc20Data } = useToken({
     address: env.ERC20_ADDRESS,
-    enabled: isConnected,
+    enabled: isConnected && status === 'authenticated',
   });
 
   const erc20Contract = useContract<ERC20Permit>({

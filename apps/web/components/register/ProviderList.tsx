@@ -1,5 +1,5 @@
-import { type FC, useCallback, useMemo, useState } from 'react';
-import { Connector, useAccount, useConnect, useNetwork } from 'wagmi';
+import { type FC, useCallback, useMemo } from 'react';
+import { Connector, useAccount, useConnect } from 'wagmi';
 import { Spinner } from '../common/Spinner';
 import { useIsMounted } from '../../hooks/useIsMounted';
 import FormattedMessage from '../common/FormattedMessage';
@@ -14,9 +14,7 @@ const ProviderList: FC<ProviderListProps> = ({ callback, userType }) => {
   const mounted = useIsMounted();
 
   const { connectors, connectAsync, isLoading } = useConnect();
-  const { isConnected, connector: activeConnector, address } = useAccount();
-
-  const { chain } = useNetwork();
+  const { isConnected, connector: activeConnector } = useAccount();
 
   const handleConnect = useCallback(
     (connector: Connector) => {
@@ -29,13 +27,13 @@ const ProviderList: FC<ProviderListProps> = ({ callback, userType }) => {
         connectAsync({ connector }).then(() => callback(connector.id));
       }
     },
-    [connectAsync, isConnected, address, chain, activeConnector],
+    [connectAsync, isConnected, activeConnector, callback],
   );
 
   const filteredConnectors = useMemo(() => {
     if (userType === 'Parent') return connectors;
     return connectors.filter((c) => c.id !== 'magic');
-  }, [userType]);
+  }, [userType, connectors]);
 
   if (!mounted) {
     return null;

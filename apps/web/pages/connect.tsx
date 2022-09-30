@@ -1,8 +1,8 @@
 import PageWrapper from '../components/common/wrappers/PageWrapper';
 import FormattedMessage from '../components/common/FormattedMessage';
 import TitleHelper from '../components/common/TitleHelper';
-import EmailSignin from '../components/auth/EmailSignin';
-import EthereumSignin from '../components/auth/EthereumSignin';
+import ProviderList from '../components/connect/ProviderList';
+import Link from 'next/link';
 
 function Connect() {
   return (
@@ -13,17 +13,12 @@ function Connect() {
           <FormattedMessage id="common.welcome" />
         </h1>
         <div className="container-classic rounded-lg p-8">
-          <div className="mx-auto flex w-72 flex-col items-center justify-center gap-8">
-            {/* <EmailSignin /> */}
-            {/* <div className="flex w-72 items-center">
-              <div className="w-full border-b opacity-25"></div>
-              <h2 className="mx-2 text-lg font-bold">
-                <FormattedMessage id="or" />
-              </h2>
-              <div className="w-full border-b opacity-25"></div>
-            </div> */}
-            <EthereumSignin type="Parent" />
-          </div>
+          <ProviderList />
+        </div>
+        <div className="flex gap-2 text-sm">
+          <p>{"Don't have an account yet ?"}</p>
+
+          <Link href="/register">Sign up</Link>
         </div>
       </div>
     </PageWrapper>
