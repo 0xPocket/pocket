@@ -167,23 +167,14 @@ export const emailRouter = createRouter()
       }
     },
   })
-  .middleware(({ ctx, next }) => {
-    if (!ctx.session) {
-      throw new TRPCError({ code: 'UNAUTHORIZED' });
-    }
-    return next({
-      ctx: {
-        ...ctx,
-        // infers that `user` and `session` are non-nullable to downstream procedures
-        session: ctx.session,
-      },
-    });
-  })
   .mutation('resendVerificationEmail', {
-    resolve: async ({ ctx }) => {
+    input: z.object({
+      email: z.string().email(),
+    }),
+    resolve: async ({ input }) => {
       const user = await prisma.user.findUnique({
         where: {
-          id: ctx.session.user.id,
+          email: input.email,
         },
       });
 
@@ -196,7 +187,6 @@ export const emailRouter = createRouter()
       if (user.emailVerified) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
-          message: 'Email is already verified',
         });
       }
 

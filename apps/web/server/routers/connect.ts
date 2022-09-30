@@ -1,3 +1,4 @@
+import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { createRouter } from '../createRouter';
 import { prisma } from '../prisma';
@@ -10,9 +11,21 @@ export const connectRouter = createRouter().mutation('connect', {
     const user = await prisma.user.findUnique({
       where: { email: input.email },
     });
+
     if (!user) {
-      return false;
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'User not found.',
+      });
     }
-    return user.type === 'Parent';
+
+    if (user.type !== 'Parent') {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'User not found.',
+      });
+    }
+
+    return true;
   },
 });
