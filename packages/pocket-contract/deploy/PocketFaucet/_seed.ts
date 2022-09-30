@@ -24,9 +24,12 @@ const func: DeployFunction = async function ({
       autoMine: true,
     },
     'addChild',
-    parseUnits('100', tokenDecimals),
-    1 * 1 * 5 * 6000,
-    lola
+    lola,
+    {
+      ceiling: parseUnits('100', tokenDecimals),
+      periodicity: 1 * 1 * 5 * 6000,
+      tokenIndex: 0,
+    }
   );
 
   await execute(
@@ -36,9 +39,12 @@ const func: DeployFunction = async function ({
       autoMine: true,
     },
     'addChild',
-    parseUnits('10', tokenDecimals),
-    1 * 1 * 5 * 60,
-    damian
+    damian,
+    {
+      ceiling: parseUnits('100', tokenDecimals),
+      periodicity: 1 * 1 * 5 * 6000,
+      tokenIndex: 0,
+    }
   );
 
   await setErc20Balancev2(env.ERC20_ADDRESS, whale, elonmusk, '3000');
@@ -77,9 +83,12 @@ const func: DeployFunction = async function ({
       autoMine: true,
     },
     'addChild',
-    parseUnits('10', tokenDecimals),
-    1 * 1 * 5 * 6000,
-    xavier
+    xavier,
+    {
+      ceiling: parseUnits('10', tokenDecimals),
+      periodicity: 1 * 1 * 5 * 6000,
+      tokenIndex: 0,
+    }
   );
 };
 

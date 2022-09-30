@@ -21,7 +21,7 @@ contract PocketFaucetV2 is OwnableUpgradeable, ERC2771ContextUpgradeable {
 
     bytes32 public constant WITHDRAW_ROLE = keccak256('WITHDRAW_ROLE');
 
-    address public baseToken;
+    address[] public baseTokens;
 
     mapping(address => address[]) public parentToChildren;
     mapping(address => Config) public childToConfig;
@@ -53,16 +53,23 @@ contract PocketFaucetV2 is OwnableUpgradeable, ERC2771ContextUpgradeable {
         uint256 lastClaim;
         uint256 periodicity;
         address parent;
+        uint256 tokenIndex;
+    }
+
+      struct InitConfig {
+        uint256 ceiling;
+        uint256 periodicity;
+        uint256 tokenIndex;
     }
 
     function newFx() public pure returns (uint256) {
         return 12;
     }
-
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() ERC2771ContextUpgradeable(address(0)) {}
 
     function setTrustedForwarder(address trustedForwarder) public onlyOwner {
+
         ERC2771ContextUpgradeable._trustedForwarder = trustedForwarder;
     }
 
@@ -70,9 +77,11 @@ contract PocketFaucetV2 is OwnableUpgradeable, ERC2771ContextUpgradeable {
         public
         initializer
     {
-        baseToken = token;
+
+         baseTokens.push(token);
         __Ownable_init_unchained();
         ERC2771ContextUpgradeable._trustedForwarder = trustedForwarder;
+
     }
 
     function _msgSender()
@@ -117,8 +126,6 @@ contract PocketFaucetV2 is OwnableUpgradeable, ERC2771ContextUpgradeable {
         _;
     }
 
-    function salut() public view {}
-
     ////////////////////////////////////////////////////////////////////////////
     ////////////////////// TO DELETE FOR TESTING PURPOSE //////////////////////
 
@@ -146,7 +153,7 @@ contract PocketFaucetV2 is OwnableUpgradeable, ERC2771ContextUpgradeable {
             }
         }
 
-        IERC20Upgradeable(baseToken).safeTransfer(
+        IERC20Upgradeable(baseTokens[childConfig.tokenIndex]).safeTransfer(
             _msgSender(),
             childToConfig[child].balance
         );
@@ -165,27 +172,26 @@ contract PocketFaucetV2 is OwnableUpgradeable, ERC2771ContextUpgradeable {
     }
 
     /// @notice Add a child to a parent address
-    /// @param ceiling is the amount of token the child can claim.
-    /// @param periodicity is the time that must pass between each claim, in seconds.
+    /// @param config contains various element of the config: periodicity, indexToken and ceiling
     /// @param child is the address of the child.
     function addChild(
-        uint256 ceiling,
-        uint256 periodicity,
-        address child
+        address child,
+        InitConfig calldata config
     ) public {
         require(child != address(0), '!addChild: Address is null');
         require(
             childToConfig[child].parent == address(0),
             '!addChild: Child address already taken'
         );
-        require(periodicity != 0, '!addChild: periodicity cannot be 0');
-        Config memory conf;
-        conf.lastClaim = block.timestamp - periodicity;
-        conf.ceiling = ceiling;
-        conf.periodicity = periodicity;
-        conf.parent = _msgSender();
-        conf.active = true;
-        childToConfig[child] = conf;
+        require(config.periodicity != 0, '!addChild: periodicity cannot be 0');
+        Config memory newConf;
+        newConf.lastClaim = block.timestamp - config.periodicity;
+        newConf.ceiling = config.ceiling;
+        newConf.periodicity = config.periodicity;
+        newConf.parent = _msgSender();
+        newConf.active = true;
+        newConf.tokenIndex = config.tokenIndex;
+        childToConfig[child] = newConf;
         parentToChildren[_msgSender()].push(child);
 
         childrenList.push(child);
@@ -193,18 +199,61 @@ contract PocketFaucetV2 is OwnableUpgradeable, ERC2771ContextUpgradeable {
     }
 
     /// @notice Add a child to a parent address + add funds to the child account.
-    /// @param ceiling is the amount of token the child can claim.
-    /// @param periodicity is the time that must pass between each claim, in seconds.
     /// @param child is the address of the child.
     /// @param amount is the number of tokens that the child's account should be credited.
-    function addChildAndFunds(
-        uint256 ceiling,
-        uint256 periodicity,
+    function addChildAndFundsPermit(
         address child,
-        uint256 amount
+        InitConfig calldata config,
+        uint256 amount,
+        uint256 deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
     ) external {
-        addChild(ceiling, periodicity, child);
-        if (amount != 0) addFunds(amount, child);
+        addChild(child, config);
+        addFundsPermit(child, amount, deadline, v, r, s);
+    }
+
+    /// @notice Add `amount` to your child `child` account.
+    /// @param amount is the amount of tokens to add.
+    /// @param child is the address of the child.
+    function addFunds(address child, uint256 amount)
+        public
+        _areRelated(_msgSender(), child)
+    {
+        IERC20Upgradeable(baseTokens[childToConfig[child].tokenIndex]).safeTransferFrom(
+            _msgSender(),
+            address(this),
+            amount
+        );
+
+        childToConfig[child].balance += amount;
+
+        emit FundsAdded(block.timestamp, _msgSender(), amount, child);
+    }
+
+    /// @notice Add `amount` to your child `child` account.
+    /// @param amount is the amount of tokens to add.
+    /// @param child is the address of the child.
+    function addFundsPermit(
+        address child,
+        uint256 amount,
+        uint256 deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) public _areRelated(_msgSender(), child) {
+        IERC20PermitUpgradeable(baseTokens[childToConfig[child].tokenIndex]).permit(
+            _msgSender(),
+            address(this),
+            amount,
+            deadline,
+            v,
+            r,
+            s
+        );
+
+        addFunds(child, amount);
     }
 
     /// @notice Removes `child` from your account and transfers all the founds associated to him to your address.
@@ -227,14 +276,14 @@ contract PocketFaucetV2 is OwnableUpgradeable, ERC2771ContextUpgradeable {
             }
         }
 
-        IERC20Upgradeable(baseToken).safeTransfer(
+        IERC20Upgradeable(baseTokens[childToConfig[child].tokenIndex]).safeTransfer(
             _msgSender(),
             childToConfig[child].balance
         );
 
         delete childToConfig[child];
         emit ChildRemoved(childConfig.parent, child);
-    }
+    } // TO DO : REMOVE ?
 
     /// @notice This transaction will set the active variable to `active`. If the value is false, your child: `child` won't be able to claim anymore.
     /// @param active the future value of conf.active.
@@ -254,9 +303,9 @@ contract PocketFaucetV2 is OwnableUpgradeable, ERC2771ContextUpgradeable {
     /// @param periodicity is the time that must pass between each claim, in seconds.
     /// @param child is the address of the child.
     function changeConfig(
+        address child,
         uint256 ceiling,
-        uint256 periodicity,
-        address child
+        uint256 periodicity
     ) public _areRelated(_msgSender(), child) {
         Config storage conf = childToConfig[child];
         require(periodicity != 0, '!changeConfig: periodicity cannot be 0');
@@ -291,24 +340,6 @@ contract PocketFaucetV2 is OwnableUpgradeable, ERC2771ContextUpgradeable {
         emit ChildAddrChanged(oldAddr, newAddr);
     }
 
-    /// @notice Add `amount` to your child `child` account.
-    /// @param amount is the amount of tokens to add.
-    /// @param child is the address of the child.
-    function addFunds(uint256 amount, address child)
-        public
-        _areRelated(_msgSender(), child)
-    {
-        IERC20Upgradeable(baseToken).safeTransferFrom(
-            _msgSender(),
-            address(this),
-            amount
-        );
-
-        childToConfig[child].balance += amount;
-
-        emit FundsAdded(block.timestamp, _msgSender(), amount, child);
-    }
-
     /// @notice You will withdraw `amount` from your child account `child`. If amount is 0, it will wihdraw all its balance.
     /// @param amount is the amount of tokens to withdraw.
     /// @param child is the address of the child.
@@ -324,14 +355,15 @@ contract PocketFaucetV2 is OwnableUpgradeable, ERC2771ContextUpgradeable {
         );
         if (amount == 0) amount = childBalance;
         conf.balance -= amount;
-        IERC20Upgradeable(baseToken).safeTransfer(_msgSender(), amount);
+        IERC20Upgradeable(baseTokens[childToConfig[child].tokenIndex]).safeTransfer(_msgSender(), amount);
         emit FundsWithdrawn(_msgSender(), amount, child);
-    }
+    } // TO DO : keep ?
 
     /// @dev Computes the amount of token the child can claim.
     /// @param child is the child for which we compute the claimable amount.
     function computeClaimable(address child) public view returns (uint256) {
         Config memory conf = childToConfig[child];
+        if (conf.periodicity == 0) return 0;
         if (conf.lastClaim + conf.periodicity > block.timestamp) return 0;
         uint256 nbPeriod = (block.timestamp - conf.lastClaim) /
             conf.periodicity;
@@ -356,7 +388,7 @@ contract PocketFaucetV2 is OwnableUpgradeable, ERC2771ContextUpgradeable {
         conf.lastClaim = conf.lastClaim + conf.periodicity * nbPeriod;
 
         conf.balance -= claimable;
-        IERC20Upgradeable(baseToken).safeTransfer(_msgSender(), claimable);
+        IERC20Upgradeable(baseTokens[conf.tokenIndex]).safeTransfer(_msgSender(), claimable);
         emit FundsClaimed(block.timestamp, _msgSender(), claimable);
     }
 

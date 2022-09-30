@@ -51,7 +51,7 @@ describe('Deploy and tests on proxy functions', function () {
   });
 
   it('Should have set baseToken', async function () {
-    expect((await pocketFaucet.baseToken()).toLowerCase()).to.equal(
+    expect((await pocketFaucet.baseTokens(0)).toLowerCase()).to.equal(
       constants.CHOSEN_TOKEN
     );
   });
