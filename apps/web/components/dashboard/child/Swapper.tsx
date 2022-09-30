@@ -1,14 +1,9 @@
-import type { SwapWidgetProps, Theme } from '@uniswap/widgets';
+import { SwapWidget, Theme } from '@uniswap/widgets';
 import { env } from 'config/env/client';
-import dynamic from 'next/dynamic';
 import { useIntl } from 'react-intl';
 import { useTheme } from '../../../contexts/theme';
 import FormattedMessage from '../../common/FormattedMessage';
 
-const SwapWidget = dynamic<SwapWidgetProps>(
-  () => import('@uniswap/widgets').then((mod) => mod.SwapWidget),
-  { ssr: false },
-);
 type SwapperProps = {};
 
 const jsonrpcmap = { [Number(env.CHAIN_ID)]: [env.RPC_URL] };

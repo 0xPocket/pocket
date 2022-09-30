@@ -35,7 +35,7 @@
     "@trpc/server": "^9.26.2",
     "@types/react-scroll": "^1.8.3",
     "@uniswap/v3-periphery": "1.4.1",
-    "@uniswap/widgets": "^2.8.1",
+    "@uniswap/widgets": "^2.9.1",
     "abitype": "^0.1.4",
     "alchemy-sdk": "^2.0.5-rc1",
     "axios": "^0.27.2",
