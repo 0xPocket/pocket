@@ -54,12 +54,17 @@ export function useAddFundsForm(
 
           if (addChild) {
             await write([
-              parseUnits(
-                child.child.initialCeiling.toString(),
-                erc20.data?.decimals,
-              ).toBigInt(),
-              BigNumber.from(child.child.initialPeriodicity).toBigInt(),
               child.address as `0x${string}`,
+              {
+                ceiling: parseUnits(
+                  child.child.initialCeiling.toString(),
+                  erc20.data?.decimals,
+                ).toBigInt(),
+                periodicity: BigNumber.from(
+                  child.child.initialPeriodicity,
+                ).toBigInt(),
+                tokenIndex: BigInt(0),
+              },
               amount.toBigInt(),
               BigInt(deadline),
               signature.v,

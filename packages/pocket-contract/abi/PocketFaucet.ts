@@ -335,19 +335,31 @@ export const PocketFaucetAbi = [
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "ceiling",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "periodicity",
-        "type": "uint256"
-      },
-      {
         "internalType": "address",
         "name": "child",
         "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "ceiling",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "periodicity",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenIndex",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct PocketFaucet.InitConfig",
+        "name": "config",
+        "type": "tuple"
       }
     ],
     "name": "addChild",
@@ -358,19 +370,31 @@ export const PocketFaucetAbi = [
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "ceiling",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "periodicity",
-        "type": "uint256"
-      },
-      {
         "internalType": "address",
         "name": "child",
         "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "ceiling",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "periodicity",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenIndex",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct PocketFaucet.InitConfig",
+        "name": "config",
+        "type": "tuple"
       },
       {
         "internalType": "uint256",
@@ -460,8 +484,14 @@ export const PocketFaucetAbi = [
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "baseToken",
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "baseTokens",
     "outputs": [
       {
         "internalType": "address",
@@ -493,6 +523,11 @@ export const PocketFaucetAbi = [
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "child",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
         "name": "ceiling",
         "type": "uint256"
@@ -501,11 +536,6 @@ export const PocketFaucetAbi = [
         "internalType": "uint256",
         "name": "periodicity",
         "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "child",
-        "type": "address"
       }
     ],
     "name": "changeConfig",
@@ -565,6 +595,11 @@ export const PocketFaucetAbi = [
         "internalType": "address",
         "name": "parent",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenIndex",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -730,19 +765,6 @@ export const PocketFaucetAbi = [
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "newFx",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "pure",
     "type": "function"
   },
   {

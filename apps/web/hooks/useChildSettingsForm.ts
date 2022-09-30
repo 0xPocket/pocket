@@ -53,12 +53,12 @@ export function useChildSettingsForm(
       try {
         if (write && childAddress) {
           await write([
+            childAddress as `0x${string}`,
             parseUnits(
               data.ceiling.toString(),
               erc20.data?.decimals,
             ).toBigInt(),
             BigInt(data.periodicity),
-            childAddress as `0x${string}`,
           ]);
         } else {
           return;

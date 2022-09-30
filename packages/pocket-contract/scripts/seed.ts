@@ -18,16 +18,16 @@ async function main() {
     parent
   );
 
-  await faucet.addChild(
-    parseUnits('100', tokenDecimals),
-    1 * 1 * 5 * 6000,
-    constants.LOLA_MUSK.address
-  );
-  await faucet.addChild(
-    parseUnits('10', tokenDecimals),
-    1 * 1 * 5 * 60,
-    constants.DAMIAN_MUSK.address
-  );
+  await faucet.addChild(constants.LOLA_MUSK.address, {
+    ceiling: parseUnits('100', tokenDecimals),
+    periodicity: 1 * 1 * 5 * 6000,
+    tokenIndex: 0,
+  });
+  await faucet.addChild(constants.DAMIAN_MUSK.address, {
+    ceiling: parseUnits('10', tokenDecimals),
+    periodicity: 1 * 1 * 5 * 60,
+    tokenIndex: 0,
+  });
 
   await setErc20Balance(
     constants.CHOSEN_TOKEN,
