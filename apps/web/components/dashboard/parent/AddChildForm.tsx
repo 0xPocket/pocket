@@ -66,11 +66,11 @@ function AddChildForm() {
       </h2>
       <div className="flex flex-grow flex-col justify-evenly gap-4">
         <InputText
-          label={<FormattedMessage id="name" />}
+          label={intl.formatMessage({ id: 'name' })}
           register={register('name')}
         />
         <InputText
-          label={<FormattedMessage id="email" />}
+          label={intl.formatMessage({ id: 'email' })}
           register={register('email')}
         />
         <h2 className="mt-4">

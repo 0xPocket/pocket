@@ -76,7 +76,7 @@ const ContactDialog: FC<ContactDialogProps> = ({ isOpen, setIsOpen }) => {
           </div>
         )}
         <InputText
-          label={<FormattedMessage id="subject" />}
+          label={intl.formatMessage({ id: 'subject' })}
           register={register('subject')}
           autoComplete="off"
         />
