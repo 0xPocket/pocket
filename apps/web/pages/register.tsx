@@ -2,6 +2,7 @@ import { RadioGroup } from '@headlessui/react';
 import { getCsrfToken } from 'next-auth/react';
 import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import { SiweMessage } from 'siwe';
 import { useAccount, useNetwork, useSignMessage } from 'wagmi';
 import EmailSignin from '../components/auth/EmailSignin';
@@ -10,6 +11,7 @@ import InputText from '../components/common/InputText';
 import TitleHelper from '../components/common/TitleHelper';
 import PageWrapper from '../components/common/wrappers/PageWrapper';
 import EthereumConnect from '../components/register/EthereumConnect';
+import Stepper from '../components/register/Stepper';
 import { trpc } from '../utils/trpc';
 
 type FormData = {
@@ -34,7 +36,9 @@ const Register: FC = () => {
       },
     });
 
-  const ethereumRegister = trpc.useMutation('register.ethereum');
+  const ethereumRegister = trpc.useMutation('register.ethereum', {
+    onError: async (e) => toast.error(e.message),
+  });
 
   const userType = watch('userType');
 
@@ -43,7 +47,6 @@ const Register: FC = () => {
       const message = new SiweMessage({
         domain: window.location.host,
         address,
-        // HELP
         statement: 'Sign this message to access Pocket.',
         uri: window.location.origin,
         version: '1',
@@ -51,19 +54,22 @@ const Register: FC = () => {
         nonce: await getCsrfToken(),
       });
 
-      const signature = await signMessageAsync({
-        message: message.prepareMessage(),
-      });
+      try {
+        const signature = await signMessageAsync({
+          message: message.prepareMessage(),
+        });
 
-      await ethereumRegister.mutateAsync({
-        message: JSON.stringify(message),
-        signature,
-        type: userType,
-        email: data.email,
-        name: data.name,
-      });
-
-      setStep(3);
+        await ethereumRegister.mutateAsync({
+          message: JSON.stringify(message),
+          signature,
+          type: userType,
+          email: data.email,
+          name: data.name,
+        });
+        setStep(3);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -72,29 +78,7 @@ const Register: FC = () => {
       <TitleHelper title="Register" />
       <div className="flex flex-col items-center">
         <h1 className="pb-8">Register to Pocket</h1>
-        <div className="stepper flex w-[250px] items-center justify-between pb-4">
-          <div
-            className={`step ${step === 1 && 'active'} ${
-              step > 1 && 'completed'
-            }`}
-          >
-            1
-          </div>
-          <div className="btw-step">
-            <div className={`fill ${step >= 2 && 'completed'}`}></div>
-          </div>
-          <div
-            className={`step ${step === 2 && 'active'} ${
-              step > 2 && 'completed'
-            }`}
-          >
-            2
-          </div>
-          <div className="btw-step">
-            <div className={`fill ${step >= 3 && 'completed'}`}></div>
-          </div>
-          <div className={`step ${step === 3 && 'completed'}`}>3</div>
-        </div>
+        <Stepper step={step} />
 
         <div
           className="container-classic mx-auto flex max-w-sm flex-col justify-center gap-8 rounded-lg p-8
