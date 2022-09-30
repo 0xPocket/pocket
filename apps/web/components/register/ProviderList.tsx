@@ -4,6 +4,7 @@ import { Spinner } from '../common/Spinner';
 import { useIsMounted } from '../../hooks/useIsMounted';
 import FormattedMessage from '../common/FormattedMessage';
 import Image from 'next/future/image';
+import { toast } from 'react-toastify';
 
 type ProviderListProps = {
   callback: (id: string) => void;
@@ -13,7 +14,13 @@ type ProviderListProps = {
 const ProviderList: FC<ProviderListProps> = ({ callback, userType }) => {
   const mounted = useIsMounted();
 
-  const { connectors, connectAsync, isLoading } = useConnect();
+  const { connectors, connect } = useConnect({
+    onSuccess: (connector) => {
+      if (connector.connector) {
+        callback(connector.connector?.id);
+      }
+    },
+  });
   const { isConnected, connector: activeConnector } = useAccount();
 
   const handleConnect = useCallback(
@@ -24,10 +31,10 @@ const ProviderList: FC<ProviderListProps> = ({ callback, userType }) => {
       ) {
         callback(connector.id);
       } else {
-        connectAsync({ connector }).then(() => callback(connector.id));
+        connect({ connector });
       }
     },
-    [connectAsync, isConnected, activeConnector, callback],
+    [connect, isConnected, activeConnector, callback],
   );
 
   const filteredConnectors = useMemo(() => {
@@ -42,7 +49,6 @@ const ProviderList: FC<ProviderListProps> = ({ callback, userType }) => {
   return (
     <>
       <h2>Choose your connection method</h2>
-      {isLoading && <Spinner />}
       <>
         <div className={` flex w-full justify-center gap-8`}>
           {filteredConnectors.map((connector) => (
@@ -59,7 +65,6 @@ const ProviderList: FC<ProviderListProps> = ({ callback, userType }) => {
                   alt={connector.name}
                 />
               </div>
-              {/* <p className="">{connector.name}</p> */}
             </button>
           ))}
         </div>

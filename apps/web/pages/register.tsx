@@ -3,7 +3,7 @@ import { Magic } from 'magic-sdk';
 import { getCsrfToken } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { SiweMessage } from 'siwe';
 import { useAccount, useConnect, useNetwork, useSignMessage } from 'wagmi';
@@ -32,7 +32,7 @@ const Register: FC = () => {
   const { chain } = useNetwork();
   const { signMessageAsync } = useSignMessage();
 
-  const { register, handleSubmit, setValue, getValues, formState, watch } =
+  const { register, handleSubmit, setValue, formState, watch } =
     useForm<FormData>({
       mode: 'onChange',
       reValidateMode: 'onChange',
@@ -53,13 +53,19 @@ const Register: FC = () => {
     setStep(router.query.step ? parseInt(router.query.step as string) : 0);
   }, [router]);
 
+  useEffect(() => {
+    if (step > 0 && !userType) {
+      router.push('/register?step=0');
+    }
+  }, [step, router, userType]);
+
   // Get magic sdk
   useEffect(() => {
     const sdk = (
       connectors.find((e) => e.id === 'magic') as MagicConnector
     ).getMagicSDK();
     setMagicSDK(sdk);
-  }, []);
+  }, [connectors]);
 
   const onSubmit = async (data: FormData) => {
     if (data.connectionType === 'Ethereum') {
@@ -73,25 +79,31 @@ const Register: FC = () => {
         nonce: await getCsrfToken(),
       });
 
-      const signature = await signMessageAsync({
-        message: message.prepareMessage(),
-      });
+      try {
+        const signature = await signMessageAsync({
+          message: message.prepareMessage(),
+        });
 
-      await ethereumRegister.mutateAsync({
-        message: JSON.stringify(message),
-        signature,
-        type: userType,
-        email: data.email,
-        name: data.name,
-      });
+        await ethereumRegister.mutateAsync({
+          message: JSON.stringify(message),
+          signature,
+          type: userType,
+          email: data.email,
+          name: data.name,
+        });
+      } catch (e) {
+        return;
+      }
     } else if (data.connectionType === 'Magic') {
       await magicSDK?.auth.loginWithMagicLink({
         email: data.email,
       });
       const didToken = await magicSDK?.user.getIdToken();
+
       if (!didToken) {
         throw new Error('No DID token found.');
       }
+
       await magicLinkRegister.mutateAsync({
         didToken: didToken,
         email: data.email,
