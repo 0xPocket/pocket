@@ -13,45 +13,42 @@ import {
   setAllowance,
   setErc20Balance,
 } from '../utils/ERC20';
-import setup from '../utils/testSetup';
+import setup, { User } from '../utils/testSetup';
+import { addStdChildAndSend } from '../utils/addChild';
+import { checkChildIsInit } from '../utils/getters';
 
 describe('Testing addr changement', function () {
-  let child1: string, child2: string;
-  let parent1: ParentTester, parent2: ParentTester;
-  let pocketFaucetContract: PocketFaucet;
-  let parent1Wallet: Wallet, parent2Wallet: Wallet;
+  let parent1: User, parent2: User;
+  let child1: User, child2: User;
+  let pocketFaucet: PocketFaucet;
   const tokenAddr = constants.CHOSEN_TOKEN;
 
   before(async function () {
-    const { pocketFaucet, namedAccounts } = await setup();
-    pocketFaucetContract = pocketFaucet;
-    child1 = namedAccounts['child1'];
-    child2 = namedAccounts['child2'];
+    const { contracts, parents, children } = await setup();
+    child1 = children[0];
+    child2 = children[1];
+    parent1 = parents[0];
+    parent2 = parents[1];
+    pocketFaucet = contracts.pocketFaucet;
 
-    parent1Wallet = new Wallet(
-      constants.FAMILY_ACCOUNT.parent1,
-      ethers.provider
-    );
-    parent2Wallet = new Wallet(
-      constants.FAMILY_ACCOUNT.parent2,
-      ethers.provider
-    );
-    parent1 = new ParentTester(pocketFaucet.address, parent1Wallet);
-    parent2 = new ParentTester(pocketFaucet.address, parent2Wallet);
-    await parent1.addStdChildAndSend(child1, tokenAddr);
+    await addStdChildAndSend(parent1.pocketFaucet, child1.address, tokenAddr);
   });
 
   it('Should reverse because child2 is not parent1 child', async function () {
-    await expect(parent1.changeChildAddress(child2, child1)).to.be.revertedWith(
-      "!_areRelated: child doesn't match"
-    );
+    await expect(
+      parent1.pocketFaucet.changeChildAddress(child2.address, child1.address)
+    ).to.be.revertedWith("!_areRelated: child doesn't match");
   });
 
   it('Should change child1 to child2 for parent1', async function () {
-    const tx = await parent1.changeChildAddress(child1, child2);
+    const tx = await parent1.pocketFaucet.changeChildAddress(
+      child1.address,
+      child2.address
+    );
     await tx.wait();
-    const child1IsInit = await parent1.checkChildIsInit(child1);
-    const child2IsInit = await parent1.checkChildIsInit(child2);
+    const child1IsInit = await checkChildIsInit(parent1, child1.address);
+    const child2IsInit = await checkChildIsInit(parent1, child2.address);
+
     assert(
       child1IsInit === false && child2IsInit === true,
       'Child1 should not be set for parent1/Child2 should be set for parent1'
@@ -60,62 +57,69 @@ describe('Testing addr changement', function () {
 
   it('Should test that new child2 can withdraw', async function () {
     const toSend = ethers.utils.parseUnits('10', await getDecimals(tokenAddr));
-    const tokenBefore = await getERC20Balance(tokenAddr, child2);
+    const tokenBefore = await getERC20Balance(tokenAddr, child2.address);
     await goForwardNDays(21);
     await setErc20Balance(
       tokenAddr,
-      parent1Wallet,
+      await ethers.getSigner(parent1.address),
       '10',
       constants.CHOSEN_WHALE
     );
     await setAllowance(
       tokenAddr,
-      parent1Wallet,
-      pocketFaucetContract.address,
+      await ethers.getSigner(parent1.address),
+      pocketFaucet.address,
       toSend.toString()
     );
-    let tx = await parent1.addFunds(child2, toSend);
+    let tx = await parent1.pocketFaucet.addFunds(child2.address, toSend);
     await tx.wait();
-    tx = await pocketFaucetContract
-      .connect(child2)
-      .claim({ gasLimit: 3000000 });
+
+    tx = await child2.pocketFaucet.claim({ gasLimit: 3000000 });
     await tx.wait();
-    console.log('why4');
 
     assert(
-      tokenBefore.lt(await getERC20Balance(tokenAddr, child2)),
+      tokenBefore.lt(await getERC20Balance(tokenAddr, child2.address)),
       'Child2 number of token did not increased'
     );
   });
 
-  // it('Should change parent1 to parent2', async function () {
-  //   const tx = await parent1.changeParentAddress(parent2.address);
-  //   await tx.wait();
-  //   const child1IsInit = await parent2.checkChildIsInit(child1);
-  //   const child2IsInit = await parent2.checkChildIsInit(child2);
-  //   const nbChildParent1 = await parent1.getNbChildren();
+  it('Should change parent1 to parent2', async function () {
+    const tx = await parent1.pocketFaucet.changeParentAddr(parent2.address);
+    await tx.wait();
+    const child1IsInit = await checkChildIsInit(parent2, child1.address);
+    const child2IsInit = await checkChildIsInit(parent2, child2.address);
+    const nbChildParent1 = (
+      await pocketFaucet.getNumberChildren(parent1.address)
+    ).toNumber();
 
-  //   assert(
-  //     child1IsInit === false && child2IsInit === true && nbChildParent1 === 0,
-  //     'Child1 should not be set for parent1/Child2 should be set for parent1'
-  //   );
-  // });
+    assert(
+      child1IsInit === false && child2IsInit === true && nbChildParent1 === 0,
+      'Child1 should not be set for parent1/Child2 should be set for parent1'
+    );
+  });
 
-  // it('Should revert because trying to change to same address is not possible', async function () {
-  //   await expect(
-  //     parent1.changeParentAddress(parent1.address)
-  //   ).to.be.revertedWith('!changeParentAddr : cannot change to same addr');
-  // });
+  it('Should revert because trying to change to same address is not possible', async function () {
+    await expect(
+      parent1.pocketFaucet.changeParentAddr(parent1.address)
+    ).to.be.revertedWith('!changeParentAddr : cannot change to same addr');
+  });
 
   // it('Should change parent2 to parent1', async function () {
-  //   await parent2.changeParentAddress(parent1.address);
-  //   await parent1.addStdChildAndSend(child1, tokenAddr);
-  //   const child1IsInit = await parent1.checkChildIsInit(child1);
-  //   const child2IsInit = await parent1.checkChildIsInit(child2);
-  //   const child1IsInitP2 = await parent2.checkChildIsInit(child1);
-  //   const child2IsInitP2 = await parent2.checkChildIsInit(child2);
-  //   const nbChildParent2 = await parent2.getNbChildren();
-  //   const nbChildParent1 = await parent1.getNbChildren();
+  //   await parent2.pocketFaucet.changeParentAddr(parent1.address);
+  //   await addStdChildAndSend(parent2.pocketFaucet, child1.address, tokenAddr);
+  //   const child1IsInit = await checkChildIsInit(parent1, child1.address);
+  //   const child2IsInit = await checkChildIsInit(parent1, child2.address);
+  //   const child1IsInitP2 = await checkChildIsInit(parent2, child1.address);
+  //   const child2IsInitP2 = await checkChildIsInit(parent2, child2.address);
+  //   const nbChildParent2 = (
+  //     await pocketFaucet.getNumberChildren(parent2.address)
+  //   ).toNumber();
+  //   const nbChildParent1 = (
+  //     await pocketFaucet.getNumberChildren(parent1.address)
+  //   ).toNumber();
+  //   console.log(child1IsInit, child2IsInit);
+  //   console.log(child1IsInitP2, child2IsInitP2);
+  //   console.log(nbChildParent1, nbChildParent2);
   //   assert(
   //     child1IsInit === true &&
   //       child2IsInit === true &&

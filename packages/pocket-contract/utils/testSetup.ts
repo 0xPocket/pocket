@@ -12,9 +12,10 @@ export interface User {
   pocketFaucet: PocketFaucet;
 }
 
-export async function setupUsers<
-  T extends { [contractName: string]: Contract }
->(namedAccounts: { [name: string]: string }, contracts: T) {
+async function setupUsers<T extends { [contractName: string]: Contract }>(
+  namedAccounts: { [name: string]: string },
+  contracts: T
+) {
   const parents: ({ address: string } & T)[] = [];
   const children: ({ address: string } & T)[] = [];
 
@@ -28,9 +29,10 @@ export async function setupUsers<
   return { parents, children };
 }
 
-export async function setupRandomUsers<
-  T extends { [contractName: string]: Contract }
->(addresses: string[], contracts: T) {
+async function setupRandomUsers<T extends { [contractName: string]: Contract }>(
+  addresses: string[],
+  contracts: T
+) {
   const randomUsers: ({ address: string } & T)[] = [];
   for (const address of addresses) {
     randomUsers.push(await setupUser(address, contracts));
@@ -39,7 +41,7 @@ export async function setupRandomUsers<
   return randomUsers;
 }
 
-export async function setupUser<T extends { [contractName: string]: Contract }>(
+async function setupUser<T extends { [contractName: string]: Contract }>(
   address: string,
   contracts: T
 ): Promise<{ address: string } & T> {

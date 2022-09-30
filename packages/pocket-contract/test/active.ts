@@ -2,9 +2,9 @@
 import { assert, expect } from 'chai';
 import * as constants from '../utils/constants';
 import setup, { User } from '../utils/testSetup';
-import addStdChildAndSend from '../utils/addChild';
+import { addStdChildAndSend } from '../utils/addChild';
 import { PocketFaucet } from '../typechain-types';
-import getActive from '../utils/getters';
+import { getActive } from '../utils/getters';
 
 describe('Testing active param change', function () {
   let parent1: User, parent2: User;
