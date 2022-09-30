@@ -207,7 +207,7 @@ const Register: FC = () => {
                     <a
                       onClick={() => {
                         if (resendEmail.status !== 'loading')
-                          resendEmail.mutateAsync();
+                          resendEmail.mutateAsync({ email: emailAddress });
                       }}
                     >
                       Send a new one
