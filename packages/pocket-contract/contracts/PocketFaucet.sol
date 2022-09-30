@@ -4,7 +4,7 @@ pragma solidity ^0.8.9;
 import '@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol';
 import '@openzeppelin/contracts-upgradeable/token/ERC20/extensions/draft-IERC20PermitUpgradeable.sol';
 import '@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol';
-import '@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol';
+import '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
 import './ERC2771ContextUpgradeableCustom.sol';
 import 'hardhat/console.sol';
 
@@ -12,7 +12,7 @@ import 'hardhat/console.sol';
 /// @author Guillaume Dupont, Sami Darnaud
 /// @custom:experimental This is an experimental contract. It should not be used in production.
 
-contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
+contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     address[] public baseTokens;
@@ -25,7 +25,11 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
     event CoinWithdrawed(uint256 amount);
     event ConfigChanged(bool active, uint256 ceiling, address indexed child);
     event ParentChanged(address indexed oldAddr, address newAddr);
-    event FundsWithdrawn(address indexed parent, uint256 amount, address indexed child);
+    event FundsWithdrawn(
+        address indexed parent,
+        uint256 amount,
+        address indexed child
+    );
     event ChildAddrChanged(address oldAddr, address newAddr);
     event FundsAdded(
         uint256 timestamp,
@@ -58,10 +62,7 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() ERC2771ContextUpgradeable(address(0)) {}
 
-    function setTrustedForwarder(address trustedForwarder)
-        public
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
+    function setTrustedForwarder(address trustedForwarder) public onlyOwner {
         ERC2771ContextUpgradeable._trustedForwarder = trustedForwarder;
     }
 
@@ -69,9 +70,10 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
         public
         initializer
     {
+
         baseTokens.push(token);
-        __AccessControl_init_unchained();
-        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        __Ownable_init_unchained();
+        // _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         setTrustedForwarder(trustedForwarder);
     }
 
@@ -398,7 +400,7 @@ contract PocketFaucet is AccessControlUpgradeable, ERC2771ContextUpgradeable {
         emit ParentChanged(_msgSender(), newAddr);
     }
 
-    function withdrawCoin(uint256 amount) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function withdrawCoin(uint256 amount) public onlyOwner {
         if (amount == 0) amount = address(this).balance;
         payable(_msgSender()).transfer(amount);
         emit CoinWithdrawed(amount);
