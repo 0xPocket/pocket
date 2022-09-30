@@ -70,18 +70,19 @@ class ParentTester extends ParentContract {
   ) => {
     const tx = await this.contract
       .connect(this.signer)
-      .changeConfig(ceiling, periodicity, childAddr);
+      .changeConfig(childAddr, ceiling, periodicity);
     await tx.wait();
   };
 
   addChildAndSend = async (
     ceiling: BigNumberish,
     periodicity: BigNumberish,
-    childAddr: string
+    childAddr: string,
+    tokenIndex = 0
   ) => {
     const tx = await this.contract
       .connect(this.signer)
-      .addChild(ceiling, periodicity, childAddr);
+      .addChild(childAddr, { ceiling, periodicity, tokenIndex });
     await tx.wait();
   };
 
@@ -115,13 +116,17 @@ class ParentTester extends ParentContract {
     // await tx.wait();
   };
 
-  addStdChildAndSend = async (address: string, tokenAddr: string) => {
+  addStdChildAndSend = async (
+    address: string,
+    tokenAddr: string,
+    tokenIndex = 0
+  ) => {
     const ceiling = ethers.utils.parseUnits('10', await getDecimals(tokenAddr));
     const periodicity = constants.TIME.WEEK;
 
     const tx = await this.contract
       .connect(this.signer)
-      .addChild(ceiling, periodicity, address);
+      .addChild(address, { ceiling, periodicity, tokenIndex });
     await tx.wait();
   };
 

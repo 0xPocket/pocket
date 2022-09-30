@@ -46,13 +46,14 @@ class ParentContract {
   addChild = async (
     ceiling: BigNumberish,
     periodicity: BigNumberish,
-    childAddr: string
+    childAddr: string,
+    tokenIndex = 0
   ) => {
-    const tx = await this.contract.populateTransaction.addChild(
+    const tx = await this.contract.populateTransaction.addChild(childAddr, {
       ceiling,
       periodicity,
-      childAddr
-    );
+      tokenIndex,
+    });
 
     const populatedTransaction = await this.signer.populateTransaction(tx);
     return this.signer.signTransaction(populatedTransaction);
@@ -72,9 +73,9 @@ class ParentContract {
     childAddr: string
   ) => {
     const tx = await this.contract.populateTransaction.changeConfig(
+      childAddr,
       ceiling,
-      periodicity,
-      childAddr
+      periodicity
     );
 
     const populatedTransaction = await this.signer.populateTransaction(tx);
