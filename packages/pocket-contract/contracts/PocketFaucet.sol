@@ -70,7 +70,6 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
         public
         initializer
     {
-
         baseTokens.push(token);
         __Ownable_init_unchained();
         // _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
@@ -167,10 +166,7 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
     /// @notice Add a child to a parent address
     /// @param config contains various element of the config: periodicity, indexToken and ceiling
     /// @param child is the address of the child.
-    function addChild(
-        address child,
-        InitConfig calldata config
-    ) public {
+    function addChild(address child, InitConfig calldata config) public {
         require(child != address(0), '!addChild: Address is null');
         require(
             childToConfig[child].parent == address(0),
@@ -213,11 +209,8 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
         public
         _areRelated(_msgSender(), child)
     {
-        IERC20Upgradeable(baseTokens[childToConfig[child].tokenIndex]).safeTransferFrom(
-            _msgSender(),
-            address(this),
-            amount
-        );
+        IERC20Upgradeable(baseTokens[childToConfig[child].tokenIndex])
+            .safeTransferFrom(_msgSender(), address(this), amount);
 
         childToConfig[child].balance += amount;
         emit FundsAdded(block.timestamp, _msgSender(), amount, child);
@@ -234,15 +227,8 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
         bytes32 r,
         bytes32 s
     ) public _areRelated(_msgSender(), child) {
-        IERC20PermitUpgradeable(baseTokens[childToConfig[child].tokenIndex]).permit(
-            _msgSender(),
-            address(this),
-            amount,
-            deadline,
-            v,
-            r,
-            s
-        );
+        IERC20PermitUpgradeable(baseTokens[childToConfig[child].tokenIndex])
+            .permit(_msgSender(), address(this), amount, deadline, v, r, s);
         addFunds(child, amount);
     }
 
@@ -266,10 +252,8 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
             }
         }
 
-        IERC20Upgradeable(baseTokens[childToConfig[child].tokenIndex]).safeTransfer(
-            _msgSender(),
-            childToConfig[child].balance
-        );
+        IERC20Upgradeable(baseTokens[childToConfig[child].tokenIndex])
+            .safeTransfer(_msgSender(), childToConfig[child].balance);
 
         delete childToConfig[child];
         emit ChildRemoved(childConfig.parent, child);
@@ -345,7 +329,8 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
         );
         if (amount == 0) amount = childBalance;
         conf.balance -= amount;
-        IERC20Upgradeable(baseTokens[childToConfig[child].tokenIndex]).safeTransfer(_msgSender(), amount);
+        IERC20Upgradeable(baseTokens[childToConfig[child].tokenIndex])
+            .safeTransfer(_msgSender(), amount);
         emit FundsWithdrawn(_msgSender(), amount, child);
     } // TO DO : keep ?
 
@@ -378,7 +363,10 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
         conf.lastClaim = conf.lastClaim + conf.periodicity * nbPeriod;
 
         conf.balance -= claimable;
-        IERC20Upgradeable(baseTokens[conf.tokenIndex]).safeTransfer(_msgSender(), claimable);
+        IERC20Upgradeable(baseTokens[conf.tokenIndex]).safeTransfer(
+            _msgSender(),
+            claimable
+        );
         emit FundsClaimed(block.timestamp, _msgSender(), claimable);
     }
 
