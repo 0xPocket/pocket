@@ -2,20 +2,8 @@ import PageWrapper from '../components/common/wrappers/PageWrapper';
 import TitleHelper from '../components/common/TitleHelper';
 import ProviderList from '../components/connect/ProviderList';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
-import { useEffect } from 'react';
 
 function Connect() {
-  const { status } = useSession();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (status === 'authenticated') {
-      router.push('/');
-    }
-  }, [router, status]);
-
   return (
     <PageWrapper>
       <TitleHelper id="titles.connect" />

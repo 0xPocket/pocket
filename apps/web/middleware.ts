@@ -1,67 +1,27 @@
-import { withAuth } from 'next-auth/middleware';
-import type { NextRequestWithAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
+import withAuth, { type NextRequestWithAuth } from './middleware/withAuth';
+import withRoles from './middleware/withRoles';
 
-const userRoutes = {
-  ALL: ['/', '/onboarding'],
-  Parent: ['/add-account', '/account/:path*'],
-  Child: [],
-};
-
-function routeAuthorized(currentRoute: string, toMatch: string) {
-  let pathToMatch = toMatch;
-  let routeToMatch = currentRoute;
-  const findWildcard = toMatch.indexOf('/:path*');
-
-  if (findWildcard > 0) {
-    pathToMatch = toMatch.substring(0, findWildcard);
-    routeToMatch = currentRoute.substring(0, findWildcard);
-  }
-
-  return routeToMatch === pathToMatch;
-}
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const handler = (req: NextRequestWithAuth) => {
-  const token = req.nextauth.token;
-
-  if (!token) {
-    return NextResponse.next();
-  }
-
-  const userType = token.type;
-
-  if (!userRoutes[userType]) {
-    return NextResponse.next();
-  }
-
-  const authorized =
-    userRoutes['ALL'].findIndex((route) => {
-      return routeAuthorized(req.nextUrl.pathname, route);
-    }) !== -1 ||
-    userRoutes[userType].findIndex((route) => {
-      return routeAuthorized(req.nextUrl.pathname, route);
-    }) !== -1;
-
-  if (!authorized) {
-    return NextResponse.redirect(new URL('/', req.url));
-  }
-
   return NextResponse.next();
 };
 
-const middleware = withAuth(handler, {
-  pages: {
-    signIn: '/connect',
-  },
-  callbacks: {
-    authorized: ({ token }) => {
-      return !!token;
-    },
+export const config = {
+  matcher: ['/', '/connect', '/register', '/add-account', '/account/:path*'],
+};
+
+const withRolesHandler = withRoles(handler, {
+  paths: ['/', '/add-account', '/account/:path*'],
+  roles: {
+    Parent: ['/', '/add-account', '/account/:path*'],
+    Child: ['/'],
   },
 });
 
-export default middleware;
-
-export const config = {
-  matcher: ['/', '/add-account', '/account/:path*'],
-};
+export default withAuth(withRolesHandler, {
+  pages: {
+    signIn: '/connect',
+    register: '/register',
+  },
+});

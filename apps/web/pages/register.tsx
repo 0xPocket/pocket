@@ -1,7 +1,6 @@
 import { faEnvelopeCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { RadioGroup } from '@headlessui/react';
-import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FC, useEffect, useMemo, useState } from 'react';
@@ -28,7 +27,6 @@ type FormData = {
 
 const Register: FC = () => {
   const router = useRouter();
-  const { status } = useSession();
 
   const [step, setStep] = useState<number>(0);
 
@@ -69,12 +67,6 @@ const Register: FC = () => {
   useEffect(() => {
     setStep(router.query.step ? parseInt(router.query.step as string) : 0);
   }, [router]);
-
-  useEffect(() => {
-    if (status === 'authenticated') {
-      router.push('/');
-    }
-  }, [router, status]);
 
   useEffect(() => {
     if (step > 0 && !userType) {

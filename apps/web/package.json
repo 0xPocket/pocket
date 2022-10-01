@@ -48,6 +48,7 @@
     "next-auth": "^4.10.3",
     "next-axiom": "^0.14.0",
     "next-compose-plugins": "^2.2.1",
+    "path-to-regexp": "^6.2.1",
     "pocket-contract": "*",
     "react": "18.2.0",
     "react-dom": "18.2.0",

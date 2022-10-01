@@ -3,9 +3,11 @@ import type { DefaultSession } from 'next-auth';
 
 declare module 'next-auth' {
   type DefaultSessionUser = NonNullable<DefaultSession['user']>;
-  type CustomSessionUser = DefaultSessionUser & {
+  type CustomSessionUser = Omit<DefaultSessionUser, 'image'> & {
     id: string;
-    address: string | undefined;
+    name: string;
+    email: string;
+    address: string;
     type: UserType;
   };
   interface Session {
@@ -21,7 +23,7 @@ declare module 'next-auth' {
 declare module 'next-auth/jwt' {
   /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
   interface JWT {
-    address: string | undefined;
+    address: string;
     type: UserType;
   }
 }
