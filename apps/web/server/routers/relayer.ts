@@ -43,7 +43,7 @@ type ExecuteParams = Forwarder['functions']['execute'] extends (
   ? P
   : never;
 
-const startonRelayer = async (params: ExecuteParams) => {
+const startonRelayer = async (params: any) => {
   return http
     .post<StartonSmartContractCallResponse>(
       `/smart-contract/${env.NETWORK_KEY}/${env.TRUSTED_FORWARDER}/call`,
@@ -129,12 +129,32 @@ export const relayerRouter = createProtectedRouter().mutation('forward', {
     }
 
     const tx = await startonRelayer([
-      request,
+      JSON.stringify(request),
       env.DOMAIN_SELECTOR_HASH,
       TYPE_HASH,
       '0x',
       signature,
     ]);
+
+    console.log(tx);
+
+    const tx2 = await startonRelayer([
+      [
+        request.data,
+        request.from,
+        request.gas,
+        request.nonce,
+        request.to,
+        request.value,
+        request.validUntil,
+      ],
+      env.DOMAIN_SELECTOR_HASH,
+      TYPE_HASH,
+      '0x',
+      signature,
+    ]);
+
+    console.log(tx2);
 
     return { txHash: tx?.transactionHash };
   },
