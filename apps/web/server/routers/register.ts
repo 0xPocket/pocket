@@ -16,7 +16,8 @@ import * as requestIp from 'request-ip';
 
 const mAdmin = new Magic(env.MAGIC_LINK_SECRET_KEY);
 
-const PRIVATE_BETA = true;
+// disable also on beta router
+const PRIVATE_BETA = false;
 
 export const registerRouter = createRouter()
   .mutation('magic', {
