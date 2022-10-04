@@ -151,13 +151,7 @@ export const emailRouter = createRouter()
         },
       });
 
-      if (!user || !user.email || !user.name) {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-        });
-      }
-
-      if (user.emailVerified) {
+      if (!user || user.emailVerified) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
         });

@@ -5,8 +5,8 @@ import { formatUnits } from 'ethers/lib/utils';
 import { useMemo } from 'react';
 import type { Event } from './useGetClaimsQuery';
 export const useGetDepositsQuery = (
-  childAddress: string,
-  parentAddress: string,
+  childAddress?: string,
+  parentAddress?: string,
 ) => {
   const provider = useProvider();
   const { pocketContract } = useSmartContract();

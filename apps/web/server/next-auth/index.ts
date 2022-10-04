@@ -24,8 +24,7 @@ export const authOptions: NextAuthOptions = {
         try {
           mAdmin.token.validate(credentials.token);
         } catch (e) {
-          console.error(e);
-          return null;
+          throw new Error('Error validating your account');
         }
 
         const userAddress = mAdmin.token.getPublicAddress(credentials.token);
@@ -34,7 +33,7 @@ export const authOptions: NextAuthOptions = {
         );
 
         if (!userMetadata.email) {
-          throw new Error('no email');
+          throw new Error('Error validating your account');
         }
 
         const existingUser = await prisma.user.findUnique({
@@ -43,16 +42,6 @@ export const authOptions: NextAuthOptions = {
 
         if (!existingUser) {
           throw new Error('User does not exist');
-        }
-
-        if (!existingUser.emailVerified) {
-          throw new Error('Email not verified');
-        }
-
-        if (existingUser.accountType !== 'Magic') {
-          throw new Error(
-            'Your email is already linked to an Ethereum Wallet.',
-          );
         }
 
         return existingUser;
@@ -81,7 +70,12 @@ export const authOptions: NextAuthOptions = {
         const { message, signature } = credentials;
 
         const siwe = new SiweMessage(JSON.parse(message || '{}'));
-        await siwe.validate(signature || '');
+
+        try {
+          await siwe.validate(signature || '');
+        } catch (e) {
+          throw new Error('The signature is invalid');
+        }
 
         const existingUser = await prisma.user.findUnique({
           where: { address: siwe.address },

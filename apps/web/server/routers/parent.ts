@@ -99,7 +99,7 @@ export const parentRouter = createProtectedRouter()
     resolve: async ({ ctx, input }) => {
       const parent = await prisma.user.findUnique({
         where: {
-          id: ctx.session?.user.id,
+          id: ctx.session.user.id,
         },
       });
 
@@ -184,20 +184,18 @@ export const parentRouter = createProtectedRouter()
       });
     }
 
-    return next();
+    return next({
+      ctx: {
+        ...ctx,
+        child,
+      },
+    });
   })
   .query('childByAddress', {
     input: z.object({
       address: z.string(),
     }),
-    resolve: ({ input }) => {
-      return prisma.user.findUnique({
-        where: {
-          address: input.address,
-        },
-        include: {
-          child: true,
-        },
-      });
+    resolve: ({ ctx }) => {
+      return ctx.child;
     },
   });

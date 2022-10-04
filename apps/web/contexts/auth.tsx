@@ -13,7 +13,7 @@ interface AuthProviderProps {
 
 interface IAuthContext {
   loggedIn: boolean;
-  signOut: (redirect?: boolean) => Promise<void>;
+  signOut: () => Promise<void>;
   user: CustomSessionUser | undefined;
 }
 
@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const router = useRouter();
 
   const { chain } = useNetwork();
-  const { switchNetwork } = useSwitchNetwork();
+  const { switchNetwork, isLoading: switchNetworkLoading } = useSwitchNetwork();
 
   const { status: nextAuthStatus, data } = useSession();
 
@@ -71,13 +71,22 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // WE FORCE SWITCH NETWORK HERE
   useEffect(() => {
     if (
+      nextAuthStatus === 'authenticated' &&
       connector?.id !== 'magic' &&
       chain &&
+      !switchNetworkLoading &&
       switchNetwork &&
       chain.id !== env.CHAIN_ID
     )
       switchNetwork(env.CHAIN_ID);
-  }, [chain, chain?.id, switchNetwork, connector]);
+  }, [
+    chain,
+    chain?.id,
+    switchNetwork,
+    connector,
+    nextAuthStatus,
+    switchNetworkLoading,
+  ]);
 
   return (
     <AuthContextProvider

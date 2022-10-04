@@ -17,18 +17,6 @@ interface Options {
   additionalMagicOptions?: MagicSDKAdditionalConfiguration<string>;
 }
 
-interface UserDetailsEmail {
-  email: string;
-  oauthProvider?: OAuthProvider;
-}
-
-interface UserDetailsOAuth {
-  oauthProvider: OAuthProvider;
-  email?: string;
-}
-
-type UserDetails = UserDetailsEmail | UserDetailsOAuth;
-
 export class MagicConnector extends Connector {
   ready = !IS_SERVER;
 
@@ -81,28 +69,6 @@ export class MagicConnector extends Connector {
           account: await this.getAccount(),
         };
       }
-
-      // if (userDetails) {
-      //   const magic = this.getMagicSDK();
-
-      //   if (userDetails.email) {
-      //     await magic.auth.loginWithMagicLink({
-      //       email: userDetails.email,
-      //     });
-      //   }
-
-      //   const signer = await this.getSigner();
-      //   const account = await signer.getAddress();
-
-      //   return {
-      //     account,
-      //     chain: {
-      //       id: await this.getChainId(),
-      //       unsupported: false,
-      //     },
-      //     provider,
-      //   };
-      // }
 
       throw new UserRejectedRequestError('Something went wrong');
     } catch (error) {
@@ -160,7 +126,6 @@ export class MagicConnector extends Connector {
       this.magicSDK = new Magic(this.magicOptions.apiKey, {
         ...this.magicOptions.additionalMagicOptions,
       });
-      // console.log('magic sdk created');
       this.magicSDK.preload();
       return this.magicSDK;
     }

@@ -50,6 +50,7 @@ function Swapper({}: SwapperProps) {
       </h2>
       <SwapWidget
         theme={theme}
+        defaultChainId={env.CHAIN_ID}
         className="container-classic"
         defaultInputTokenAddress={env.ERC20_ADDRESS}
         jsonRpcUrlMap={jsonrpcmap}
