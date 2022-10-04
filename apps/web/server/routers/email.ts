@@ -24,7 +24,7 @@ export const emailRouter = createRouter()
     }),
     resolve: async ({ ctx, input }) => {
       try {
-        const childConfig = await prisma.childConfig.findUnique({
+        const childConfig = await prisma.pendingChild.findUnique({
           where: {
             email: input.email,
           },
@@ -79,7 +79,7 @@ export const emailRouter = createRouter()
               },
             },
           }),
-          prisma.childConfig.delete({
+          prisma.pendingChild.delete({
             where: {
               id: childConfig.id,
             },

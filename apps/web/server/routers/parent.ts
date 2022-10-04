@@ -50,7 +50,7 @@ export const parentRouter = createProtectedRouter()
   })
   .query('pendingChildren', {
     resolve: async ({ ctx }) => {
-      return prisma.childConfig.findMany({
+      return prisma.pendingChild.findMany({
         where: {
           parentUserId: ctx.session.user.id,
         },
@@ -62,7 +62,7 @@ export const parentRouter = createProtectedRouter()
       id: z.number(),
     }),
     resolve: async ({ input }) => {
-      const childConfig = await prisma.childConfig.findUnique({
+      const childConfig = await prisma.pendingChild.findUnique({
         where: {
           id: input.id,
         },
@@ -107,11 +107,18 @@ export const parentRouter = createProtectedRouter()
         throw new TRPCError({ code: 'UNAUTHORIZED' });
       }
 
-      const userExists = await prisma.user.findUnique({
-        where: {
-          email: input.email,
-        },
-      });
+      const userExists = await prisma.$transaction([
+        prisma.user.findUnique({
+          where: {
+            email: input.email,
+          },
+        }),
+        prisma.pendingChild.findUnique({
+          where: {
+            email: input.email,
+          },
+        }),
+      ]);
 
       if (userExists) {
         throw new TRPCError({
@@ -120,7 +127,7 @@ export const parentRouter = createProtectedRouter()
         });
       }
 
-      const childConfig = await prisma.childConfig.create({
+      const childConfig = await prisma.pendingChild.create({
         data: {
           name: input.name,
           email: input.email,

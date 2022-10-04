@@ -1,4 +1,4 @@
-import { ChildConfig } from '@prisma/client';
+import type { PendingChild } from '@prisma/client';
 import type { FC } from 'react';
 import { toast } from 'react-toastify';
 import { trpc } from '../../../utils/trpc';
@@ -6,7 +6,7 @@ import FormattedMessage from '../../common/FormattedMessage';
 import { Spinner } from '../../common/Spinner';
 
 type EmailStatusProps = {
-  child: ChildConfig;
+  child: PendingChild;
 };
 
 const EmailStatus: FC<EmailStatusProps> = ({ child }) => {
