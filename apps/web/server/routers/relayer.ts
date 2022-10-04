@@ -128,15 +128,15 @@ export const relayerRouter = createProtectedRouter().mutation('forward', {
       return { txHash: tx.hash };
     }
 
-    const tx = await startonRelayer([
-      JSON.stringify(request),
-      env.DOMAIN_SELECTOR_HASH,
-      TYPE_HASH,
-      '0x',
-      signature,
-    ]);
+    // const tx = await startonRelayer([
+    //   JSON.stringify(request),
+    //   env.DOMAIN_SELECTOR_HASH,
+    //   TYPE_HASH,
+    //   '0x',
+    //   signature,
+    // ]);
 
-    console.log(tx);
+    // console.log(tx);
 
     const tx2 = await startonRelayer([
       [
@@ -156,6 +156,6 @@ export const relayerRouter = createProtectedRouter().mutation('forward', {
 
     console.log(tx2);
 
-    return { txHash: tx?.transactionHash };
+    return { txHash: tx2?.transactionHash };
   },
 });
