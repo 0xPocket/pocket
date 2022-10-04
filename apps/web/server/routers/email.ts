@@ -33,12 +33,32 @@ export const emailRouter = createRouter()
         if (!childConfig) {
           throw new TRPCError({
             code: 'BAD_REQUEST',
-            message: 'User not found.',
+            message: 'Invalid invite.',
           });
         }
 
         const siweMessage = new SiweMessage(JSON.parse(input.message || '{}'));
         const fields = await siweMessage.validate(input.signature);
+
+        const userExists = await prisma.user.findFirst({
+          where: {
+            OR: [
+              {
+                address: fields.address,
+              },
+              {
+                email: input.email,
+              },
+            ],
+          },
+        });
+
+        if (userExists) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'User already exists.',
+          });
+        }
 
         if (fields.nonce !== (await getCsrfToken({ req: ctx.req }))) {
           throw new TRPCError({
