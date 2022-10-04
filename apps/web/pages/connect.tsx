@@ -1,6 +1,6 @@
 import PageWrapper from '../components/common/wrappers/PageWrapper';
 import TitleHelper from '../components/common/TitleHelper';
-import ProviderList from '../components/connect/ProviderList';
+import ConnectProviderList from '../components/connect/ConnectProviderList';
 import Link from 'next/link';
 
 function Connect() {
@@ -15,7 +15,7 @@ function Connect() {
             className=" mx-auto flex w-full flex-col justify-center gap-8 rounded-lg p-8
 					text-center"
           >
-            <ProviderList />
+            <ConnectProviderList />
           </div>
           <div className="mt-4 flex justify-center gap-2">
             <p>{"Don't have an account yet ?"}</p>

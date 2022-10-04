@@ -11,7 +11,7 @@ import InputText from '../components/common/InputText';
 import { Spinner } from '../components/common/Spinner';
 import TitleHelper from '../components/common/TitleHelper';
 import PageWrapper from '../components/common/wrappers/PageWrapper';
-import ProviderList from '../components/register/ProviderList';
+import RegisterProviderList from '../components/register/RegisterProviderList';
 import Stepper from '../components/register/Stepper';
 import { useEthereumSiwe } from '../hooks/useEthereumSiwe';
 import { useMagicConnect } from '../hooks/useMagicConnect';
@@ -161,7 +161,7 @@ const Register: FC = () => {
               </>
             )}
             {step === 1 && userType && (
-              <ProviderList
+              <RegisterProviderList
                 userType={userType}
                 callback={(id) => {
                   if (id === 'magic') {
