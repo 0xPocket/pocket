@@ -6,8 +6,23 @@ const getChildConfig = (childAddr: string, pocketFaucet: PocketFaucet) => {
 };
 
 const getActive = async (address: string, pocketFaucet: PocketFaucet) => {
-  const [active, , , , ,] = await getChildConfig(address, pocketFaucet);
-  return active;
+  return (await getChildConfig(address, pocketFaucet)).active;
+};
+
+const getCeiling = async (address: string, pocketFaucet: PocketFaucet) => {
+  return (await getChildConfig(address, pocketFaucet)).ceiling;
+};
+
+const getLastClaim = async (address: string, pocketFaucet: PocketFaucet) => {
+  return (await getChildConfig(address, pocketFaucet)).lastClaim;
+};
+
+const getParent = async (address: string, pocketFaucet: PocketFaucet) => {
+  return (await getChildConfig(address, pocketFaucet)).parent;
+};
+
+const getPeriodicity = async (address: string, pocketFaucet: PocketFaucet) => {
+  return (await getChildConfig(address, pocketFaucet)).periodicity;
 };
 
 const getChildren = async (parent: User) => {
@@ -35,4 +50,11 @@ const checkChildIsInit = async (parent: User, childAddr: string) => {
   return ret;
 };
 
-export { getActive, checkChildIsInit };
+export {
+  getActive,
+  getCeiling,
+  getLastClaim,
+  getParent,
+  getPeriodicity,
+  checkChildIsInit,
+};
