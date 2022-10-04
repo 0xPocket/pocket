@@ -115,7 +115,7 @@ async function main() {
     update: {},
   });
 
-  await prisma.childConfig.upsert({
+  await prisma.pendingChild.upsert({
     where: {
       id: 0,
     },
