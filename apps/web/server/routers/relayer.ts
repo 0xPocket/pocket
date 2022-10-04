@@ -18,8 +18,6 @@ const wallet = new Wallet(
   provider,
 );
 
-const DOMAIN_SELECTOR_HASH =
-  '0x945494529cc799d5423e33fc3fe2dd3cf98063fe93e6c14af49f6f8c17a571ee';
 const TYPE_HASH =
   '0x2510fc5e187085770200b027d9f2cc4b930768f3b2bd81daafb71ffeb53d21c4';
 
@@ -56,7 +54,8 @@ const startonRelayer = async (params: ExecuteParams) => {
         params,
       },
     )
-    .then((res) => res.data);
+    .then((res) => res.data)
+    .catch((e) => console.log(e));
 };
 
 export const relayerRouter = createProtectedRouter().mutation('forward', {
@@ -90,7 +89,7 @@ export const relayerRouter = createProtectedRouter().mutation('forward', {
 
     const staticCall = await forwarder.callStatic.execute(
       request,
-      DOMAIN_SELECTOR_HASH,
+      env.DOMAIN_SELECTOR_HASH,
       TYPE_HASH,
       '0x',
       signature,
@@ -119,7 +118,7 @@ export const relayerRouter = createProtectedRouter().mutation('forward', {
     if (env.NODE_ENV === 'development') {
       const tx = await forwarder.execute(
         request,
-        DOMAIN_SELECTOR_HASH,
+        env.DOMAIN_SELECTOR_HASH,
         TYPE_HASH,
         '0x',
         signature,
@@ -131,12 +130,12 @@ export const relayerRouter = createProtectedRouter().mutation('forward', {
 
     const tx = await startonRelayer([
       request,
-      DOMAIN_SELECTOR_HASH,
+      env.DOMAIN_SELECTOR_HASH,
       TYPE_HASH,
       '0x',
       signature,
     ]);
 
-    return { txHash: tx.transactionHash };
+    return { txHash: tx?.transactionHash };
   },
 });
