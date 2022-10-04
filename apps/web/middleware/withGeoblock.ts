@@ -17,8 +17,6 @@ async function handleMiddleware(
 ) {
   const country = req.geo?.country || 'US';
 
-  console.log(req.geo);
-
   if (options.countries.find((c) => c === country)) {
     req.nextUrl.pathname = '/blocked';
     return NextResponse.rewrite(req.nextUrl);

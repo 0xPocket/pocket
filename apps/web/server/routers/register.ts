@@ -12,6 +12,7 @@ import {
   hashToken,
   saveVerificationToken,
 } from '../services/jwt';
+import * as requestIp from 'request-ip';
 
 const mAdmin = new Magic(env.MAGIC_LINK_SECRET_KEY);
 
@@ -25,7 +26,7 @@ export const registerRouter = createRouter()
       email: z.string().email(),
       didToken: z.string(),
     }),
-    resolve: async ({ input }) => {
+    resolve: async ({ input, ctx }) => {
       if (PRIVATE_BETA && !input.token) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
@@ -79,12 +80,18 @@ export const registerRouter = createRouter()
         });
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const ip = requestIp.getClientIp(ctx.req as any);
+
+      console.log('ip', ip);
+
       return prisma.user.create({
         data: {
           name: input.name,
           email: userMetadata.email,
           emailVerified: new Date(),
           address: userAddress,
+          ipAddress: ip,
           type: 'Parent',
           accountType: 'Magic',
           parent: {
@@ -103,7 +110,7 @@ export const registerRouter = createRouter()
       signature: z.string(),
       type: z.enum(['Parent', 'Child']),
     }),
-    resolve: async ({ input }) => {
+    resolve: async ({ input, ctx }) => {
       if (PRIVATE_BETA && !input.token) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
@@ -148,6 +155,10 @@ export const registerRouter = createRouter()
         });
       }
 
+      const ip = requestIp.getClientIp(ctx.req as any);
+
+      console.log('ip', ip);
+
       let newUser: User;
 
       if (input.type === 'Parent') {
@@ -157,6 +168,7 @@ export const registerRouter = createRouter()
             email: input.email,
             address: siwe.address,
             type: input.type,
+            ipAddress: ip,
             accountType: 'Ethereum',
             parent: {
               create: {},
