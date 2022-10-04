@@ -123,6 +123,12 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model PrivateBetaToken {
+  token      String  @unique @default(cuid())
+  identifier String
+  used       Boolean @default(false)
+}
+
 model BlacklistToken {
   address  String  @id @unique
   verified Boolean @default(true)

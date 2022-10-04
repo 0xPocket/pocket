@@ -15,14 +15,24 @@ import {
 
 const mAdmin = new Magic(env.MAGIC_LINK_SECRET_KEY);
 
+const PRIVATE_BETA = true;
+
 export const registerRouter = createRouter()
   .mutation('magic', {
     input: z.object({
+      token: z.string().optional(),
       name: z.string(),
       email: z.string().email(),
       didToken: z.string(),
     }),
     resolve: async ({ input }) => {
+      if (PRIVATE_BETA && !input.token) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'You need a token to register',
+        });
+      }
+
       try {
         mAdmin.token.validate(input.didToken);
       } catch (e) {
@@ -46,6 +56,29 @@ export const registerRouter = createRouter()
         throw new Error('User already exists');
       }
 
+      if (PRIVATE_BETA) {
+        const token = await prisma.privateBetaToken.findUnique({
+          where: { token: input.token },
+        });
+
+        if (!token || token.used) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Invalid token',
+          });
+        }
+
+        await prisma.privateBetaToken.update({
+          data: {
+            used: true,
+            identifier: userMetadata.email,
+          },
+          where: {
+            token: input.token,
+          },
+        });
+      }
+
       return prisma.user.create({
         data: {
           name: input.name,
@@ -63,6 +96,7 @@ export const registerRouter = createRouter()
   })
   .mutation('ethereum', {
     input: z.object({
+      token: z.string().optional(),
       name: z.string(),
       email: z.string().email(),
       message: z.string(),
@@ -70,6 +104,13 @@ export const registerRouter = createRouter()
       type: z.enum(['Parent', 'Child']),
     }),
     resolve: async ({ input }) => {
+      if (PRIVATE_BETA && !input.token) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'You need a token to register',
+        });
+      }
+
       const siwe = new SiweMessage(JSON.parse(input.message || '{}'));
       await siwe.validate(input.signature || '');
 
@@ -81,6 +122,29 @@ export const registerRouter = createRouter()
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'This user already exists',
+        });
+      }
+
+      if (PRIVATE_BETA) {
+        const token = await prisma.privateBetaToken.findUnique({
+          where: { token: input.token },
+        });
+
+        if (!token || token.used) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Invalid token',
+          });
+        }
+
+        await prisma.privateBetaToken.update({
+          data: {
+            used: true,
+            identifier: input.email,
+          },
+          where: {
+            token: input.token,
+          },
         });
       }
 

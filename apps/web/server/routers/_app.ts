@@ -13,6 +13,7 @@ import { tokenRouter } from './token';
 import { relayerRouter } from './relayer';
 import { registerRouter } from './register';
 import { connectRouter } from './connect';
+import { betaRouter } from './beta';
 
 /**
  * Create your application's root router
@@ -32,6 +33,7 @@ export const appRouter = createRouter()
    */
   // .formatError(({ shape, error }) => { })
   .merge('email.', emailRouter)
+  .merge('beta.', betaRouter)
   .merge('connect.', connectRouter)
   .merge('register.', registerRouter)
   .merge('parent.', parentRouter)
