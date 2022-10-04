@@ -46,7 +46,9 @@ const ProviderList: FC<ProviderListProps> = ({ callback, userType }) => {
 
   return (
     <>
-      <h3>Choose your connection method</h3>
+      <h3>
+        <FormattedMessage id="register.step1.title" />
+      </h3>
 
       <div className={` flex w-full justify-center gap-8`}>
         {filteredConnectors.map((connector) => (

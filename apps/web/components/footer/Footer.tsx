@@ -21,12 +21,12 @@ function Footer(props: FooterProps) {
         <p>&copy; 2022 Pocket</p>
         <Link href="/privacy-policy">
           <a>
-            <FormattedMessage id="onboarding.privacy" />
+            <FormattedMessage id="legal.privacy" />
           </a>
         </Link>
         <Link href="/terms-and-conditions">
           <a>
-            <FormattedMessage id="onboarding.terms" />
+            <FormattedMessage id="legal.terms" />
           </a>
         </Link>
         <a onClick={() => setContactOpen(true)}>Contact</a>

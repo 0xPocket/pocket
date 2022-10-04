@@ -27,16 +27,16 @@ export function TermsModal() {
           <input {...register('terms')} type="checkbox" />
           <label className="text-gray-900 dark:text-gray-300 ml-2 text-sm font-medium">
             <FormattedMessage
-              id="onboarding.terms.confirm"
+              id="legal.terms.confirm"
               values={{
                 privacy: (
                   <a href="/privacy-policy" target="_blank">
-                    <FormattedMessage id="onboarding.privacy" />
+                    <FormattedMessage id="legal.privacy" />
                   </a>
                 ),
                 terms: (
                   <a href="/terms-and-conditions" target="_blank">
-                    <FormattedMessage id="onboarding.terms" />
+                    <FormattedMessage id="legal.terms" />
                   </a>
                 ),
               }}

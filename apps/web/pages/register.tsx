@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { FC, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 import { z } from 'zod';
+import { useIntl } from 'react-intl';
 import FormattedMessage from '../components/common/FormattedMessage';
 import InputText from '../components/common/InputText';
 import { Spinner } from '../components/common/Spinner';
@@ -35,6 +36,7 @@ const Register: FC = () => {
     mode: 'onChange',
     reValidateMode: 'onChange',
   });
+  const { formatMessage } = useIntl();
 
   const magicSignIn = useMagicConnect();
   const ethereumSignMessage = useEthereumSiwe();
@@ -115,7 +117,9 @@ const Register: FC = () => {
       <TitleHelper title="Register" />
       <div className="flex flex-col items-center">
         <div className="flex w-[512px] flex-col items-center gap-16">
-          <h1 className="">Register to Pocket</h1>
+          <h1>
+            <FormattedMessage id="register.title" />
+          </h1>
 
           <Stepper step={step} nbrSteps={4} />
           <div
@@ -124,7 +128,9 @@ const Register: FC = () => {
           >
             {step === 0 && (
               <>
-                <h3>Select your account type</h3>
+                <h3>
+                  <FormattedMessage id="register.step0.title" />
+                </h3>
                 <RadioGroup
                   value={userType}
                   className="flex items-center justify-center space-x-8"
@@ -141,7 +147,7 @@ const Register: FC = () => {
                       router.push('/register' + '?step=1');
                     }}
                   >
-                    Parent
+                    <FormattedMessage id="parent" />
                   </RadioGroup.Option>
                   <RadioGroup.Option
                     value="Child"
@@ -155,7 +161,7 @@ const Register: FC = () => {
                       router.push('/register' + '?step=1');
                     }}
                   >
-                    Enfant
+                    <FormattedMessage id="child" />
                   </RadioGroup.Option>
                 </RadioGroup>
               </>
@@ -178,15 +184,17 @@ const Register: FC = () => {
                 className="flex w-full min-w-[350px] flex-col items-center justify-center gap-8 text-left"
                 onSubmit={handleSubmit(onSubmit)}
               >
-                <h3>Complete your infos</h3>
+                <h3>
+                  <FormattedMessage id="register.step2.title" />
+                </h3>
                 <div className="flex min-w-[300px] flex-col gap-4">
                   <InputText
-                    label="Name"
+                    label={formatMessage({ id: 'name' })}
                     register={register('name')}
                     autoComplete="name"
                   />
                   <InputText
-                    label="Email"
+                    label={formatMessage({ id: 'email' })}
                     register={register('email')}
                     autoComplete="email"
                   />
@@ -200,9 +208,11 @@ const Register: FC = () => {
                   />
                   <label className="ml-2 text-sm font-medium">
                     {userType === 'Parent' && (
-                      <FormattedMessage id="onboarding.majority" />
+                      <FormattedMessage id="register.agelimit.parent" />
                     )}
-                    {userType === 'Child' && 'Je certifie blablabla'}
+                    {userType === 'Child' && (
+                      <FormattedMessage id="register.agelimit.child" />
+                    )}
                   </label>
                 </div>
                 {isLoading ? (
@@ -217,10 +227,17 @@ const Register: FC = () => {
             {step === 3 && connectionType === 'Ethereum' && (
               <div className="flex flex-col items-center justify-center gap-8">
                 <FontAwesomeIcon icon={faEnvelopeCircleCheck} size="3x" />
-                <h3>An email as been sent to {emailAddress} !</h3>
+                <h3>
+                  <FormattedMessage
+                    id="register.step3.title"
+                    values={{ emailAddress }}
+                  />
+                </h3>
                 {/* <p>Follow the instructions to finish your registration</p> */}
                 <div className="flex gap-2 text-sm">
-                  <p>{`Didn't receive ?`}</p>
+                  <p>
+                    <FormattedMessage id="register.step3.email.notreceived" />
+                  </p>
                   {resendEmail.status !== 'success' && (
                     <a
                       onClick={() => {
@@ -228,7 +245,7 @@ const Register: FC = () => {
                           resendEmail.mutateAsync({ email: emailAddress });
                       }}
                     >
-                      Send a new one
+                      <FormattedMessage id="register.step3.email.sendnew" />
                     </a>
                   )}
                 </div>
@@ -236,8 +253,14 @@ const Register: FC = () => {
             )}
             {step === 3 && connectionType === 'Magic' && (
               <div className="flex flex-col items-center justify-center gap-8">
-                <h3>Your register is completed !</h3>
-                <Link href="/connect">Go to connection page</Link>
+                <h3>
+                  <FormattedMessage id="register.step3.completed" />
+                </h3>
+                <Link href="/connect">
+                  <a>
+                    <FormattedMessage id="register.step3.gotoconnect" />
+                  </a>
+                </Link>
               </div>
             )}
           </div>
