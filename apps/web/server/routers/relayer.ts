@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { env } from 'config/env/server';
-import { providers, Wallet } from 'ethers';
-import { PocketFaucetAbi } from 'pocket-contract/abi';
+import { ethers, providers, Wallet } from 'ethers';
+import { ForwarderAbi, PocketFaucetAbi } from 'pocket-contract/abi';
 import {
   Forwarder,
   Forwarder__factory,
@@ -11,7 +11,10 @@ import { z } from 'zod';
 import { createProtectedRouter } from '../createRouter';
 import { getParsedEthersError } from '@enzoferey/ethers-error-parser';
 import axios from 'axios';
-
+import {
+  DefenderRelayProvider,
+  DefenderRelaySigner,
+} from 'defender-relay-client/lib/ethers';
 const provider = new providers.JsonRpcProvider(env.RPC_URL);
 const wallet = new Wallet(
   '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80', // test address for local
@@ -128,34 +131,36 @@ export const relayerRouter = createProtectedRouter().mutation('forward', {
       return { txHash: tx.hash };
     }
 
-    // const tx = await startonRelayer([
-    //   JSON.stringify(request),
-    //   env.DOMAIN_SELECTOR_HASH,
-    //   TYPE_HASH,
-    //   '0x',
-    //   signature,
-    // ]);
+    const defenderProvider = new DefenderRelayProvider({
+      apiKey: '8zW5XQv8RS9Qqn8yWmDhgdCim8KNFD4q',
+      apiSecret:
+        '2DuoiEsQhEX3n74Ksp7FeoNNxor1DRGAYp5wdShdBLi7cZW5AuoQA2ANpcjxbBnP',
+    });
 
-    // console.log(tx);
+    const signer = new DefenderRelaySigner(
+      {
+        apiKey: '8zW5XQv8RS9Qqn8yWmDhgdCim8KNFD4q',
+        apiSecret:
+          '2DuoiEsQhEX3n74Ksp7FeoNNxor1DRGAYp5wdShdBLi7cZW5AuoQA2ANpcjxbBnP',
+      },
+      defenderProvider,
+      { speed: 'fast' },
+    );
 
-    const tx2 = await startonRelayer([
-      [
-        request.data,
-        request.from,
-        request.gas,
-        request.nonce,
-        request.to,
-        request.value,
-        request.validUntil,
-      ],
+    const defenderForwarder = new ethers.Contract(
+      env.TRUSTED_FORWARDER,
+      ForwarderAbi,
+      signer,
+    );
+
+    const tx = await defenderForwarder.execute(
+      request,
       env.DOMAIN_SELECTOR_HASH,
       TYPE_HASH,
       '0x',
       signature,
-    ]);
+    );
 
-    console.log(tx2);
-
-    return { txHash: tx2?.transactionHash };
+    return { txHash: tx.hash };
   },
 });
