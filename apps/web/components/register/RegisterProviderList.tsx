@@ -2,6 +2,7 @@ import { type FC, useCallback, useMemo } from 'react';
 import { Connector, useAccount, useConnect } from 'wagmi';
 import { useIsMounted } from '../../hooks/useIsMounted';
 import Image from 'next/future/image';
+import FormattedMessage from '../common/FormattedMessage';
 
 type ProviderListProps = {
   callback: (id: string) => void;
