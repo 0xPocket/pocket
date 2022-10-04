@@ -5,12 +5,13 @@ import TokenContent from '../common/token/TokenContent';
 import ActivityContent from '../common/activity/ActivityContent';
 import ChildCard from '../../card/child/ChildCard';
 import Swapper from './Swapper';
-import { trpc } from '../../../utils/trpc';
 import { Spinner } from '../../common/Spinner';
+import { trpc } from '../../../utils/trpc';
 
 const ChildDashboard: React.FC = () => {
   const { address } = useAccount();
-  const { data } = trpc.useQuery(['auth.me']);
+
+  const { data } = trpc.useQuery(['child.getParent']);
 
   if (!address) {
     return (
@@ -28,12 +29,11 @@ const ChildDashboard: React.FC = () => {
       </div>
       <div className="grid grid-cols-2 gap-8">
         <NftContent childAddress={address!} fill_nbr={6} />
-        {data?.child?.parent?.user.address && (
-          <ActivityContent
-            childAddress={address!}
-            parentAddress={data?.child?.parent?.user.address}
-          />
-        )}
+
+        <ActivityContent
+          childAddress={address!}
+          parentAddress={data?.address}
+        />
       </div>
       <TokenContent childAddress={address!} />
     </div>

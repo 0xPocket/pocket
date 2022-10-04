@@ -9,8 +9,8 @@ import { useGetDepositsQuery } from '../../../../hooks/useGetDepositsQuery';
 import { Spinner } from '../../../common/Spinner';
 
 type ActivityContentProps = {
-  childAddress: string;
-  parentAddress: string;
+  childAddress?: string;
+  parentAddress?: string;
 };
 
 function ActivityContent({

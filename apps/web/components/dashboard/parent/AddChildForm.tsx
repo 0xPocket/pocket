@@ -36,7 +36,7 @@ function AddChildForm() {
 
   const addChild = trpc.useMutation(['parent.createChild'], {
     onSuccess: () => {
-      queryClient.invalidateQueries('parent.children');
+      queryClient.invalidateQueries('parent.pendingChildren');
       router.push('/');
       toast.success(<FormattedMessage id="child-form.created" />);
     },
