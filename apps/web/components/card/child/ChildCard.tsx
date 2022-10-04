@@ -6,7 +6,6 @@ import FormattedMessage from '../../common/FormattedMessage';
 import { useIntl } from 'react-intl';
 import { ethers } from 'ethers';
 import { useQuery } from 'react-query';
-import { trpc } from '../../../utils/trpc';
 import ClaimButton from './ClaimButton';
 import Balance from '../common/Balance';
 import LinkPolygonScan from '../common/LinkPolygonScan';

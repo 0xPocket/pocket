@@ -1,5 +1,4 @@
 import PageWrapper from '../components/common/wrappers/PageWrapper';
-import { trpc } from '../utils/trpc';
 import { Spinner } from '../components/common/Spinner';
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';

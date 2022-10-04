@@ -5,7 +5,6 @@ import FormattedMessage from '../common/FormattedMessage';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClipboard } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from '../common/Tooltip';
-import { trpc } from '../../utils/trpc';
 import useTransak from '../../hooks/useTransak';
 import { useSession } from 'next-auth/react';
 

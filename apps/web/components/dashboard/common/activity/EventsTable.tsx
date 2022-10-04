@@ -89,9 +89,7 @@ function EventsTable({ logs }: EventTableProps) {
     [intl],
   );
 
-  const [sorting, setSorting] = useState<SortingState>([
-    { id: 'Date', desc: true },
-  ]);
+  const [sorting] = useState<SortingState>([{ id: 'Date', desc: true }]);
 
   const table = useReactTable({
     data: data,
