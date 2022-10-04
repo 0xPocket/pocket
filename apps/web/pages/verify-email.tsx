@@ -11,7 +11,7 @@ const VerifyChild: FC = () => {
 
   const mutation = trpc.useMutation(['email.verifyEmail'], {
     onSuccess: () => {
-      setTimeout(() => router.push('/'), 3000);
+      setTimeout(() => router.push('/connect'), 3000);
     },
   });
 
@@ -29,42 +29,30 @@ const VerifyChild: FC = () => {
     }
   }, [router, router.query, mutation]);
 
-  if (mutation.status === 'success') {
-    return (
-      <PageWrapper>
-        <TitleHelper id="titles.onboard" />
-
-        <div className="flex flex-col items-center justify-center gap-2 text-3xl font-bold">
-          <FormattedMessage id="verify-email.email-verified" />
-          <p className="text-sm font-thin">
-            <FormattedMessage id="verify-email.redirect" />
-          </p>
-        </div>
-      </PageWrapper>
-    );
-  }
-
-  if (mutation.isError) {
-    return (
-      <PageWrapper>
-        <TitleHelper id="titles.email-verification" />
-
-        <div className="flex flex-col items-center justify-center gap-8 font-bold">
-          <p>{mutation.error.message}</p>
-          <p className="text-sm font-thin">
-            <FormattedMessage id="verify-email.problem" />
-          </p>
-        </div>
-      </PageWrapper>
-    );
-  }
-
   return (
     <PageWrapper>
-      <TitleHelper id="titles.email-verification" />
+      <TitleHelper id="titles.onboard" />
 
-      <div className="flex h-screen flex-col items-center justify-center gap-8">
-        <Spinner />
+      <div className="flex flex-col items-center justify-center gap-4">
+        {mutation.isLoading && <Spinner />}
+        {mutation.isError && (
+          <>
+            <h1>{mutation.error.message}</h1>
+            <p>
+              <FormattedMessage id="verify-email.problem" />
+            </p>
+          </>
+        )}
+        {mutation.isSuccess && (
+          <>
+            <h1>
+              <FormattedMessage id="verify-email.email-verified" />
+            </h1>
+            <p>
+              <FormattedMessage id="verify-email.redirect" />
+            </p>
+          </>
+        )}
       </div>
     </PageWrapper>
   );
