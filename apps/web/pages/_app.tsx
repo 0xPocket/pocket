@@ -8,7 +8,7 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
-import { MagicAuthProvider } from '../contexts/auth';
+import { AuthProvider } from '../contexts/auth';
 import { MagicConnector } from '../utils/MagicConnector';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
 import type { AppRouter } from '../server';
@@ -53,13 +53,6 @@ function App({
       provider,
       persister: null,
       connectors: [
-        new MetaMaskConnector({ chains }),
-        new WalletConnectConnector({
-          chains,
-          options: {
-            qrcode: true,
-          },
-        }),
         new MagicConnector({
           options: {
             apiKey: env.NEXT_PUBLIC_MAGIC_LINK_PUBLIC_KEY,
@@ -71,6 +64,13 @@ function App({
             },
           },
           chains: chains,
+        }),
+        new MetaMaskConnector({ chains }),
+        new WalletConnectConnector({
+          chains,
+          options: {
+            qrcode: true,
+          },
         }),
       ],
     }),
@@ -84,7 +84,7 @@ function App({
       >
         <WagmiConfig client={wagmiClient}>
           <SessionProvider session={session}>
-            <MagicAuthProvider>
+            <AuthProvider>
               <SmartContractProvider>
                 <Component {...pageProps} />
                 <ToastContainer
@@ -94,7 +94,7 @@ function App({
                 />
                 <ReactQueryDevtools />
               </SmartContractProvider>
-            </MagicAuthProvider>
+            </AuthProvider>
           </SessionProvider>
         </WagmiConfig>
       </IntlProvider>

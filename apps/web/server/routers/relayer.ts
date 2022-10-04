@@ -103,6 +103,7 @@ export const relayerRouter = createProtectedRouter().mutation('forward', {
           PocketFaucetAbi,
         ).decodeFunctionResult(input.functionName, staticCall.ret);
       } catch (e) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const error = getParsedEthersError(e as any);
         throw new TRPCError({
           code: 'BAD_REQUEST',

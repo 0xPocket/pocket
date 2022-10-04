@@ -26,12 +26,12 @@ enum AccountType {
 model User {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
-  name      String?
-  address   String?  @unique
+  name      String
+  address   String   @unique
   newUser   Boolean  @default(true)
 
   accountType   AccountType @default(Ethereum)
-  email         String?     @unique
+  email         String      @unique
   emailVerified DateTime?
 
   type      UserType
@@ -45,27 +45,32 @@ model Parent {
   user   User   @relation(fields: [userId], references: [id])
   userId String @id @unique
 
-  ramp     Ramp[]
-  children Child[]
+  ramp         Ramp[]
+  children     Child[]
+  PendingChild PendingChild[]
 }
 
-enum ChildStatus {
-  INVITED
-  ACTIVE
+model PendingChild {
+  id                 Int    @id @default(autoincrement())
+  name               String
+  email              String @unique
+  initialPeriodicity String
+  initialCeiling     Int
+  parent             Parent @relation(fields: [parentUserId], references: [userId])
+  parentUserId       String
 }
 
 model Child {
   user   User   @relation(fields: [userId], references: [id])
   userId String @id @unique
 
-  status     ChildStatus @default(INVITED)
   activities Activity[]
 
   parent       Parent @relation(fields: [parentUserId], references: [userId])
   parentUserId String
 
-  initialPeriodicity String?
-  initialCeiling     Int?
+  initialPeriodicity String
+  initialCeiling     Int
 }
 
 // User Parent Ramp
@@ -116,6 +121,12 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model PrivateBetaToken {
+  token      String  @unique @default(cuid())
+  identifier String
+  used       Boolean @default(false)
 }
 
 model BlacklistToken {

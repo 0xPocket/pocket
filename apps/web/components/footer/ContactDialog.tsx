@@ -4,12 +4,12 @@ import { trpc } from '../../utils/trpc';
 import InputText from '../common/InputText';
 import { ContactSchema } from '../../server/schemas';
 import { toast } from 'react-toastify';
-import { useMagic } from '../../contexts/auth';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import FormattedMessage from '../common/FormattedMessage';
 import { useIntl } from 'react-intl';
 import { DialogPopupWrapper } from '../common/wrappers/DialogsWrapper';
+import { useSession } from 'next-auth/react';
 
 type ContactDialogProps = {
   isOpen: boolean;
@@ -17,7 +17,7 @@ type ContactDialogProps = {
 };
 
 const ContactDialog: FC<ContactDialogProps> = ({ isOpen, setIsOpen }) => {
-  const { user } = useMagic();
+  const { data } = useSession();
   const { register, handleSubmit, setValue } = useZodForm({
     schema: ContactSchema['submit'],
   });
@@ -35,13 +35,13 @@ const ContactDialog: FC<ContactDialogProps> = ({ isOpen, setIsOpen }) => {
   const intl = useIntl();
 
   useEffect(() => {
-    if (user?.email) {
-      setValue('email', user.email);
+    if (data?.user?.email) {
+      setValue('email', data?.user.email);
     }
-    if (user?.name) {
-      setValue('name', user.name);
+    if (data?.user?.name) {
+      setValue('name', data?.user.name);
     }
-  }, [user?.name, user?.email, setValue]);
+  }, [data?.user?.name, data?.user?.email, setValue]);
 
   return (
     <DialogPopupWrapper isOpen={isOpen} setIsOpen={setIsOpen}>
@@ -53,12 +53,12 @@ const ContactDialog: FC<ContactDialogProps> = ({ isOpen, setIsOpen }) => {
         onSubmit={handleSubmit((data) => contact.mutate(data))}
         className="flex min-w-[460px] flex-col gap-4 rounded-lg"
       >
-        {(!user?.name || !user?.email) && (
+        {(!data?.user?.name || !data?.user?.email) && (
           <div className="flex gap-4 py-2">
-            {!user?.name && (
+            {!data?.user?.name && (
               <InputText label="Name" register={register('name')} />
             )}
-            {!user?.email && (
+            {!data?.user?.email && (
               <>
                 <InputText
                   label="Email"
@@ -76,7 +76,7 @@ const ContactDialog: FC<ContactDialogProps> = ({ isOpen, setIsOpen }) => {
           </div>
         )}
         <InputText
-          label={<FormattedMessage id="subject" />}
+          label={intl.formatMessage({ id: 'subject' })}
           register={register('subject')}
           autoComplete="off"
         />

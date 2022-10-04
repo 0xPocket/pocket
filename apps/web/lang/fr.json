@@ -38,6 +38,8 @@
   "piggybank": "Tirelire",
   "account.settings": "Paramètres du compte",
   "account": "Compte",
+	"parent" : "Parent",
+	"child": "Enfant",
 
   "auth.email.connect": "Se connecter avec son email",
   "auth.email.verify": "Vérifiez votre email avec le lien envoyé s'il vous plait.",
@@ -75,10 +77,18 @@
 
   "onboarding.connect-wallet": "Connectez-vous avec votre wallet préféré",
   "onboarding.more-info": "Nous avons besoin de plus d'informations !",
-  "onboarding.terms.confirm": "Vous confirmez avoir lu et accepté les {terms} et la {privacy} de Pocket.",
-  "onboarding.privacy": "Politique de confidentialité",
-  "onboarding.terms": "Conditions d'utilisation",
-  "onboarding.majority": "Je certifie avoir plus de 18 ans.",
+
+	"register.title": "Créer un compte",
+	"register.step0.title": "Type de compte",
+	"register.step1.title": "Choisissez la méthode de connexion",
+	"register.step2.title": "Complétez vos informations",
+	"register.step3.title": "Un email a été envoyé à {emailAddress} !",
+	"register.step3.email.notreceived": "Vous n'avez rien reçu?",
+	"register.step3.email.sendnew": "Cliquez ici pour en renvoyer un.",
+	"register.step3.completed": "Votre compte a été crée !",
+	"register.step3.gotoconnect": "Aller à la page de connexion.",
+  "register.agelimit.parent": "Je certifie avoir plus de 18 ans.",
+  "register.agelimit.child": "Je certifie avoir plus de 13 ans.",
 
   "route.dashboard": "tableau de bord",
 
@@ -86,9 +96,6 @@
   "add-account.step1": "Complétez ce formulaire avec les informations de votre enfant et les paramétres de son argent de poche récurrent.",
   "add-account.step2": "Un email va être envoyé à votre enfant, il faut qu'il suive les instructions pour finaliser son inscription.",
   "add-account.step3": "Le compte est prêt à être utilisé !",
-
-  "connect.parent": "Je suis un parent",
-  "connect.child": "Je suis un enfant",
 
   "account.not-found": "L'utilisateur n'existe pas",
 
@@ -145,7 +152,7 @@
   "footer.my-message": "Mon message",
   "footer.contact-us": "Contactez-nous",
   "footer.contact.success": "Message envoyé ! Nous reviendrons vers vous le plus tôt possible.",
-
+	
   "add-child-and-funds.error": "Le dépôt a échoué. Si le probléme persiste, veuillez nous contacter.",
   "add-child-and-funds.success": "Le depôt est un succès !",
   "add-child-and-funds.approve-fail": "L'approbation des fonds a échoué. Si le probléme persiste, veuillez nous contacter.",
@@ -153,12 +160,16 @@
 
   "add-child-or-change-config.error": "Le changement de configuration a échoué: {message}. Si le problème persiste, veuillez nous contacter.",
   "add-child-or-change-config.success": "Le changement de configuration est un succès !",
-
+	
   "transaction.pending": "Transaction en attente, merci de patienter !",
   "transaction.next": "Veuillez confirmer la transaction suivante.",
-
+	
 	"tooltip.wallet.erc20": "Nous utilisons l'USDC de Polygon",
 	"tooltip.wallet.matic": "Le Matic sert à payer les frais de transaction sur la blockchain",
+	
+  "legal.privacy": "Politique de confidentialité",
+  "legal.terms": "Conditions d'utilisation",
+  "legal.terms.confirm": "Vous confirmez avoir lu et accepté les {terms} et la {privacy} de Pocket.",
 
 	"titles.add-account": "Ajouter un compte",
 	"titles.connect": "Connection",

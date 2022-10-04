@@ -50,10 +50,9 @@ const BugDialog: FC<BugDialogProps> = ({ isOpen, setIsOpen }) => {
       >
         <InputText
           label={
-            <>
-              <FormattedMessage id="subject" />{' '}
-              <FormattedMessage id="optional" />
-            </>
+            intl.formatMessage({ id: 'subject' }) +
+            ' ' +
+            intl.formatMessage({ id: 'optional' })
           }
           register={register('subject')}
           optional
