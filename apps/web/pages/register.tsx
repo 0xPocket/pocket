@@ -4,8 +4,8 @@ import { RadioGroup } from '@headlessui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FC, useEffect, useMemo, useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { z } from 'zod';
 import FormattedMessage from '../components/common/FormattedMessage';
 import InputText from '../components/common/InputText';
 import { Spinner } from '../components/common/Spinner';
@@ -16,25 +16,25 @@ import Stepper from '../components/register/Stepper';
 import { useEthereumSiwe } from '../hooks/useEthereumSiwe';
 import { useMagicConnect } from '../hooks/useMagicConnect';
 import { trpc } from '../utils/trpc';
+import { useZodForm } from '../utils/useZodForm';
 
-type FormData = {
-  userType: 'Parent' | 'Child';
-  connectionType: 'Magic' | 'Ethereum';
-  email: string;
-  name: string;
-  ageLimit: boolean;
-};
+const FormData = z.object({
+  userType: z.enum(['Parent', 'Child']),
+  connectionType: z.enum(['Magic', 'Ethereum']),
+  email: z.string().email(),
+  name: z.string().min(2),
+  ageLimit: z.literal(true),
+});
 
 const Register: FC = () => {
   const router = useRouter();
-
   const [step, setStep] = useState<number>(0);
 
-  const { register, handleSubmit, setValue, formState, watch } =
-    useForm<FormData>({
-      mode: 'onChange',
-      reValidateMode: 'onChange',
-    });
+  const { register, handleSubmit, setValue, formState, watch } = useZodForm({
+    schema: FormData,
+    mode: 'onChange',
+    reValidateMode: 'onChange',
+  });
 
   const magicSignIn = useMagicConnect();
   const ethereumSignMessage = useEthereumSiwe();
@@ -88,7 +88,7 @@ const Register: FC = () => {
     magicSignIn.isLoading,
   ]);
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: z.infer<typeof FormData>) => {
     if (data.connectionType === 'Ethereum') {
       const { message, signature } = await ethereumSignMessage.mutateAsync();
 
@@ -195,9 +195,7 @@ const Register: FC = () => {
                   <input
                     required
                     type="checkbox"
-                    {...register('ageLimit', {
-                      validate: (value) => value === true,
-                    })}
+                    {...register('ageLimit')}
                     className=" h-4 w-4 rounded focus:ring-2"
                   />
                   <label className="ml-2 text-sm font-medium">
