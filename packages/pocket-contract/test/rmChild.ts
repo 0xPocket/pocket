@@ -1,30 +1,20 @@
-/* eslint-disable no-unused-vars */
 import { assert, expect } from 'chai';
-import { ethers, upgrades } from 'hardhat';
-import { providers, Wallet } from 'ethers';
-import ParentTester from '../ts/ParentTester';
 import * as constants from '../utils/constants';
-import { PocketFaucet__factory, PocketFaucet } from '../typechain-types';
-import config from 'config/network';
 import setup, { User } from '../utils/testSetup';
 import { addStdChildAndSend } from '../utils/addChild';
 import { checkChildIsInit } from '../utils/getters';
 
 describe('Testing rm child', function () {
-  let parent1: User, parent2: User;
-  let child1: User, child2: User;
+  let parent1: User, child1: User, child2: User;
   let rdmUsers: User[];
-  let pocketFaucet: PocketFaucet;
   const tokenAddr = constants.CHOSEN_TOKEN;
 
   before(async function () {
-    const { contracts, parents, children, randomUsers } = await setup();
+    const { parents, children, randomUsers } = await setup();
     child1 = children[0];
     child2 = children[1];
     parent1 = parents[0];
-    parent2 = parents[1];
     rdmUsers = randomUsers;
-    pocketFaucet = contracts.pocketFaucet;
   });
 
   it('Should remove child1', async function () {

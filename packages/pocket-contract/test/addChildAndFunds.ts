@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { assert, expect } from 'chai';
 import { ethers } from 'hardhat';
 import * as constants from '../utils/constants';
@@ -9,6 +8,7 @@ import {
   addStdChildAndSend,
   addChildAndFundsPermitAndSend,
 } from '../utils/addChild';
+import { time } from '@nomicfoundation/hardhat-network-helpers';
 
 describe('Testing add Child and funds', function () {
   let parent1: User;
@@ -35,7 +35,8 @@ describe('Testing add Child and funds', function () {
         0,
         tokenAddr,
         whale,
-        parent1
+        parent1,
+        await time.latest()
       )
     ).to.be.revertedWith('!addChild: Address is null');
   });
@@ -51,7 +52,8 @@ describe('Testing add Child and funds', function () {
         0,
         tokenAddr,
         whale,
-        parent1
+        parent1,
+        await time.latest()
       )
     ).to.be.revertedWith('!addChild: Child address already taken');
   });
@@ -64,7 +66,8 @@ describe('Testing add Child and funds', function () {
       0,
       tokenAddr,
       whale,
-      parent1
+      parent1,
+      await time.latest()
     );
     assert(
       (await pocketFaucet.getNumberChildren(parent1.address)).toNumber() === 2,
@@ -85,7 +88,8 @@ describe('Testing add Child and funds', function () {
         5,
         tokenAddr,
         null,
-        parent1
+        parent1,
+        await time.latest()
       )
     ).to.be.revertedWith(constants.CHOSEN_ERRORMSG);
   });
@@ -98,7 +102,8 @@ describe('Testing add Child and funds', function () {
       15,
       tokenAddr,
       whale,
-      parent1
+      parent1,
+      await time.latest()
     );
     assert(
       (await pocketFaucet.getNumberChildren(parent1.address)).toNumber() === 3,

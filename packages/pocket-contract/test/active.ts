@@ -1,10 +1,8 @@
-/* eslint-disable no-unused-vars */
 import { assert, expect } from 'chai';
 import * as constants from '../utils/constants';
 import setup, { User } from '../utils/testSetup';
 import { addStdChildAndSend } from '../utils/addChild';
 import { PocketFaucet } from '../typechain-types';
-import { getActive } from '../utils/getters';
 
 describe('Testing active param change', function () {
   let parent1: User, parent2: User;
@@ -25,10 +23,12 @@ describe('Testing active param change', function () {
   });
 
   it('Should change child1 active variable value', async function () {
-    const activeBefore = await getActive(child1.address, pocketFaucet);
+    const activeBefore = (await pocketFaucet.childToConfig(child1.address))
+      .active;
     const tx = await parent1.pocketFaucet.setActive(false, child1.address);
     await tx.wait();
-    const activeAfter = await getActive(child1.address, pocketFaucet);
+    const activeAfter = (await pocketFaucet.childToConfig(child1.address))
+      .active;
 
     assert(activeAfter != activeBefore, 'Active value did not change');
   });
@@ -40,15 +40,18 @@ describe('Testing active param change', function () {
   });
 
   it('Should change child2 active variable value 2 times', async function () {
-    const activeBefore = await getActive(child2.address, pocketFaucet);
+    const activeBefore = (await pocketFaucet.childToConfig(child2.address))
+      .active;
     let tx = await parent2.pocketFaucet.setActive(false, child2.address);
     await tx.wait();
-    const activeAfter = await getActive(child2.address, pocketFaucet);
+    const activeAfter = (await pocketFaucet.childToConfig(child2.address))
+      .active;
     assert(activeAfter !== activeBefore, 'Active value did not change');
 
     tx = await parent2.pocketFaucet.setActive(true, child2.address);
     await tx.wait();
-    const activeBack = await getActive(child2.address, pocketFaucet);
+    const activeBack = (await pocketFaucet.childToConfig(child2.address))
+      .active;
     assert(
       activeBack === activeBefore,
       'Active value did not go back to original value'

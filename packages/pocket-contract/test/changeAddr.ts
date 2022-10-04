@@ -1,12 +1,7 @@
-/* eslint-disable no-unused-vars */
 import { assert, expect } from 'chai';
-import { ethers, upgrades } from 'hardhat';
-import { Wallet } from 'ethers';
-import ParentTester from '../ts/ParentTester';
+import { ethers } from 'hardhat';
 import * as constants from '../utils/constants';
-import { PocketFaucet__factory, PocketFaucet } from '../typechain-types';
-import config from 'config/network';
-import goForwardNDays from '../utils/goForward';
+import { PocketFaucet } from '../typechain-types';
 import {
   getERC20Balance,
   getDecimals,
@@ -16,6 +11,7 @@ import {
 import setup, { User } from '../utils/testSetup';
 import { addStdChildAndSend } from '../utils/addChild';
 import { checkChildIsInit } from '../utils/getters';
+import { time } from '@nomicfoundation/hardhat-network-helpers';
 
 describe('Testing addr changement', function () {
   let parent1: User, parent2: User;
@@ -58,7 +54,7 @@ describe('Testing addr changement', function () {
   it('Should test that new child2 can withdraw', async function () {
     const toSend = ethers.utils.parseUnits('10', await getDecimals(tokenAddr));
     const tokenBefore = await getERC20Balance(tokenAddr, child2.address);
-    await goForwardNDays(21);
+    await time.increase(21 * constants.TIME.DAY);
     await setErc20Balance(
       tokenAddr,
       await ethers.getSigner(parent1.address),

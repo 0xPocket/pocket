@@ -1,30 +1,20 @@
-/* eslint-disable no-unused-vars */
 import { assert, expect } from 'chai';
-import { ethers, upgrades } from 'hardhat';
-import { Wallet } from 'ethers';
-import ParentTester from '../ts/ParentTester';
 import * as constants from '../utils/constants';
-import { PocketFaucet__factory, PocketFaucet } from '../typechain-types';
-import config from 'config/network';
+import { PocketFaucet } from '../typechain-types';
 import { getERC20Balance } from '../utils/ERC20';
-import { ChildContract } from '../ts/Child';
-import goForwardNDays from '../utils/goForward';
 import setup, { User } from '../utils/testSetup';
 import { addFundsPermit, addStdChildAndSend } from '../utils/addChild';
 import { time } from '@nomicfoundation/hardhat-network-helpers';
 
 describe('Testing to claim funds as child', function () {
-  let parent1: User, parent2: User;
-  let child1: User, child2: User;
+  let parent1: User, child1: User;
   let pocketFaucet: PocketFaucet;
   const tokenAddr = constants.CHOSEN_TOKEN;
 
   before(async function () {
     const { contracts, parents, children } = await setup();
     child1 = children[0];
-    child2 = children[1];
     parent1 = parents[0];
-    parent2 = parents[1];
     pocketFaucet = contracts.pocketFaucet;
 
     await addStdChildAndSend(parent1.pocketFaucet, child1.address, tokenAddr);
@@ -65,7 +55,7 @@ describe('Testing to claim funds as child', function () {
       parent1,
       await time.latest()
     );
-    await goForwardNDays(8);
+    await time.increase(8 * constants.TIME.DAY);
     const tx = await child1.pocketFaucet.claim();
     await tx.wait();
     const balanceAfter = await getERC20Balance(tokenAddr, child1.address);
@@ -88,7 +78,7 @@ describe('Testing to claim funds as child', function () {
       await time.latest()
     );
     const balanceBefore = await getERC20Balance(tokenAddr, child1.address);
-    await goForwardNDays(7 * 5 + 1);
+    await time.increase(5 * constants.TIME.WEEK);
     const tx = await child1.pocketFaucet.claim();
     await tx.wait();
     const balanceAfter = await getERC20Balance(tokenAddr, child1.address);
@@ -116,7 +106,7 @@ describe('Testing to claim funds as child', function () {
     );
     const diffExpected = (await pocketFaucet.childToConfig(child1.address))
       .balance;
-    await goForwardNDays(7 * 5);
+    await time.increase(5 * constants.TIME.WEEK);
     tx = await child1.pocketFaucet.claim();
     await tx.wait();
     const balanceAfter = await getERC20Balance(tokenAddr, child1.address);
@@ -144,7 +134,7 @@ describe('Testing to claim funds as child', function () {
       '100',
       newPeriodicity
     );
-    await goForwardNDays(7 * 5);
+    await time.increase(5 * constants.TIME.WEEK);
     const diffExpected = await pocketFaucet.computeClaimable(child1.address);
     const tx = await child1.pocketFaucet.claim();
     await tx.wait();
@@ -173,7 +163,7 @@ describe('Testing to claim funds as child', function () {
       '100',
       newPeriodicity
     );
-    await goForwardNDays(7 * 5);
+    await time.increase(5 * constants.TIME.WEEK);
     const diffExpected = await pocketFaucet.computeClaimable(child1.address);
     const tx = await child1.pocketFaucet.claim();
     await tx.wait();
@@ -217,7 +207,7 @@ describe('Testing to claim funds as child', function () {
     await tx.wait();
     tx = await parent1.pocketFaucet.setActive(true, child1.address);
     await tx.wait();
-    await goForwardNDays(7 * 5);
+    await time.increase(5 * constants.TIME.WEEK);
     const diffExpected = await pocketFaucet.computeClaimable(child1.address);
     tx = await child1.pocketFaucet.claim();
     await tx.wait();

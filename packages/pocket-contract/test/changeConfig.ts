@@ -1,19 +1,9 @@
-/* eslint-disable no-unused-vars */
 import { assert, expect } from 'chai';
-import { ethers, upgrades } from 'hardhat';
-import { Wallet } from 'ethers';
-import ParentTester from '../ts/ParentTester';
+import { ethers } from 'hardhat';
 import * as constants from '../utils/constants';
-import { PocketFaucet__factory, PocketFaucet } from '../typechain-types';
-import config from 'config/network';
+import { PocketFaucet } from '../typechain-types';
 import setup, { User } from '../utils/testSetup';
 import { addStdChildAndSend } from '../utils/addChild';
-import {
-  getCeiling,
-  getLastClaim,
-  getParent,
-  getPeriodicity,
-} from '../utils/getters';
 
 describe('Testing conf changement', function () {
   let parent1: User;
@@ -52,16 +42,20 @@ describe('Testing conf changement', function () {
 
   it('Should change ceiling', async function () {
     await addStdChildAndSend(parent1.pocketFaucet, child1.address, tokenAddr);
-    const ceilingBefore = await getCeiling(child1.address, pocketFaucet);
+    const ceilingBefore = (await pocketFaucet.childToConfig(child1.address))
+      .ceiling;
     await parent1.pocketFaucet.changeConfig(child1.address, 10, 1);
-    const ceilingAfter = await getCeiling(child1.address, pocketFaucet);
+    const ceilingAfter = (await pocketFaucet.childToConfig(child1.address))
+      .ceiling;
     assert(!ceilingAfter.eq(ceilingBefore), 'Ceiling value did not change');
   });
 
   it('Should not change lastClaim', async function () {
-    const lastClaimBefore = await getLastClaim(child1.address, pocketFaucet);
+    const lastClaimBefore = (await pocketFaucet.childToConfig(child1.address))
+      .lastClaim;
     await parent1.pocketFaucet.changeConfig(child1.address, 20, 1);
-    const lastClaimAfter = await getLastClaim(child1.address, pocketFaucet);
+    const lastClaimAfter = (await pocketFaucet.childToConfig(child1.address))
+      .lastClaim;
     assert(
       lastClaimAfter.eq(lastClaimBefore),
       'Last claim value changed: ' + lastClaimAfter + ' vs ' + lastClaimBefore
@@ -69,20 +63,21 @@ describe('Testing conf changement', function () {
   });
 
   it('Should not change parent param', async function () {
-    const parentBefore = await getParent(child1.address, pocketFaucet);
+    const parentBefore = (await pocketFaucet.childToConfig(child1.address))
+      .parent;
     await parent1.pocketFaucet.changeConfig(child1.address, 10, 1);
-    const parentAfter = await getParent(child1.address, pocketFaucet);
+    const parentAfter = (await pocketFaucet.childToConfig(child1.address))
+      .parent;
     assert(parentAfter === parentBefore, 'Parent value changed');
   });
 
   it('Should change periodicity', async function () {
     const newPeriodicity = 2000;
-    const periodicityBefore = await getPeriodicity(
-      child1.address,
-      pocketFaucet
-    );
+    const periodicityBefore = (await pocketFaucet.childToConfig(child1.address))
+      .periodicity;
     await parent1.pocketFaucet.changeConfig(child1.address, 10, newPeriodicity);
-    const periodicityAfter = await getPeriodicity(child1.address, pocketFaucet);
+    const periodicityAfter = (await pocketFaucet.childToConfig(child1.address))
+      .periodicity;
     assert(
       !periodicityAfter.eq(periodicityBefore),
       'Periodicity value is wrong: ' + periodicityAfter.toString()

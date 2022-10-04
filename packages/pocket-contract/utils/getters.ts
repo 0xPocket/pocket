@@ -1,29 +1,4 @@
-import { PocketFaucet } from '../typechain-types';
 import { User } from './testSetup';
-
-const getChildConfig = (childAddr: string, pocketFaucet: PocketFaucet) => {
-  return pocketFaucet.childToConfig(childAddr);
-};
-
-const getActive = async (address: string, pocketFaucet: PocketFaucet) => {
-  return (await getChildConfig(address, pocketFaucet)).active;
-};
-
-const getCeiling = async (address: string, pocketFaucet: PocketFaucet) => {
-  return (await getChildConfig(address, pocketFaucet)).ceiling;
-};
-
-const getLastClaim = async (address: string, pocketFaucet: PocketFaucet) => {
-  return (await getChildConfig(address, pocketFaucet)).lastClaim;
-};
-
-const getParent = async (address: string, pocketFaucet: PocketFaucet) => {
-  return (await getChildConfig(address, pocketFaucet)).parent;
-};
-
-const getPeriodicity = async (address: string, pocketFaucet: PocketFaucet) => {
-  return (await getChildConfig(address, pocketFaucet)).periodicity;
-};
 
 const getChildren = async (parent: User) => {
   const childrenAddresses: string[] = [];
@@ -50,11 +25,4 @@ const checkChildIsInit = async (parent: User, childAddr: string) => {
   return ret;
 };
 
-export {
-  getActive,
-  getCeiling,
-  getLastClaim,
-  getParent,
-  getPeriodicity,
-  checkChildIsInit,
-};
+export { checkChildIsInit };

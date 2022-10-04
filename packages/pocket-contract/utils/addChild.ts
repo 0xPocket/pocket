@@ -91,7 +91,8 @@ const addChildAndFundsPermitAndSend = async (
   amount: BigNumberish,
   token: string,
   whale: string | null,
-  parent: User
+  parent: User,
+  timestamp: number
 ) => {
   if (whale) {
     await setErc20Balance(
@@ -117,6 +118,7 @@ const addChildAndFundsPermitAndSend = async (
       name: 'USD Coin (PoS)',
       version: '1',
     },
+    deadline: timestamp + 300,
   });
 
   const signature = ethers.utils.splitSignature(

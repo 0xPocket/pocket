@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { assert, expect } from 'chai';
 import { ethers } from 'hardhat';
 import * as constants from '../utils/constants';
