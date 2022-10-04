@@ -12,7 +12,7 @@ const ProviderList: FC = () => {
   const { connector: activeConnector } = useAccount();
   const mounted = useIsMounted();
   const { disconnectAsync } = useDisconnect();
-  const ethereumSign = useEthereumSiwe();
+  const ethereumSign = useEthereumSiwe({});
   const { signIn, isLoading } = useSignIn();
 
   const { connectors, connect } = useConnect({

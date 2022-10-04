@@ -9,6 +9,7 @@ import { useSignIn } from '../../hooks/useSignIn';
 import { trpc } from '../../utils/trpc';
 import { useZodForm } from '../../utils/useZodForm';
 import FormattedMessage from '../common/FormattedMessage';
+import InputText from '../common/InputText';
 
 const EmailSchema = z.object({
   email: z.string().email(),
@@ -62,33 +63,40 @@ const EmailModalForm: FC<EmailModalFormProps> = ({ closeModal }) => {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex gap-4">
-        <input
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex min-w-[300px] flex-col items-center gap-8"
+      >
+        <h2>Sign in with email</h2>
+        <div className="flex w-full flex-col gap-4">
+          <InputText register={register('email')} label="Email" />
+          {/* <input
           {...register('email')}
           className="input-text w-48"
           autoComplete="email"
           placeholder="my@email.com"
-        />
-        <button
-          type="submit"
-          className={`action-btn flex-none`}
-          disabled={!formState.isValid}
-        >
-          <FormattedMessage id="signIn" />
-        </button>
+        /> */}
+          <button
+            type="submit"
+            className={`action-btn flex-none`}
+            disabled={!formState.isValid}
+          >
+            <FormattedMessage id="signIn" />
+          </button>
+        </div>
+        <div className=" flex items-center justify-center text-xs">
+          Powered by{' '}
+          <a href="https://magic.link" target="_blank" rel="noreferrer">
+            <Image
+              src="/assets/providers/magic_logo.svg"
+              width={65}
+              height={24}
+              alt="magic.link"
+              className="ml-2"
+            />
+          </a>
+        </div>
       </form>
-      <div className="mt-8 flex items-center justify-center text-xs">
-        Powered by{' '}
-        <a href="https://magic.link" target="_blank" rel="noreferrer">
-          <Image
-            src="/assets/providers/magic_logo.svg"
-            width={65}
-            height={24}
-            alt="magic.link"
-            className="ml-2"
-          />
-        </a>
-      </div>
     </>
   );
 };

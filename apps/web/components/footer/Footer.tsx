@@ -17,27 +17,29 @@ function Footer(props: FooterProps) {
 
   return (
     <footer {...props}>
-      <div className="flex items-center justify-center gap-4 py-2 text-base">
+      <div className="flex flex-col items-center">
         <p>&copy; 2022 Pocket</p>
-        <Link href="/privacy-policy">
-          <a>
-            <FormattedMessage id="legal.privacy" />
-          </a>
-        </Link>
-        <Link href="/terms-and-conditions">
-          <a>
-            <FormattedMessage id="legal.terms" />
-          </a>
-        </Link>
-        <a onClick={() => setContactOpen(true)}>Contact</a>
-        {loggedIn && (
-          <a className="text-danger" onClick={() => setBugOpen(true)}>
-            <FormattedMessage id="footer.report-bug" />
-          </a>
-        )}
+        <div className="flex items-center justify-center gap-4 py-2 text-base">
+          <Link href="/privacy-policy">
+            <a>
+              <FormattedMessage id="legal.privacy" />
+            </a>
+          </Link>
+          <Link href="/terms-and-conditions">
+            <a>
+              <FormattedMessage id="legal.terms" />
+            </a>
+          </Link>
+          <a onClick={() => setContactOpen(true)}>Contact</a>
+          {loggedIn && (
+            <a className="text-danger" onClick={() => setBugOpen(true)}>
+              <FormattedMessage id="footer.report-bug" />
+            </a>
+          )}
+        </div>
+        <ContactDialog isOpen={contactOpen} setIsOpen={setContactOpen} />
+        <BugDialog isOpen={bugOpen} setIsOpen={setBugOpen} />
       </div>
-      <ContactDialog isOpen={contactOpen} setIsOpen={setContactOpen} />
-      <BugDialog isOpen={bugOpen} setIsOpen={setBugOpen} />
     </footer>
   );
 }

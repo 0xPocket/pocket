@@ -39,7 +39,7 @@ const Register: FC = () => {
   const { formatMessage } = useIntl();
 
   const magicSignIn = useMagicConnect();
-  const ethereumSignMessage = useEthereumSiwe();
+  const ethereumSignMessage = useEthereumSiwe({});
 
   const ethereumRegister = trpc.useMutation('register.ethereum', {
     onError: (error) => {
