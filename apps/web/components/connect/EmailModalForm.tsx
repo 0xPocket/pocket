@@ -1,9 +1,11 @@
-import { signIn } from 'next-auth/react';
+// import { signIn } from 'next-auth/react';
+import Image from 'next/future/image';
 import { FC } from 'react';
 import { toast } from 'react-toastify';
 import { useAccount, useConnect } from 'wagmi';
 import { z } from 'zod';
 import { useMagicConnect } from '../../hooks/useMagicConnect';
+import { useSignIn } from '../../hooks/useSignIn';
 import { trpc } from '../../utils/trpc';
 import { useZodForm } from '../../utils/useZodForm';
 import FormattedMessage from '../common/FormattedMessage';
@@ -24,6 +26,7 @@ const EmailModalForm: FC<EmailModalFormProps> = ({ closeModal }) => {
     reValidateMode: 'onChange',
     schema: EmailSchema,
   });
+  const { signIn } = useSignIn();
 
   const checkEmail = trpc.useMutation('connect.connect', {
     onError: (err) => {
@@ -54,31 +57,39 @@ const EmailModalForm: FC<EmailModalFormProps> = ({ closeModal }) => {
     signIn('magic', {
       token: didToken,
       redirect: false,
-    }).then((res) => {
-      if (res?.ok) {
-        window.location.href = '/';
-      } else {
-        toast.error(res?.error);
-      }
     });
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex gap-4">
-      <input
-        {...register('email')}
-        className="input-text w-48"
-        autoComplete="email"
-        placeholder="my@email.com"
-      />
-      <button
-        type="submit"
-        className={`action-btn flex-none`}
-        disabled={!formState.isValid}
-      >
-        <FormattedMessage id="signIn" />
-      </button>
-    </form>
+    <>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex gap-4">
+        <input
+          {...register('email')}
+          className="input-text w-48"
+          autoComplete="email"
+          placeholder="my@email.com"
+        />
+        <button
+          type="submit"
+          className={`action-btn flex-none`}
+          disabled={!formState.isValid}
+        >
+          <FormattedMessage id="signIn" />
+        </button>
+      </form>
+      <div className="mt-8 flex items-center justify-center text-xs">
+        Powered by{' '}
+        <a href="https://magic.link" target="_blank" rel="noreferrer">
+          <Image
+            src="/assets/providers/magic_logo.svg"
+            width={65}
+            height={24}
+            alt="magic.link"
+            className="ml-2"
+          />
+        </a>
+      </div>
+    </>
   );
 };
 
