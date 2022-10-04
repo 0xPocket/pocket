@@ -89,7 +89,7 @@
 	}
 
 	.input-radio {
-		@apply relative flex items-center justify-center cursor-pointer rounded-lg border  px-3 py-2 shadow-sm focus:outline-none;
+		@apply relative flex items-center justify-center cursor-pointer rounded-lg border  px-3 py-2 shadow-sm focus:outline-none disabled:cursor-not-allowed;
 	}
 
 	.input-radio.big {

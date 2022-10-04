@@ -50,6 +50,16 @@ const Register: FC = () => {
     },
   });
 
+  // BETA TOKEN
+  const [betaToken, setBetaToken] = useState<string>();
+  trpc.useQuery(
+    ['beta.verifyInvite', { token: router.query.token as string }],
+    {
+      retry: false,
+      onSuccess: () => setBetaToken(router.query.token as string),
+    },
+  );
+
   const magicLinkRegister = trpc.useMutation('register.magic', {
     onError: (error) => {
       toast.error(error.message);
@@ -60,7 +70,6 @@ const Register: FC = () => {
   });
 
   const resendEmail = trpc.useMutation(['email.resendVerificationEmail']);
-
   const userType = watch('userType');
   const connectionType = watch('connectionType');
   const emailAddress = watch('email');
@@ -100,6 +109,7 @@ const Register: FC = () => {
         type: userType,
         email: data.email,
         name: data.name,
+        token: betaToken,
       });
     } else if (data.connectionType === 'Magic') {
       const didToken = await magicSignIn.mutateAsync(data.email);
@@ -108,9 +118,22 @@ const Register: FC = () => {
         didToken: didToken,
         email: data.email,
         name: data.name,
+        token: betaToken,
       });
     }
   };
+
+  if (!betaToken)
+    return (
+      <PageWrapper>
+        <div className="flex flex-col items-center">
+          <div className="flex w-[512px] flex-col items-center gap-16">
+            <h1>Pocket is currently in private beta</h1>
+            <p>If you want to try it, reach us on social media</p>
+          </div>
+        </div>
+      </PageWrapper>
+    );
 
   return (
     <PageWrapper>
@@ -154,12 +177,13 @@ const Register: FC = () => {
                     className={({ checked }) =>
                       checked
                         ? 'input-radio-checked big'
-                        : 'input-radio-unchecked big'
+                        : 'input-radio-unchecked big cursor-not-allowed opacity-30'
                     }
                     onClick={() => {
                       setValue('userType', 'Child');
                       router.push('/register' + '?step=1');
                     }}
+                    disabled
                   >
                     <FormattedMessage id="child" />
                   </RadioGroup.Option>
