@@ -107,7 +107,7 @@ export const parentRouter = createProtectedRouter()
         throw new TRPCError({ code: 'UNAUTHORIZED' });
       }
 
-      const userExists = await prisma.$transaction([
+      const [user, pendingChild] = await prisma.$transaction([
         prisma.user.findUnique({
           where: {
             email: input.email,
@@ -120,7 +120,7 @@ export const parentRouter = createProtectedRouter()
         }),
       ]);
 
-      if (userExists) {
+      if (user || pendingChild) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'A user with that email already exists',
