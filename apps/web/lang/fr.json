@@ -40,44 +40,44 @@
   "account": "Compte",
 	"parent" : "Parent",
 	"child": "Enfant",
-
-  "auth.email.connect": "Se connecter avec son email",
-  "auth.email.verify": "Vérifiez votre email avec le lien envoyé s'il vous plait.",
-  "auth.email.resent": "Nouvel email envoyé !",
-  "auth.email.resend": "Vous n'avez rien reçu? Cliquez ici pour en renvoyer un.",
-  "auth.wallet.connect": "Lié le wallet",
-  "auth.wallet.signMessage": "Signer le message",
-
+	
+  "email.resent": "Nouvel email envoyé !",
+	
   "card.child.title": "Mon compte",
   "card.child.swapper": "Swapper",
-
+	
   "card.child.account.title": "Dans mon compte",
-
+	
   "card.child.piggyBank.status.nothing": "Rien à retirer",
   "card.child.piggyBank.status.next": "Prochain retrait dans",
-
+	
   "card.parent.status.invited": "Un email de configuration a été envoyé à {email}",
   "card.parent.status.active": "Ce compte est actif",
   "card.parent.piggyBank.addFunds": "Ajouter des fonds",
-
+	
   "dashboard.child.claim.fail": "Le retrait a échoué.",
   "dashboard.child.claim.pending": "Retrait en cours, encore quelques secondes et ce sera bon",
   "dashbaord.child.claim.success": "Le retrait a fonctionné",
-
+	
   "dashboard.child.claimMatic.pending": "Le retrait de matic est en cours, encore quelques secondes et ce sera bon!",
   "dashboard.child.claimMatic.success": "Transaction réussie",
   "dashboard.child.claimMatic.title": "Tu peux récupérer tes Matics !",
   "dashboard.child.claimMatic.message": "Pour commencer ton voyage dans le web3, nous t'offrons quelques Matics pour payer les frais de tes premières transactions.",
-
+	
   "verify-email.email-verified": "Votre email est verifié !",
   "verify-email.redirect": "Vous allez être redirigé dans quelques instants...",
   "verify-email.problem": "Si le problème persiste, veuillez nous contacter.",
-
+	
   "common.welcome": "Bienvenue sur Pocket !",
-
+	
   "onboarding.connect-wallet": "Connectez-vous avec votre wallet préféré",
   "onboarding.more-info": "Nous avons besoin de plus d'informations !",
-
+	
+	"connect.chose": "Choisissez votre méthode de connexion",
+	"connect.noaccount": "Vous n'avez pas encore de compte ?",
+	"connect.create": "Créer un compte",
+  "connect.email.connect": "Se connecter avec son email",
+	
 	"register.title": "Créer un compte",
 	"register.step0.title": "Type de compte",
 	"register.step1.title": "Choisissez la méthode de connexion",
@@ -123,7 +123,6 @@
   "dashboard.common.nft.seeMore": "Voir plus",
   "dashboard.common.nft.title": "Librairie de NFTs",
   "dashboard.common.nft.fail": "Une erreur s'est produite en récupérant les NFT",
-
   "dashboard.common.nft.opensea": "Voir sur OpenSea",
 
   "dashboard.common.token.fail": "Une erreur s'est produite en récupérant les tokens.",

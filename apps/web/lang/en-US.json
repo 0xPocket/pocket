@@ -40,44 +40,44 @@
   "account": "Account",
 	"parent" : "Parent",
 	"child": "Child",
-
-  "auth.email.connect": "Connect with your email",
-  "auth.email.verify": "Please verify your email with the link we sent you.",
-  "auth.email.resent": "New email sent !",
-  "auth.email.resend": "Didn't received any email? Click here to resend a new one.",
-  "auth.wallet.connect": "Link wallet",
-  "auth.wallet.signMessage": "Sign message",
-
+	
+  "email.resent": "New email sent !",
+	
   "card.child.title": "My account",
   "card.child.swapper": "Swapper",
-
+	
   "card.child.account.title": "In my account",
-
+	
   "card.child.piggyBank.status.nothing": "Nothing to claim",
   "card.child.piggyBank.status.next": "Next claim in",
-
+	
   "card.parent.status.invited": "A set-up email has been sent to {email}",
   "card.parent.status.active": "This account is up and running",
   "card.parent.piggyBank.addFunds": "Add funds",
-
+	
   "dashboard.child.claim.fail": "Claim failed.",
   "dashboard.child.claim.pending": "Claim pending, please hang on !",
   "dashbaord.child.claim.success": "Successfull claim !",
-
+	
   "dashboard.child.claimMatic.pending": "Claim matic pending, please hang on !",
   "dashboard.child.claimMatic.success": "Transaction succeeded !",
   "dashboard.child.claimMatic.title": "You can claim your Matic !",
   "dashboard.child.claimMatic.message": "To start your journey into web3, we grant you some Matic to pay fees for your first transaction.",
-
+	
   "verify-email.email-verified": "Your email is now verified !",
   "verify-email.redirect": "You will be redirected in few seconds...",
   "verify-email.problem": "If the problem persists, contact us.",
-
+	
   "common.welcome": "Welcome to Pocket !",
-
+	
   "onboarding.connect-wallet": "Connect with your favorite wallet",
   "onboarding.more-info": "We need some more infos !",
-
+	
+	"connect.chose": "Choose your connection method",
+	"connect.noaccount": "Don't have an account yet ?",
+	"connect.create": "Sign up",
+  "connect.email.connect": "Connect with your email",
+	
 	"register.title": "Register to Pocket",
 	"register.step0.title": "Select your account type",
 	"register.step1.title": "Choose your connection method",
@@ -123,7 +123,6 @@
   "dashboard.common.nft.seeMore": "See more",
   "dashboard.common.nft.title": "NFTs Library",
   "dashboard.common.nft.fail": "Could not retrieve user's NFT",
-
   "dashboard.common.nft.opensea": "See on OpenSea",
 
   "dashboard.common.token.fail": "Could not retrieve user's token",

@@ -67,7 +67,9 @@ const EmailModalForm: FC<EmailModalFormProps> = ({ closeModal }) => {
         onSubmit={handleSubmit(onSubmit)}
         className="flex min-w-[300px] flex-col items-center gap-8"
       >
-        <h2>Sign in with email</h2>
+        <h2>
+          <FormattedMessage id="connect.email.connect" />
+        </h2>
         <div className="flex w-full flex-col gap-4">
           <InputText register={register('email')} label="Email" />
           {/* <input

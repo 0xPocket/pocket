@@ -40,7 +40,7 @@ const EmailStatus: FC<EmailStatusProps> = ({ child }) => {
       {resendEmail.status === 'loading' && <Spinner />}
       {resendEmail.status === 'success' && (
         <span className="ml-2 text-success">
-          <FormattedMessage id="auth.email.resent" />
+          <FormattedMessage id="email.resent" />
         </span>
       )}
     </div>
