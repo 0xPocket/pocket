@@ -100,12 +100,14 @@ export const relayerRouter = createProtectedRouter().mutation('forward', {
         ).decodeFunctionResult(input.functionName, staticCall.ret);
       } catch (e) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        console.log(e);
         const error = getParsedEthersError(e as any);
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: error.context,
         });
       }
+      console.log(staticCall);
       throw new TRPCError({
         code: 'BAD_REQUEST',
         message: 'Error during the transaction',
