@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { env } from 'config/env/server';
-import { ethers, providers, Wallet } from 'ethers';
-import { ForwarderAbi, PocketFaucetAbi } from 'pocket-contract/abi';
+import { providers, Wallet } from 'ethers';
+import { PocketFaucetAbi } from 'pocket-contract/abi';
 import {
   Forwarder,
   Forwarder__factory,
@@ -11,10 +11,7 @@ import { z } from 'zod';
 import { createProtectedRouter } from '../createRouter';
 import { getParsedEthersError } from '@enzoferey/ethers-error-parser';
 import axios from 'axios';
-import {
-  DefenderRelayProvider,
-  DefenderRelaySigner,
-} from 'defender-relay-client/lib/ethers';
+
 const provider = new providers.JsonRpcProvider(env.RPC_URL);
 const wallet = new Wallet(
   '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80', // test address for local
@@ -46,35 +43,20 @@ type ExecuteParams = Forwarder['functions']['execute'] extends (
   ? P
   : never;
 
-const startonRelayer = async (params: any) => {
+const startonRelayer = async (params: ExecuteParams) => {
   return http
     .post<StartonSmartContractCallResponse>(
       `/smart-contract/${env.NETWORK_KEY}/${env.TRUSTED_FORWARDER}/call`,
       {
-        functionName: 'execute(tuple,bytes32,bytes32,bytes,bytes)',
+        functionName:
+          'execute((address,address,uint256,uint256,uint256,bytes,uint256),bytes32,bytes32,bytes,bytes)',
         signerWallet: '0x9297108ceeE8b631B3De85486DB4Dd5fEfE20647', // test wallet
         speed: 'fast',
         params,
       },
     )
-    .then((res) => res.data)
-    .catch((e) => console.log(e));
+    .then((res) => res.data);
 };
-
-const defenderProvider = new DefenderRelayProvider({
-  apiKey: '8zW5XQv8RS9Qqn8yWmDhgdCim8KNFD4q',
-  apiSecret: '2DuoiEsQhEX3n74Ksp7FeoNNxor1DRGAYp5wdShdBLi7cZW5AuoQA2ANpcjxbBnP',
-});
-
-const signer = new DefenderRelaySigner(
-  {
-    apiKey: '8zW5XQv8RS9Qqn8yWmDhgdCim8KNFD4q',
-    apiSecret:
-      '2DuoiEsQhEX3n74Ksp7FeoNNxor1DRGAYp5wdShdBLi7cZW5AuoQA2ANpcjxbBnP',
-  },
-  defenderProvider,
-  { speed: 'fastest' },
-);
 
 export const relayerRouter = createProtectedRouter().mutation('forward', {
   input: z.object({
@@ -105,14 +87,17 @@ export const relayerRouter = createProtectedRouter().mutation('forward', {
 
     const gasLimit = (request.gas + 300000).toString();
 
-    const staticCall = await forwarder.callStatic.execute(
+    const paramsTuple = [
       request,
       env.DOMAIN_SELECTOR_HASH,
       TYPE_HASH,
       '0x',
       signature,
-      { gasLimit },
-    );
+    ] as const;
+
+    const staticCall = await forwarder.callStatic.execute(...paramsTuple, {
+      gasLimit,
+    });
 
     if (!staticCall.success) {
       try {
@@ -134,32 +119,20 @@ export const relayerRouter = createProtectedRouter().mutation('forward', {
     }
 
     if (env.NODE_ENV === 'development') {
-      const tx = await forwarder.execute(
-        request,
-        env.DOMAIN_SELECTOR_HASH,
-        TYPE_HASH,
-        '0x',
-        signature,
-        { gasLimit },
-      );
+      const tx = await forwarder.execute(...paramsTuple, { gasLimit });
 
       return { txHash: tx.hash };
     }
 
-    const defenderForwarder = new ethers.Contract(
-      env.TRUSTED_FORWARDER,
-      ForwarderAbi,
-      signer,
-    );
+    try {
+      const tx = await startonRelayer([...paramsTuple]);
 
-    const tx = await defenderForwarder.execute(
-      request,
-      env.DOMAIN_SELECTOR_HASH,
-      TYPE_HASH,
-      '0x',
-      signature,
-    );
-
-    return { txHash: tx.hash };
+      return { txHash: tx.transactionHash };
+    } catch (e) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Error relaying transaction, please reach us.',
+      });
+    }
   },
 });

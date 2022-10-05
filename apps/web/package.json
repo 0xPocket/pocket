@@ -39,7 +39,6 @@
     "abitype": "^0.1.4",
     "alchemy-sdk": "^2.0.5-rc1",
     "axios": "^0.27.2",
-    "defender-relay-client": "^1.31.1",
     "ethers": "^5.7.1",
     "fast-json-stable-stringify": "^2.1.0",
     "jsonwebtoken": "^8.5.1",
