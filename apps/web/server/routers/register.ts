@@ -13,6 +13,7 @@ import {
   saveVerificationToken,
 } from '../services/jwt';
 import * as requestIp from 'request-ip';
+import { grantPktToken } from '../services/grantPktToken';
 
 const mAdmin = new Magic(env.MAGIC_LINK_SECRET_KEY);
 
@@ -84,7 +85,9 @@ export const registerRouter = createRouter()
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const ip = requestIp.getClientIp(ctx.req as any);
 
-      console.log('ip', ip);
+      if (env.NETWORK_KEY === 'polygon-mumbai') {
+        await grantPktToken(userAddress);
+      }
 
       return prisma.user.create({
         data: {
@@ -158,7 +161,9 @@ export const registerRouter = createRouter()
 
       const ip = requestIp.getClientIp(ctx.req as any);
 
-      console.log('ip', ip);
+      if (env.NETWORK_KEY === 'polygon-mumbai') {
+        await grantPktToken(siwe.address);
+      }
 
       let newUser: User;
 
