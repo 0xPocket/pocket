@@ -104,10 +104,13 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
         require(child != address(0), '!_areRelated: null parent address');
         bool isChild;
         uint256 length = parentToChildren[parent].length;
-        for (uint256 i = 0; i < length; i++) {
+        for (uint256 i = 0; i < length;) {
             if (parentToChildren[parent][i] == child) {
                 isChild = true;
                 break;
+            }
+            unchecked {
+                ++i;
             }
         }
         require(isChild == true, "!_areRelated: child doesn't match");
@@ -118,44 +121,7 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
         _;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
-    ////////////////////// TO DELETE FOR TESTING PURPOSE //////////////////////
-
-    address[] public childrenList;
-
-    function resetAll() external {
-        for (uint256 i; i < childrenList.length; i++) {
-            if (childrenList[i] == address(0)) continue;
-            removeChildOwner(childrenList[i]);
-        }
-        delete childrenList;
-    }
-
-    function removeChildOwner(address child) internal {
-        Config memory childConfig = childToConfig[child];
-
-        uint256 length = parentToChildren[childConfig.parent].length;
-        for (uint256 i = 0; i < length; i++) {
-            if (parentToChildren[childConfig.parent][i] == child) {
-                parentToChildren[childConfig.parent][i] = parentToChildren[
-                    childConfig.parent
-                ][length - 1];
-                delete (parentToChildren[childConfig.parent][length - 1]);
-                break;
-            }
-        }
-
-        IERC20Upgradeable(baseTokens[childConfig.tokenIndex]).safeTransfer(
-            _msgSender(),
-            childToConfig[child].balance
-        );
-        delete childToConfig[child];
-        emit ChildRemoved(childConfig.parent, child);
-    }
-
-    ////////////////////////////// TO DELETE ///////////////////////////////
-    ////////////////////////////////////////////////////////////////////////
-
+   
     /// @notice This returns the number of children asssociated to an address
     /// @param parent The address of the parent account
     /// @return childNb as a uint256.
@@ -242,13 +208,16 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
         Config memory childConfig = childToConfig[child];
 
         uint256 length = parentToChildren[childConfig.parent].length;
-        for (uint256 i = 0; i < length; i++) {
+        for (uint256 i = 0; i < length;) {
             if (parentToChildren[childConfig.parent][i] == child) {
                 parentToChildren[childConfig.parent][i] = parentToChildren[
                     childConfig.parent
                 ][length - 1];
                 delete (parentToChildren[childConfig.parent][length - 1]);
                 break;
+            }
+            unchecked {
+                ++i;
             }
         }
 
@@ -303,10 +272,13 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
 
         childToConfig[newAddr] = conf;
         uint256 length = parentToChildren[conf.parent].length;
-        for (uint256 i = 0; i < length; i++) {
+        for (uint256 i = 0; i < length;) {
             if (parentToChildren[conf.parent][i] == oldAddr) {
                 parentToChildren[conf.parent][i] = newAddr;
                 break;
+            }
+            unchecked {
+                ++i;
             }
         }
         delete (childToConfig[oldAddr]);
@@ -395,4 +367,43 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
     }
 
     receive() external payable {}
+
+     ////////////////////////////////////////////////////////////////////////////
+    ////////////////////// TO DELETE FOR TESTING PURPOSE //////////////////////
+
+    address[] public childrenList;
+
+    function resetAll() external {
+        for (uint256 i; i < childrenList.length; i++) {
+            if (childrenList[i] == address(0)) continue;
+            removeChildOwner(childrenList[i]);
+        }
+        delete childrenList;
+    }
+
+    function removeChildOwner(address child) internal {
+        Config memory childConfig = childToConfig[child];
+
+        uint256 length = parentToChildren[childConfig.parent].length;
+        for (uint256 i = 0; i < length; i++) {
+            if (parentToChildren[childConfig.parent][i] == child) {
+                parentToChildren[childConfig.parent][i] = parentToChildren[
+                    childConfig.parent
+                ][length - 1];
+                delete (parentToChildren[childConfig.parent][length - 1]);
+                break;
+            }
+        }
+
+        IERC20Upgradeable(baseTokens[childConfig.tokenIndex]).safeTransfer(
+            _msgSender(),
+            childToConfig[child].balance
+        );
+        delete childToConfig[child];
+        emit ChildRemoved(childConfig.parent, child);
+    }
+
+    ////////////////////////////// TO DELETE ///////////////////////////////
+    ////////////////////////////////////////////////////////////////////////
+
 }
