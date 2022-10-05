@@ -98,9 +98,6 @@ export function useSendMetaTx<
           args,
         });
 
-        console.log('toSign args', args);
-        console.log('toSign sendMetaTx', toSign);
-
         const signature = await signTypedDataAsync(toSign);
 
         return sendMetaTx.mutateAsync({

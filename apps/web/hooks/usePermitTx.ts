@@ -47,7 +47,6 @@ export function usePermitTx({ contractAddress }: UsePermitTx) {
           },
         });
 
-        console.log('toSign permit', toSign);
         const signature = await signTypedDataAsync(toSign);
 
         setLoading(false);
