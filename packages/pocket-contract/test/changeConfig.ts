@@ -24,20 +24,20 @@ describe('Testing conf changement', function () {
   it('Should revert because new child addr is zero', async function () {
     await expect(
       parent1.pocketFaucet.changeConfig(ethers.constants.AddressZero, 0, 0)
-    ).to.be.revertedWith('!_areRelated: null child address');
+    ).to.be.revertedWith('!areRelated: null child address');
   });
 
   it('Should revert because child2 is not set for this parent', async function () {
     await expect(
       parent1.pocketFaucet.changeConfig(child2.address, 0, 0)
-    ).to.be.revertedWith("!_areRelated: child doesn't match");
+    ).to.be.revertedWith("!areRelated: child doesn't match");
   });
 
   it('Should revert because child1 is not set anymore', async function () {
     await parent1.pocketFaucet.removeChild(child1.address);
     await expect(
       parent1.pocketFaucet.changeConfig(child1.address, 0, 0)
-    ).to.be.revertedWith("!_areRelated: child doesn't match");
+    ).to.be.revertedWith("!areRelated: child doesn't match");
   });
 
   it('Should change ceiling', async function () {

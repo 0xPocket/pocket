@@ -14,10 +14,10 @@ const serverSchema = z.object({
   NEXTAUTH_SECRET: z.string(),
   NEXTAUTH_URL: z.string().url().optional(),
   NODE_ENV: z.enum(["development", "test", "production"]).optional(),
-  POCKET_PRIVATE_KEY: z.string(),
   QUERY_DEBUG: z.string().optional(),
   VERCEL_URL: z.string().optional(),
   ANALYZE: z.string().optional(),
+  STARTON_KEY: z.string(),
 });
 
 /**
@@ -36,7 +36,7 @@ const clientSchema = z.object({
   NEXT_PUBLIC_COVALENT_KEY: z.string(),
   NEXT_PUBLIC_MAGIC_LINK_PUBLIC_KEY: z.string(),
   NEXT_PUBLIC_APP_URL: z.string().url(),
-	NEXT_PUBLIC_TRANSAK_API_KEY: z.string(),
+  NEXT_PUBLIC_TRANSAK_API_KEY: z.string(),
 });
 
 /**
@@ -54,7 +54,7 @@ const clientEnv = {
   NEXT_PUBLIC_MAGIC_LINK_PUBLIC_KEY:
     process.env.NEXT_PUBLIC_MAGIC_LINK_PUBLIC_KEY,
   NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
-	NEXT_PUBLIC_TRANSAK_API_KEY: process.env.NEXT_PUBLIC_TRANSAK_API_KEY
+  NEXT_PUBLIC_TRANSAK_API_KEY: process.env.NEXT_PUBLIC_TRANSAK_API_KEY,
 };
 
 module.exports = {

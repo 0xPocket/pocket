@@ -1,6 +1,5 @@
 import { TRPCError } from '@trpc/server';
 import { env } from 'config/env/server';
-import { providers, Wallet } from 'ethers';
 import { PocketFaucetAbi } from 'pocket-contract/abi';
 import {
   Forwarder,
@@ -11,20 +10,12 @@ import { z } from 'zod';
 import { createProtectedRouter } from '../createRouter';
 import { getParsedEthersError } from '@enzoferey/ethers-error-parser';
 import axios from 'axios';
-
-const provider = new providers.JsonRpcProvider(env.RPC_URL);
-const wallet = new Wallet(
-  '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80', // test address for local
-  provider,
-);
-
-const TYPE_HASH =
-  '0x2510fc5e187085770200b027d9f2cc4b930768f3b2bd81daafb71ffeb53d21c4';
+import { DOMAIN_SELECTOR_HASH, relayerSigner, TYPE_HASH } from '../ethereum';
 
 const http = axios.create({
   baseURL: 'https://api.starton.io/v2',
   headers: {
-    'x-api-key': 'EvfD7PJGEDIT4VCCVSZ16qREwPeNVQ6H',
+    'x-api-key': env.STARTON_KEY,
   },
 });
 
@@ -50,7 +41,7 @@ const startonRelayer = async (params: ExecuteParams) => {
       {
         functionName:
           'execute((address,address,uint256,uint256,uint256,bytes,uint256),bytes32,bytes32,bytes,bytes)',
-        signerWallet: '0x9297108ceeE8b631B3De85486DB4Dd5fEfE20647', // test wallet
+        signerWallet: env.SIGNER_WALLET, // test wallet
         speed: 'fast',
         params,
       },
@@ -83,13 +74,16 @@ export const relayerRouter = createProtectedRouter().mutation('forward', {
         message: 'Request declined.',
       });
 
-    const forwarder = Forwarder__factory.connect(env.TRUSTED_FORWARDER, wallet);
+    const forwarder = Forwarder__factory.connect(
+      env.TRUSTED_FORWARDER,
+      relayerSigner,
+    );
 
     const gasLimit = (request.gas + 300000).toString();
 
     const paramsTuple = [
       request,
-      env.DOMAIN_SELECTOR_HASH,
+      DOMAIN_SELECTOR_HASH,
       TYPE_HASH,
       '0x',
       signature,

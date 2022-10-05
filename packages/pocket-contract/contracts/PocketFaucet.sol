@@ -6,7 +6,8 @@ import '@openzeppelin/contracts-upgradeable/token/ERC20/extensions/draft-IERC20P
 import '@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol';
 import '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
 import './ERC2771ContextUpgradeableCustom.sol';
-import 'hardhat/console.sol';
+
+// import 'hardhat/console.sol';
 
 /// @title A pocket money faucet
 /// @author Guillaume Dupont, Sami Darnaud
@@ -99,62 +100,27 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
     /// @notice This checks that the child address and parent address are properly bind in the contract.
     /// @param parent is the parent address
     /// @param child is the child address
-    modifier _areRelated(address parent, address child) {
-        require(child != address(0), '!_areRelated: null child address');
-        require(child != address(0), '!_areRelated: null parent address');
+    modifier areRelated(address parent, address child) {
+        require(child != address(0), '!areRelated: null child address');
+        require(child != address(0), '!areRelated: null parent address');
         bool isChild;
         uint256 length = parentToChildren[parent].length;
-        for (uint256 i = 0; i < length; i++) {
+        for (uint256 i = 0; i < length; ) {
             if (parentToChildren[parent][i] == child) {
                 isChild = true;
                 break;
             }
+            unchecked {
+                ++i;
+            }
         }
-        require(isChild == true, "!_areRelated: child doesn't match");
+        require(isChild, "!areRelated: child doesn't match");
         require(
             childToConfig[child].parent == parent,
-            "!_areRelated: parent doesn't match"
+            "!areRelated: parent doesn't match"
         );
         _;
     }
-
-    ////////////////////////////////////////////////////////////////////////////
-    ////////////////////// TO DELETE FOR TESTING PURPOSE //////////////////////
-
-    address[] public childrenList;
-
-    function resetAll() external {
-        for (uint256 i; i < childrenList.length; i++) {
-            if (childrenList[i] == address(0)) continue;
-            removeChildOwner(childrenList[i]);
-        }
-        delete childrenList;
-    }
-
-    function removeChildOwner(address child) internal {
-        Config memory childConfig = childToConfig[child];
-
-        uint256 length = parentToChildren[childConfig.parent].length;
-        for (uint256 i = 0; i < length; i++) {
-            if (parentToChildren[childConfig.parent][i] == child) {
-                parentToChildren[childConfig.parent][i] = parentToChildren[
-                    childConfig.parent
-                ][length - 1];
-                delete (parentToChildren[childConfig.parent][length - 1]);
-                break;
-            }
-        }
-
-        IERC20Upgradeable(baseTokens[childConfig.tokenIndex]).safeTransfer(
-            _msgSender(),
-            childToConfig[child].balance
-        );
-        delete childToConfig[child];
-        emit ChildRemoved(childConfig.parent, child);
-    }
-
-    ////////////////////////////// TO DELETE ///////////////////////////////
-    ////////////////////////////////////////////////////////////////////////
 
     /// @notice This returns the number of children asssociated to an address
     /// @param parent The address of the parent account
@@ -173,13 +139,16 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
             '!addChild: Child address already taken'
         );
         require(config.periodicity != 0, '!addChild: periodicity cannot be 0');
-        Config memory newConf;
-        newConf.lastClaim = block.timestamp - config.periodicity;
-        newConf.ceiling = config.ceiling;
-        newConf.periodicity = config.periodicity;
-        newConf.parent = _msgSender();
-        newConf.active = true;
-        newConf.tokenIndex = 0;
+        Config memory newConf = Config(
+            true,
+            0,
+            config.ceiling,
+            block.timestamp - config.periodicity,
+            config.periodicity,
+            _msgSender(),
+            0 // TO DO : handle index in the config
+        );
+
         childToConfig[child] = newConf;
         parentToChildren[_msgSender()].push(child);
         childrenList.push(child);
@@ -207,13 +176,12 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
     /// @param child is the address of the child.
     function addFunds(address child, uint256 amount)
         public
-        _areRelated(_msgSender(), child)
+        areRelated(_msgSender(), child)
     {
-        IERC20Upgradeable(baseTokens[childToConfig[child].tokenIndex])
-            .safeTransferFrom(_msgSender(), address(this), amount);
-
         childToConfig[child].balance += amount;
         emit FundsAdded(block.timestamp, _msgSender(), amount, child);
+        IERC20Upgradeable(baseTokens[childToConfig[child].tokenIndex])
+            .safeTransferFrom(_msgSender(), address(this), amount);
     }
 
     /// @notice Add `amount` to your child `child` account.
@@ -226,7 +194,7 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
         uint8 v,
         bytes32 r,
         bytes32 s
-    ) public _areRelated(_msgSender(), child) {
+    ) public areRelated(_msgSender(), child) {
         IERC20PermitUpgradeable(baseTokens[childToConfig[child].tokenIndex])
             .permit(_msgSender(), address(this), amount, deadline, v, r, s);
         addFunds(child, amount);
@@ -237,12 +205,12 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
     /// @dev This function properly updates the parentToChildren array by removing the address of the child and making sure there is no gap inside the array.
     function removeChild(address child)
         external
-        _areRelated(_msgSender(), child)
+        areRelated(_msgSender(), child)
     {
         Config memory childConfig = childToConfig[child];
 
         uint256 length = parentToChildren[childConfig.parent].length;
-        for (uint256 i = 0; i < length; i++) {
+        for (uint256 i = 0; i < length; ) {
             if (parentToChildren[childConfig.parent][i] == child) {
                 parentToChildren[childConfig.parent][i] = parentToChildren[
                     childConfig.parent
@@ -250,13 +218,20 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
                 delete (parentToChildren[childConfig.parent][length - 1]);
                 break;
             }
+            unchecked {
+                ++i;
+            }
         }
 
-        IERC20Upgradeable(baseTokens[childToConfig[child].tokenIndex])
-            .safeTransfer(_msgSender(), childToConfig[child].balance);
-
+        uint256 childBalance = childToConfig[child].balance;
+        uint256 tokenIndex = childToConfig[child].tokenIndex;
         delete childToConfig[child];
         emit ChildRemoved(childConfig.parent, child);
+
+        IERC20Upgradeable(baseTokens[tokenIndex]).safeTransfer(
+            _msgSender(),
+            childBalance
+        );
     } // TO DO : REMOVE ?
 
     /// @notice This transaction will set the active variable to `active`. If the value is false, your child: `child` won't be able to claim anymore.
@@ -264,12 +239,11 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
     /// @param child the child to activate or desactivate the account.
     function setActive(bool active, address child)
         public
-        _areRelated(_msgSender(), child)
+        areRelated(_msgSender(), child)
     {
         Config storage conf = childToConfig[child];
         conf.active = active;
-        if (conf.active == true)
-            conf.lastClaim = block.timestamp - conf.periodicity;
+        if (conf.active) conf.lastClaim = block.timestamp - conf.periodicity;
     }
 
     /// @notice This will set your child: `child` config to the following values: ceiling: `ceiling`, periodicity: `periodicity`.
@@ -280,7 +254,7 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
         address child,
         uint256 ceiling,
         uint256 periodicity
-    ) public _areRelated(_msgSender(), child) {
+    ) public areRelated(_msgSender(), child) {
         Config storage conf = childToConfig[child];
         require(periodicity != 0, '!changeConfig: periodicity cannot be 0');
         conf.ceiling = ceiling;
@@ -293,7 +267,7 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
     /// @param newAddr is the new address of your child.
     function changeChildAddress(address oldAddr, address newAddr)
         public
-        _areRelated(_msgSender(), oldAddr)
+        areRelated(_msgSender(), oldAddr)
     {
         Config memory conf = childToConfig[oldAddr];
         require(
@@ -303,10 +277,13 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
 
         childToConfig[newAddr] = conf;
         uint256 length = parentToChildren[conf.parent].length;
-        for (uint256 i = 0; i < length; i++) {
+        for (uint256 i = 0; i < length; ) {
             if (parentToChildren[conf.parent][i] == oldAddr) {
                 parentToChildren[conf.parent][i] = newAddr;
                 break;
+            }
+            unchecked {
+                ++i;
             }
         }
         delete (childToConfig[oldAddr]);
@@ -319,7 +296,7 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
     /// @param child is the address of the child.
     function withdrawFundsFromChild(uint256 amount, address child)
         public
-        _areRelated(_msgSender(), child)
+        areRelated(_msgSender(), child)
     {
         Config storage conf = childToConfig[child];
         uint256 childBalance = conf.balance;
@@ -329,9 +306,9 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
         );
         if (amount == 0) amount = childBalance;
         conf.balance -= amount;
+        emit FundsWithdrawn(_msgSender(), amount, child);
         IERC20Upgradeable(baseTokens[childToConfig[child].tokenIndex])
             .safeTransfer(_msgSender(), amount);
-        emit FundsWithdrawn(_msgSender(), amount, child);
     } // TO DO : keep ?
 
     /// @dev Computes the amount of token the child can claim.
@@ -352,7 +329,7 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
         require(conf.active, '!claim: not active');
         require(conf.balance > 0, '!claim: null balance');
         require(
-            childToConfig[_msgSender()].active == true,
+            childToConfig[_msgSender()].active,
             '!claim: account is inactive'
         );
 
@@ -363,11 +340,11 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
         conf.lastClaim = conf.lastClaim + conf.periodicity * nbPeriod;
 
         conf.balance -= claimable;
+        emit FundsClaimed(block.timestamp, _msgSender(), claimable);
         IERC20Upgradeable(baseTokens[conf.tokenIndex]).safeTransfer(
             _msgSender(),
             claimable
         );
-        emit FundsClaimed(block.timestamp, _msgSender(), claimable);
     }
 
     /// @notice You will change your address from `_msgSender()` to `newAddr`
@@ -390,9 +367,53 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
 
     function withdrawCoin(uint256 amount) public onlyOwner {
         if (amount == 0) amount = address(this).balance;
-        payable(_msgSender()).transfer(amount);
         emit CoinWithdrawed(amount);
+        payable(_msgSender()).transfer(amount);
     }
 
     receive() external payable {}
+
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////////////// TO DELETE FOR TESTING PURPOSE //////////////////////
+
+    address[] public childrenList;
+
+    function resetAll() external {
+        for (uint256 i; i < childrenList.length; ) {
+            if (childrenList[i] == address(0)) continue;
+            removeChildOwner(childrenList[i]);
+            unchecked {
+                ++i;
+            }
+        }
+        delete childrenList;
+    }
+
+    function removeChildOwner(address child) internal {
+        Config memory childConfig = childToConfig[child];
+
+        uint256 length = parentToChildren[childConfig.parent].length;
+        for (uint256 i = 0; i < length; ) {
+            if (parentToChildren[childConfig.parent][i] == child) {
+                parentToChildren[childConfig.parent][i] = parentToChildren[
+                    childConfig.parent
+                ][length - 1];
+                delete (parentToChildren[childConfig.parent][length - 1]);
+                break;
+            }
+            unchecked {
+                ++i;
+            }
+        }
+
+        IERC20Upgradeable(baseTokens[childConfig.tokenIndex]).safeTransfer(
+            _msgSender(),
+            childToConfig[child].balance
+        );
+        delete childToConfig[child];
+        emit ChildRemoved(childConfig.parent, child);
+    }
+
+    ////////////////////////////// TO DELETE ///////////////////////////////
+    ////////////////////////////////////////////////////////////////////////
 }

@@ -31,7 +31,7 @@ describe('Testing rm child', function () {
     await addStdChildAndSend(parent1.pocketFaucet, child1.address, tokenAddr);
     await expect(
       parent1.pocketFaucet.removeChild(child2.address)
-    ).to.be.revertedWith("!_areRelated: child doesn't match");
+    ).to.be.revertedWith("!areRelated: child doesn't match");
   });
 
   it('Should add multiple child and remove 2', async function () {
