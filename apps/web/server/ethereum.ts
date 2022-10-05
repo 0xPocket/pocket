@@ -4,7 +4,7 @@ import { _TypedDataEncoder } from 'ethers/lib/utils';
 
 export const provider = new providers.JsonRpcProvider(env.RPC_URL);
 export const relayerSigner = new Wallet(
-  '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80', // test address for local (hardhat 0) 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+  '0x8a08140e5dd7eb70af23b28f53fe24a133b708d18368361cd3d55ddfc7cc9ee7', // test address for local (hardhat 0) 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
   provider,
 );
 
