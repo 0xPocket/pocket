@@ -36,7 +36,7 @@ describe('Testing active param change', function () {
   it('Should revert because not related', async function () {
     await expect(
       parent2.pocketFaucet.setActive(false, child1.address)
-    ).to.be.revertedWith("!_areRelated: child doesn't match");
+    ).to.be.revertedWith("!areRelated: child doesn't match");
   });
 
   it('Should change child2 active variable value 2 times', async function () {

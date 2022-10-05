@@ -33,7 +33,7 @@ describe('Testing addr changement', function () {
   it('Should reverse because child2 is not parent1 child', async function () {
     await expect(
       parent1.pocketFaucet.changeChildAddress(child2.address, child1.address)
-    ).to.be.revertedWith("!_areRelated: child doesn't match");
+    ).to.be.revertedWith("!areRelated: child doesn't match");
   });
 
   it('Should change child1 to child2 for parent1', async function () {

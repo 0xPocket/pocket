@@ -20,7 +20,7 @@ describe('Testing add Child', function () {
   it('Should revert because new child addr is zero', async function () {
     await expect(
       parent1.pocketFaucet.changeConfig(ethers.constants.AddressZero, 0, 0)
-    ).to.be.revertedWith('!_areRelated: null child address');
+    ).to.be.revertedWith('!areRelated: null child address');
   });
 
   it('Should revert because child already added', async function () {
