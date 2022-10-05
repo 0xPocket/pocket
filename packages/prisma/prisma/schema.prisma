@@ -30,6 +30,8 @@ model User {
   address   String   @unique
   newUser   Boolean  @default(true)
 
+  ipAddress String?
+
   accountType   AccountType @default(Ethereum)
   email         String      @unique
   emailVerified DateTime?

@@ -15,6 +15,7 @@ import { trpc } from '../utils/trpc';
 import { env } from 'config/env/client';
 import type { TRPCError } from '@trpc/server';
 import { ForwarderAbi } from 'pocket-contract/abi';
+import { toast } from 'react-toastify';
 
 type UseSendMetaTx<
   TAbi extends Abi,
@@ -44,6 +45,9 @@ export function useSendMetaTx<
   const providerWagmi = useProvider();
   const [loading, setLoading] = useState(false);
   const sendMetaTx = trpc.useMutation(['relayer.forward'], {
+    onMutate: () => {
+      toast.info('Transaction sent, please wait a few seconds...');
+    },
     onSuccess: () => {
       onMutate?.();
     },

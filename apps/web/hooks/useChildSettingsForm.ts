@@ -52,20 +52,34 @@ export function useChildSettingsForm(
     async (data: ChangeConfigProps) => {
       try {
         if (write && childAddress) {
-          await write([
-            childAddress as `0x${string}`,
-            parseUnits(
-              data.ceiling.toString(),
-              erc20.data?.decimals,
-            ).toBigInt(),
-            BigInt(data.periodicity),
-          ]);
+          if (addChild) {
+            await write([
+              childAddress as `0x${string}`,
+              {
+                ceiling: parseUnits(
+                  data.ceiling.toString(),
+                  erc20.data?.decimals,
+                ).toBigInt(),
+                periodicity: BigInt(data.periodicity),
+                tokenIndex: BigInt(0),
+              },
+            ]);
+          } else {
+            await write([
+              childAddress as `0x${string}`,
+              parseUnits(
+                data.ceiling.toString(),
+                erc20.data?.decimals,
+              ).toBigInt(),
+              BigInt(data.periodicity),
+            ]);
+          }
         } else {
           return;
         }
       } catch (e) {}
     },
-    [childAddress, write, erc20.data?.decimals],
+    [childAddress, write, erc20.data?.decimals, addChild],
   );
 
   return { changeConfig, isLoading: isLoading };

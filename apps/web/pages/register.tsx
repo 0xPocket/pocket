@@ -19,6 +19,9 @@ import { useMagicConnect } from '../hooks/useMagicConnect';
 import { trpc } from '../utils/trpc';
 import { useZodForm } from '../utils/useZodForm';
 
+// update on routers also
+const PRIVATE_BETA = false;
+
 const FormData = z.object({
   userType: z.enum(['Parent', 'Child']),
   connectionType: z.enum(['Magic', 'Ethereum']),
@@ -123,7 +126,7 @@ const Register: FC = () => {
     }
   };
 
-  if (!betaToken)
+  if (PRIVATE_BETA && !betaToken)
     return (
       <PageWrapper>
         <div className="flex flex-col items-center">
