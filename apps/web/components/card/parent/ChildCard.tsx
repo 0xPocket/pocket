@@ -4,7 +4,6 @@ import RightTab from './RightTab';
 import type { UserChild } from '@lib/types/interfaces';
 import FormattedMessage from '../../common/FormattedMessage';
 import LinkPolygonScan from '../common/LinkPolygonScan';
-import EmailStatus from './EmailStatus';
 import MetaMaskProfilePicture from '../common/MetaMaskProfilePicture';
 
 type ChildCardProps = {
@@ -27,31 +26,29 @@ function ChildCard({
           <div className="flex items-center space-x-4">
             <MetaMaskProfilePicture address={child.address} />
             <div className="flex items-end space-x-4">
-              <h1 className="max-w-fit whitespace-nowrap">{child?.name}</h1>
-              <AccountStatus child={child} />
+              <h1 className="max-w-fit whitespace-nowrap">{child.name}</h1>
+              <AccountStatus status="ACTIVE" />
             </div>
           </div>
         </div>
-        {child.child?.status !== 'ACTIVE' && <EmailStatus child={child} />}
-        {child.child?.status === 'ACTIVE' &&
-          (polygonscanLink ? (
-            <LinkPolygonScan address={child.address!} />
-          ) : (
-            <Link href={`/account/${child.address}`}>
-              <a className="py-3">
-                {
-                  <FormattedMessage
-                    id="dashboard.parent.card.go-to"
-                    values={{
-                      name: child.name,
-                    }}
-                  />
-                }
-              </a>
-            </Link>
-          ))}
+        {polygonscanLink ? (
+          <LinkPolygonScan address={child.address!} />
+        ) : (
+          <Link href={`/account/${child.address}`}>
+            <a className="py-3">
+              {
+                <FormattedMessage
+                  id="dashboard.parent.card.go-to"
+                  values={{
+                    name: child.name,
+                  }}
+                />
+              }
+            </a>
+          </Link>
+        )}
       </div>
-      {child?.child?.status === 'ACTIVE' && <RightTab child={child} />}
+      <RightTab child={child} />
     </div>
   );
 }

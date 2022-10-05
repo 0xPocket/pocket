@@ -36,7 +36,7 @@ function AddChildForm() {
 
   const addChild = trpc.useMutation(['parent.createChild'], {
     onSuccess: () => {
-      queryClient.invalidateQueries('parent.children');
+      queryClient.invalidateQueries('parent.pendingChildren');
       router.push('/');
       toast.success(<FormattedMessage id="child-form.created" />);
     },
@@ -66,11 +66,11 @@ function AddChildForm() {
       </h2>
       <div className="flex flex-grow flex-col justify-evenly gap-4">
         <InputText
-          label={<FormattedMessage id="name" />}
+          label={intl.formatMessage({ id: 'name' })}
           register={register('name')}
         />
         <InputText
-          label={<FormattedMessage id="email" />}
+          label={intl.formatMessage({ id: 'email' })}
           register={register('email')}
         />
         <h2 className="mt-4">

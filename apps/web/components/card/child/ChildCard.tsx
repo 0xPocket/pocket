@@ -6,11 +6,11 @@ import FormattedMessage from '../../common/FormattedMessage';
 import { useIntl } from 'react-intl';
 import { ethers } from 'ethers';
 import { useQuery } from 'react-query';
-import { trpc } from '../../../utils/trpc';
 import ClaimButton from './ClaimButton';
 import Balance from '../common/Balance';
 import LinkPolygonScan from '../common/LinkPolygonScan';
 import MetaMaskProfilePicture from '../common/MetaMaskProfilePicture';
+import { useSession } from 'next-auth/react';
 
 type ChildCardProps = {
   childAddress: string;
@@ -22,7 +22,7 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
   const { pocketContract, erc20 } = useSmartContract();
   const intl = useIntl();
 
-  const { data: userData } = trpc.useQuery(['auth.session']);
+  const { data: userData } = useSession();
 
   const { data: config } = useContractRead({
     contract: pocketContract,

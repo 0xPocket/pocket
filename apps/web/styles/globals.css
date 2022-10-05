@@ -25,6 +25,10 @@
     @apply font-raleway text-3xl font-bold;
   }
 
+	h3 {
+		@apply font-raleway text-2xl;
+	}
+
   a {
     @apply without-ring cursor-pointer text-primary;
   }
@@ -85,7 +89,11 @@
 	}
 
 	.input-radio {
-		@apply relative flex items-center justify-center cursor-pointer rounded-lg border  px-3 py-2 shadow-sm focus:outline-none;
+		@apply relative flex items-center justify-center cursor-pointer rounded-lg border  px-3 py-2 shadow-sm focus:outline-none disabled:cursor-not-allowed;
+	}
+
+	.input-radio.big {
+		@apply w-1/2 py-4 text-xl hover:bg-primary hover:text-white transition-all;
 	}
 
 	.input-radio-checked {
@@ -146,6 +154,16 @@
   .without-ring {
     @apply focus:outline-0;
   }
+
+
+	/* providers icons */
+	.provider-container {
+		@apply relative flex aspect-square w-28 flex-col items-center justify-center gap-4 rounded-lg transition-all hover:bg-dark/50
+	}
+
+	.provider-img {
+		@apply flex h-12 w-12 items-center;
+	}
 
   /* skeleton */
   .skeleton {
@@ -219,5 +237,29 @@
 
 	.tooltip-container{
 		@apply bg-gray text-white px-3 py-1 rounded-md text-base;
+	}
+
+	.step {
+		@apply flex h-6 w-6 items-center justify-center rounded-full bg-dark-light border border-transparent transition-all select-none;
+	}
+
+	.step.active {
+		@apply border-primary;
+	}
+
+	.step.completed {
+		@apply bg-primary;
+	}
+
+	.btw-step {
+		@apply h-1 flex-grow bg-dark-light;
+	}
+
+	.fill {
+		@apply bg-primary w-0 h-full transition-all duration-500;
+	}
+
+	.fill.completed {
+		@apply w-full;
 	}
 }

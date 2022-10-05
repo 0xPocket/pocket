@@ -18,8 +18,6 @@ const wallet = new Wallet(
   provider,
 );
 
-const DOMAIN_SELECTOR_HASH =
-  '0x945494529cc799d5423e33fc3fe2dd3cf98063fe93e6c14af49f6f8c17a571ee';
 const TYPE_HASH =
   '0x2510fc5e187085770200b027d9f2cc4b930768f3b2bd81daafb71ffeb53d21c4';
 
@@ -50,7 +48,8 @@ const startonRelayer = async (params: ExecuteParams) => {
     .post<StartonSmartContractCallResponse>(
       `/smart-contract/${env.NETWORK_KEY}/${env.TRUSTED_FORWARDER}/call`,
       {
-        functionName: 'execute(tuple,bytes32,bytes32,bytes,bytes)',
+        functionName:
+          'execute((address,address,uint256,uint256,uint256,bytes,uint256),bytes32,bytes32,bytes,bytes)',
         signerWallet: '0x9297108ceeE8b631B3De85486DB4Dd5fEfE20647', // test wallet
         speed: 'fast',
         params,
@@ -88,14 +87,17 @@ export const relayerRouter = createProtectedRouter().mutation('forward', {
 
     const gasLimit = (request.gas + 300000).toString();
 
-    const staticCall = await forwarder.callStatic.execute(
+    const paramsTuple = [
       request,
-      DOMAIN_SELECTOR_HASH,
+      env.DOMAIN_SELECTOR_HASH,
       TYPE_HASH,
       '0x',
       signature,
-      { gasLimit },
-    );
+    ] as const;
+
+    const staticCall = await forwarder.callStatic.execute(...paramsTuple, {
+      gasLimit,
+    });
 
     if (!staticCall.success) {
       try {
@@ -103,6 +105,7 @@ export const relayerRouter = createProtectedRouter().mutation('forward', {
           PocketFaucetAbi,
         ).decodeFunctionResult(input.functionName, staticCall.ret);
       } catch (e) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const error = getParsedEthersError(e as any);
         throw new TRPCError({
           code: 'BAD_REQUEST',
@@ -116,26 +119,20 @@ export const relayerRouter = createProtectedRouter().mutation('forward', {
     }
 
     if (env.NODE_ENV === 'development') {
-      const tx = await forwarder.execute(
-        request,
-        DOMAIN_SELECTOR_HASH,
-        TYPE_HASH,
-        '0x',
-        signature,
-        { gasLimit },
-      );
+      const tx = await forwarder.execute(...paramsTuple, { gasLimit });
 
       return { txHash: tx.hash };
     }
 
-    const tx = await startonRelayer([
-      request,
-      DOMAIN_SELECTOR_HASH,
-      TYPE_HASH,
-      '0x',
-      signature,
-    ]);
+    try {
+      const tx = await startonRelayer([...paramsTuple]);
 
-    return { txHash: tx.transactionHash };
+      return { txHash: tx.transactionHash };
+    } catch (e) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Error relaying transaction, please reach us.',
+      });
+    }
   },
 });

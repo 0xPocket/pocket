@@ -1,10 +1,10 @@
-import { useMagic } from '../../contexts/auth';
+import { useAuth } from '../../contexts/auth';
 import WalletPopover from '../wallet/WalletPopover';
 import DropdownMenu from './DropdownMenu';
 import { Header } from '../common/HeaderComponent';
 
 function GlobalHeader() {
-  const { loggedIn } = useMagic();
+  const { loggedIn } = useAuth();
 
   return (
     <Header>

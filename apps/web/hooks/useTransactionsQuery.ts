@@ -43,7 +43,7 @@ const alchemy = new Alchemy({
 //   return tx;
 // }
 
-export const useTransactionsQuery = (address: string) => {
+export const useTransactionsQuery = (address?: string) => {
   return useQuery(
     ['child.transactions-content', address],
     () => {

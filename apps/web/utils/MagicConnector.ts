@@ -17,24 +17,12 @@ interface Options {
   additionalMagicOptions?: MagicSDKAdditionalConfiguration<string>;
 }
 
-interface UserDetailsEmail {
-  email: string;
-  oauthProvider?: OAuthProvider;
-}
-
-interface UserDetailsOAuth {
-  oauthProvider: OAuthProvider;
-  email?: string;
-}
-
-type UserDetails = UserDetailsEmail | UserDetailsOAuth;
-
 export class MagicConnector extends Connector {
   ready = !IS_SERVER;
 
   readonly id = 'magic';
 
-  readonly name = 'Magic';
+  readonly name = 'Email';
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   provider?: any;
@@ -42,8 +30,6 @@ export class MagicConnector extends Connector {
   magicSDK: Magic | undefined;
 
   magicOptions: Options;
-
-  userDetails: UserDetails | undefined;
 
   oauthProviders: OAuthProvider[];
 
@@ -58,14 +44,6 @@ export class MagicConnector extends Connector {
     this.oauthCallbackUrl = config.options.oauthOptions?.callbackUrl;
   }
 
-  setUserDetails(details: UserDetails) {
-    this.userDetails = details;
-  }
-
-  clearUserDetails() {
-    this.userDetails = undefined;
-  }
-
   async connect() {
     try {
       const provider = await this.getProvider();
@@ -76,6 +54,7 @@ export class MagicConnector extends Connector {
         provider.on('disconnect', this.onDisconnect);
       }
 
+      console.log('testt');
       // Check if there is a user logged in
       const isAuthenticated = await this.isAuthorized();
 
@@ -88,36 +67,6 @@ export class MagicConnector extends Connector {
             unsupported: false,
           },
           account: await this.getAccount(),
-        };
-      }
-
-      if (!this.userDetails) {
-        throw new UserRejectedRequestError('Something went wrong');
-      }
-
-      const userDetails = { ...this.userDetails };
-
-      this.clearUserDetails();
-
-      if (userDetails) {
-        const magic = this.getMagicSDK();
-
-        if (userDetails.email) {
-          await magic.auth.loginWithMagicLink({
-            email: userDetails.email,
-          });
-        }
-
-        const signer = await this.getSigner();
-        const account = await signer.getAddress();
-
-        return {
-          account,
-          chain: {
-            id: await this.getChainId(),
-            unsupported: false,
-          },
-          provider,
         };
       }
 
@@ -177,7 +126,6 @@ export class MagicConnector extends Connector {
       this.magicSDK = new Magic(this.magicOptions.apiKey, {
         ...this.magicOptions.additionalMagicOptions,
       });
-      // console.log('magic sdk created');
       this.magicSDK.preload();
       return this.magicSDK;
     }

@@ -1,8 +1,9 @@
 import { TRPCError } from '@trpc/server';
 import { createProtectedRouter } from '../createRouter';
+import { prisma } from '../prisma';
 
-export const childRouter = createProtectedRouter().middleware(
-  ({ ctx, next }) => {
+export const childRouter = createProtectedRouter()
+  .middleware(({ ctx, next }) => {
     if (ctx.session.user.type !== 'Child') {
       throw new TRPCError({
         code: 'BAD_REQUEST',
@@ -22,5 +23,25 @@ export const childRouter = createProtectedRouter().middleware(
         },
       },
     });
-  },
-);
+  })
+  .query('getParent', {
+    resolve: async ({ ctx }) => {
+      return prisma.user.findFirst({
+        where: {
+          type: 'Parent',
+          parent: {
+            children: {
+              some: {
+                userId: ctx.session.user.id,
+              },
+            },
+          },
+        },
+        select: {
+          id: true,
+          name: true,
+          address: true,
+        },
+      });
+    },
+  });
