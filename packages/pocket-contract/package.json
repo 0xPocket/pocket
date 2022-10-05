@@ -5,11 +5,10 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "clean": "hardhat clean && rm -rf node_modules .turbo",
+    "clean": "hardhat clean && rm -rf node_modules .turbo cache",
     "fork": "hardhat node",
     "build": "hardhat compile && yarn export-abi --no-compile",
     "export-abi": "hardhat deploy --tags export-abi",
-    "reset": "hardhat run ./scripts/reset.ts",
     "lint": "eslint \"{test,utils,helpers,deploy,scripts}/**/*.ts\" --fix",
     "test": "hardhat test"
   },

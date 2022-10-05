@@ -37,7 +37,6 @@ async function buildPermitRequest(
   erc20: Contract,
   input: { owner: string; spender: string; value: string; deadline: number }
 ) {
-  // get the nonce
   const nonce = await erc20
     .nonces(input.owner)
     .then((nonce: BigNumber) => nonce.toNumber());
@@ -90,6 +89,7 @@ export async function generatePermitTx({
     erc20Contract.address
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { EIP712Domain: _unused, ...types } = typeData.types;
 
   return {

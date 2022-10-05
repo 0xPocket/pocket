@@ -44,17 +44,4 @@ describe('Testing add Child', function () {
       'Number of children is not good'
     );
   });
-
-  // TO DO : take off ?
-  // it('Should add 1 child', async function () {
-  //   await addStdChildAndSend(
-  //     parent1.pocketFaucet,
-  //     constants.RDM_ADDRESS[1],
-  //     tokenAddr
-  //   );
-  //   assert(
-  //     (await pocketFaucet.getNumberChildren(parent1.address)).toNumber() === 2,
-  //     'Number of children is not good'
-  //   );
-  // });
 });

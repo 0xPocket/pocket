@@ -100,44 +100,27 @@ describe('Testing addr changement', function () {
     ).to.be.revertedWith('!changeParentAddr : cannot change to same addr');
   });
 
-  // it('Should change parent2 to parent1', async function () {
-  //   await parent2.pocketFaucet.changeParentAddr(parent1.address);
-  //   await addStdChildAndSend(parent2.pocketFaucet, child1.address, tokenAddr);
-  //   const child1IsInit = await checkChildIsInit(parent1, child1.address);
-  //   const child2IsInit = await checkChildIsInit(parent1, child2.address);
-  //   const child1IsInitP2 = await checkChildIsInit(parent2, child1.address);
-  //   const child2IsInitP2 = await checkChildIsInit(parent2, child2.address);
-  //   const nbChildParent2 = (
-  //     await pocketFaucet.getNumberChildren(parent2.address)
-  //   ).toNumber();
-  //   const nbChildParent1 = (
-  //     await pocketFaucet.getNumberChildren(parent1.address)
-  //   ).toNumber();
-  //   console.log(child1IsInit, child2IsInit);
-  //   console.log(child1IsInitP2, child2IsInitP2);
-  //   console.log(nbChildParent1, nbChildParent2);
-  //   assert(
-  //     child1IsInit === true &&
-  //       child2IsInit === true &&
-  //       child1IsInitP2 === false &&
-  //       child2IsInitP2 === false &&
-  //       nbChildParent2 === 0 &&
-  //       nbChildParent1 === 2,
-  //     'Child1 and Child2 should be set for parent1 and not for P2'
-  //   );
-  // });
-
-  // it('Should reverse because trying to change to same address is not possible', async function () {
-  //   const tx = await parent1.changeParentAddress(parent2.address);
-  //   await tx.wait();
-  //   const nbChildParent1 = await parent1.getNbChildren();
-  //   const nbChildParent2 = await parent2.getNbChildren();
-  //   assert(
-  //     nbChildParent1 === 0 && nbChildParent2 === 2,
-  //     'Parent1 should have 0 children and parent2 2'
-  //   );
-  //   //  await expect(
-  //   //    parent2.changeParentAddress(parent2.address)
-  //   //  ).to.revert();
-  // });
+  it('Should change parent2 to parent1', async function () {
+    await parent2.pocketFaucet.changeParentAddr(parent1.address);
+    await addStdChildAndSend(parent2.pocketFaucet, child1.address, tokenAddr);
+    const child1IsInit = await checkChildIsInit(parent1, child1.address);
+    const child2IsInit = await checkChildIsInit(parent1, child2.address);
+    const child1IsInitP2 = await checkChildIsInit(parent2, child1.address);
+    const child2IsInitP2 = await checkChildIsInit(parent2, child2.address);
+    const nbChildParent2 = (
+      await pocketFaucet.getNumberChildren(parent2.address)
+    ).toNumber();
+    const nbChildParent1 = (
+      await pocketFaucet.getNumberChildren(parent1.address)
+    ).toNumber();
+    assert(
+      child1IsInit === false &&
+        child2IsInit === true &&
+        child1IsInitP2 === true &&
+        child2IsInitP2 === false &&
+        nbChildParent2 === 1 &&
+        nbChildParent1 === 1,
+      'Child1 and Child2 should be set for parent1 and not for P2'
+    );
+  });
 });

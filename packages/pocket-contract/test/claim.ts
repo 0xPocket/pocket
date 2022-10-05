@@ -26,7 +26,7 @@ describe('Testing to claim funds as child', function () {
     );
   });
 
-  it("Should revert because child1's balance is empty", async function () {
+  it("Should revert because child1's balance is empty after claim", async function () {
     await parent1.pocketFaucet.withdrawFundsFromChild(0, child1.address);
     await addFundsPermit(
       child1.address,
