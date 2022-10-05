@@ -11,5 +11,7 @@ const wallet = new Wallet(
 
 export async function grantPktToken(to: string) {
   const contract = ERC20__factory.connect(env.ERC20_ADDRESS, wallet);
-  return contract.transfer(to, parseUnits('100', 18));
+  return contract.transfer(to, parseUnits('100', 18), {
+    gasLimit: 1e6,
+  });
 }
