@@ -61,6 +61,21 @@ const startonRelayer = async (params: any) => {
     .catch((e) => console.log(e));
 };
 
+const defenderProvider = new DefenderRelayProvider({
+  apiKey: '8zW5XQv8RS9Qqn8yWmDhgdCim8KNFD4q',
+  apiSecret: '2DuoiEsQhEX3n74Ksp7FeoNNxor1DRGAYp5wdShdBLi7cZW5AuoQA2ANpcjxbBnP',
+});
+
+const signer = new DefenderRelaySigner(
+  {
+    apiKey: '8zW5XQv8RS9Qqn8yWmDhgdCim8KNFD4q',
+    apiSecret:
+      '2DuoiEsQhEX3n74Ksp7FeoNNxor1DRGAYp5wdShdBLi7cZW5AuoQA2ANpcjxbBnP',
+  },
+  defenderProvider,
+  { speed: 'fastest' },
+);
+
 export const relayerRouter = createProtectedRouter().mutation('forward', {
   input: z.object({
     request: z.object({
@@ -130,22 +145,6 @@ export const relayerRouter = createProtectedRouter().mutation('forward', {
 
       return { txHash: tx.hash };
     }
-
-    const defenderProvider = new DefenderRelayProvider({
-      apiKey: '8zW5XQv8RS9Qqn8yWmDhgdCim8KNFD4q',
-      apiSecret:
-        '2DuoiEsQhEX3n74Ksp7FeoNNxor1DRGAYp5wdShdBLi7cZW5AuoQA2ANpcjxbBnP',
-    });
-
-    const signer = new DefenderRelaySigner(
-      {
-        apiKey: '8zW5XQv8RS9Qqn8yWmDhgdCim8KNFD4q',
-        apiSecret:
-          '2DuoiEsQhEX3n74Ksp7FeoNNxor1DRGAYp5wdShdBLi7cZW5AuoQA2ANpcjxbBnP',
-      },
-      defenderProvider,
-      { speed: 'fast' },
-    );
 
     const defenderForwarder = new ethers.Contract(
       env.TRUSTED_FORWARDER,
