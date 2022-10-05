@@ -1,71 +1,81 @@
-/* eslint-disable no-unused-vars */
 import { assert, expect } from 'chai';
-import { ethers, upgrades } from 'hardhat';
-import { providers, Wallet } from 'ethers';
-import ParentTester from '../ts/ParentTester';
 import * as constants from '../utils/constants';
-import { PocketFaucet__factory, PocketFaucet } from '../typechain-types';
-import config from 'config/network';
+import setup, { User } from '../utils/testSetup';
+import { addStdChildAndSend } from '../utils/addChild';
+import { checkChildIsInit } from '../utils/getters';
 
 describe('Testing rm child', function () {
-  let child1: Wallet;
-  let child2: Wallet;
-  let parent1: ParentTester;
-  let PocketFaucet_factory: PocketFaucet__factory, pocketFaucet: PocketFaucet;
-  let parent1Wallet: Wallet;
-
+  let parent1: User, child1: User, child2: User;
+  let rdmUsers: User[];
   const tokenAddr = constants.CHOSEN_TOKEN;
-  before(async function () {
-    child1 = new Wallet(constants.FAMILY_ACCOUNT.child1, ethers.provider);
-    child2 = new Wallet(constants.FAMILY_ACCOUNT.child2, ethers.provider);
 
-    PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
-    pocketFaucet = (await upgrades.deployProxy(PocketFaucet_factory, [
-      tokenAddr,
-      config.localhost.TRUSTED_FORWARDER,
-    ])) as PocketFaucet;
-    await pocketFaucet.deployed();
-    parent1Wallet = new Wallet(
-      constants.FAMILY_ACCOUNT.parent1,
-      ethers.provider
-    );
-    parent1 = new ParentTester(pocketFaucet.address, parent1Wallet);
+  before(async function () {
+    const { parents, children, randomUsers } = await setup();
+    child1 = children[0];
+    child2 = children[1];
+    parent1 = parents[0];
+    rdmUsers = randomUsers;
   });
 
   it('Should remove child1', async function () {
-    await parent1.addStdChildAndSend(child1.address, tokenAddr);
-    const tx = await parent1.removeChild(child1.address);
+    await addStdChildAndSend(parent1.pocketFaucet, child1.address, tokenAddr);
+    const tx = await parent1.pocketFaucet.removeChild(child1.address);
     await tx.wait();
     assert(
-      (await parent1.checkChildIsInit(child1.address)) === false,
+      (await checkChildIsInit(parent1, child1.address)) === false,
       'Child 1 is still related to parent1'
     );
   });
 
   it('Should revert because child2 is not set for this parent', async function () {
-    await parent1.addStdChildAndSend(child1.address, tokenAddr);
-    await expect(parent1.removeChild(child2.address)).to.be.revertedWith(
-      "!_areRelated: child doesn't match"
-    );
+    await addStdChildAndSend(parent1.pocketFaucet, child1.address, tokenAddr);
+    await expect(
+      parent1.pocketFaucet.removeChild(child2.address)
+    ).to.be.revertedWith("!_areRelated: child doesn't match");
   });
 
   it('Should add multiple child and remove 2', async function () {
-    await parent1.addStdChildAndSend(constants.RDM_ADDRESS[0], tokenAddr);
-    await parent1.addStdChildAndSend(constants.RDM_ADDRESS[1], tokenAddr);
-    await parent1.addStdChildAndSend(constants.RDM_ADDRESS[2], tokenAddr);
-    await parent1.addStdChildAndSend(constants.RDM_ADDRESS[3], tokenAddr);
-    await parent1.addStdChildAndSend(constants.RDM_ADDRESS[4], tokenAddr);
-    let tx = await parent1.removeChild(constants.RDM_ADDRESS[1]);
+    // TO DO : refactor
+    await addStdChildAndSend(
+      parent1.pocketFaucet,
+      rdmUsers[0].address,
+      tokenAddr
+    );
+    await addStdChildAndSend(
+      parent1.pocketFaucet,
+      rdmUsers[1].address,
+      tokenAddr
+    );
+    await addStdChildAndSend(
+      parent1.pocketFaucet,
+      rdmUsers[2].address,
+      tokenAddr
+    );
+    await addStdChildAndSend(
+      parent1.pocketFaucet,
+      rdmUsers[3].address,
+      tokenAddr
+    );
+    await addStdChildAndSend(
+      parent1.pocketFaucet,
+      rdmUsers[4].address,
+      tokenAddr
+    );
+    let tx = await parent1.pocketFaucet.removeChild(rdmUsers[1].address);
     await tx.wait();
-    tx = await parent1.removeChild(constants.RDM_ADDRESS[4]);
+    tx = await parent1.pocketFaucet.removeChild(rdmUsers[4].address);
     await tx.wait();
-    await parent1.addStdChildAndSend(constants.RDM_ADDRESS[1], tokenAddr);
-    tx = await parent1.removeChild(constants.RDM_ADDRESS[0]);
+    await addStdChildAndSend(
+      parent1.pocketFaucet,
+      rdmUsers[1].address,
+      tokenAddr
+    );
+    tx = await parent1.pocketFaucet.removeChild(rdmUsers[0].address);
     await tx.wait();
 
     assert(
-      (await parent1.checkChildIsInit(constants.RDM_ADDRESS[4])) === false &&
-        (await parent1.checkChildIsInit(constants.RDM_ADDRESS[0])) === false,
+      (await checkChildIsInit(parent1, rdmUsers[4].address)) === false &&
+        (await checkChildIsInit(parent1, rdmUsers[0].address)) === false,
       'The two child were not removed'
     );
   });

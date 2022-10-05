@@ -17,15 +17,21 @@ const config: HardhatUserConfig = {
     deployer: {
       default: 0,
     },
+    parent1: 1,
+    parent2: 2,
+    parent3: 3,
+    child1: 4,
+    child2: 5,
+    child3: 6,
+    elonmusk: 10,
+    damian: 13,
+    xavier: 14,
+    lola: 15,
     whale: {
       default: '0xf977814e90da44bfa03b6295a0616a897441acec',
       polygon: '0xf977814e90da44bfa03b6295a0616a897441acec',
       mumbai: '0xe41c53eb9fce0ac9d204d4f361e28a8f28559d54',
     },
-    elonmusk: 10,
-    damian: 13,
-    xavier: 14,
-    lola: 15,
   },
   solidity: {
     compilers: [
