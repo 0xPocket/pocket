@@ -65,7 +65,6 @@ export function usePermitTx({ contractAddress }: UsePermitTx) {
 
   return {
     signPermit,
-    status: loading ? 'loading' : status,
     isLoading: loading,
   };
 }

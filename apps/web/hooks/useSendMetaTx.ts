@@ -52,6 +52,7 @@ export function useSendMetaTx<
       onMutate?.();
     },
     onError: (err) => {
+      setLoading(false);
       onError?.(err as any);
     },
   });
@@ -60,6 +61,7 @@ export function useSendMetaTx<
 
   const { isLoading, isError, isSuccess, status } = useWaitForTransaction({
     hash: sendMetaTx.data?.txHash,
+    enabled: !!sendMetaTx.data?.txHash,
     onSuccess: (data) => {
       setLoading(false);
       onSuccess?.(data);
