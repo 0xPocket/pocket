@@ -161,8 +161,6 @@ export const registerRouter = createRouter()
 
       const ip = requestIp.getClientIp(ctx.req as any);
 
-      console.log('ip', ip);
-
       if (env.NETWORK_KEY === 'polygon-mumbai') {
         await grantPktToken(siwe.address);
       }
