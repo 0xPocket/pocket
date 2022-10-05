@@ -597,7 +597,7 @@ contract ERC20 is Context, IERC20, IERC20Internal {
      * All three of these values are immutable: they can only be set once during
      * construction.
      */
-    constructor(string memory name, string memory symbol) public {
+    constructor() public {
         _name = "PocketToken";
         _symbol = "PKT";
         _decimals = 6;
@@ -2285,7 +2285,7 @@ contract UChildERC20 is
     bytes32 public constant DEPOSITOR_ROLE = keccak256("DEPOSITOR_ROLE");
     string public constant EIP712_VERSION = "1";
 
-    constructor() public ERC20("", "") {}
+    constructor() public ERC20() {}
 
     /**
      * @notice Initialize the contract after it has been proxified
