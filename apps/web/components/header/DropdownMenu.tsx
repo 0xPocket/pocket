@@ -12,7 +12,7 @@ import LangToggler from './LangToggler';
 import { ThemeToggler } from './ThemeToggler';
 
 const DropdownMenu: FC = ({}) => {
-  const { signOut } = useAuth();
+  const { signOut, loggedIn } = useAuth();
 
   return (
     <Menu as="div" className="relative z-50 inline-block text-left">
@@ -44,16 +44,17 @@ const DropdownMenu: FC = ({}) => {
                   <div className="h-6  border-l"></div>
                   <ThemeToggler />
                 </div>
-
-                <Menu.Item>
-                  <button onClick={() => signOut()} className="third-btn">
-                    <FontAwesomeIcon
-                      icon={faRightFromBracket}
-                      className="mr-2"
-                    />
-                    <FormattedMessage id="signout" />
-                  </button>
-                </Menu.Item>
+                {loggedIn && (
+                  <Menu.Item>
+                    <button onClick={() => signOut()} className="third-btn">
+                      <FontAwesomeIcon
+                        icon={faRightFromBracket}
+                        className="mr-2"
+                      />
+                      <FormattedMessage id="signout" />
+                    </button>
+                  </Menu.Item>
+                )}
               </Menu.Items>
             </Transition>
           )}
