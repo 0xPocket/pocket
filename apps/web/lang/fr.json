@@ -176,5 +176,7 @@
 	"titles.onboard": "Enregistrement",
 	"titles.email-verification": "Verification d'email",
 	"titles.privacy-policy": "Politique de confidentialité",
-	"titles.terms-conditions": "Conditions générales d'utilisation"
+	"titles.terms-conditions": "Conditions générales d'utilisation",
+
+	"testnet.disclaimer" : "Ce site est une version testnet fonctionnant sur polygon-mumbai. N'envoyez pas de fonds réels aux adresses affichées sur le site, les fonds peuvent être perdus. Nous fournissons des jetons pour que vous puissiez essayer notre produit lors de votre inscription."
 }
