@@ -8,8 +8,13 @@ export const connectRouter = createRouter().mutation('connect', {
     email: z.string().email(),
   }),
   resolve: async ({ input }) => {
-    const user = await prisma.user.findUnique({
-      where: { email: input.email },
+    const user = await prisma.user.findFirst({
+      where: {
+        email: {
+          equals: input.email,
+          mode: 'insensitive',
+        },
+      },
     });
 
     if (!user) {

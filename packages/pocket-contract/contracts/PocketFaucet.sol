@@ -414,6 +414,9 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
         emit ChildRemoved(childConfig.parent, child);
     }
 
+    function setBaseTokens(address _baseToken, uint256 index) public onlyOwner {
+        baseTokens[index] = _baseToken;
+    }
     ////////////////////////////// TO DELETE ///////////////////////////////
     ////////////////////////////////////////////////////////////////////////
 }

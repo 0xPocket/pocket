@@ -15,8 +15,8 @@
   "balance": "Balance",
   "periodicity": "Fréquence",
   "ceiling": "Plafond",
-  "weekly": "Hebdomadaire",
-  "monthly": "Mensuelle",
+  "weekly": "Semaine",
+  "monthly": "Mois",
   "value": "Valeur",
   "report": "Signaler",
   "claim": "Retirer",
@@ -38,55 +38,55 @@
   "piggybank": "Tirelire",
   "account.settings": "Paramètres du compte",
   "account": "Compte",
-	"parent" : "Parent",
-	"child": "Enfant",
-	
+  "parent": "Parent",
+  "child": "Enfant",
+
   "email.resent": "Nouvel email envoyé !",
-	
+
   "card.child.title": "Mon compte",
   "card.child.swapper": "Swapper",
-	
+
   "card.child.account.title": "Dans mon compte",
-	
+
   "card.child.piggyBank.status.nothing": "Rien à retirer",
   "card.child.piggyBank.status.next": "Prochain retrait dans",
-	
+
   "card.parent.status.invited": "Un email de configuration a été envoyé à {email}",
   "card.parent.status.active": "Ce compte est actif",
   "card.parent.piggyBank.addFunds": "Ajouter des fonds",
-	
+
   "dashboard.child.claim.fail": "Le retrait a échoué.",
   "dashboard.child.claim.pending": "Retrait en cours, encore quelques secondes et ce sera bon",
   "dashbaord.child.claim.success": "Le retrait a fonctionné",
-	
+
   "dashboard.child.claimMatic.pending": "Le retrait de matic est en cours, encore quelques secondes et ce sera bon!",
   "dashboard.child.claimMatic.success": "Transaction réussie",
   "dashboard.child.claimMatic.title": "Tu peux récupérer tes Matics !",
   "dashboard.child.claimMatic.message": "Pour commencer ton voyage dans le web3, nous t'offrons quelques Matics pour payer les frais de tes premières transactions.",
-	
+
   "verify-email.email-verified": "Votre email est verifié !",
   "verify-email.redirect": "Vous allez être redirigé dans quelques instants...",
   "verify-email.problem": "Si le problème persiste, veuillez nous contacter.",
-	
+
   "common.welcome": "Bienvenue sur Pocket !",
-	
+
   "onboarding.connect-wallet": "Connectez-vous avec votre wallet préféré",
   "onboarding.more-info": "Nous avons besoin de plus d'informations !",
-	
-	"connect.chose": "Choisissez votre méthode de connexion",
-	"connect.noaccount": "Vous n'avez pas encore de compte ?",
-	"connect.create": "Créer un compte",
+
+  "connect.chose": "Choisissez votre méthode de connexion",
+  "connect.noaccount": "Vous n'avez pas encore de compte ?",
+  "connect.create": "Créer un compte",
   "connect.email.connect": "Se connecter avec son email",
-	
-	"register.title": "Créer un compte",
-	"register.step0.title": "Type de compte",
-	"register.step1.title": "Choisissez la méthode de connexion",
-	"register.step2.title": "Complétez vos informations",
-	"register.step3.title": "Un email a été envoyé à {emailAddress} !",
-	"register.step3.email.notreceived": "Vous n'avez rien reçu?",
-	"register.step3.email.sendnew": "Cliquez ici pour en renvoyer un.",
-	"register.step3.completed": "Votre compte a été crée !",
-	"register.step3.gotoconnect": "Aller à la page de connexion.",
+
+  "register.title": "Créer un compte",
+  "register.step0.title": "Type de compte",
+  "register.step1.title": "Choisissez la méthode de connexion",
+  "register.step2.title": "Complétez vos informations",
+  "register.step3.title": "Un email a été envoyé à {emailAddress} !",
+  "register.step3.email.notreceived": "Vous n'avez rien reçu?",
+  "register.step3.email.sendnew": "Cliquez ici pour en renvoyer un.",
+  "register.step3.completed": "Votre compte a été crée !",
+  "register.step3.gotoconnect": "Aller à la page de connexion.",
   "register.agelimit.parent": "Je certifie avoir plus de 18 ans.",
   "register.agelimit.child": "Je certifie avoir plus de 13 ans.",
 
@@ -151,7 +151,7 @@
   "footer.my-message": "Mon message",
   "footer.contact-us": "Contactez-nous",
   "footer.contact.success": "Message envoyé ! Nous reviendrons vers vous le plus tôt possible.",
-	
+
   "add-child-and-funds.error": "Le dépôt a échoué. Si le probléme persiste, veuillez nous contacter.",
   "add-child-and-funds.success": "Le depôt est un succès !",
   "add-child-and-funds.approve-fail": "L'approbation des fonds a échoué. Si le probléme persiste, veuillez nous contacter.",
@@ -159,22 +159,22 @@
 
   "add-child-or-change-config.error": "Le changement de configuration a échoué: {message}. Si le problème persiste, veuillez nous contacter.",
   "add-child-or-change-config.success": "Le changement de configuration est un succès !",
-	
+
   "transaction.pending": "Transaction en attente, merci de patienter !",
   "transaction.next": "Veuillez confirmer la transaction suivante.",
-	
-	"tooltip.wallet.erc20": "Nous utilisons l'USDC de Polygon",
-	"tooltip.wallet.matic": "Le Matic sert à payer les frais de transaction sur la blockchain",
-	
+
+  "tooltip.wallet.erc20": "Nous utilisons l'USDC de Polygon",
+  "tooltip.wallet.matic": "Le Matic sert à payer les frais de transaction sur la blockchain",
+
   "legal.privacy": "Politique de confidentialité",
   "legal.terms": "Conditions d'utilisation",
   "legal.terms.confirm": "Vous confirmez avoir lu et accepté les {terms} et la {privacy} de Pocket.",
 
-	"titles.add-account": "Ajouter un compte",
-	"titles.connect": "Connection",
-	"titles.dashboard": "Dashboard",
-	"titles.onboard": "Enregistrement",
-	"titles.email-verification": "Verification d'email",
-	"titles.privacy-policy": "Politique de confidentialité",
-	"titles.terms-conditions": "Conditions générales d'utilisation"
+  "titles.add-account": "Ajouter un compte",
+  "titles.connect": "Connection",
+  "titles.dashboard": "Dashboard",
+  "titles.onboard": "Enregistrement",
+  "titles.email-verification": "Verification d'email",
+  "titles.privacy-policy": "Politique de confidentialité",
+  "titles.terms-conditions": "Conditions générales d'utilisation"
 }

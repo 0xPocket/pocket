@@ -58,6 +58,7 @@ const Register: FC = () => {
   trpc.useQuery(
     ['beta.verifyInvite', { token: router.query.token as string }],
     {
+      enabled: PRIVATE_BETA,
       retry: false,
       onSuccess: () => setBetaToken(router.query.token as string),
     },

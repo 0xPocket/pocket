@@ -38,56 +38,56 @@
   "piggybank": "PiggyBank",
   "account.settings": "Account settings",
   "account": "Account",
-	"parent" : "Parent",
-	"child": "Child",
-	
+  "parent": "Parent",
+  "child": "Child",
+
   "email.resent": "New email sent !",
-	
+
   "card.child.title": "My account",
   "card.child.swapper": "Swapper",
-	
+
   "card.child.account.title": "In my account",
-	
+
   "card.child.piggyBank.status.nothing": "Nothing to claim",
   "card.child.piggyBank.status.next": "Next claim in",
-	
+
   "card.parent.status.invited": "A set-up email has been sent to {email}",
   "card.parent.status.active": "This account is up and running",
   "card.parent.piggyBank.addFunds": "Add funds",
-	
+
   "dashboard.child.claim.fail": "Claim failed.",
   "dashboard.child.claim.pending": "Claim pending, please hang on !",
-  "dashbaord.child.claim.success": "Successfull claim !",
-	
+  "dashbaord.child.claim.success": "Successful claim !",
+
   "dashboard.child.claimMatic.pending": "Claim matic pending, please hang on !",
   "dashboard.child.claimMatic.success": "Transaction succeeded !",
   "dashboard.child.claimMatic.title": "You can claim your Matic !",
   "dashboard.child.claimMatic.message": "To start your journey into web3, we grant you some Matic to pay fees for your first transaction.",
-	
+
   "verify-email.email-verified": "Your email is now verified !",
   "verify-email.redirect": "You will be redirected in few seconds...",
   "verify-email.problem": "If the problem persists, contact us.",
-	
+
   "common.welcome": "Welcome to Pocket !",
-	
+
   "onboarding.connect-wallet": "Connect with your favorite wallet",
   "onboarding.more-info": "We need some more infos !",
-	
-	"connect.chose": "Choose your connection method",
-	"connect.noaccount": "Don't have an account yet ?",
-	"connect.create": "Sign up",
+
+  "connect.chose": "Choose your connection method",
+  "connect.noaccount": "Don't have an account yet ?",
+  "connect.create": "Sign up",
   "connect.email.connect": "Connect with your email",
-	
-	"register.title": "Register to Pocket",
-	"register.step0.title": "Select your account type",
-	"register.step1.title": "Choose your connection method",
-	"register.step2.title": "Complete your infos",
-	"register.step3.title": "An email as been sent to {emailAddress} !",
-	"register.step3.email.notreceived": "Didn't receive?",
-	"register.step3.email.sendnew": "Send a new one.",
-	"register.step3.completed": "Your register is completed !",
-	"register.step3.gotoconnect": "Go to connection page",
-	"register.agelimit.parent": "I certified being over 18 years old.",
+
+  "register.title": "Register to Pocket",
+  "register.step0.title": "Select your account type",
+  "register.step1.title": "Choose your connection method",
+  "register.step2.title": "Complete your infos",
+  "register.step3.title": "An email as been sent to {emailAddress} !",
+  "register.step3.email.notreceived": "Didn't receive?",
+  "register.step3.email.sendnew": "Send a new one.",
+  "register.step3.completed": "Your register is completed !",
+  "register.step3.gotoconnect": "Go to connection page",
+  "register.agelimit.parent": "I certified being over 18 years old.",
   "register.agelimit.child": "I certified being over 13 years old.",
 
   "route.dashboard": "dashboard",
@@ -130,7 +130,7 @@
   "dashboard.common.token.empty": "No token to display.",
 
   "dashboard.common.token.report.sent": "Report sent !",
-  "dashboard.common.token.report.send": "Report a suspicious token !",
+  "dashboard.common.token.report.send": "Report a suspicious token",
   "dashboard.common.token.report.select": "Select a token",
 
   "dashboard.common.token.table.header.tokenName": "Token Name",
@@ -151,30 +151,30 @@
   "footer.my-message": "My message",
   "footer.contact-us": "Contact us",
   "footer.contact.success": "Message sent ! We'll get back at you as soon as possible.",
-	
+
   "add-child-and-funds.error": "Deposit failed. If the problem persits, please contact us.",
-  "add-child-and-funds.success": "Successfull deposit !",
+  "add-child-and-funds.success": "Successful deposit !",
   "add-child-and-funds.approve-fail": "Approve failed. If the problem persits, please contact us.",
   "add-child-and-funds.approve-success": "Approve success! Please accept the following transaction.",
-	
+
   "add-child-or-change-config.error": "Changing config failed. If the problem persists, contact us.",
   "add-child-or-change-config.success": "Configuration sets successfully !",
-	
+
   "transaction.pending": "Transaction pending, please hang on !",
   "transaction.next": "Please approve the next transaction",
 
-	"tooltip.wallet.erc20": "We currently use Polygon's USDC",
-	"tooltip.wallet.matic": "Matic is used to pay transaction fees on the blockchain",
-	
+  "tooltip.wallet.erc20": "We currently use Polygon's USDC",
+  "tooltip.wallet.matic": "Matic is used to pay transaction fees on the blockchain",
+
   "legal.privacy": "Privacy policy",
   "legal.terms": "Terms and conditions",
   "legal.terms.confirm": "By signing up, you confirm you have read and agree to Pocket's {privacy} and {terms}.",
-	 
-	"titles.add-account": "Add an account",
-	"titles.connect": "Connect",
-	"titles.dashboard": "Dashboard",
-	"titles.onboard": "Onboard",
-	"titles.email-verification": "Email verification",
-	"titles.privacy-policy": "Privacy policy",
-	"titles.terms-conditions": "Terms and conditions"
+
+  "titles.add-account": "Add an account",
+  "titles.connect": "Connect",
+  "titles.dashboard": "Dashboard",
+  "titles.onboard": "Onboard",
+  "titles.email-verification": "Email verification",
+  "titles.privacy-policy": "Privacy policy",
+  "titles.terms-conditions": "Terms and conditions"
 }
