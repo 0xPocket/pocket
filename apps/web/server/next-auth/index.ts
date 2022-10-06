@@ -41,7 +41,7 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (!existingUser) {
-          throw new Error('User does not exist');
+          throw new Error('Account not found. Please sign up.');
         }
 
         return existingUser;
@@ -82,11 +82,13 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (!existingUser) {
-          throw new Error('User does not exist');
+          throw new Error('Account not found. Please sign up.');
         }
 
         if (!existingUser.emailVerified) {
-          throw new Error('Email not verified');
+          throw new Error(
+            'Your email is not verified. Please use the link we sent you to verify it.',
+          );
         }
 
         return existingUser;
