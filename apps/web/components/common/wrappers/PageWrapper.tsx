@@ -35,7 +35,11 @@ const PageWrapper: FC<PageWrapperProps> = ({
       {open && env.NETWORK_KEY === 'polygon-mumbai' && (
         <div className="relative mt-2 flex items-center justify-between gap-4 rounded-lg bg-primary px-4">
           <p className="flex-grow text-center text-sm font-bold">
-            <FontAwesomeIcon icon={faExclamationTriangle} className="mr-2" />
+            <FontAwesomeIcon
+              icon={faExclamationTriangle}
+              className="mr-2"
+              style={{ width: '1rem' }}
+            />
             <FormattedMessage id="testnet.disclaimer" />
           </p>
           <div onClick={() => setOpen(false)} className="cursor-pointer">
