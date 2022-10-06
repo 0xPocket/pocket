@@ -1,5 +1,4 @@
 import type { NextAuthOptions, Session } from 'next-auth';
-import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { Magic } from '@magic-sdk/admin';
 import { SiweMessage } from 'siwe';
@@ -9,7 +8,6 @@ import { env } from 'config/env/server';
 const mAdmin = new Magic(env.MAGIC_LINK_SECRET_KEY);
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
   secret: env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
@@ -36,8 +34,13 @@ export const authOptions: NextAuthOptions = {
           throw new Error('Error validating your account');
         }
 
-        const existingUser = await prisma.user.findUnique({
-          where: { email: userMetadata.email },
+        const existingUser = await prisma.user.findFirst({
+          where: {
+            email: {
+              equals: userMetadata.email,
+              mode: 'insensitive',
+            },
+          },
         });
 
         if (!existingUser) {
@@ -77,8 +80,13 @@ export const authOptions: NextAuthOptions = {
           throw new Error('The signature is invalid');
         }
 
-        const existingUser = await prisma.user.findUnique({
-          where: { address: siwe.address },
+        const existingUser = await prisma.user.findFirst({
+          where: {
+            address: {
+              equals: siwe.address,
+              mode: 'insensitive',
+            },
+          },
         });
 
         if (!existingUser) {

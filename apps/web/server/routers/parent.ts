@@ -108,14 +108,20 @@ export const parentRouter = createProtectedRouter()
       }
 
       const [user, pendingChild] = await prisma.$transaction([
-        prisma.user.findUnique({
+        prisma.user.findFirst({
           where: {
-            email: input.email,
+            email: {
+              equals: input.email,
+              mode: 'insensitive',
+            },
           },
         }),
-        prisma.pendingChild.findUnique({
+        prisma.pendingChild.findFirst({
           where: {
-            email: input.email,
+            email: {
+              equals: input.email,
+              mode: 'insensitive',
+            },
           },
         }),
       ]);
@@ -172,9 +178,12 @@ export const parentRouter = createProtectedRouter()
 
     if (!result.success) throw new TRPCError({ code: 'BAD_REQUEST' });
 
-    const child = await prisma.user.findUnique({
+    const child = await prisma.user.findFirst({
       where: {
-        address: result.data.address,
+        address: {
+          equals: result.data.address,
+          mode: 'insensitive',
+        },
       },
       include: {
         child: true,
