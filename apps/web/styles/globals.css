@@ -262,4 +262,14 @@
 	.fill.completed {
 		@apply w-full;
 	}
+
+	.protect-small-screen{
+		@apply absolute inset-0 z-[100] items-center justify-center background hidden;
+	}
+
+	@media screen and (max-width: 1000px) {
+		.protect-small-screen{
+			@apply flex;
+		}
+	}
 }
