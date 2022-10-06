@@ -17,11 +17,7 @@ export function saveVerificationToken(
   data: Prisma.VerificationTokenCreateInput,
 ) {
   return prisma.verificationToken.create({
-    data: {
-      expires: data.expires,
-      token: data.token,
-      identifier: data.identifier.toLowerCase(),
-    },
+    data,
   });
 }
 
@@ -30,12 +26,7 @@ export async function useVerificationToken(
 ) {
   try {
     const token = await prisma.verificationToken.delete({
-      where: {
-        identifier_token: {
-          identifier: identifier_token.identifier.toLowerCase(),
-          token: hashToken(identifier_token.token),
-        },
-      },
+      where: { identifier_token },
     });
     return token;
   } catch (error) {
