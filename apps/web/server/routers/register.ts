@@ -51,8 +51,13 @@ export const registerRouter = createRouter()
         throw new Error('no email');
       }
 
-      const existingUser = await prisma.user.findUnique({
-        where: { email: userMetadata.email },
+      const existingUser = await prisma.user.findFirst({
+        where: {
+          email: {
+            equals: userMetadata.email,
+            mode: 'insensitive',
+          },
+        },
       });
 
       if (existingUser) {
@@ -126,7 +131,17 @@ export const registerRouter = createRouter()
       await siwe.validate(input.signature || '');
 
       const existingUser = await prisma.user.findFirst({
-        where: { OR: [{ email: input.email }, { address: siwe.address }] },
+        where: {
+          OR: [
+            {
+              email: {
+                equals: input.email,
+                mode: 'insensitive',
+              },
+            },
+            { address: { equals: siwe.address, mode: 'insensitive' } },
+          ],
+        },
       });
 
       if (existingUser) {

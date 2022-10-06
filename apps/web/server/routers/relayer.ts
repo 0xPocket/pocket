@@ -81,17 +81,24 @@ export const relayerRouter = createProtectedRouter().mutation('forward', {
 
     const gasLimit = (request.gas + 300000).toString();
 
-    const paramsTuple = [
+    // const paramsTuple = [
+    //   request,
+    //   DOMAIN_SELECTOR_HASH,
+    //   TYPE_HASH,
+    //   '0x',
+    //   signature,
+    // ] as const;
+
+    const staticCall = await forwarder.callStatic.execute(
       request,
       DOMAIN_SELECTOR_HASH,
       TYPE_HASH,
       '0x',
       signature,
-    ] as const;
-
-    const staticCall = await forwarder.callStatic.execute(...paramsTuple, {
-      gasLimit,
-    });
+      {
+        gasLimit,
+      },
+    );
 
     if (!staticCall.success) {
       try {
@@ -113,13 +120,26 @@ export const relayerRouter = createProtectedRouter().mutation('forward', {
     }
 
     if (env.NODE_ENV === 'development') {
-      const tx = await forwarder.execute(...paramsTuple, { gasLimit });
+      const tx = await forwarder.execute(
+        request,
+        DOMAIN_SELECTOR_HASH,
+        TYPE_HASH,
+        '0x',
+        signature,
+        { gasLimit },
+      );
 
       return { txHash: tx.hash };
     }
 
     try {
-      const tx = await startonRelayer([...paramsTuple]);
+      const tx = await startonRelayer([
+        request,
+        DOMAIN_SELECTOR_HASH,
+        TYPE_HASH,
+        '0x',
+        signature,
+      ]);
 
       return { txHash: tx.transactionHash };
     } catch (e) {

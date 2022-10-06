@@ -5,6 +5,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { trpc } from '../../../utils/trpc';
 import FormattedMessage from '../../common/FormattedMessage';
 import PendingChildCard from '../../card/parent/PendingChildCard';
+import { Spinner } from '../../common/Spinner';
 
 function ChildrenMozaic() {
   const router = useRouter();
@@ -20,8 +21,10 @@ function ChildrenMozaic() {
           <FormattedMessage id="dashboard.title" />
         </h1>
       </div>
-      <div className="grid grid-cols-2 gap-4">
-        {!isLoading && !pendingChildrenLoading && (
+      {isLoading || pendingChildrenLoading ? (
+        <Spinner />
+      ) : (
+        <div className="grid grid-cols-2 gap-4">
           <>
             {data?.map((child) => (
               <ChildCard key={child.id} child={child} />
@@ -39,8 +42,8 @@ function ChildrenMozaic() {
               </p>
             </div>
           </>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

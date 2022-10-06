@@ -24,9 +24,12 @@ export const emailRouter = createRouter()
     }),
     resolve: async ({ ctx, input }) => {
       try {
-        const childConfig = await prisma.pendingChild.findUnique({
+        const childConfig = await prisma.pendingChild.findFirst({
           where: {
-            email: input.email,
+            email: {
+              equals: input.email,
+              mode: 'insensitive',
+            },
           },
         });
 
@@ -44,10 +47,16 @@ export const emailRouter = createRouter()
           where: {
             OR: [
               {
-                address: fields.address,
+                address: {
+                  equals: fields.address,
+                  mode: 'insensitive',
+                },
               },
               {
-                email: input.email,
+                email: {
+                  equals: input.email,
+                  mode: 'insensitive',
+                },
               },
             ],
           },
@@ -165,9 +174,12 @@ export const emailRouter = createRouter()
       email: z.string().email(),
     }),
     resolve: async ({ input }) => {
-      const user = await prisma.user.findUnique({
+      const user = await prisma.user.findFirst({
         where: {
-          email: input.email,
+          email: {
+            equals: input.email,
+            mode: 'insensitive',
+          },
         },
       });
 
