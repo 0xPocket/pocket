@@ -28,7 +28,9 @@ const PageWrapper: FC<PageWrapperProps> = ({
   return (
     <div className="relative min-h-screen overflow-hidden px-4 pb-20">
       <div className="protect-small-screen">
-        <p>This website is not optimized for small screens yet !</p>
+        <p>
+          <FormattedMessage id="protect.smallscreen" />
+        </p>
       </div>
       {open && env.NETWORK_KEY === 'polygon-mumbai' && (
         <div className="relative mt-2 flex items-center justify-between gap-4 rounded-lg bg-primary px-4">

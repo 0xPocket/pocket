@@ -178,5 +178,7 @@
 	"titles.privacy-policy": "Privacy policy",
 	"titles.terms-conditions": "Terms and conditions",
 
-	"testnet.disclaimer" : "This is a testnet version running on polygon-mumbai. Do not send any real funds to any addresses display on the website, funds can be lost. We provide tokens for you to try our product on registration."
+	"testnet.disclaimer" : "This is a testnet version running on polygon-mumbai. Do not send any real funds to any addresses display on the website, funds can be lost. We provide tokens for you to try our product on registration.",
+	"protect.smallscreen": "Pocket is not optimized for small screens yet !"
+
 }
