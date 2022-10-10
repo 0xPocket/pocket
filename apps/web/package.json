@@ -38,7 +38,7 @@
     "@uniswap/widgets": "^2.11.0",
     "abitype": "^0.1.5",
     "alchemy-sdk": "^2.1.1",
-    "axios": "^0.27.2",
+    "axios": "^1.1.2",
     "ethers": "^5.7.1",
     "fast-json-stable-stringify": "^2.1.0",
     "jsonwebtoken": "^8.5.1",
