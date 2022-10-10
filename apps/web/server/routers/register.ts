@@ -17,9 +17,6 @@ import { grantPktToken } from '../services/grantPktToken';
 
 const mAdmin = new Magic(env.MAGIC_LINK_SECRET_KEY);
 
-// disable also on beta router
-const PRIVATE_BETA = false;
-
 export const registerRouter = createRouter()
   .mutation('magic', {
     input: z.object({
@@ -29,7 +26,7 @@ export const registerRouter = createRouter()
       didToken: z.string(),
     }),
     resolve: async ({ input, ctx }) => {
-      if (PRIVATE_BETA && !input.token) {
+      if (env.NEXT_PUBLIC_PRIVATE_BETA && !input.token) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'You need a token to register',
@@ -64,7 +61,7 @@ export const registerRouter = createRouter()
         throw new Error('User already exists');
       }
 
-      if (PRIVATE_BETA) {
+      if (env.NEXT_PUBLIC_PRIVATE_BETA) {
         const token = await prisma.privateBetaToken.findUnique({
           where: { token: input.token },
         });
@@ -120,7 +117,7 @@ export const registerRouter = createRouter()
       type: z.enum(['Parent', 'Child']),
     }),
     resolve: async ({ input, ctx }) => {
-      if (PRIVATE_BETA && !input.token) {
+      if (env.NEXT_PUBLIC_PRIVATE_BETA && !input.token) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'You need a token to register',
@@ -151,7 +148,7 @@ export const registerRouter = createRouter()
         });
       }
 
-      if (PRIVATE_BETA) {
+      if (env.NEXT_PUBLIC_PRIVATE_BETA) {
         const token = await prisma.privateBetaToken.findUnique({
           where: { token: input.token },
         });

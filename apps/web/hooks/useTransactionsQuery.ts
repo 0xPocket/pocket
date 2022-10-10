@@ -17,7 +17,7 @@ const staticAssetTransfersParams = {
     AssetTransfersCategory.ERC721,
     AssetTransfersCategory.ERC1155,
     AssetTransfersCategory.SPECIALNFT,
-    AssetTransfersCategory.EXTERNAL,
+    // AssetTransfersCategory.EXTERNAL,
   ],
   order: AssetTransfersOrder.DESCENDING,
 };
