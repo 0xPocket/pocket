@@ -13,6 +13,7 @@
     "test": "hardhat test"
   },
   "devDependencies": {
+    "@ethersproject/hardware-wallets": "^5.7.0",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.3",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.6",
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",

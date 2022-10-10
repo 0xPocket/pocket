@@ -18,6 +18,7 @@ const serverSchema = z.object({
   VERCEL_URL: z.string().optional(),
   ANALYZE: z.string().optional(),
   STARTON_KEY: z.string(),
+  ETHERSCAN_API_KEY: z.string().optional(),
 });
 
 /**
