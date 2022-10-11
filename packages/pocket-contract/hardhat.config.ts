@@ -7,8 +7,6 @@ import '@typechain/hardhat';
 import '@openzeppelin/hardhat-upgrades';
 import NETWORK_CONFIG from 'config/network';
 import 'hardhat-deploy';
-import { env } from 'config/env/server';
-// import { env } from 'config/env';
 
 dotenv.config({
   path: '../../.env',
@@ -50,7 +48,7 @@ const config: HardhatUserConfig = {
   },
   verify: {
     etherscan: {
-      apiKey: env.ETHERSCAN_API_KEY,
+      apiKey: process.env.ETHERSCAN_API_KEY,
     },
   },
   networks: {
