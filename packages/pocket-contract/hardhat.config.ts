@@ -46,6 +46,11 @@ const config: HardhatUserConfig = {
       },
     ],
   },
+  verify: {
+    etherscan: {
+      apiKey: process.env.ETHERSCAN_API_KEY,
+    },
+  },
   networks: {
     hardhat: {
       mining: {

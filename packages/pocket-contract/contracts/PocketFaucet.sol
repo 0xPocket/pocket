@@ -7,10 +7,9 @@ import '@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeab
 import '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
 import './ERC2771ContextUpgradeableCustom.sol';
 
-// import 'hardhat/console.sol';
 
 /// @title A pocket money faucet
-/// @author Guillaume Dupont, Sami Darnaud
+/// @author Guillaume Dupont, Sami Darnaud, Solal Dunckel, Theo Palhol
 /// @custom:experimental This is an experimental contract. It should not be used in production.
 
 contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
@@ -73,7 +72,6 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
     {
         baseTokens.push(token);
         __Ownable_init_unchained();
-        // _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         setTrustedForwarder(trustedForwarder);
     }
 
@@ -146,12 +144,11 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
             block.timestamp - config.periodicity,
             config.periodicity,
             _msgSender(),
-            0 // TO DO : handle index in the config
+            config.tokenIndex
         );
 
         childToConfig[child] = newConf;
         parentToChildren[_msgSender()].push(child);
-        childrenList.push(child);
         emit ChildAdded(_msgSender(), child);
     }
 
@@ -232,7 +229,7 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
             _msgSender(),
             childBalance
         );
-    } // TO DO : REMOVE ?
+    }
 
     /// @notice This transaction will set the active variable to `active`. If the value is false, your child: `child` won't be able to claim anymore.
     /// @param active the future value of conf.active.
@@ -309,7 +306,7 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
         emit FundsWithdrawn(_msgSender(), amount, child);
         IERC20Upgradeable(baseTokens[childToConfig[child].tokenIndex])
             .safeTransfer(_msgSender(), amount);
-    } // TO DO : keep ?
+    }
 
     /// @dev Computes the amount of token the child can claim.
     /// @param child is the child for which we compute the claimable amount.
@@ -372,51 +369,4 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
     }
 
     receive() external payable {}
-
-    ////////////////////////////////////////////////////////////////////////////
-    ////////////////////// TO DELETE FOR TESTING PURPOSE //////////////////////
-
-    address[] public childrenList;
-
-    function resetAll() external {
-        for (uint256 i; i < childrenList.length; ) {
-            if (childrenList[i] == address(0)) continue;
-            removeChildOwner(childrenList[i]);
-            unchecked {
-                ++i;
-            }
-        }
-        delete childrenList;
-    }
-
-    function removeChildOwner(address child) internal {
-        Config memory childConfig = childToConfig[child];
-
-        uint256 length = parentToChildren[childConfig.parent].length;
-        for (uint256 i = 0; i < length; ) {
-            if (parentToChildren[childConfig.parent][i] == child) {
-                parentToChildren[childConfig.parent][i] = parentToChildren[
-                    childConfig.parent
-                ][length - 1];
-                delete (parentToChildren[childConfig.parent][length - 1]);
-                break;
-            }
-            unchecked {
-                ++i;
-            }
-        }
-
-        IERC20Upgradeable(baseTokens[childConfig.tokenIndex]).safeTransfer(
-            _msgSender(),
-            childToConfig[child].balance
-        );
-        delete childToConfig[child];
-        emit ChildRemoved(childConfig.parent, child);
-    }
-
-    function setBaseTokens(address _baseToken, uint256 index) public onlyOwner {
-        baseTokens[index] = _baseToken;
-    }
-    ////////////////////////////// TO DELETE ///////////////////////////////
-    ////////////////////////////////////////////////////////////////////////
 }
