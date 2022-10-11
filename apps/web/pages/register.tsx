@@ -18,9 +18,7 @@ import { useEthereumSiwe } from '../hooks/useEthereumSiwe';
 import { useMagicConnect } from '../hooks/useMagicConnect';
 import { trpc } from '../utils/trpc';
 import { useZodForm } from '../utils/useZodForm';
-
-// update on routers also
-const PRIVATE_BETA = false;
+import { env } from 'config/env/client';
 
 const FormData = z.object({
   userType: z.enum(['Parent', 'Child']),
@@ -58,7 +56,7 @@ const Register: FC = () => {
   trpc.useQuery(
     ['beta.verifyInvite', { token: router.query.token as string }],
     {
-      enabled: PRIVATE_BETA,
+      enabled: env.NEXT_PUBLIC_PRIVATE_BETA,
       retry: false,
       onSuccess: () => setBetaToken(router.query.token as string),
     },
@@ -127,7 +125,7 @@ const Register: FC = () => {
     }
   };
 
-  if (PRIVATE_BETA && !betaToken)
+  if (env.NEXT_PUBLIC_PRIVATE_BETA && !betaToken)
     return (
       <PageWrapper>
         <div className="flex flex-col items-center">

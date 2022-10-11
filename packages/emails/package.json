@@ -8,7 +8,7 @@
     "dev": "mailing preview --quiet"
   },
   "dependencies": {
-    "dotenv": "^16.0.1",
+    "dotenv": "^16.0.3",
     "mailing": "^0.8.2",
     "mailing-core": "^0.8.2"
   },
