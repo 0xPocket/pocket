@@ -8411,6 +8411,7 @@ ethers@^4.0.40:
     setimmediate "1.0.4"
     uuid "2.0.1"
     xmlhttprequest "1.8.0"
+
 ethers@^5.0.1, ethers@^5.0.2, ethers@^5.1.4, ethers@^5.5.2, ethers@^5.5.3, ethers@^5.6.1, ethers@^5.7.0, ethers@^5.7.1:
   version "5.7.1"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.7.1.tgz#48c83a44900b5f006eb2f65d3ba6277047fd4f33"
