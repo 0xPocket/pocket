@@ -21,9 +21,7 @@ async function main() {
           where: {
             userId: "elonmusk",
           },
-          create: {
-            maticGrants: 5,
-          },
+          create: {},
         },
       },
     },
@@ -52,7 +50,6 @@ async function main() {
             initialCeiling: 50,
             initialPeriodicity: "2592000",
             parentUserId: "elonmusk",
-            status: "ACTIVE",
           },
         },
       },
@@ -82,7 +79,6 @@ async function main() {
             initialCeiling: 50,
             initialPeriodicity: "2592000",
             parentUserId: "elonmusk",
-            status: "ACTIVE",
           },
         },
       },
@@ -112,10 +108,24 @@ async function main() {
             initialCeiling: 50,
             initialPeriodicity: "2592000",
             parentUserId: "elonmusk",
-            status: "ACTIVE",
           },
         },
       },
+    },
+    update: {},
+  });
+
+  await prisma.pendingChild.upsert({
+    where: {
+      id: 0,
+    },
+    create: {
+      id: 0,
+      name: "Amber Heard",
+      email: "amberheard@gmail.com",
+      initialCeiling: 50,
+      initialPeriodicity: "2592000",
+      parentUserId: "elonmusk",
     },
     update: {},
   });

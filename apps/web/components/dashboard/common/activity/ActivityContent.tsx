@@ -1,5 +1,3 @@
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Tab } from '@headlessui/react';
 import ActivityTabHeaders from './ActivityTabHeader';
 import EventsTable from './EventsTable';
@@ -8,10 +6,11 @@ import { useGetClaimsQuery } from '../../../../hooks/useGetClaimsQuery';
 import { useTransactionsQuery } from '../../../../hooks/useTransactionsQuery';
 import FormattedMessage from '../../../common/FormattedMessage';
 import { useGetDepositsQuery } from '../../../../hooks/useGetDepositsQuery';
+import { Spinner } from '../../../common/Spinner';
 
 type ActivityContentProps = {
-  childAddress: string;
-  parentAddress: string;
+  childAddress?: string;
+  parentAddress?: string;
 };
 
 function ActivityContent({
@@ -36,15 +35,15 @@ function ActivityContent({
           </h2>
           <ActivityTabHeaders
             leftHeader={<FormattedMessage id="transactions" />}
-            rightHeader={<FormattedMessage id="piggybank" />}
+            rightHeader={<FormattedMessage id="account" />}
           />
         </div>
-        <Tab.Panels className="container-classic relative flex-grow overflow-x-hidden overflow-y-scroll rounded-lg px-8">
+        <Tab.Panels className="container-classic relative flex-grow overflow-y-auto overflow-x-hidden rounded-lg px-8">
           <Tab.Panel>
             {!isTxLoading && txList ? (
               <TransactionsTable transactionsList={txList} />
             ) : (
-              <FontAwesomeIcon className="m-3 w-full" icon={faSpinner} spin />
+              <Spinner />
             )}
           </Tab.Panel>
 
@@ -52,7 +51,7 @@ function ActivityContent({
             {!isClaimsLoading && !isDepositsLoading && claims && deposits ? (
               <EventsTable logs={[...claims, ...deposits]} />
             ) : (
-              <FontAwesomeIcon className="m-3 w-full" icon={faSpinner} spin />
+              <Spinner />
             )}
           </Tab.Panel>
         </Tab.Panels>

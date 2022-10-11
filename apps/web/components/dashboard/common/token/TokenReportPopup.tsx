@@ -1,12 +1,15 @@
-import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
+import {
+  faAngleDown,
+  faTriangleExclamation,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Listbox, Transition } from '@headlessui/react';
 import { CovalentItem } from '@lib/types/interfaces';
-import { DialogPopupWrapper } from '@lib/ui';
 import { FC, Fragment, useState } from 'react';
 import { toast } from 'react-toastify';
 import { trpc } from '../../../../utils/trpc';
 import FormattedMessage from '../../../common/FormattedMessage';
+import { DialogPopupWrapper } from '../../../common/wrappers/DialogsWrapper';
 
 type TokenReportPopupProps = {
   items: CovalentItem[];
@@ -42,8 +45,9 @@ const TokenReportPopup: FC<TokenReportPopupProps> = ({ items }) => {
                 </Listbox.Label>
 
                 <div className="relative">
-                  <Listbox.Button className="relative w-full max-w-sm cursor-default rounded-md border py-2 pl-3 pr-10 text-left shadow-sm">
+                  <Listbox.Button className="relative flex w-full max-w-sm cursor-default items-center justify-between rounded-md border py-2 px-3 text-left shadow-sm">
                     {selectedToken?.contract_name}
+                    <FontAwesomeIcon icon={faAngleDown} />
                   </Listbox.Button>
                   <Transition
                     show={open}

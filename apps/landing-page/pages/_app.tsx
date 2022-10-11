@@ -1,5 +1,4 @@
 import type { AppProps } from 'next/app';
-import { ThemeProvider } from '@lib/ui';
 import '../styles/globals.css';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import Head from 'next/head';
@@ -10,6 +9,7 @@ import fr from '../lang/fr.json';
 import en from '../lang/en-US.json';
 import { useRouter } from 'next/router';
 import SEO from '../components/SEO';
+import { ThemeProvider } from '../contexts/theme';
 
 const messages = { fr, 'en-US': en };
 function App({ Component, pageProps: { ...pageProps } }: AppProps) {

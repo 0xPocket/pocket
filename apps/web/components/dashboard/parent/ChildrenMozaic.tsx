@@ -4,13 +4,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { trpc } from '../../../utils/trpc';
 import FormattedMessage from '../../common/FormattedMessage';
+import PendingChildCard from '../../card/parent/PendingChildCard';
 import { Spinner } from '../../common/Spinner';
 
 function ChildrenMozaic() {
   const router = useRouter();
 
   const { isLoading, data } = trpc.useQuery(['parent.children']);
-  const testwebhookramp = trpc.useMutation(['parent.testWebhookRamp']);
+  const { isLoading: pendingChildrenLoading, data: pendingChildren } =
+    trpc.useQuery(['parent.pendingChildren']);
 
   return (
     <div className="flex flex-col space-y-12">
@@ -18,16 +20,17 @@ function ChildrenMozaic() {
         <h1>
           <FormattedMessage id="dashboard.title" />
         </h1>
-        <button onClick={() => testwebhookramp.mutate()} className="danger-btn">
-          Test webhook
-        </button>
       </div>
-      <div className="grid grid-cols-2 gap-4">
-        {isLoading && <Spinner />}
-        {!isLoading && (
+      {isLoading || pendingChildrenLoading ? (
+        <Spinner />
+      ) : (
+        <div className="grid grid-cols-2 gap-4">
           <>
             {data?.map((child) => (
-              <ChildCard key={child.id} child={child} hasLink />
+              <ChildCard key={child.id} child={child} />
+            ))}
+            {pendingChildren?.map((child) => (
+              <PendingChildCard key={child.id} child={child} />
             ))}
             <div
               onClick={() => router.push('/add-account')}
@@ -39,8 +42,8 @@ function ChildrenMozaic() {
               </p>
             </div>
           </>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

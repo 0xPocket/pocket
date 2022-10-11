@@ -1,57 +1,41 @@
-import MainWrapper from '../../components/wrappers/MainWrapper';
-import { SectionContainer } from '@lib/ui';
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import PageWrapper from '../../components/common/wrappers/PageWrapper';
 import AccountDashboard from '../../components/dashboard/parent/Dashboard';
-import Link from 'next/link';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { trpc } from '../../utils/trpc';
 import FormattedMessage from '../../components/common/FormattedMessage';
+import Breadcrumb from '../../components/common/Breadcrumb';
+import TitleHelper from '../../components/common/TitleHelper';
+import { useRouter } from 'next/router';
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const id = context.params?.id as string;
+function Account() {
+  const router = useRouter();
+  const id = router.query.id as string;
 
-  return {
-    props: {
-      address: id,
+  const { isLoading, data: child } = trpc.useQuery(
+    ['parent.childByAddress', { address: id }],
+    {
+      enabled: !!id,
     },
-  };
-}
+  );
 
-function Account({
-  address,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { isLoading, data: child } = trpc.useQuery([
-    'parent.childByAddress',
-    { address },
-  ]);
+  if (!child) return null;
 
   return (
-    <MainWrapper>
-      <SectionContainer>
-        <div className="mb-12 flex items-center space-x-4">
-          <FontAwesomeIcon icon={faAngleRight} />
-          <Link href="/">
-            <a>
-              <FormattedMessage id="route.dashboard" />
-            </a>
-          </Link>
-          <p>{`>`}</p>
-          <p>{child?.name}</p>
+    <PageWrapper>
+      <TitleHelper title={child.name!} />
+
+      <Breadcrumb routes={[{ name: child.name!, path: null }]} />
+      {isLoading ? (
+        <>
+          <FormattedMessage id="loading" />
+        </>
+      ) : child ? (
+        <AccountDashboard child={child} />
+      ) : (
+        <div>
+          <FormattedMessage id="account.not-found" />
         </div>
-        {isLoading ? (
-          <>
-            <FormattedMessage id="loading" />
-          </>
-        ) : child ? (
-          <AccountDashboard child={child} />
-        ) : (
-          <div>
-            <FormattedMessage id="account.not-found" />
-          </div>
-        )}
-      </SectionContainer>
-    </MainWrapper>
+      )}
+    </PageWrapper>
   );
 }
 

@@ -6,7 +6,7 @@
   "signIn": "Se connecter",
   "disconnect": "Se déconnecter",
   "signout": "Se déconnecter",
-  "submit": "Soumettre",
+  "submit": "Valider",
   "name": "Nom",
   "email": "Email",
   "return": "Retour",
@@ -15,11 +15,12 @@
   "balance": "Balance",
   "periodicity": "Fréquence",
   "ceiling": "Plafond",
-  "weekly": "Hebdomadaire",
-  "monthly": "Mensuelle",
+  "weekly": "Semaine",
+  "monthly": "Mois",
   "value": "Valeur",
   "report": "Signaler",
   "claim": "Retirer",
+  "withdraw": "Retirer",
   "claim.noun": "Retrait",
   "deposit.noun": "Dépôt",
   "next": "Suivant",
@@ -35,23 +36,23 @@
   "subject": "Sujet",
   "optional": "(optionnel)",
   "piggybank": "Tirelire",
+  "account.settings": "Paramètres du compte",
+  "account": "Compte",
+  "parent": "Parent",
+  "child": "Enfant",
 
-  "auth.email.connect": "Se connecter avec son email",
-  "auth.email.verify": "Vérifiez votre email avec le lien envoyé s'il vous plait.",
-  "auth.email.resent": "Nouvel email envoyé !",
-  "auth.email.resend": "Vous n'avez rien reçu? Cliquez ici pour en renvoyer un.",
-  "auth.wallet.connect": "Lié le wallet",
-  "auth.wallet.signMessage": "Signer le message",
+  "email.resent": "Nouvel email envoyé !",
 
   "card.child.title": "Mon compte",
   "card.child.swapper": "Swapper",
 
-  "card.child.piggyBank.title": "Dans ma tirelire",
+  "card.child.account.title": "Dans mon compte",
 
   "card.child.piggyBank.status.nothing": "Rien à retirer",
   "card.child.piggyBank.status.next": "Prochain retrait dans",
 
-  "card.parent.status": "Un email de configuration a été envoyé à",
+  "card.parent.status.invited": "Un email de configuration a été envoyé à {email}",
+  "card.parent.status.active": "Ce compte est actif",
   "card.parent.piggyBank.addFunds": "Ajouter des fonds",
 
   "dashboard.child.claim.fail": "Le retrait a échoué.",
@@ -65,12 +66,29 @@
 
   "verify-email.email-verified": "Votre email est verifié !",
   "verify-email.redirect": "Vous allez être redirigé dans quelques instants...",
-  "verify-email.problem": "Si le problème persiste, contactez nous.",
+  "verify-email.problem": "Si le problème persiste, veuillez nous contacter.",
 
   "common.welcome": "Bienvenue sur Pocket !",
 
   "onboarding.connect-wallet": "Connectez-vous avec votre wallet préféré",
   "onboarding.more-info": "Nous avons besoin de plus d'informations !",
+
+  "connect.chose": "Choisissez votre méthode de connexion",
+  "connect.noaccount": "Vous n'avez pas encore de compte ?",
+  "connect.create": "Créer un compte",
+  "connect.email.connect": "Se connecter avec son email",
+
+  "register.title": "Créer un compte",
+  "register.step0.title": "Type de compte",
+  "register.step1.title": "Choisissez la méthode de connexion",
+  "register.step2.title": "Complétez vos informations",
+  "register.step3.title": "Un email a été envoyé à {emailAddress} !",
+  "register.step3.email.notreceived": "Vous n'avez rien reçu?",
+  "register.step3.email.sendnew": "Cliquez ici pour en renvoyer un.",
+  "register.step3.completed": "Votre compte a été crée !",
+  "register.step3.gotoconnect": "Aller à la page de connexion.",
+  "register.agelimit.parent": "Je certifie avoir plus de 18 ans.",
+  "register.agelimit.child": "Je certifie avoir plus de 13 ans.",
 
   "route.dashboard": "tableau de bord",
 
@@ -78,9 +96,6 @@
   "add-account.step1": "Complétez ce formulaire avec les informations de votre enfant et les paramétres de son argent de poche récurrent.",
   "add-account.step2": "Un email va être envoyé à votre enfant, il faut qu'il suive les instructions pour finaliser son inscription.",
   "add-account.step3": "Le compte est prêt à être utilisé !",
-
-  "connect.parent": "Je suis un parent",
-  "connect.child": "Je suis un enfant",
 
   "account.not-found": "L'utilisateur n'existe pas",
 
@@ -108,11 +123,10 @@
   "dashboard.common.nft.seeMore": "Voir plus",
   "dashboard.common.nft.title": "Librairie de NFTs",
   "dashboard.common.nft.fail": "Une erreur s'est produite en récupérant les NFT",
-
   "dashboard.common.nft.opensea": "Voir sur OpenSea",
 
   "dashboard.common.token.fail": "Une erreur s'est produite en récupérant les tokens.",
-  "dashboard.common.token.balance": "Ses tokens",
+  "dashboard.common.token.balance": "Balance des tokens",
   "dashboard.common.token.empty": "Pas de token à afficher.",
 
   "dashboard.common.token.report.sent": "Signalement envoyé !",
@@ -126,7 +140,7 @@
   "dashboard.parent.card.email-sent": "Nous avons envoyé un email a votre enfant.",
   "dashboard.parent.card.send-new": "Renvoyer un email.",
   "dashboard.parent.card.see-on-polygon": "Voir sur polygonscan",
-  "dashboard.parent.card.email-error": "Une erreur s'est produite, si le problème persiste, contactez nous.",
+  "dashboard.parent.card.email-error": "Une erreur s'est produite, si le problème persiste, veuillez nous contacter.",
   "dashboard.parent.card.email-sent-to": "Email envoyé à {email}",
   "dashboard.parent.card.go-to": "Aller sur le profil de {name}",
 
@@ -138,13 +152,32 @@
   "footer.contact-us": "Contactez-nous",
   "footer.contact.success": "Message envoyé ! Nous reviendrons vers vous le plus tôt possible.",
 
-  "add-child-and-funds.error": "Le dépôt a échoué: {message}. Si le probléme persiste, contactez-nous s'il vous plaît.",
+  "add-child-and-funds.error": "Le dépôt a échoué. Si le probléme persiste, veuillez nous contacter.",
   "add-child-and-funds.success": "Le depôt est un succès !",
-  "add-child-and-funds.approve": "L'opération a échoué: {message}. Si le probléme persiste, contactez-nous s'il vous plaît.",
+  "add-child-and-funds.approve-fail": "L'approbation des fonds a échoué. Si le probléme persiste, veuillez nous contacter.",
   "add-child-and-funds.approve-success": "L'opération est un succès! Merci d'accepter la transaction suivante.",
 
-  "add-child-or-change-config.error": "Le changement de configuration a échoué: {message}. Si le problème persiste, contactez-nous.",
+  "add-child-or-change-config.error": "Le changement de configuration a échoué: {message}. Si le problème persiste, veuillez nous contacter.",
   "add-child-or-change-config.success": "Le changement de configuration est un succès !",
 
-  "transaction.pending": "Transaction en attente, merci de patienter !"
+  "transaction.pending": "Transaction en attente, merci de patienter !",
+  "transaction.next": "Veuillez confirmer la transaction suivante.",
+
+  "tooltip.wallet.erc20": "Nous utilisons l'USDC de Polygon",
+  "tooltip.wallet.matic": "Le Matic sert à payer les frais de transaction sur la blockchain",
+
+  "legal.privacy": "Politique de confidentialité",
+  "legal.terms": "Conditions d'utilisation",
+  "legal.terms.confirm": "Vous confirmez avoir lu et accepté les {terms} et la {privacy} de Pocket.",
+
+	"titles.add-account": "Ajouter un compte",
+	"titles.connect": "Connection",
+	"titles.dashboard": "Dashboard",
+	"titles.onboard": "Enregistrement",
+	"titles.email-verification": "Verification d'email",
+	"titles.privacy-policy": "Politique de confidentialité",
+	"titles.terms-conditions": "Conditions générales d'utilisation",
+
+	"testnet.disclaimer" : "Ce site est une version testnet fonctionnant sur polygon-mumbai. N'envoyez pas de fonds réels aux adresses affichées sur le site, les fonds peuvent être perdus. Nous fournissons des jetons pour que vous puissiez essayer notre produit lors de votre inscription.",
+	"protect.smallscreen": "Pocket n'est pas encore disponible pour les petits écrans !"
 }

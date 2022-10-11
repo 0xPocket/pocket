@@ -1,41 +1,72 @@
-// @ts-check
-/* eslint-disable @typescript-eslint/no-var-requires */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const dotenv = require('dotenv');
-const { withAxiom } = require('next-axiom');
 
 dotenv.config({ path: '../../.env' });
 
-require('config/env/server');
+const { env } = require('config/env/server');
+require('./lang/compareLang');
 
-// const withPlugins = require('next-compose-plugins');
+const plugins = [];
 
 const withTM = require('next-transpile-modules')([
   '@pocket/emails',
-  '@lib/ui',
   'pocket-contract',
 ]);
 
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-});
+plugins.push(withTM);
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-	i18n :{
-		locales: ['en-US', 'fr'],
-    defaultLocale: 'en-US',
-	},
-  reactStrictMode: true,
-  experimental: {
-    images: { allowFutureImage: true },
-  },
-  images: {
-    domains: ['logos.covalenthq.com'],
-  },
-  eslint: {
-    dirs: ['pages', 'utils', 'components', 'server'], // Only run ESLint on the 'pages' and 'utils' directories during production builds (next build)
-  },
-};
+if (env.ANALYZE === 'true') {
+  const withBundleAnalyzer = require('@next/bundle-analyzer')({
+    enabled: true,
+  });
+  plugins.push(withBundleAnalyzer);
+}
 
-module.exports = withTM(withBundleAnalyzer(withAxiom(nextConfig)));
+const { withAxiom } = require('next-axiom');
+
+plugins.push(withAxiom);
+
+/**
+ * Don't be scared of the generics here.
+ * All they do is to give us autocompletion when using this.
+ *
+ * @param {import('next').NextConfig} config - A generic parameter that flows through to the return type
+ */
+function defineNextConfig(config) {
+  return config;
+}
+
+const nextConfig = () =>
+  plugins.reduce(
+    (acc, next) => next(acc),
+    defineNextConfig({
+      i18n: {
+        locales: ['en-US', 'fr'],
+        defaultLocale: 'en-US',
+      },
+      reactStrictMode: true,
+      swcMinify: true,
+      images: {
+        domains: ['logos.covalenthq.com'],
+      },
+      eslint: {
+        dirs: ['pages', 'utils', 'components', 'server', 'hooks'], // Only run ESLint on the 'pages' and 'utils' directories during production builds (next build)
+      },
+    }),
+  );
+
+// /** @type {import('next').NextConfig} */
+// const nextConfig = {
+//   i18n: {
+//     locales: ['en-US', 'fr'],
+//     defaultLocale: 'en-US',
+//   },
+//   reactStrictMode: true,
+//   images: {
+//     domains: ['logos.covalenthq.com'],
+//   },
+//   eslint: {
+//     dirs: ['pages', 'utils', 'components', 'server'], // Only run ESLint on the 'pages' and 'utils' directories during production builds (next build)
+//   },
+// };
+
+module.exports = nextConfig;

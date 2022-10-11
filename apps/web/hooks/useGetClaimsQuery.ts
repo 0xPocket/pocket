@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query';
-import { useAccount, useProvider } from 'wagmi';
+import { useProvider } from 'wagmi';
 import { useSmartContract } from '../contexts/contract';
 import { formatUnits } from 'ethers/lib/utils';
 import { useMemo } from 'react';
@@ -11,7 +11,7 @@ export type Event = {
   category: 'Claim' | 'Deposit';
 };
 
-export const useGetClaimsQuery = (address: string) => {
+export const useGetClaimsQuery = (address?: string) => {
   const provider = useProvider();
   const { pocketContract } = useSmartContract();
   const { erc20 } = useSmartContract();

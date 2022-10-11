@@ -1,9 +1,11 @@
 import { parseUnits } from 'ethers/lib/utils';
 import { useCallback } from 'react';
 import { toast } from 'react-toastify';
-import { useContractWrite, useWaitForTransaction } from 'wagmi';
 import { useSmartContract } from '../contexts/contract';
 import { useIntl } from 'react-intl';
+import { useSendMetaTx } from './useSendMetaTx';
+import { env } from 'config/env/client';
+import { PocketFaucetAbi } from 'pocket-contract/abi';
 
 type ChangeConfigProps = {
   ceiling: number;
@@ -15,28 +17,14 @@ export function useChildSettingsForm(
   addChild: boolean,
   returnFn: () => void,
 ) {
-  const { pocketContract, erc20 } = useSmartContract();
+  const { erc20 } = useSmartContract();
   const intl = useIntl();
 
-  const addChildOrChangeConfig = useContractWrite({
-    mode: 'recklesslyUnprepared',
-    addressOrName: pocketContract.address,
-    contractInterface: pocketContract.interface,
+  const { write, isLoading } = useSendMetaTx({
+    contractAddress: env.NEXT_PUBLIC_CONTRACT_ADDRESS,
+    contractInterface: PocketFaucetAbi,
     functionName: addChild ? 'addChild' : 'changeConfig',
-    // ! TEMPORARY. necessary on testnet
-    overrides: { gasLimit: '3000000' },
-    onError(e) {
-      console.log(e.message);
-      toast.error(
-        intl.formatMessage(
-          { id: 'add-child-or-change-config.error' },
-          {
-            message: e.message,
-          },
-        ),
-      );
-    },
-    onSuccess: () => {
+    onMutate: () => {
       toast.info(
         intl.formatMessage({
           id: 'transaction.pending',
@@ -47,17 +35,9 @@ export function useChildSettingsForm(
       );
       returnFn();
     },
-  });
-
-  useWaitForTransaction({
-    hash: addChildOrChangeConfig.data?.hash,
-    onError: (e) => {
-      toast.dismiss();
+    onError() {
       toast.error(
-        intl.formatMessage(
-          { id: 'add-child-or-change-config.error' },
-          { message: e.message },
-        ),
+        intl.formatMessage({ id: 'add-child-or-change-config.error' }),
       );
     },
     onSuccess: () => {
@@ -71,19 +51,36 @@ export function useChildSettingsForm(
   const changeConfig = useCallback(
     async (data: ChangeConfigProps) => {
       try {
-        if (addChildOrChangeConfig.writeAsync) {
-          await addChildOrChangeConfig.writeAsync({
-            recklesslySetUnpreparedArgs: [
-              parseUnits(data.ceiling.toString(), erc20.data?.decimals),
-              data.periodicity,
-              childAddress,
-            ],
-          });
+        if (write && childAddress) {
+          if (addChild) {
+            await write([
+              childAddress as `0x${string}`,
+              {
+                ceiling: parseUnits(
+                  data.ceiling.toString(),
+                  erc20.data?.decimals,
+                ).toBigInt(),
+                periodicity: BigInt(data.periodicity),
+                tokenIndex: BigInt(0),
+              },
+            ]);
+          } else {
+            await write([
+              childAddress as `0x${string}`,
+              parseUnits(
+                data.ceiling.toString(),
+                erc20.data?.decimals,
+              ).toBigInt(),
+              BigInt(data.periodicity),
+            ]);
+          }
+        } else {
+          return;
         }
       } catch (e) {}
     },
-    [childAddress, addChildOrChangeConfig, erc20.data?.decimals],
+    [childAddress, write, erc20.data?.decimals, addChild],
   );
 
-  return { changeConfig, isLoading: addChildOrChangeConfig.isLoading };
+  return { changeConfig, isLoading: isLoading };
 }

@@ -26,59 +26,53 @@ enum AccountType {
 model User {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
-  name      String?
-  address   String?  @unique
+  name      String
+  address   String   @unique
   newUser   Boolean  @default(true)
 
+  ipAddress String?
+
   accountType   AccountType @default(Ethereum)
-  email         String?     @unique
+  email         String      @unique
   emailVerified DateTime?
 
-  type        UserType
-  parent      Parent?
-  child       Child?
-  maticGrants MaticGrant[]
-  BugReport   Ticket[]
-  Contact     Contact[]
+  type      UserType
+  parent    Parent?
+  child     Child?
+  BugReport Ticket[]
+  Contact   Contact[]
 }
 
 model Parent {
   user   User   @relation(fields: [userId], references: [id])
   userId String @id @unique
 
-  maticGrants Int     @default(0)
-  ramp        Ramp[]
-  children    Child[]
+  ramp         Ramp[]
+  children     Child[]
+  PendingChild PendingChild[]
 }
 
-enum ChildStatus {
-  INVITED
-  ACTIVE
+model PendingChild {
+  id                 Int    @id @default(autoincrement())
+  name               String
+  email              String @unique
+  initialPeriodicity String
+  initialCeiling     Int
+  parent             Parent @relation(fields: [parentUserId], references: [userId])
+  parentUserId       String
 }
 
 model Child {
   user   User   @relation(fields: [userId], references: [id])
   userId String @id @unique
 
-  status     ChildStatus @default(INVITED)
   activities Activity[]
 
   parent       Parent @relation(fields: [parentUserId], references: [userId])
   parentUserId String
 
-  initialPeriodicity String?
-  initialCeiling     Int?
-}
-
-// Matic Grant
-
-model MaticGrant {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  amount    String
-  hash      String?
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
+  initialPeriodicity String
+  initialCeiling     Int
 }
 
 // User Parent Ramp
@@ -129,6 +123,12 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model PrivateBetaToken {
+  token      String  @unique @default(cuid())
+  identifier String
+  used       Boolean @default(false)
 }
 
 model BlacklistToken {

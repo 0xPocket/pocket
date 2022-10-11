@@ -4,14 +4,16 @@
 import superjson from 'superjson';
 
 import { createRouter } from '../createRouter';
-import { authRouter } from './auth';
 import { childRouter } from './child';
 import { contactRouter } from './contact';
 import { emailRouter } from './email';
 import { parentRouter } from './parent';
 import { ticketRouter } from './ticket';
-import { testRouter } from './test';
 import { tokenRouter } from './token';
+import { relayerRouter } from './relayer';
+import { registerRouter } from './register';
+import { connectRouter } from './connect';
+import { betaRouter } from './beta';
 
 /**
  * Create your application's root router
@@ -31,12 +33,14 @@ export const appRouter = createRouter()
    */
   // .formatError(({ shape, error }) => { })
   .merge('email.', emailRouter)
-  .merge('auth.', authRouter)
+  .merge('beta.', betaRouter)
+  .merge('connect.', connectRouter)
+  .merge('register.', registerRouter)
   .merge('parent.', parentRouter)
   .merge('child.', childRouter)
   .merge('token.', tokenRouter)
   .merge('contact.', contactRouter)
   .merge('ticket.', ticketRouter)
-  .merge('test.', testRouter);
+  .merge('relayer.', relayerRouter);
 
 export type AppRouter = typeof appRouter;

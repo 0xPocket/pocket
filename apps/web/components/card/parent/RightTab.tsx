@@ -1,17 +1,17 @@
 import { Tab } from '@headlessui/react';
-import { UserChild } from '@lib/types/interfaces';
+import type { UserChild } from '@lib/types/interfaces';
 import { useMemo, useState } from 'react';
 import { useContractWrite } from 'wagmi';
 import { useSmartContract } from '../../../contexts/contract';
 import { useAddFundsForm } from '../../../hooks/useAddFundsForm';
 import { useChildSettingsForm } from '../../../hooks/useChildSettingsForm';
 import FormattedMessage from '../../common/FormattedMessage';
-import useContractRead from '../../../hooks/useContractRead';
-import AddFundsForm from '../../forms/AddFundsForm';
-import ChildSettingsForm from '../../forms/ChildSettingsForm';
-import Balance from './Balance';
+import AddFundsForm from './AddFundsForm';
+import ChildSettingsForm from './ChildSettingsForm';
 import { parseUnits } from 'ethers/lib/utils';
 import { BigNumber } from 'ethers';
+import MainPanel from './MainPanel';
+import useContractRead from '../../../hooks/useContractRead';
 
 type RightTabProps = {
   child: UserChild;
@@ -27,9 +27,13 @@ function RightTab({ child }: RightTabProps) {
     functionName: 'childToConfig',
     args: [child.address!],
     enabled: !!child.address,
+    onError(err) {
+      console.error(err);
+    },
+    watch: true,
   });
 
-  const { approveAndAddChild } = useAddFundsForm(
+  const { approveAndAddChild, isLoading: isLoadingAddFunds } = useAddFundsForm(
     child,
     !!config?.lastClaim.isZero(),
     () => {
@@ -38,14 +42,11 @@ function RightTab({ child }: RightTabProps) {
     },
   );
 
-  const { changeConfig, isLoading } = useChildSettingsForm(
-    child.address,
-    !!config?.lastClaim.isZero(),
-    () => {
+  const { changeConfig, isLoading: isLoadingChildSetting } =
+    useChildSettingsForm(child.address, !!config?.lastClaim.isZero(), () => {
       refetchConfig();
       setSelectedIndex(0);
-    },
-  );
+    });
 
   const { write: withdrawFundsFromChild } = useContractWrite({
     mode: 'recklesslyUnprepared',
@@ -69,7 +70,7 @@ function RightTab({ child }: RightTabProps) {
               erc20.data?.decimals,
             ),
     };
-  }, [config]);
+  }, [config, erc20, child]);
 
   if (!config) {
     return null;
@@ -98,7 +99,7 @@ function RightTab({ child }: RightTabProps) {
       <Tab.Panels as="div" className="h-full">
         <Tab.Panel as={'div'} className="h-full">
           <div className="flex h-full flex-col items-end justify-between">
-            <Balance
+            <MainPanel
               value={config?.balance}
               setSelectedIndex={setSelectedIndex}
             />
@@ -109,6 +110,7 @@ function RightTab({ child }: RightTabProps) {
             <AddFundsForm
               child={child}
               addFunds={approveAndAddChild}
+              isLoading={isLoadingAddFunds}
               returnFn={() => {
                 setSelectedIndex(0);
               }}
@@ -122,7 +124,7 @@ function RightTab({ child }: RightTabProps) {
               initialConfig={initialConfig}
               config={config}
               withdrawFundsFromChild={withdrawFundsFromChild}
-              isLoading={isLoading}
+              isLoading={isLoadingChildSetting}
               returnFn={() => {
                 setSelectedIndex(0);
               }}

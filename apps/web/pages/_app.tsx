@@ -4,13 +4,11 @@ import { SmartContractProvider } from '../contexts/contract';
 import { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { ThemeProvider } from '@lib/ui';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import { AlchemyProvider } from '../contexts/alchemy';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
-import { MagicAuthProvider } from '../contexts/auth';
+import { AuthProvider } from '../contexts/auth';
 import { MagicConnector } from '../utils/MagicConnector';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
 import type { AppRouter } from '../server';
@@ -22,11 +20,12 @@ import { splitLink } from '@trpc/client/links/splitLink';
 import { withTRPC } from '@trpc/next';
 import { env } from 'config/env/client';
 import { SessionProvider } from 'next-auth/react';
-// import { SessionProvider } from 'next-auth/react';
 import fr from '../lang/fr.json';
 import en from '../lang/en-US.json';
 import { useRouter } from 'next/router';
 import { IntlProvider } from 'react-intl';
+import { ThemeProvider } from '../contexts/theme';
+import type { Session } from 'next-auth';
 
 const messages = { fr, 'en-US': en };
 export type IntlMessageID = keyof typeof en;
@@ -42,7 +41,10 @@ const { chains, provider } = configureChains(
   ],
 );
 
-function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppProps<{ session: Session }>) {
   const { locale } = useRouter();
 
   const [wagmiClient] = useState(() =>
@@ -51,19 +53,9 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
       provider,
       persister: null,
       connectors: [
-        new MetaMaskConnector({ chains }),
-        new WalletConnectConnector({
-          chains,
-          options: {
-            qrcode: true,
-          },
-        }),
         new MagicConnector({
           options: {
             apiKey: env.NEXT_PUBLIC_MAGIC_LINK_PUBLIC_KEY,
-            // oauthOptions: {
-            //   providers: ['facebook', 'google'],
-            // },
             additionalMagicOptions: {
               network: {
                 rpcUrl: env.RPC_URL,
@@ -73,35 +65,40 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
           },
           chains: chains,
         }),
+        new MetaMaskConnector({ chains }),
+        new WalletConnectConnector({
+          chains,
+          options: {
+            qrcode: true,
+          },
+        }),
       ],
     }),
   );
 
   return (
-    <IntlProvider
-      locale={locale as 'fr' | 'en-US'}
-      messages={messages[locale as 'fr' | 'en-US']}
-    >
-      <WagmiConfig client={wagmiClient}>
-        <SessionProvider session={session}>
-          <MagicAuthProvider>
-            <AlchemyProvider>
-              <ThemeProvider>
-                <SmartContractProvider>
-                  <Component {...pageProps} />
-                  <ToastContainer
-                    toastClassName="toast-container"
-                    position="bottom-right"
-                    autoClose={3000}
-                  />
-                  <ReactQueryDevtools />
-                </SmartContractProvider>
-              </ThemeProvider>
-            </AlchemyProvider>
-          </MagicAuthProvider>
-        </SessionProvider>
-      </WagmiConfig>
-    </IntlProvider>
+    <ThemeProvider>
+      <IntlProvider
+        locale={locale as 'fr' | 'en-US'}
+        messages={messages[locale as 'fr' | 'en-US']}
+      >
+        <WagmiConfig client={wagmiClient}>
+          <SessionProvider session={session}>
+            <AuthProvider>
+              <SmartContractProvider>
+                <Component {...pageProps} />
+                <ToastContainer
+                  toastClassName="toast-container"
+                  position="bottom-right"
+                  autoClose={3000}
+                />
+                <ReactQueryDevtools />
+              </SmartContractProvider>
+            </AuthProvider>
+          </SessionProvider>
+        </WagmiConfig>
+      </IntlProvider>
+    </ThemeProvider>
   );
 }
 

@@ -6,13 +6,33 @@ import '@nomiclabs/hardhat-waffle';
 import '@typechain/hardhat';
 import '@openzeppelin/hardhat-upgrades';
 import NETWORK_CONFIG from 'config/network';
-// import TEST from 'config/env/client';
+import 'hardhat-deploy';
 
 dotenv.config({
   path: '../../.env',
 });
 
 const config: HardhatUserConfig = {
+  namedAccounts: {
+    deployer: {
+      default: 0,
+    },
+    parent1: 1,
+    parent2: 2,
+    parent3: 3,
+    child1: 4,
+    child2: 5,
+    child3: 6,
+    elonmusk: 10,
+    damian: 13,
+    xavier: 14,
+    lola: 15,
+    whale: {
+      default: '0xf977814e90da44bfa03b6295a0616a897441acec',
+      polygon: '0xf977814e90da44bfa03b6295a0616a897441acec',
+      mumbai: '0xe41c53eb9fce0ac9d204d4f361e28a8f28559d54',
+    },
+  },
   solidity: {
     compilers: [
       {
@@ -26,13 +46,21 @@ const config: HardhatUserConfig = {
       },
     ],
   },
-
+  verify: {
+    etherscan: {
+      apiKey: process.env.ETHERSCAN_API_KEY,
+    },
+  },
   networks: {
     hardhat: {
+      mining: {
+        auto: true,
+        interval: 5000,
+      },
       forking: {
         url: NETWORK_CONFIG['polygon-mainnet'].RPC_URL,
       },
-      chainId: NETWORK_CONFIG.localhost.CHAIN_ID,
+      chainId: 137, // DO NOT TOUCH
     },
     polygon: {
       url: NETWORK_CONFIG['polygon-mainnet'].RPC_URL,

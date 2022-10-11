@@ -1,18 +1,15 @@
 import { sendEmailWrapper } from '@pocket/emails';
-import type { User } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import { env } from 'config/env/server';
 import { z } from 'zod';
 import { createProtectedRouter } from '../createRouter';
 import { prisma } from '../prisma';
 import { ParentSchema } from '../schemas';
-import { grantMaticToParent } from '../services/ethereum';
 import {
   generateVerificationToken,
   hashToken,
   saveVerificationToken,
 } from '../services/jwt';
-import { sanitizeParent } from '../utils/sanitizeUser';
 
 export const parentRouter = createProtectedRouter()
   .middleware(({ ctx, next }) => {
@@ -51,39 +48,47 @@ export const parentRouter = createProtectedRouter()
       });
     },
   })
-  .mutation('resendChildVerificationEmail', {
-    input: z.object({
-      userId: z.string(),
-    }),
-    resolve: async ({ input }) => {
-      const child = await prisma.user.findUnique({
+  .query('pendingChildren', {
+    resolve: async ({ ctx }) => {
+      return prisma.pendingChild.findMany({
         where: {
-          id: input.userId,
-        },
-        include: {
-          child: true,
+          parentUserId: ctx.session.user.id,
         },
       });
-      if (!child || !child.email) {
+    },
+  })
+  .mutation('resendChildVerificationEmail', {
+    input: z.object({
+      id: z.number(),
+    }),
+    resolve: async ({ input }) => {
+      const childConfig = await prisma.pendingChild.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!childConfig) {
         throw new TRPCError({ code: 'NOT_FOUND' });
       }
+
       const token = generateVerificationToken();
       const ONE_DAY_IN_SECONDS = 86400;
       const expires = new Date(Date.now() + ONE_DAY_IN_SECONDS * 1000);
 
       await saveVerificationToken({
-        identifier: child.email,
+        identifier: childConfig.email,
         expires,
         token: hashToken(token),
       });
 
-      const params = new URLSearchParams({ token, email: child.email });
+      const params = new URLSearchParams({ token, email: childConfig.email });
 
       await sendEmailWrapper({
-        to: child.email,
+        to: childConfig.email,
         template: 'child_invitation',
         props: {
-          name: child.name!,
+          name: childConfig.name,
           link: `${env.APP_URL}/verify-child?${params}`,
         },
       });
@@ -94,7 +99,7 @@ export const parentRouter = createProtectedRouter()
     resolve: async ({ ctx, input }) => {
       const parent = await prisma.user.findUnique({
         where: {
-          id: ctx.session?.user.id,
+          id: ctx.session.user.id,
         },
       });
 
@@ -102,81 +107,67 @@ export const parentRouter = createProtectedRouter()
         throw new TRPCError({ code: 'UNAUTHORIZED' });
       }
 
-      let child: User;
-
-      try {
-        child = await prisma.user.create({
-          data: {
-            name: input.name,
-            email: input.email,
-            type: 'Child',
-            newUser: true,
-            child: {
-              create: {
-                initialCeiling: input.ceiling,
-                initialPeriodicity: input.periodicity,
-                parent: {
-                  connect: {
-                    userId: parent.id,
-                  },
-                },
-              },
+      const [user, pendingChild] = await prisma.$transaction([
+        prisma.user.findFirst({
+          where: {
+            email: {
+              equals: input.email,
+              mode: 'insensitive',
             },
           },
-        });
-      } catch (e) {
-        console.log(e);
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'Child with this email already exists',
-        });
-      }
-
-      if (child) {
-        const token = generateVerificationToken();
-
-        const ONE_DAY_IN_SECONDS = 86400;
-        const expires = new Date(Date.now() + ONE_DAY_IN_SECONDS * 1000);
-
-        await saveVerificationToken({
-          identifier: input.email,
-          expires,
-          token: hashToken(token),
-        });
-
-        const params = new URLSearchParams({ token, email: input.email });
-
-        await sendEmailWrapper({
-          to: child.email!,
-          template: 'child_invitation',
-          props: {
-            name: child.name!,
-            link: `${env.APP_URL}/verify-child?${params}`,
-          },
-        });
-      }
-
-      ctx.log.info('new child created', { child });
-
-      return 'OK';
-    },
-  })
-  .mutation('testWebhookRamp', {
-    resolve: async ({ ctx }) => {
-      const parent = sanitizeParent(
-        await prisma.parent.findUnique({
+        }),
+        prisma.pendingChild.findFirst({
           where: {
-            userId: ctx.session.user.id,
-          },
-          include: {
-            user: true,
+            email: {
+              equals: input.email,
+              mode: 'insensitive',
+            },
           },
         }),
-      );
-      if (!parent) {
-        return;
+      ]);
+
+      if (user || pendingChild) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'A user with that email already exists',
+        });
       }
-      await grantMaticToParent(parent);
+
+      const childConfig = await prisma.pendingChild.create({
+        data: {
+          name: input.name,
+          email: input.email,
+          initialCeiling: input.ceiling,
+          initialPeriodicity: input.periodicity,
+          parentUserId: parent.id,
+        },
+      });
+
+      const token = generateVerificationToken();
+
+      const ONE_DAY_IN_SECONDS = 86400;
+      const expires = new Date(Date.now() + ONE_DAY_IN_SECONDS * 1000);
+
+      await saveVerificationToken({
+        identifier: input.email,
+        expires,
+        token: hashToken(token),
+      });
+
+      const params = new URLSearchParams({ token, email: input.email });
+
+      await sendEmailWrapper({
+        to: childConfig.email,
+        template: 'child_invitation',
+        props: {
+          name: childConfig.name,
+          link: `${env.APP_URL}/verify-child?${params}`,
+        },
+      });
+
+      ctx.log.info('new child created', { childConfig });
+
+      return 'OK';
     },
   })
   .middleware(async ({ ctx, next, rawInput }) => {
@@ -187,9 +178,12 @@ export const parentRouter = createProtectedRouter()
 
     if (!result.success) throw new TRPCError({ code: 'BAD_REQUEST' });
 
-    const child = await prisma.user.findUnique({
+    const child = await prisma.user.findFirst({
       where: {
-        address: result.data.address,
+        address: {
+          equals: result.data.address,
+          mode: 'insensitive',
+        },
       },
       include: {
         child: true,
@@ -206,20 +200,18 @@ export const parentRouter = createProtectedRouter()
       });
     }
 
-    return next();
+    return next({
+      ctx: {
+        ...ctx,
+        child,
+      },
+    });
   })
   .query('childByAddress', {
     input: z.object({
       address: z.string(),
     }),
-    resolve: ({ input }) => {
-      return prisma.user.findUnique({
-        where: {
-          address: input.address,
-        },
-        include: {
-          child: true,
-        },
-      });
+    resolve: ({ ctx }) => {
+      return ctx.child;
     },
   });

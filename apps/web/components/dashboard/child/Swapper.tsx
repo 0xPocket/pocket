@@ -1,14 +1,9 @@
-import { useTheme } from '@lib/ui/src/Theme/ThemeContext';
-import { SwapWidgetProps, Theme } from '@uniswap/widgets';
+import { SwapWidget, Theme } from '@uniswap/widgets';
 import { env } from 'config/env/client';
-import dynamic from 'next/dynamic';
 import { useIntl } from 'react-intl';
+import { useTheme } from '../../../contexts/theme';
 import FormattedMessage from '../../common/FormattedMessage';
 
-const SwapWidget = dynamic<SwapWidgetProps>(
-  () => import('@uniswap/widgets').then((mod) => mod.SwapWidget),
-  { ssr: false },
-);
 type SwapperProps = {};
 
 const jsonrpcmap = { [Number(env.CHAIN_ID)]: [env.RPC_URL] };
@@ -55,6 +50,7 @@ function Swapper({}: SwapperProps) {
       </h2>
       <SwapWidget
         theme={theme}
+        defaultChainId={env.CHAIN_ID}
         className="container-classic"
         defaultInputTokenAddress={env.ERC20_ADDRESS}
         jsonRpcUrlMap={jsonrpcmap}

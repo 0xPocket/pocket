@@ -4,7 +4,6 @@ import type { PurchaseStatusWebhookEvent } from '@lib/types/interfaces';
 import { prisma } from '../../../server/prisma';
 import stringify from 'fast-json-stable-stringify';
 import { sanitizeParent } from '../../../server/utils/sanitizeUser';
-import { grantMaticToParent } from '../../../server/services/ethereum';
 
 // PRODUCTION KEY
 // const RAMP_KEY = `-----BEGIN PUBLIC KEY-----
@@ -101,14 +100,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       },
     },
   });
-
-  try {
-    if (body.type === 'RELEASED') {
-      await grantMaticToParent(parent);
-    }
-  } catch (e) {
-    return res.status(400).send('Error');
-  }
 
   return res.status(200).send('OK');
 };

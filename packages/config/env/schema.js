@@ -13,10 +13,12 @@ const serverSchema = z.object({
   MAIL_PASSWORD: z.string(),
   NEXTAUTH_SECRET: z.string(),
   NEXTAUTH_URL: z.string().url().optional(),
-  NODE_ENV: z.enum(["development", "test", "production"]),
-  POCKET_PRIVATE_KEY: z.string(),
+  NODE_ENV: z.enum(["development", "test", "production"]).optional(),
   QUERY_DEBUG: z.string().optional(),
   VERCEL_URL: z.string().optional(),
+  ANALYZE: z.string().optional(),
+  STARTON_KEY: z.string(),
+  ETHERSCAN_API_KEY: z.string().optional(),
 });
 
 /**
@@ -29,13 +31,14 @@ const clientSchema = z.object({
   NEXT_PUBLIC_NETWORK: z.enum([
     "polygon-mainnet",
     "polygon-mumbai",
-    "eth-rinkeby",
     "localhost",
   ]),
   NEXT_PUBLIC_CONTRACT_ADDRESS: z.string(),
   NEXT_PUBLIC_COVALENT_KEY: z.string(),
   NEXT_PUBLIC_MAGIC_LINK_PUBLIC_KEY: z.string(),
   NEXT_PUBLIC_APP_URL: z.string().url(),
+  NEXT_PUBLIC_TRANSAK_API_KEY: z.string(),
+  NEXT_PUBLIC_PRIVATE_BETA: z.boolean().optional(),
 });
 
 /**
@@ -53,6 +56,8 @@ const clientEnv = {
   NEXT_PUBLIC_MAGIC_LINK_PUBLIC_KEY:
     process.env.NEXT_PUBLIC_MAGIC_LINK_PUBLIC_KEY,
   NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+  NEXT_PUBLIC_TRANSAK_API_KEY: process.env.NEXT_PUBLIC_TRANSAK_API_KEY,
+  NEXT_PUBLIC_PRIVATE_BETA: Boolean(process.env.NEXT_PUBLIC_PRIVATE_BETA),
 };
 
 module.exports = {

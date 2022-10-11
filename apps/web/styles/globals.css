@@ -25,6 +25,10 @@
     @apply font-raleway text-3xl font-bold;
   }
 
+	h3 {
+		@apply font-raleway text-2xl;
+	}
+
   a {
     @apply without-ring cursor-pointer text-primary;
   }
@@ -52,19 +56,19 @@
   }
 
   .success-btn {
-    @apply base-btn bg-primary  text-bright;
+    @apply base-btn bg-primary  text-bright disabled-btn;
   }
 
   .danger-btn {
-    @apply base-btn bg-danger  text-bright;
+    @apply base-btn bg-danger  text-bright disabled-btn;
   }
 
   .action-btn {
-    @apply base-btn bg-primary  text-bright;
+    @apply base-btn bg-primary  text-bright disabled-btn;
   }
 
   .disabled-btn {
-    @apply action-btn cursor-not-allowed opacity-25;
+    @apply disabled:cursor-not-allowed disabled:opacity-40;
   }
 
   .third-btn {
@@ -85,7 +89,11 @@
 	}
 
 	.input-radio {
-		@apply relative flex items-center justify-center cursor-pointer rounded-lg border  px-3 py-2 shadow-sm focus:outline-none;
+		@apply relative flex items-center justify-center cursor-pointer rounded-lg border  px-3 py-2 shadow-sm focus:outline-none disabled:cursor-not-allowed;
+	}
+
+	.input-radio.big {
+		@apply w-1/2 py-4 text-xl hover:bg-primary hover:text-white transition-all;
 	}
 
 	.input-radio-checked {
@@ -147,6 +155,16 @@
     @apply focus:outline-0;
   }
 
+
+	/* providers icons */
+	.provider-container {
+		@apply relative flex aspect-square w-28 flex-col items-center justify-center gap-4 rounded-lg transition-all hover:bg-dark/50
+	}
+
+	.provider-img {
+		@apply flex h-12 w-12 items-center;
+	}
+
   /* skeleton */
   .skeleton {
     position: relative;
@@ -180,5 +198,78 @@
 	/* toastify */
 	.toast-container {
 		@apply container-classic  text-dark-lightest  dark:text-white !important;
+	}
+
+	/* tooltip */
+	#arrow,
+	#arrow::before {
+		position: absolute;
+		width: 8px;
+		height: 8px;
+		background: inherit;
+	}
+
+	#arrow {
+		visibility: hidden;
+	}
+
+	#arrow::before {
+		visibility: visible;
+		content: '';
+		transform: rotate(45deg);
+	}
+
+	#tooltip[data-popper-placement^='top'] > #arrow {
+		bottom: -4px;
+	}
+
+	#tooltip[data-popper-placement^='bottom'] > #arrow {
+		top: -4px;
+	}
+
+	#tooltip[data-popper-placement^='left'] > #arrow {
+		right: -4px;
+	}
+
+	#tooltip[data-popper-placement^='right'] > #arrow {
+		left: -4px;
+	}
+
+	.tooltip-container{
+		@apply bg-gray text-white px-3 py-1 rounded-md text-base;
+	}
+
+	.step {
+		@apply flex h-6 w-6 items-center justify-center rounded-full bg-dark-light border border-transparent transition-all select-none;
+	}
+
+	.step.active {
+		@apply border-primary;
+	}
+
+	.step.completed {
+		@apply bg-primary;
+	}
+
+	.btw-step {
+		@apply h-1 flex-grow bg-dark-light;
+	}
+
+	.fill {
+		@apply bg-primary w-0 h-full transition-all duration-500;
+	}
+
+	.fill.completed {
+		@apply w-full;
+	}
+
+	.protect-small-screen{
+		@apply absolute inset-0 z-[100] items-center justify-center background hidden;
+	}
+
+	@media screen and (max-width: 1000px) {
+		.protect-small-screen{
+			@apply flex;
+		}
 	}
 }

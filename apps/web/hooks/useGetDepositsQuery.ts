@@ -3,10 +3,10 @@ import { useProvider } from 'wagmi';
 import { useSmartContract } from '../contexts/contract';
 import { formatUnits } from 'ethers/lib/utils';
 import { useMemo } from 'react';
-import { Event } from './useGetClaimsQuery';
+import type { Event } from './useGetClaimsQuery';
 export const useGetDepositsQuery = (
-  childAddress: string,
-  parentAddress: string,
+  childAddress?: string,
+  parentAddress?: string,
 ) => {
   const provider = useProvider();
   const { pocketContract } = useSmartContract();

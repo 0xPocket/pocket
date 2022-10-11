@@ -1,106 +1,122 @@
-/* eslint-disable no-unused-vars */
 import { assert, expect } from 'chai';
-import { ethers, upgrades } from 'hardhat';
-import { Wallet } from 'ethers';
-import ParentTester from '../helpers/ParentTester';
+import { ethers } from 'hardhat';
 import * as constants from '../utils/constants';
-import { PocketFaucet__factory, PocketFaucet } from '../typechain-types';
 import { stringToDecimalsVersion } from '../utils/ERC20';
+import setup, { User } from '../utils/testSetup';
+import { PocketFaucet } from '../typechain-types';
+import {
+  addStdChildAndSend,
+  addChildAndFundsPermitAndSend,
+} from '../utils/addChild';
+import { time } from '@nomicfoundation/hardhat-network-helpers';
 
 describe('Testing add Child and funds', function () {
-  let child1: Wallet;
-  let parent1: ParentTester;
-  let PocketFaucet_factory: PocketFaucet__factory, pocketFaucet: PocketFaucet;
-  let parent1Wallet: Wallet;
+  let parent1: User;
+  let child1: User, child2: User, child3: User;
+  let pocketFaucet: PocketFaucet;
   const tokenAddr = constants.CHOSEN_TOKEN;
   const whale = constants.CHOSEN_WHALE;
+
   before(async function () {
-    child1 = new Wallet(constants.FAMILY_ACCOUNT.child1, ethers.provider);
-    PocketFaucet_factory = await ethers.getContractFactory('PocketFaucet');
-    pocketFaucet = (await upgrades.deployProxy(PocketFaucet_factory, [
-      tokenAddr,
-    ])) as PocketFaucet;
-    await pocketFaucet.deployed();
-    parent1Wallet = new Wallet(
-      constants.FAMILY_ACCOUNT.parent1,
-      ethers.provider
-    );
-    parent1 = new ParentTester(pocketFaucet.address, parent1Wallet);
+    const { contracts, parents, children } = await setup();
+    child1 = children[0];
+    child2 = children[1];
+    child3 = children[2];
+    parent1 = parents[0];
+    pocketFaucet = contracts.pocketFaucet;
   });
 
   it('Should revert because new child addr is zero', async function () {
     await expect(
-      parent1.addChildAndFundsAndSend(
+      addChildAndFundsPermitAndSend(
         1,
         1,
         ethers.constants.AddressZero,
         0,
         tokenAddr,
-        whale
+        whale,
+        parent1,
+        await time.latest()
       )
     ).to.be.revertedWith('!addChild: Address is null');
   });
 
-  it('Should revert because child2 is already set', async function () {
-    await parent1.addStdChildAndSend(child1.address, tokenAddr);
+  it('Should revert because child is already set', async function () {
+    await addStdChildAndSend(parent1.pocketFaucet, child1.address, tokenAddr);
+
     await expect(
-      parent1.addChildAndFundsAndSend(1, 1, child1.address, 0, tokenAddr, whale)
+      addChildAndFundsPermitAndSend(
+        1,
+        1,
+        child1.address,
+        0,
+        tokenAddr,
+        whale,
+        parent1,
+        await time.latest()
+      )
     ).to.be.revertedWith('!addChild: Child address already taken');
   });
 
   it('Should add 1 child and give him 0', async function () {
-    await parent1.addChildAndFundsAndSend(
+    await addChildAndFundsPermitAndSend(
       1,
       1,
-      constants.RDM_ADDRESS[1],
+      child2.address,
       0,
       tokenAddr,
-      whale
+      whale,
+      parent1,
+      await time.latest()
     );
     assert(
-      (await parent1.getNbChildren()) === 2,
+      (await pocketFaucet.getNumberChildren(parent1.address)).toNumber() === 2,
       'Number of children is not good'
     );
     assert(
-      (await parent1.getChildBalance(constants.RDM_ADDRESS[1])).isZero(),
+      (await pocketFaucet.childToConfig(child2.address)).balance.isZero(),
       'This child has not got the right balance'
     );
   });
 
   it('Should revert because addFunds did not work', async function () {
     await expect(
-      parent1.addChildAndFundsAndSend(
+      addChildAndFundsPermitAndSend(
         1,
         1,
-        constants.RDM_ADDRESS[2],
+        child3.address,
         5,
         tokenAddr,
-        null
+        null,
+        parent1,
+        await time.latest()
       )
     ).to.be.revertedWith(constants.CHOSEN_ERRORMSG);
   });
 
   it('Should add 1 child and give him money', async function () {
-    await parent1.addChildAndFundsAndSend(
+    await addChildAndFundsPermitAndSend(
       1,
       1,
-      constants.RDM_ADDRESS[2],
+      child3.address,
       15,
       tokenAddr,
-      whale
+      whale,
+      parent1,
+      await time.latest()
     );
     assert(
-      (await parent1.getNbChildren()) === 3,
+      (await pocketFaucet.getNumberChildren(parent1.address)).toNumber() === 3,
       'Number of children is not good'
     );
     assert(
-      (await parent1.getChildBalance(constants.RDM_ADDRESS[2])).eq(
+      (await pocketFaucet.childToConfig(child3.address)).balance.eq(
         await stringToDecimalsVersion(tokenAddr, '15')
       ),
       'This child has not got the right balance'
     );
     assert(
-      (await parent1.getChildBalance(constants.RDM_ADDRESS[1])).eq(
+      (await pocketFaucet.childToConfig(child2.address)).balance.eq(
         await stringToDecimalsVersion(tokenAddr, '0')
       ),
       'This child has not got the right balance'
