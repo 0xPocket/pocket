@@ -17,7 +17,9 @@ const Balance: FC<BalanceProps> = ({ balance }) => {
         <FormattedMessage id="claimable" />
       </p>
       <span className="text-4xl">
-        {balance ? formatUnits(balance, erc20.data?.decimals).toString() : '0'}{' '}
+        {balance
+          ? Number(formatUnits(balance, erc20.data?.decimals)).toFixed(2)
+          : '0.00'}{' '}
         $
       </span>
     </div>
