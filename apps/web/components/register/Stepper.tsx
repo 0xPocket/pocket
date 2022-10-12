@@ -5,7 +5,7 @@ type StepperProps = { step: number; nbrSteps: number };
 
 const Stepper: FC<StepperProps> = ({ step, nbrSteps }) => {
   const steps = [...Array(nbrSteps)];
-  const { pathname, push } = useRouter();
+  const { pathname, push, query } = useRouter();
 
   return (
     <div className="stepper relative flex w-full items-center justify-between">
@@ -16,7 +16,7 @@ const Stepper: FC<StepperProps> = ({ step, nbrSteps }) => {
               key={i}
               onClick={() => {
                 if (step > i && step != nbrSteps - 1)
-                  push(pathname + '?step=' + i);
+                  push({ pathname, query: { ...query, step: i } });
               }}
               className={`step ${step === 0 && 'active'} ${
                 step > 0 && 'completed'
@@ -37,7 +37,7 @@ const Stepper: FC<StepperProps> = ({ step, nbrSteps }) => {
               <div
                 onClick={() => {
                   if (step > i && step != nbrSteps - 1)
-                    push(pathname + '?step=' + i);
+                    push({ pathname, query: { ...query, step: i } });
                 }}
                 className={`step ${step === nbrSteps - 1 && 'completed'}`}
               >
@@ -55,7 +55,7 @@ const Stepper: FC<StepperProps> = ({ step, nbrSteps }) => {
             <div
               onClick={() => {
                 if (step > i && step != nbrSteps - 1)
-                  push(pathname + '?step=' + i);
+                  push({ pathname, query: { ...query, step: i } });
               }}
               className={`step ${step === i && 'active'} ${
                 step > i && 'completed'
