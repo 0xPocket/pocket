@@ -6,6 +6,7 @@ import { authOptions } from './next-auth';
 
 import { GetServerSidePropsContext } from 'next';
 import type { Logger } from 'next-axiom';
+import { env } from 'config/env/server';
 
 /**
  * Creates context for an incoming request
@@ -21,6 +22,11 @@ export const createContext = async (
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const logger = (req as any)?.log as Logger;
+
+  // slow the api for testing
+  if (env.NODE_ENV === 'development') {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  }
 
   return {
     req,
