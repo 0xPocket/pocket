@@ -11,6 +11,7 @@ import { useZodForm } from '../../../utils/useZodForm';
 import { useEffect } from 'react';
 import FormattedMessage from '../../common/FormattedMessage';
 import { useIntl } from 'react-intl';
+import { Spinner } from '../../common/Spinner';
 
 type AddFundsFormProps = {
   child: UserChild;
@@ -125,7 +126,11 @@ function AddFundsForm({
           className="success-btn"
           disabled={isLoading}
         >
-          <FontAwesomeIcon icon={faPaperPlane} className="mr-2" />
+          {isLoading ? (
+            <Spinner base />
+          ) : (
+            <FontAwesomeIcon icon={faPaperPlane} className="mr-2" />
+          )}
           <FormattedMessage id="send" />
         </button>
       </div>
