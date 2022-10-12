@@ -156,8 +156,12 @@ function ChildSettingsForm({
             className="success-btn"
             disabled={isLoading || !changeConfig}
           >
-            <FontAwesomeIcon icon={faWrench} className="mr-2" />
-            {isLoading ? <Spinner /> : <FormattedMessage id="apply" />}
+            {isLoading ? (
+              <Spinner base />
+            ) : (
+              <FontAwesomeIcon icon={faWrench} className="mr-2" />
+            )}
+            <FormattedMessage id="apply" />
           </button>
         </div>
       </form>

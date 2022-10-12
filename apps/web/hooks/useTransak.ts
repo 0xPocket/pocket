@@ -11,7 +11,8 @@ function useTransak() {
   const showTransak = useCallback(() => {
     const transak = new transakSDK({
       apiKey: env.NEXT_PUBLIC_TRANSAK_API_KEY, // Your API Key
-      environment: 'STAGING', // STAGING/PRODUCTION
+      environment:
+        process.env.NODE_ENV === 'production' ? 'PRODUCTION' : 'STAGING', // STAGING/PRODUCTION
       widgetHeight: '625px',
       widgetWidth: '500px',
       // Examples of some of the customization parameters you can pass

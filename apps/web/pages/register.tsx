@@ -47,16 +47,20 @@ const Register: FC = () => {
       toast.error(error.message);
     },
     onSuccess: () => {
-      router.push(router.pathname + '?step=3');
+      router.push({
+        pathname: router.pathname,
+        query: { ...router.query, step: 3 },
+      });
     },
   });
 
   // BETA TOKEN
   const [betaToken, setBetaToken] = useState<string>();
-  trpc.useQuery(
+
+  const { isLoading: tokenIsLoading } = trpc.useQuery(
     ['beta.verifyInvite', { token: router.query.token as string }],
     {
-      enabled: env.NEXT_PUBLIC_PRIVATE_BETA,
+      enabled: env.NEXT_PUBLIC_PRIVATE_BETA && !!router.query.token,
       retry: false,
       onSuccess: () => setBetaToken(router.query.token as string),
     },
@@ -67,7 +71,10 @@ const Register: FC = () => {
       toast.error(error.message);
     },
     onSuccess: () => {
-      router.push(router.pathname + '?step=3');
+      router.push({
+        pathname: router.pathname,
+        query: { ...router.query, step: 3 },
+      });
     },
   });
 
@@ -83,7 +90,10 @@ const Register: FC = () => {
 
   useEffect(() => {
     if (step > 0 && !userType) {
-      router.push('/register?step=0');
+      router.push({
+        pathname: router.pathname,
+        query: { ...router.query, step: 0 },
+      });
     }
   }, [step, router, userType]);
 
@@ -125,17 +135,22 @@ const Register: FC = () => {
     }
   };
 
-  if (env.NEXT_PUBLIC_PRIVATE_BETA && !betaToken)
+  if (env.NEXT_PUBLIC_PRIVATE_BETA && !betaToken) {
     return (
       <PageWrapper>
         <div className="flex flex-col items-center">
-          <div className="flex w-[512px] flex-col items-center gap-16">
-            <h1>Pocket is currently in private beta</h1>
-            <p>If you want to try it, reach us on social media</p>
-          </div>
+          {tokenIsLoading ? (
+            <Spinner />
+          ) : (
+            <div className="flex w-[512px] flex-col items-center gap-16">
+              <h1>Pocket is currently in private beta</h1>
+              <p>If you want to try it, reach us on social media</p>
+            </div>
+          )}
         </div>
       </PageWrapper>
     );
+  }
 
   return (
     <PageWrapper>
@@ -169,7 +184,10 @@ const Register: FC = () => {
                     }
                     onClick={() => {
                       setValue('userType', 'Parent');
-                      router.push('/register' + '?step=1');
+                      router.push({
+                        pathname: router.pathname,
+                        query: { ...router.query, step: 1 },
+                      });
                     }}
                   >
                     <FormattedMessage id="parent" />
@@ -183,7 +201,10 @@ const Register: FC = () => {
                     }
                     onClick={() => {
                       setValue('userType', 'Child');
-                      router.push('/register' + '?step=1');
+                      router.push({
+                        pathname: router.pathname,
+                        query: { ...router.query, step: 1 },
+                      });
                     }}
                     disabled
                   >
@@ -201,7 +222,10 @@ const Register: FC = () => {
                   } else {
                     setValue('connectionType', 'Ethereum');
                   }
-                  router.push('/register' + '?step=2');
+                  router.push({
+                    pathname: router.pathname,
+                    query: { ...router.query, step: 2 },
+                  });
                 }}
               />
             )}

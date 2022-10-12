@@ -63,7 +63,7 @@ export const relayerRouter = createProtectedRouter().mutation('forward', {
     signature: z.string(),
     functionName: z.string(),
   }),
-  resolve: async ({ input }) => {
+  resolve: async ({ input, ctx }) => {
     const { request, signature } = input;
 
     const accepts = request.to === env.NEXT_PUBLIC_CONTRACT_ADDRESS;
@@ -101,6 +101,7 @@ export const relayerRouter = createProtectedRouter().mutation('forward', {
     );
 
     if (!staticCall.success) {
+      ctx.log.error('call static failed', { ret: staticCall });
       try {
         PocketFaucet__factory.getInterface(
           PocketFaucetAbi,
@@ -141,8 +142,11 @@ export const relayerRouter = createProtectedRouter().mutation('forward', {
         signature,
       ]);
 
+      ctx.log.debug('successfully relayed tx', { txHash: tx.transactionHash });
+
       return { txHash: tx.transactionHash };
     } catch (e) {
+      ctx.log.error('error relaying tx');
       throw new TRPCError({
         code: 'BAD_REQUEST',
         message: 'Error relaying transaction, please reach us.',

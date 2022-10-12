@@ -91,6 +91,11 @@ export const registerRouter = createRouter()
         await grantPktToken(userAddress);
       }
 
+      ctx.log.info('new register with magic', {
+        email: userMetadata.email,
+        address: userAddress,
+      });
+
       return prisma.user.create({
         data: {
           name: input.name,
@@ -206,6 +211,11 @@ export const registerRouter = createRouter()
         // });
         throw new Error('Not implemented');
       }
+
+      ctx.log.info('new register with ethereum', {
+        email: newUser.email,
+        address: newUser.address,
+      });
 
       const token = generateVerificationToken();
       const ONE_DAY_IN_SECONDS = 86400;
