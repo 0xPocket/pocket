@@ -26,10 +26,14 @@ module.exports = {
       bright: {
         bg: 'rgb(237,249,254)',
         DEFAULT: '#fff',
-        dark: '#f9fcfe',
-        darkest: '#d1dee9',
+        dark: '#f8ffff',
+        darkest: '#b5d8f7',
       },
-      danger: '#FF0000',
+      danger: 'rgba(197,48,48)',
+			success: {
+				DEFAULT :'#3deb57',
+				dark:'#00be26'
+			},
       black: '#000',
       white: {
         DEFAULT: '#fff',
@@ -41,6 +45,16 @@ module.exports = {
         lightest: '#f1f5f9',
         DEFAULT: '#64748b',
       },
+			badges: {
+				bgblue : 'rgb(195 221 253)',
+				textblue: 'rgb(30 66 159)',
+				bggreen : 'rgb(188 240 218)',
+				textgreen: 'rgb(1 71 55)',
+				bgdefaultdark: 'rgb(55 65 81)',
+				textdefaultdark: 'rgb(209 213 219)',
+				bgdefaultlight: 'rgb(243 244 246)',
+				textdefaultlight: 'rgb(31 41 55)',
+			},
       transparent: 'transparent',
     },
     extend: {

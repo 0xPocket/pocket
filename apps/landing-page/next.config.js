@@ -2,13 +2,6 @@ const dotenv = require('dotenv');
 
 dotenv.config({ path: '../../.env' });
 
-if (
-  !process.env.NEXT_PUBLIC_RECAPTCHA_PUBLIC_KEY ||
-  !process.env.RECAPTCHA_SECRET_KEY
-) {
-  throw new Error('Missing reCAPTCHA keys');
-}
-
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
