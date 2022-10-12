@@ -64,8 +64,11 @@ function AddFundsForm({
     register,
     handleSubmit,
     setFocus,
-    formState: { errors },
+    formState: { isValid },
+    setValue,
   } = useZodForm({
+    reValidateMode: 'onChange',
+    mode: 'all',
     schema: ChildSettingsSchema,
   });
 
@@ -82,7 +85,7 @@ function AddFundsForm({
       onSubmit={handleSubmit(onSubmit)}
       className="flex h-full flex-col items-end justify-between space-y-4"
     >
-      <div className="flex flex-col items-end">
+      <div className="flex flex-col items-end gap-2">
         <label htmlFor="topup">
           <FormattedMessage
             id="funds-form.add-funds-to"
@@ -91,12 +94,14 @@ function AddFundsForm({
             }}
           />
         </label>
+
         <div className="relative flex items-center text-4xl">
           <input
             className="input-number"
             placeholder="0"
             type="number"
             min="0"
+            step={1 / 10 ** erc20.data?.decimals!}
             onKeyDown={(e) => {
               if (e.key === 'e' || e.key === '-') {
                 e.preventDefault();
@@ -107,11 +112,33 @@ function AddFundsForm({
             })}
           />
           <span>$</span>
-          {errors.topup && (
-            <span className="absolute bottom-0 right-0 translate-y-full rounded border border-danger bg-danger/20 p-1 px-2 text-xs text-white">
-              {errors.topup.message}
+        </div>
+        <div className="flex gap-2">
+          {balance && (
+            <span className="text-gray">
+              Balance:{' '}
+              {Number(
+                formatUnits(balance.toString(), erc20.data?.decimals),
+              ).toFixed(2)}
             </span>
           )}
+          <button
+            className="rounded bg-primary px-2"
+            onClick={(e) => {
+              e.preventDefault();
+              if (!balance?.isZero()) {
+                setValue(
+                  'topup',
+                  Number(formatUnits(balance || 1000, erc20.data?.decimals)),
+                  {
+                    shouldValidate: true,
+                  },
+                );
+              }
+            }}
+          >
+            Max
+          </button>
         </div>
       </div>
 
@@ -124,7 +151,7 @@ function AddFundsForm({
           type="submit"
           value="Send"
           className="success-btn"
-          disabled={isLoading}
+          disabled={!isValid || isLoading}
         >
           {isLoading ? (
             <Spinner base />
