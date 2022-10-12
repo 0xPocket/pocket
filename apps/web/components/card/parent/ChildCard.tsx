@@ -1,10 +1,17 @@
-import Link from 'next/link';
-import AccountStatus from './AccountStatus';
-import RightTab from './RightTab';
 import type { UserChild } from '@lib/types/interfaces';
+import { Tab } from '@headlessui/react';
+import { useMemo, useState } from 'react';
+import { useContractWrite } from 'wagmi';
+import { useSmartContract } from '../../../contexts/contract';
+import { useAddFundsForm } from '../../../hooks/useAddFundsForm';
+import { useChildSettingsForm } from '../../../hooks/useChildSettingsForm';
 import FormattedMessage from '../../common/FormattedMessage';
-import LinkPolygonScan from '../common/LinkPolygonScan';
-import MetaMaskProfilePicture from '../common/MetaMaskProfilePicture';
+import AddFundsForm from './AddFundsForm';
+import ChildSettingsForm from './ChildSettingsForm';
+import { parseUnits } from 'ethers/lib/utils';
+import { BigNumber } from 'ethers';
+import MainPanel from './MainPanel';
+import useContractRead from '../../../hooks/useContractRead';
 
 type ChildCardProps = {
   child: UserChild;
@@ -17,38 +24,126 @@ function ChildCard({
   polygonscanLink = false,
   className,
 }: ChildCardProps) {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const { pocketContract, erc20 } = useSmartContract();
+
+  const { data: config, refetch: refetchConfig } = useContractRead({
+    contract: pocketContract,
+    functionName: 'childToConfig',
+    args: [child.address!],
+    enabled: !!child.address,
+    onError(err) {
+      console.error(err);
+    },
+    watch: true,
+  });
+
+  const { approveAndAddChild, isLoading: isLoadingAddFunds } = useAddFundsForm(
+    child,
+    !!config?.lastClaim.isZero(),
+    () => {
+      refetchConfig();
+      setSelectedIndex(0);
+    },
+  );
+
+  const { changeConfig, isLoading: isLoadingChildSetting } =
+    useChildSettingsForm(child.address, !!config?.lastClaim.isZero(), () => {
+      refetchConfig();
+      setSelectedIndex(0);
+    });
+
+  const { write: withdrawFundsFromChild } = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    addressOrName: pocketContract.address,
+    functionName: 'withdrawFundsFromChild',
+    contractInterface: pocketContract.interface,
+    args: [config?.balance, child.address],
+  });
+
+  const initialConfig = useMemo(() => {
+    return {
+      periodicity:
+        config && !config.periodicity.isZero()
+          ? config.periodicity
+          : BigNumber.from(child.child?.initialPeriodicity),
+      ceiling:
+        config && !config.ceiling.isZero()
+          ? config.ceiling
+          : parseUnits(
+              child.child!.initialCeiling!.toString(),
+              erc20.data?.decimals,
+            ),
+    };
+  }, [config, erc20, child]);
+
+  if (!config) {
+    return null;
+  }
+
   return (
     <div
-      className={`${className} container-classic grid min-h-[260px] grid-cols-2 rounded-lg p-8`}
+      className={`${className} container-classic min-h-[260px] rounded-lg p-8`}
     >
-      <div className="flex flex-col justify-between">
-        <div className="space-y-2">
-          <div className="flex items-center space-x-4">
-            <MetaMaskProfilePicture address={child.address} />
-            <div className="flex items-end space-x-4">
-              <h1 className="max-w-fit whitespace-nowrap">{child.name}</h1>
-              <AccountStatus status="ACTIVE" />
+      <Tab.Group
+        defaultIndex={1}
+        selectedIndex={selectedIndex}
+        as="div"
+        className="h-full"
+      >
+        <Tab.List className="hidden">
+          <Tab>
+            <FormattedMessage id="balance" />
+          </Tab>
+
+          <Tab>
+            <FormattedMessage id="card.parent.piggyBank.addFunds" />
+          </Tab>
+
+          <Tab>
+            <FormattedMessage id="settings" />
+          </Tab>
+        </Tab.List>
+        <Tab.Panels as="div" className="h-full">
+          <Tab.Panel as={'div'} className="h-full">
+            <div className="flex h-full flex-col  justify-between">
+              <MainPanel
+                child={child}
+                value={config?.balance}
+                setSelectedIndex={setSelectedIndex}
+                polygonScanLink={polygonscanLink}
+              />
             </div>
-          </div>
-        </div>
-        {polygonscanLink ? (
-          <LinkPolygonScan address={child.address!} />
-        ) : (
-          <Link href={`/account/${child.address}`}>
-            <a className="py-3">
-              {
-                <FormattedMessage
-                  id="dashboard.parent.card.go-to"
-                  values={{
-                    name: child.name,
-                  }}
-                />
-              }
-            </a>
-          </Link>
-        )}
-      </div>
-      <RightTab child={child} />
+          </Tab.Panel>
+          <Tab.Panel as={'div'} className="h-full">
+            <div className="flex h-full flex-col items-end justify-between">
+              <AddFundsForm
+                child={child}
+                addFunds={approveAndAddChild}
+                isLoading={isLoadingAddFunds}
+                returnFn={() => {
+                  setSelectedIndex(0);
+                }}
+              />
+            </div>
+          </Tab.Panel>
+          <Tab.Panel as={'div'} className="h-full">
+            <div className="flex h-full flex-col items-end justify-between">
+              <ChildSettingsForm
+                changeConfig={changeConfig}
+                initialConfig={initialConfig}
+                config={config}
+                withdrawFundsFromChild={withdrawFundsFromChild}
+                isLoading={isLoadingChildSetting}
+                returnFn={() => {
+                  setSelectedIndex(0);
+                }}
+              />
+            </div>
+          </Tab.Panel>
+        </Tab.Panels>
+      </Tab.Group>
     </div>
   );
 }
