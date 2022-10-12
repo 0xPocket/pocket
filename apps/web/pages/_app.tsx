@@ -26,6 +26,7 @@ import { useRouter } from 'next/router';
 import { IntlProvider } from 'react-intl';
 import { ThemeProvider } from '../contexts/theme';
 import type { Session } from 'next-auth';
+import Script from 'next/script';
 
 const messages = { fr, 'en-US': en };
 export type IntlMessageID = keyof typeof en;
@@ -77,28 +78,31 @@ function App({
   );
 
   return (
-    <ThemeProvider>
-      <IntlProvider
-        locale={locale as 'fr' | 'en-US'}
-        messages={messages[locale as 'fr' | 'en-US']}
-      >
-        <WagmiConfig client={wagmiClient}>
-          <SessionProvider session={session}>
-            <AuthProvider>
-              <SmartContractProvider>
-                <Component {...pageProps} />
-                <ToastContainer
-                  toastClassName="toast-container"
-                  position="bottom-right"
-                  autoClose={3000}
-                />
-                <ReactQueryDevtools />
-              </SmartContractProvider>
-            </AuthProvider>
-          </SessionProvider>
-        </WagmiConfig>
-      </IntlProvider>
-    </ThemeProvider>
+    <>
+      <ThemeProvider>
+        <IntlProvider
+          locale={locale as 'fr' | 'en-US'}
+          messages={messages[locale as 'fr' | 'en-US']}
+        >
+          <WagmiConfig client={wagmiClient}>
+            <SessionProvider session={session}>
+              <AuthProvider>
+                <SmartContractProvider>
+                  <Script src="/theme.js" strategy="beforeInteractive"></Script>
+                  <Component {...pageProps} />
+                  <ToastContainer
+                    toastClassName="toast-container"
+                    position="bottom-right"
+                    autoClose={3000}
+                  />
+                  <ReactQueryDevtools />
+                </SmartContractProvider>
+              </AuthProvider>
+            </SessionProvider>
+          </WagmiConfig>
+        </IntlProvider>
+      </ThemeProvider>
+    </>
   );
 }
 
