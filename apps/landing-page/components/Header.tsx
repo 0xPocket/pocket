@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import CallToAction from './CallToAction';
 import { ThemeToggler } from './ThemeToggler';
 
 type HeaderProps = {};
@@ -26,6 +27,12 @@ function Header({}: HeaderProps) {
             )}
           </div>
           <ThemeToggler className="h-6 w-6 md:h-8 md:w-8" />
+
+          <div className="flex items-center  gap-8 text-base">
+            <Link href="https://app.gopocket.co">
+              <button className="action-btn">Sign In</button>
+            </Link>
+          </div>
         </div>
       </div>
     </header>
