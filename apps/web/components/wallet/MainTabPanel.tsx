@@ -22,9 +22,7 @@ function MainTabPanel({}: MainTabPanelProps) {
     enabled: !!erc20.data,
     watch: true,
   });
-  const { data: maticBalance } = useBalance({
-    addressOrName: address,
-  });
+
   const { data: userData, status } = useSession();
 
   return (
@@ -60,14 +58,6 @@ function MainTabPanel({}: MainTabPanelProps) {
             </Tooltip>
           </div>
         )}
-        <div className="flex items-end text-xs text-gray">
-          <p className="number">
-            {Number(maticBalance?.formatted).toFixed(2)} {maticBalance?.symbol}
-          </p>
-          <Tooltip placement="top" className="ml-2">
-            <FormattedMessage id="tooltip.wallet.matic" />
-          </Tooltip>
-        </div>
       </div>
       {status === 'authenticated' &&
         userData &&
