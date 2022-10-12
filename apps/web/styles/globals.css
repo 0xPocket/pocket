@@ -37,6 +37,9 @@
     @apply without-ring;
   }
 
+	.number {
+	}
+
   /* generics */
   .background {
     @apply bg-bright-bg text-dark-lightest dark:bg-dark dark:text-white;
