@@ -1,6 +1,7 @@
 const dotenv = require('dotenv');
 
 dotenv.config({ path: '../../.env' });
+require('./lang/compareLang');
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',

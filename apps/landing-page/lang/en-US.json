@@ -22,10 +22,10 @@
   "childcard.title": "Children",
 
   "childcard.practice.title": "Learning",
-  "childcard.practice.content": "Educational platform to make his/her first steps in Web3.",
+  "childcard.practice.content": "Educational platform to make his/her first steps in Web3 (Coming soon).",
 
   "childcard.discovery.title": "Discovery",
-  "childcard.discovery.content": "Games and applications specially selected to meet teenagers interest.",
+  "childcard.discovery.content": "Games and applications specially selected to meet teenagers interest (Coming soon).",
 
   "childcard.liberty.title": "Autonomy",
   "childcard.liberty.content": "An accompaniment towards autonomy in the ecosystem.",
@@ -42,5 +42,4 @@
 
   "footer.copyright": "© 2022 Pocket.",
   "footer.contact": "Contact : hello@gopocket.fr"
-
 }

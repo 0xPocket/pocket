@@ -17,15 +17,15 @@
   "parentcard.serenity.content": "Soyez avertis en temps réel de l’activité de vos enfants et recevez un résumé hebdomadaire.",
 
   "parentcard.stability.title": "Stabilité",
-  "parentcard.stability.content": "L'argent de poche n'est pas soumis aux aléas du marché grâce à une cryptomonnaie indexée sur l'euro ou le dollar.",
+  "parentcard.stability.content": "L'argent de poche n'est pas soumis aux aléas du marché grâce à une cryptomonnaie indexée sur le dollar.",
 
   "childcard.title": "Enfants",
 
   "childcard.practice.title": "Initiation",
-  "childcard.practice.content": "Une plateforme pédagogique pour faire ses premiers pas dans le web3.",
+  "childcard.practice.content": "Une plateforme pédagogique pour faire ses premiers pas dans le web3 (bientôt disponible).",
 
   "childcard.discovery.title": "Découverte",
-  "childcard.discovery.content": "Une sélection de jeux et d'applications adaptée aux adolescents.",
+  "childcard.discovery.content": "Une sélection de jeux et d'applications adaptée aux adolescents (bientôt disponible).",
 
   "childcard.liberty.title": "Liberté",
   "childcard.liberty.content": "Un accompagnement vers une autonomie dans l’écosystème en toute sérénité.",
@@ -37,10 +37,9 @@
   "calltoaction.action": "S'inscrire",
   "calltoaction.error": "Vous devez rentrer un email valide",
   "calltoaction.email": "Adresse email",
-	
+
   "backedby.title": "Nos partenaires",
 
   "footer.copyright": "© 2022 Pocket.",
   "footer.contact": "Contact : hello@gopocket.fr"
-
 }
