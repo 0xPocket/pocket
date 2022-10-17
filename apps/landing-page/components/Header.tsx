@@ -26,7 +26,7 @@ function Header({}: HeaderProps) {
               </Link>
             )}
           </div>
-          <ThemeToggler className="h-6 w-6 md:h-8 md:w-8" />
+          <ThemeToggler className="h-6 w-6 cursor-pointer md:h-8 md:w-8" />
 
           <div className="flex items-center  gap-8 text-base">
             <Link href="https://app.gopocket.co">
