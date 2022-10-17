@@ -25,6 +25,12 @@ function IndexPageCardsChildren() {
       >
         <IndexCardAnimation>
           <IndexCard
+            title="childcard.liberty.title"
+            content="childcard.liberty.content"
+            icon={faRocket}
+            varitaion
+          />
+          <IndexCard
             title="childcard.practice.title"
             content="childcard.practice.content"
             icon={faGraduationCap}
@@ -34,12 +40,6 @@ function IndexPageCardsChildren() {
             title="childcard.discovery.title"
             content="childcard.discovery.content"
             icon={faEarthEurope}
-            varitaion
-          />
-          <IndexCard
-            title="childcard.liberty.title"
-            content="childcard.liberty.content"
-            icon={faRocket}
             varitaion
           />
         </IndexCardAnimation>
