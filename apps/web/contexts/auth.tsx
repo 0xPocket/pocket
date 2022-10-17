@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { useAccount, useDisconnect, useNetwork, useSwitchNetwork } from 'wagmi';
 import { createCtx } from '../utils/createContext';
@@ -20,7 +20,7 @@ interface IAuthContext {
 export const [useAuth, AuthContextProvider] = createCtx<IAuthContext>();
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const { isConnected, connector } = useAccount();
+  const { isConnected, connector, status } = useAccount();
   const { disconnectAsync } = useDisconnect();
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -30,16 +30,40 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const { status: nextAuthStatus, data } = useSession();
 
-  const logout = useMutation<void, unknown, boolean>(() => disconnectAsync(), {
+  const [reconnecting, setReconnecting] = useState(false);
+
+  const logout = useMutation(() => disconnectAsync(), {
     onSuccess: async () => {
       queryClient.removeQueries();
       signOut();
     },
   });
 
+  // useEffect to match connecting state between wallet/wagmi and next-auth
+  useEffect(() => {
+    if (
+      (status === 'reconnecting' || status === 'connecting') &&
+      (nextAuthStatus === 'loading' || nextAuthStatus === 'authenticated') &&
+      reconnecting === false
+    ) {
+      setReconnecting(true);
+    }
+    if (
+      reconnecting &&
+      status === 'disconnected' &&
+      nextAuthStatus === 'authenticated'
+    ) {
+      setReconnecting(false);
+      logout.mutate();
+    }
+    if (status === 'connected' && nextAuthStatus === 'authenticated') {
+      setReconnecting(false);
+    }
+  }, [status, reconnecting, nextAuthStatus, logout]);
+
   useEffect(() => {
     function onDisconnect() {
-      logout.mutate(true);
+      logout.mutate();
     }
     function onChange({ account }: { account?: string }) {
       if (
@@ -92,7 +116,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     <AuthContextProvider
       value={{
         loggedIn: nextAuthStatus === 'authenticated' && isConnected,
-        signOut: async (redirect = true) => logout.mutate(redirect),
+        signOut: async () => logout.mutate(),
         user: data?.user,
       }}
     >
