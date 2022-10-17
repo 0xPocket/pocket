@@ -8,11 +8,6 @@ function SEO({}: SEOProps) {
 
   const title = intl.formatMessage({ id: 'head.title' });
   const description = intl.formatMessage({ id: 'head.description' });
-  const alt = intl.formatMessage({ id: 'head.alt' });
-  const img_url =
-    intl.locale === 'fr'
-      ? 'https://pocket-eu.s3.eu-west-3.amazonaws.com/PocketOGImage.png'
-      : 'https://pocket-eu.s3.eu-west-3.amazonaws.com/PocketOGImage_en.png';
 
   return (
     <NextSeo
@@ -20,19 +15,20 @@ function SEO({}: SEOProps) {
       description={description}
       twitter={{
         handle: '@0xPocket',
-        site: 'https://gopocket.fr',
+        site: 'https://gopocket.co',
         cardType: 'summary_large_image',
+
       }}
       openGraph={{
-        url: 'https://gopocket.fr',
-        title: title,
-        description: description,
+        url: 'https://gopocket.co',
+        title: 'Web3 pocket money | Pocket',
+        description: "No need to be an expert to hand cryptocurrency to your teenagers. Buy and give pocket money to your children with one click.",
         images: [
           {
-            url: img_url,
+            url: 'https://pocket-eu.s3.eu-west-3.amazonaws.com/PocketOGImage_en.png',
             width: 800,
             height: 600,
-            alt: alt,
+            alt: 'Pocket',
             type: 'image/jpeg',
           },
         ],
