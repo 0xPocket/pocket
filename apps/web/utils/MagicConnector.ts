@@ -54,7 +54,6 @@ export class MagicConnector extends Connector {
         provider.on('disconnect', this.onDisconnect);
       }
 
-      console.log('testt');
       // Check if there is a user logged in
       const isAuthenticated = await this.isAuthorized();
 

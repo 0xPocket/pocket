@@ -7,6 +7,7 @@ import { faClipboard } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from '../common/Tooltip';
 import useTransak from '../../hooks/useTransak';
 import { useSession } from 'next-auth/react';
+import { Spinner } from '../common/Spinner';
 
 type MainTabPanelProps = {};
 
@@ -21,9 +22,7 @@ function MainTabPanel({}: MainTabPanelProps) {
     enabled: !!erc20.data,
     watch: true,
   });
-  const { data: maticBalance } = useBalance({
-    addressOrName: address,
-  });
+
   const { data: userData, status } = useSession();
 
   return (
@@ -49,27 +48,16 @@ function MainTabPanel({}: MainTabPanelProps) {
           <FormattedMessage id="wallet.funds" />
         </span>
         {isLoading ? (
-          <h2>
-            <FormattedMessage id="loading" />
-            ...
-          </h2>
+          <Spinner />
         ) : (
           <div className="flex items-end gap-2">
-            <h2>{data?.formatted}</h2>
+            <h2 className="number">{Number(data?.formatted).toFixed(2)}</h2>
             <span className="text-3xl font-bold">$</span>
             <Tooltip placement="top">
               <FormattedMessage id="tooltip.wallet.erc20" />
             </Tooltip>
           </div>
         )}
-        <div className="flex items-end text-xs text-gray">
-          <p>
-            {maticBalance?.formatted.slice(0, 6)} {maticBalance?.symbol}
-          </p>
-          <Tooltip placement="top" className="ml-2">
-            <FormattedMessage id="tooltip.wallet.matic" />
-          </Tooltip>
-        </div>
       </div>
       {status === 'authenticated' &&
         userData &&

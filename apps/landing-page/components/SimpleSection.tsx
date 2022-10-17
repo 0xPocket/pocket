@@ -8,7 +8,7 @@ const SimpleSection: React.FC = () => {
     <section className="relative mx-auto grid max-w-7xl grid-cols-2 gap-16">
       <div className="relative col-span-2 aspect-[1/0.58] w-full lg:col-span-1 ">
         <Image
-          src="https://pocket-eu.s3.eu-west-3.amazonaws.com/mockup_macbookpro.png"
+          src="https://pocket-eu.s3.eu-west-3.amazonaws.com/pocket_mockup.png"
           objectFit="contain"
           layout="fill"
           alt="pocket website"

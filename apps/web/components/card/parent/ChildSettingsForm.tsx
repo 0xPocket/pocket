@@ -88,11 +88,11 @@ function ChildSettingsForm({
                   <FormattedMessage id="periodicity" />
                 </label>
               </td>
-              <td className="flex flex-grow justify-end">
+              <td className="flex  w-full justify-end">
                 <RadioGroup
                   value={selected}
                   onChange={setSelected}
-                  className="flex items-center space-x-8"
+                  className="flex items-center justify-end  space-x-8"
                 >
                   {periodicity_options.map((option) => (
                     <RadioGroup.Option
@@ -118,7 +118,7 @@ function ChildSettingsForm({
               </td>
               <td className="flex justify-end text-4xl">
                 <input
-                  className="input-number"
+                  className="input-number max-w-[250px]"
                   placeholder="0"
                   type="number"
                   min="0"

@@ -32,48 +32,15 @@
 
   "simple.section.title": "Rejoignez Pocket",
   "simple.section.subtitle": "Soyez le premier.",
-  "simple.section.content": "Pocket sera disponible très rapidement. Faites partie des premiers inscrits et profitez d'avantages exclusifs.",
+  "simple.section.content": "Pocket est désormais disponible. Commencez dès maintenant et devenez un parent du Web3 en quelques clics !",
 
   "calltoaction.action": "S'inscrire",
   "calltoaction.error": "Vous devez rentrer un email valide",
   "calltoaction.email": "Adresse email",
-
-  "carrousel.avis1.content": "\" Avant je prêtais ma carte bleue à mon fils pour qu'il achète des crypto-monnaies. Au moins avec Pocket, je vois ce qu'il fait avec. C'est un service que je recommande à tous les parents qui veulent un tant soit peu surveiller leurs enfants ! \"",
-  "carrousel.avis1.author": "Rémi, papa d'Antoine (14 ans)",
-
-  "carrousel.avis2.content": "\" J'avais très peur de ce domaine, mais mon fils n'arrête pas de me demander de lui acheter des NFTs d'un youtubeur (j'ai oublié le nom) alors on a décidé avec mon mari de lui créer un compte Pocket ! \"",
-  "carrousel.avis2.author": "Christine, maman de Jonathan (16 ans)",
-
-  "carrousel.avis3.content": "\" Ça faisait pas mal de temps que ma fille me demandait d'acheter des cryptomonnaies et je n'étais vraiment pas rassuré par l'idée. Quand elle m'a parlé du service de Pocket, j'ai pensé que ce serait un bon moyen de faire ça en toute sécurité. \"",
-  "carrousel.avis3.author": "Jean-Christophe, papa de Lou (16 ans)",
-
+	
   "backedby.title": "Nos partenaires",
 
   "footer.copyright": "© 2022 Pocket.",
-  "footer.contact": "Contact : hello@gopocket.fr",
+  "footer.contact": "Contact : hello@gopocket.fr"
 
-  "intro.title": "Bonjour 👋",
-  "intro.subtitle": "Nous aimerions en savoir un peu plus sur vous.",
-  "intro.thirdtitle": "5 questions pas plus, c'est promis !",
-  "intro.letsgo": "C'est parti !",
-
-  "question.email": "Une adresse email pour vous tenir informé ?",
-  "question.email.error": "Vous devez rentrer un email valide",
-
-  "question.cryptoKnowledge": "Possédez-vous des crypto-monnaies ou des NFTs ?",
-  "question.childKnowledge": "En avez-vous déjà discuté avec vos enfants ?",
-  "question.childPlayToEarn": "Vos enfants vous ont-ils parlé de play-to-earn ?",
-  "question.gavePocketMoney": "Donnez-vous de l'argent de poche à vos enfants ?",
-  "question.contact.title": "Acceptez-vous d'être contacté par email pour essayer notre solution en avant première ?",
-
-  "question.next": "Suivant",
-
-  "choices.yes": "Oui",
-  "choices.no": "Non",
-  "choices.nochild": "Je n'ai pas d'enfants",
-  "choices.bankaccount": "Oui, via un compte bancaire",
-  "choices.cash": "Oui, en espèces",
-
-  "conclusion.title": "Merci de votre intérêt ❤️",
-  "conclusion.team": "Pocket est en cours de développement, à très bientôt 🚀"
 }

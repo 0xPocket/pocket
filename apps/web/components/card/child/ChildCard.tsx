@@ -72,10 +72,12 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
       <>
         <FormattedMessage id="withdraw" />
         {' ' +
-          ethers.utils.formatUnits(
-            claimableAmount.toString(),
-            erc20.data?.decimals,
-          ) +
+          Number(
+            ethers.utils.formatUnits(
+              claimableAmount.toString(),
+              erc20.data?.decimals,
+            ),
+          ).toFixed(2) +
           '$'}
       </>
     );
