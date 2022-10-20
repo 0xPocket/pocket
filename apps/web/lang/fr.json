@@ -37,6 +37,7 @@
   "optional": "(optionnel)",
   "piggybank": "Tirelire",
   "account.settings": "Paramètres du compte",
+	"account.settings.tooltip": "Paramètres de retrait d'argent de poche. Vous pourrez les changer à tout moment.",
   "account": "Compte",
   "parent": "Parent",
   "child": "Enfant",
@@ -54,6 +55,9 @@
   "card.parent.status.invited": "Un email de configuration a été envoyé à {email}",
   "card.parent.status.active": "Ce compte est actif",
   "card.parent.piggyBank.addFunds": "Ajouter des fonds",
+	"card.parent.settings.periodicity": "Fréquence des retraits",
+	"card.parent.settings.ceiling": "Montant des retraits",
+
 
   "dashboard.child.claim.fail": "Le retrait a échoué.",
   "dashboard.child.claim.pending": "Retrait en cours, encore quelques secondes et ce sera bon",
@@ -101,8 +105,10 @@
 
   "wallet.my-wallet": "Mon wallet",
   "wallet.funds": "Fonds disponibles",
-  "wallet.top-up": "Ajouter des fonds",
+  "wallet.top-up": "Recharger mon compte",
   "wallet.clipboard": "Adresse copiée dans le presse-papier !",
+  "wallet.clipboardtooltip": "Cliquez pour copier l'adresse",
+	"wallet.myaccount" :	"Mon compte",
 
   "header.open-options": "Ouvrir les options",
 

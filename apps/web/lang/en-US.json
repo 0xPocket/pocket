@@ -37,6 +37,8 @@
   "optional": "(optional)",
   "piggybank": "PiggyBank",
   "account.settings": "Account settings",
+	"account.settings.tooltip": "Pocket money withdraw settings. You will be able to change this at any moment.",
+
   "account": "Account",
   "parent": "Parent",
   "child": "Child",
@@ -54,6 +56,10 @@
   "card.parent.status.invited": "A set-up email has been sent to {email}",
   "card.parent.status.active": "This account is up and running",
   "card.parent.piggyBank.addFunds": "Add funds",
+	"card.parent.settings.periodicity": "Withdraw frequency",
+	"card.parent.settings.ceiling": "Withdraw amount",
+
+
 
   "dashboard.child.claim.fail": "Claim failed.",
   "dashboard.child.claim.pending": "Claim pending, please hang on !",
@@ -103,6 +109,8 @@
   "wallet.funds": "Available funds",
   "wallet.top-up": "Top-Up",
   "wallet.clipboard": "Address copied to clipboard !",
+  "wallet.clipboardtooltip": "Click to copy your address",
+	"wallet.myaccount" : "My account",
 
   "header.open-options": "Open options",
 
