@@ -7,6 +7,7 @@ import useTransak from '../../hooks/useTransak';
 import { useSession } from 'next-auth/react';
 import { Spinner } from '../common/Spinner';
 import { faCopy } from '@fortawesome/free-regular-svg-icons';
+import TokenInfo from './TokenInfo';
 
 type MainTabPanelProps = {};
 
@@ -60,6 +61,7 @@ function MainTabPanel({}: MainTabPanelProps) {
           </div>
         )}
       </div>
+      <TokenInfo />
       {status === 'authenticated' &&
         userData &&
         userData.user.type === 'Parent' && (
