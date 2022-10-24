@@ -5,6 +5,7 @@ import { getERC20Balance } from '../utils/ERC20';
 import setup, { User } from '../utils/testSetup';
 import { addFundsPermit, addStdChildAndSend } from '../utils/addChild';
 import { time } from '@nomicfoundation/hardhat-network-helpers';
+import { BigNumber } from 'ethers';
 
 describe('Testing to claim funds as child', function () {
   let parent1: User, child1: User;
@@ -66,9 +67,8 @@ describe('Testing to claim funds as child', function () {
     );
   });
 
-  it('Should claim 5 times the ceiling', async function () {
+  it('Should claim the ceiling after 3 weeks', async function () {
     const ceiling = (await pocketFaucet.childToConfig(child1.address)).ceiling;
-    const diffExpected = ceiling.mul(5);
     await addFundsPermit(
       child1.address,
       '1000',
@@ -78,42 +78,59 @@ describe('Testing to claim funds as child', function () {
       await time.latest()
     );
     const balanceBefore = await getERC20Balance(tokenAddr, child1.address);
-    await time.increase(5 * constants.TIME.WEEK);
+    await time.increase(3 * constants.TIME.WEEK);
     const tx = await child1.pocketFaucet.claim();
     await tx.wait();
     const balanceAfter = await getERC20Balance(tokenAddr, child1.address);
     const diff = balanceAfter.sub(balanceBefore);
     assert(
-      diff.eq(diffExpected),
+      diff.eq(ceiling),
       'The amount of token did not increase properly after claim'
     );
   });
 
-  it('Should claim exactly balance', async function () {
-    let tx = await parent1.pocketFaucet.withdrawFundsFromChild(
-      0,
-      child1.address
-    );
-    await tx.wait();
-    const balanceBefore = await getERC20Balance(tokenAddr, child1.address);
+  it('Should not be able to claim multiple time after multiple periodisity', async function () {
     await addFundsPermit(
       child1.address,
-      '30',
+      '1000',
       tokenAddr,
       constants.CHOSEN_WHALE,
       parent1,
       await time.latest()
     );
-    const diffExpected = (await pocketFaucet.childToConfig(child1.address))
-      .balance;
-    await time.increase(5 * constants.TIME.WEEK);
-    tx = await child1.pocketFaucet.claim();
+    await time.increase(3 * constants.TIME.WEEK);
+    const tx = await child1.pocketFaucet.claim();
     await tx.wait();
-    const balanceAfter = await getERC20Balance(tokenAddr, child1.address);
-    const diff = balanceAfter.sub(balanceBefore);
+    await expect(child1.pocketFaucet.claim()).to.be.revertedWith(
+      '!claim: nothing to claim'
+    );
+    // assert(await (await pocketFaucet.childToConfig(child1.address)).lastClaim.eq(), 'pas bon');
+  });
+
+  it('Should update lastClain correctly', async function () {
+    await addFundsPermit(
+      child1.address,
+      '1000',
+      tokenAddr,
+      constants.CHOSEN_WHALE,
+      parent1,
+      await time.latest()
+    );
+
+    const lastClaim = (await pocketFaucet.childToConfig(child1.address))
+      .lastClaim;
+    const periodicity = (await pocketFaucet.childToConfig(child1.address))
+      .periodicity;
+
+    await time.increase(3 * constants.TIME.WEEK);
+
+    const tx = await child1.pocketFaucet.claim();
+    await tx.wait();
     assert(
-      diff.eq(diffExpected),
-      'The amount of token did not increase properly after claim'
+      (await pocketFaucet.childToConfig(child1.address)).lastClaim.eq(
+        lastClaim.add(periodicity.mul(3))
+      ),
+      'LastClaim not updated correctly'
     );
   });
 

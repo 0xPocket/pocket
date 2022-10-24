@@ -59,9 +59,9 @@ export const FAMILY_ACCOUNT = {
 
 export const WHALES = {
   'eth-rinkeby': '0xe2e0256d6785d49ec7badcd1d44adbd3f6b0ab58',
-  'polygon-mainnet': '0xf977814e90da44bfa03b6295a0616a897441acec',
+  'polygon-mainnet': '0xe7804c37c13166fF0b37F5aE0BB07A3aEbb6e245',
   'polygon-mumbai': '0xe41c53eb9fce0ac9d204d4f361e28a8f28559d54',
-  localhost: '0xf977814e90da44bfa03b6295a0616a897441acec',
+  localhost: '0xe7804c37c13166fF0b37F5aE0BB07A3aEbb6e245',
 };
 
 export const ERROR_MSG = {
