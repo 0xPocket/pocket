@@ -28,8 +28,8 @@ const config: HardhatUserConfig = {
     xavier: 14,
     lola: 15,
     whale: {
-      default: '0xf977814e90da44bfa03b6295a0616a897441acec',
-      polygon: '0xf977814e90da44bfa03b6295a0616a897441acec',
+      default: '0xe7804c37c13166fF0b37F5aE0BB07A3aEbb6e245',
+      polygon: '0xe7804c37c13166fF0b37F5aE0BB07A3aEbb6e245',
       mumbai: '0xe41c53eb9fce0ac9d204d4f361e28a8f28559d54',
     },
   },
