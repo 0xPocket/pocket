@@ -3,6 +3,8 @@
   "head.description": "Pas besoin de tout comprendre aux cryptomonnaies pour en donner à ses ados. Achetez et distribuez de l'argent de poche à vos enfants en un clic.",
   "head.alt": "Pocket, L'argent de poche du web3",
 
+	"header.signin": "Se connecter",
+
   "hero.title.top": "L'argent de poche du web3.",
   "hero.title.bottom": "Simple. Sécurisé.",
   "hero.subtitle.top": "Pas besoin de tout comprendre aux cryptomonnaies pour en donner à ses ados.",
@@ -34,7 +36,7 @@
   "simple.section.subtitle": "Soyez le premier.",
   "simple.section.content": "Pocket est désormais disponible. Commencez dès maintenant et devenez un parent du Web3 en quelques clics !",
 
-  "calltoaction.action": "S'inscrire",
+  "calltoaction.action": "Lancer Pocket",
   "calltoaction.error": "Vous devez rentrer un email valide",
   "calltoaction.email": "Adresse email",
 
