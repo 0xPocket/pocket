@@ -5,14 +5,22 @@ type FooterProps = {};
 
 function Footer({}: FooterProps) {
   return (
-    <footer className="text-gray">
-      <div className="mx-auto max-w-7xl overflow-hidden py-12 px-4 sm:px-6 lg:px-8">
-        <p className="mt-8 text-center text-base">
+    <footer className="flex w-screen justify-around rounded-lg bg-dark-lightest text-white dark:bg-dark-light dark:text-gray">
+      <div className="mx-auto mt-0 inline-block max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
+        <a
+          className="inline-block  text-center text-base"
+          href="https://blog.gopocket.co"
+        >
+          <FormattedMessage id="footer.blog" />
+        </a>
+      </div>
+      <div className="mx-auto inline-block max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
+        <span className="block text-left text-base">
           <FormattedMessage id="footer.copyright" />
-        </p>
-        <p className="text-center text-base">
+        </span>
+        <span className="text-center text-base ">
           <FormattedMessage id="footer.contact" />
-        </p>
+        </span>
       </div>
     </footer>
   );
