@@ -12,7 +12,9 @@ function Footer({}: FooterProps) {
         </span>
       </div>
       <div className="mx-auto mt-0 inline-block max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
-        <p className="pb-3 text-base text-white">Ressources</p>
+        <p className="pb-3 text-base text-white">
+          <FormattedMessage id="footer.ressources" />
+        </p>
         <a
           className="text block text-base text-gray-light"
           href="https://blog.gopocket.co"
@@ -27,7 +29,9 @@ function Footer({}: FooterProps) {
         </a>
       </div>
       <div className="mx-auto mt-0 inline-block max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
-        <p className="pb-3 text-base text-white">About</p>
+        <p className="pb-3 text-base text-white">
+          <FormattedMessage id="footer.about" />
+        </p>
         <a
           className="block text-base text-gray-light"
           href="https://blog.gopocket.co/posts/FAQ"
