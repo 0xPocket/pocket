@@ -43,6 +43,7 @@
   "backedby.title": "Nos partenaires",
 
   "footer.copyright": "© 2022 Pocket.",
-  "footer.contact": "Contact : hello@gopocket.fr",
-  "footer.blog": "Blog"
+  "footer.contact": "Contact",
+  "footer.blog": "Blog",
+  "footer.faq": "FAQ"
 }

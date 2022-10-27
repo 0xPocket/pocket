@@ -5,22 +5,35 @@ type FooterProps = {};
 
 function Footer({}: FooterProps) {
   return (
-    <footer className="flex w-screen justify-around rounded-lg bg-dark-lightest text-white dark:bg-dark-light dark:text-gray">
+    <footer className="flex w-full justify-around bg-dark-lightest dark:bg-dark-light ">
+      <div className="m-auto max-w-7xl py-12 px-4 text-gray-light sm:px-6 lg:px-8">
+        <span className="text-base">
+          <FormattedMessage id="footer.copyright" />
+        </span>
+      </div>
       <div className="mx-auto mt-0 inline-block max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
+        <p className="pb-3 text-base text-white">Ressources</p>
         <a
-          className="inline-block  text-center text-base"
+          className="text block text-base text-gray-light"
           href="https://blog.gopocket.co"
         >
           <FormattedMessage id="footer.blog" />
         </a>
-      </div>
-      <div className="mx-auto inline-block max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
-        <span className="block text-left text-base">
-          <FormattedMessage id="footer.copyright" />
-        </span>
-        <span className="text-center text-base ">
+        <a
+          className="inline text-left text-base text-gray-light"
+          href="mailto:hello@gopocket.fr"
+        >
           <FormattedMessage id="footer.contact" />
-        </span>
+        </a>
+      </div>
+      <div className="mx-auto mt-0 inline-block max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
+        <p className="pb-3 text-base text-white">About</p>
+        <a
+          className="block text-base text-gray-light"
+          href="https://blog.gopocket.co/posts/FAQ"
+        >
+          <FormattedMessage id="footer.faq" />
+        </a>
       </div>
     </footer>
   );
