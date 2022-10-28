@@ -14,6 +14,8 @@ import { PocketFaucetAbi } from 'pocket-contract/abi';
 export function useAddFundsForm(
   child: UserChild | null,
   addChild: boolean,
+  ceiling: string,
+  periodicity: string,
   returnFn: () => void,
 ) {
   const { erc20 } = useSmartContract();

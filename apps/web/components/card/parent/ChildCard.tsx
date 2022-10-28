@@ -25,6 +25,8 @@ function ChildCard({
   className,
 }: ChildCardProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [ceiling, setCeiling] = useState('0');
+  const [periodicity, setPeriodicity] = useState('0');
 
   const { pocketContract, erc20 } = useSmartContract();
 
@@ -42,6 +44,8 @@ function ChildCard({
   const { approveAndAddChild, isLoading: isLoadingAddFunds } = useAddFundsForm(
     child,
     !!config?.lastClaim.isZero(),
+    ceiling,
+    periodicity,
     () => {
       refetchConfig();
       setSelectedIndex(0);
@@ -123,6 +127,9 @@ function ChildCard({
                 addFunds={approveAndAddChild}
                 isLoading={isLoadingAddFunds}
                 config={config}
+                periodicity={periodicity}
+                setCeiling={setCeiling}
+                setPeriodicity={setPeriodicity}
                 returnFn={() => {
                   setSelectedIndex(0);
                 }}

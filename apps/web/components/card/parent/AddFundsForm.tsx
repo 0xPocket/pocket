@@ -8,18 +8,22 @@ import { useAccount } from 'wagmi';
 import type { BigNumber } from 'ethers';
 import { z } from 'zod';
 import { useZodForm } from '../../../utils/useZodForm';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import FormattedMessage from '../../common/FormattedMessage';
 import { useIntl } from 'react-intl';
 import { Spinner } from '../../common/Spinner';
 import { Config } from 'abitype';
 import AddChildForm from '../../dashboard/parent/AddChildForm';
+import SetChildConfigForm from './SetChildConfigForm';
 
 type AddFundsFormProps = {
   child: UserChild;
   addFunds: (amount: BigNumber) => Promise<void>;
   isLoading: boolean;
   config: Config;
+  periodicity: string;
+  setCeiling: Dispatch<SetStateAction<string>>;
+  setPeriodicity: Dispatch<SetStateAction<string>>;
   returnFn: () => void;
 };
 
@@ -29,12 +33,13 @@ function AddFundsForm({
   returnFn,
   isLoading,
   config,
+  periodicity,
+  setCeiling,
+  setPeriodicity,
 }: AddFundsFormProps) {
   const { erc20 } = useSmartContract();
   const { address } = useAccount();
   const intl = useIntl();
-  const [ceiling, setCeiling] = useState('0');
-  const [periodicity, setPeriodicity] = useState('0');
 
   const { data: balance } = useContractRead({
     contract: erc20.contract,
@@ -88,7 +93,12 @@ function AddFundsForm({
 
   // config.periodicity = 0;
   if (config.periodicity !== '0' && periodicity == '0') {
-    return <AddChildForm />;
+    return (
+      <SetChildConfigForm
+        setCeiling={setCeiling}
+        setPeriodicity={setPeriodicity}
+      />
+    );
   }
 
   return (
