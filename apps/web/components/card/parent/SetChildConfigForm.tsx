@@ -62,7 +62,7 @@ function SetChildConfigForm({
       className="flex flex-col gap-4 rounded-lg"
     >
       <div className="flex flex-grow flex-col justify-evenly gap-4">
-        <p className="text mb-3 text-center text-sm italic">
+        <p className="text mb-3 text-center  italic">
           <FormattedMessage id="first_set_child_settings" />
         </p>
         <table>
