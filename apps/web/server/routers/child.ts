@@ -1,6 +1,14 @@
+import { sendEmailWrapper } from '@pocket/emails';
 import { TRPCError } from '@trpc/server';
+import { env } from 'config/env/server';
+import { z } from 'zod';
 import { createProtectedRouter } from '../createRouter';
 import { prisma } from '../prisma';
+import {
+  generateVerificationToken,
+  hashToken,
+  saveVerificationToken,
+} from '../services/jwt';
 
 export const childRouter = createProtectedRouter()
   .middleware(({ ctx, next }) => {
@@ -23,6 +31,58 @@ export const childRouter = createProtectedRouter()
         },
       },
     });
+  })
+  .mutation('inviteParent', {
+    input: z.object({
+      email: z.string().email(),
+    }),
+    resolve: async ({ input, ctx }) => {
+      const existingParent = await prisma.user.findFirst({
+        where: {
+          email: {
+            equals: input.email,
+            mode: 'insensitive',
+          },
+        },
+      });
+
+      // send an email to link the parent to the child
+      if (existingParent) {
+        const token = generateVerificationToken();
+        const ONE_DAY_IN_SECONDS = 86400;
+        const expires = new Date(Date.now() + ONE_DAY_IN_SECONDS * 1000);
+
+        await saveVerificationToken({
+          identifier: JSON.stringify({
+            childId: ctx.session.user.id,
+            parentId: existingParent.id,
+          }),
+          token: hashToken(token),
+          expires: expires,
+        });
+
+        const params = new URLSearchParams({
+          token,
+          childId: ctx.session.user.id,
+          parentId: existingParent.id,
+        });
+
+        await sendEmailWrapper({
+          to: existingParent.email,
+          template: 'link_invitation',
+          subject: 'Your child wants to be part of your account !',
+          props: {
+            name: existingParent.name,
+            link: `${env.APP_URL}/link-account?${params}`,
+            from: 'Child',
+            fromName: ctx.session.user.name,
+          },
+        });
+
+        return 'SENT';
+      }
+      return 'test';
+    },
   })
   .query('getParent', {
     resolve: async ({ ctx }) => {

@@ -68,11 +68,11 @@ model Child {
 
   activities Activity[]
 
-  parent       Parent @relation(fields: [parentUserId], references: [userId])
-  parentUserId String
+  parent       Parent? @relation(fields: [parentUserId], references: [userId])
+  parentUserId String?
 
-  initialPeriodicity String
-  initialCeiling     Int
+  initialPeriodicity String?
+  initialCeiling     Int?
 }
 
 // User Parent Ramp

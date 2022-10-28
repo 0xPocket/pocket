@@ -14,6 +14,7 @@ import { relayerRouter } from './relayer';
 import { registerRouter } from './register';
 import { connectRouter } from './connect';
 import { betaRouter } from './beta';
+import { linkAccountRouter } from './link-account';
 
 /**
  * Create your application's root router
@@ -36,6 +37,7 @@ export const appRouter = createRouter()
   .merge('beta.', betaRouter)
   .merge('connect.', connectRouter)
   .merge('register.', registerRouter)
+  .merge('linkAccount.', linkAccountRouter)
   .merge('parent.', parentRouter)
   .merge('child.', childRouter)
   .merge('token.', tokenRouter)

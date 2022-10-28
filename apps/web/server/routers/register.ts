@@ -153,28 +153,28 @@ export const registerRouter = createRouter()
         });
       }
 
-      if (env.NEXT_PUBLIC_PRIVATE_BETA) {
-        const token = await prisma.privateBetaToken.findUnique({
-          where: { token: input.token },
-        });
+      // if (env.NEXT_PUBLIC_PRIVATE_BETA) {
+      //   const token = await prisma.privateBetaToken.findUnique({
+      //     where: { token: input.token },
+      //   });
 
-        if (!token || token.used) {
-          throw new TRPCError({
-            code: 'BAD_REQUEST',
-            message: 'Invalid token',
-          });
-        }
+      //   if (!token || token.used) {
+      //     throw new TRPCError({
+      //       code: 'BAD_REQUEST',
+      //       message: 'Invalid token',
+      //     });
+      //   }
 
-        await prisma.privateBetaToken.update({
-          data: {
-            used: true,
-            identifier: input.email,
-          },
-          where: {
-            token: input.token,
-          },
-        });
-      }
+      //   await prisma.privateBetaToken.update({
+      //     data: {
+      //       used: true,
+      //       identifier: input.email,
+      //     },
+      //     where: {
+      //       token: input.token,
+      //     },
+      //   });
+      // }
 
       const ip = requestIp.getClientIp(ctx.req as any);
 
@@ -199,22 +199,25 @@ export const registerRouter = createRouter()
           },
         });
       } else {
-        // newUser = await prisma.user.create({
-        //   data: {
-        //     address: siwe.address,
-        //     type: input.type,
-        //     accountType: 'Ethereum',
-        //     child: {
-        //       create: {},
-        //     },
-        //   },
-        // });
-        throw new Error('Not implemented');
+        newUser = await prisma.user.create({
+          data: {
+            name: input.name,
+            email: input.email,
+            address: siwe.address,
+            type: input.type,
+            ipAddress: ip,
+            accountType: 'Ethereum',
+            child: {
+              create: {},
+            },
+          },
+        });
       }
 
       ctx.log.info('new register with ethereum', {
         email: newUser.email,
         address: newUser.address,
+        type: newUser.type,
       });
 
       const token = generateVerificationToken();
