@@ -197,7 +197,7 @@ const Register: FC = () => {
                     className={({ checked }) =>
                       checked
                         ? 'input-radio-checked big'
-                        : 'input-radio-unchecked big cursor-not-allowed opacity-30'
+                        : 'input-radio-unchecked big'
                     }
                     onClick={() => {
                       setValue('userType', 'Child');
@@ -206,7 +206,6 @@ const Register: FC = () => {
                         query: { ...router.query, step: 1 },
                       });
                     }}
-                    disabled
                   >
                     <FormattedMessage id="child" />
                   </RadioGroup.Option>

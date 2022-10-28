@@ -107,7 +107,7 @@ export const parentRouter = createProtectedRouter()
         throw new TRPCError({ code: 'UNAUTHORIZED' });
       }
 
-      const [user, pendingChild] = await prisma.$transaction([
+      const [existingChild, pendingChild] = await prisma.$transaction([
         prisma.user.findFirst({
           where: {
             email: {
@@ -126,7 +126,43 @@ export const parentRouter = createProtectedRouter()
         }),
       ]);
 
-      if (user || pendingChild) {
+      // if the child already exists, we just need to link them to the parent
+      if (existingChild) {
+        const token = generateVerificationToken();
+        const ONE_DAY_IN_SECONDS = 86400;
+        const expires = new Date(Date.now() + ONE_DAY_IN_SECONDS * 1000);
+
+        await saveVerificationToken({
+          identifier: JSON.stringify({
+            childId: existingChild.id,
+            parentId: ctx.session.user.id,
+          }),
+          token: hashToken(token),
+          expires: expires,
+        });
+
+        const params = new URLSearchParams({
+          token,
+          childId: existingChild.id,
+          parentId: ctx.session.user.id,
+        });
+
+        await sendEmailWrapper({
+          to: existingChild.email,
+          template: 'link_invitation',
+          subject: 'Your parent wants you to be part of his account !',
+          props: {
+            name: existingChild.name,
+            link: `${env.APP_URL}/link-account?${params}`,
+            from: 'Parent',
+            fromName: ctx.session.user.name,
+          },
+        });
+
+        return 'SENT';
+      }
+
+      if (pendingChild) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'A user with that email already exists',

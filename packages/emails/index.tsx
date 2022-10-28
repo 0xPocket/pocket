@@ -4,6 +4,7 @@ dotenv.config({ path: "../../.env" });
 
 import { buildSendMail, ComponentMail } from "mailing-core";
 import nodemailer from "nodemailer";
+import LinkAccount from "./emails/LinkAccount";
 import VerifyEmail from "./emails/VerifyEmail";
 
 const transport = nodemailer.createTransport({
@@ -22,7 +23,14 @@ const sendMail = buildSendMail({
   configPath: "./mailing.config.json",
 });
 
-const TEMPLATES = {
+type TemplateObjects = {
+  [key: string]: {
+    component: (props: any) => any;
+    subject?: string;
+  };
+};
+
+const TEMPLATES: TemplateObjects = {
   email_verification: {
     component: (props: Omit<InferProps<typeof VerifyEmail>, "body">) => (
       <VerifyEmail
@@ -47,6 +55,11 @@ const TEMPLATES = {
       />
     ),
     subject: "You've been invited to join Pocket !",
+  },
+  link_invitation: {
+    component: (props: InferProps<typeof LinkAccount>) => (
+      <LinkAccount ctaText="Link account" {...props} />
+    ),
   },
 };
 
@@ -93,10 +106,12 @@ export function sendEmailWrapper<Key extends EmailTemplateKeys>(
   const { props, template, ...rest } = config;
   const templateFn = TEMPLATES[template];
 
+  const subject = templateFn.subject ? templateFn.subject : config.subject;
+
   return sendMailWithHeader({
     ...rest,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    subject: templateFn.subject,
+    subject,
     component: templateFn.component(props as any),
   });
 }
