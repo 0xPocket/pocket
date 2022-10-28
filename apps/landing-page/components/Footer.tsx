@@ -5,13 +5,8 @@ type FooterProps = {};
 
 function Footer({}: FooterProps) {
   return (
-    <footer className="flex w-full justify-around bg-dark-lightest dark:bg-dark-light ">
-      <div className="m-auto max-w-7xl py-12 px-4 text-gray-light sm:px-6 lg:px-8">
-        <span className="text-base">
-          <FormattedMessage id="footer.copyright" />
-        </span>
-      </div>
-      <div className="mx-auto mt-0 inline-block max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
+    <footer className="flex w-full flex-col justify-around bg-dark-lightest px-8 dark:bg-dark-light sm:flex-row  sm:px-0 ">
+      <div className=" py-12">
         <p className="pb-3 text-base text-white">
           <FormattedMessage id="footer.ressources" />
         </p>
@@ -28,7 +23,7 @@ function Footer({}: FooterProps) {
           <FormattedMessage id="footer.contact" />
         </a>
       </div>
-      <div className="mx-auto mt-0 inline-block max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
+      <div className="sm:py-12">
         <p className="pb-3 text-base text-white">
           <FormattedMessage id="footer.about" />
         </p>
@@ -38,6 +33,11 @@ function Footer({}: FooterProps) {
         >
           <FormattedMessage id="footer.faq" />
         </a>
+      </div>
+      <div className="flex items-center py-12 text-white">
+        <span className="text-base">
+          <FormattedMessage id="footer.copyright" />
+        </span>
       </div>
     </footer>
   );
