@@ -3,8 +3,8 @@
   "head.description": "No need to be an expert to hand cryptocurrency to your teenagers. Buy and give pocket money to your children with one click.",
   "head.alt": "Pocket, Web3 pocket money",
 
-	"header.signin": "Sign in",
-	
+  "header.signin": "Sign in",
+
   "hero.title.top": "Web3 pocket money.",
   "hero.title.bottom": "Simple. Secured.",
   "hero.subtitle.top": "No need to be an expert to hand cryptocurrency to your teenagers.",
@@ -43,5 +43,9 @@
   "backedby.title": "Our partners",
 
   "footer.copyright": "© 2022 Pocket.",
-  "footer.contact": "Contact : hello@gopocket.fr"
+  "footer.contact": "Contact",
+  "footer.blog": "Blog",
+  "footer.faq": "FAQ",
+  "footer.ressources": "Ressources",
+  "footer.about": "About"
 }

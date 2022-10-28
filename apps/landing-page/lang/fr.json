@@ -3,7 +3,7 @@
   "head.description": "Pas besoin de tout comprendre aux cryptomonnaies pour en donner à ses ados. Achetez et distribuez de l'argent de poche à vos enfants en un clic.",
   "head.alt": "Pocket, L'argent de poche du web3",
 
-	"header.signin": "Se connecter",
+  "header.signin": "Se connecter",
 
   "hero.title.top": "L'argent de poche du web3.",
   "hero.title.bottom": "Simple. Sécurisé.",
@@ -43,5 +43,9 @@
   "backedby.title": "Nos partenaires",
 
   "footer.copyright": "© 2022 Pocket.",
-  "footer.contact": "Contact : hello@gopocket.fr"
+  "footer.contact": "Contact",
+  "footer.blog": "Blog",
+  "footer.faq": "FAQ",
+  "footer.ressources": "Ressources",
+  "footer.about": "A propos"
 }
