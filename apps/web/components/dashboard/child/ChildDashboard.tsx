@@ -23,11 +23,7 @@ const ChildDashboard: React.FC = () => {
   }
 
   if (!data) {
-    return (
-      <div className="flex h-[50vh] items-center justify-center">
-        <InviteParentForm />
-      </div>
-    );
+    return <InviteParentForm />;
   }
 
   return (
