@@ -12,16 +12,16 @@ import InviteParentForm from './InviteParentForm';
 const ChildDashboard: React.FC = () => {
   const { address } = useAccount();
 
-  let { data } = trpc.useQuery(['child.getParent']);
+  const { data, isLoading } = trpc.useQuery(['child.getParent']);
 
-  if (!address) {
+  if (!address || isLoading) {
     return (
       <div className="flex h-[50vh] items-center justify-center">
         <Spinner />
       </div>
     );
   }
-  data = null; // TODO DEL
+
   if (!data) {
     return (
       <div className="flex h-[50vh] items-center justify-center">

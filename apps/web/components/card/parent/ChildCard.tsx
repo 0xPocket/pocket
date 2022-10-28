@@ -42,8 +42,8 @@ function ChildCard({
   });
 
   const { approveAndAddChild, isLoading: isLoadingAddFunds } = useAddFundsForm(
-    child,
-    !!config?.lastClaim.isZero(),
+    child.address,
+    !!config?.periodicity.isZero(),
     ceiling,
     periodicity,
     () => {
@@ -53,7 +53,7 @@ function ChildCard({
   );
 
   const { changeConfig, isLoading: isLoadingChildSetting } =
-    useChildSettingsForm(child.address, !!config?.lastClaim.isZero(), () => {
+    useChildSettingsForm(child.address, !!config?.periodicity.isZero(), () => {
       refetchConfig();
       setSelectedIndex(0);
     });
@@ -65,22 +65,6 @@ function ChildCard({
     contractInterface: pocketContract.interface,
     args: [config?.balance, child.address],
   });
-
-  const initialConfig = useMemo(() => {
-    return {
-      periodicity:
-        config && !config.periodicity.isZero()
-          ? config.periodicity
-          : BigNumber.from(child.child?.initialPeriodicity),
-      ceiling:
-        config && !config.ceiling.isZero()
-          ? config.ceiling
-          : parseUnits(
-              child.child!.initialCeiling!.toString(),
-              erc20.data?.decimals,
-            ),
-    };
-  }, [config, erc20, child]);
 
   if (!config) {
     return null;
@@ -140,7 +124,6 @@ function ChildCard({
             <div className="flex h-full flex-col items-end justify-between">
               <ChildSettingsForm
                 changeConfig={changeConfig}
-                initialConfig={initialConfig}
                 config={config}
                 withdrawFundsFromChild={withdrawFundsFromChild}
                 isLoading={isLoadingChildSetting}

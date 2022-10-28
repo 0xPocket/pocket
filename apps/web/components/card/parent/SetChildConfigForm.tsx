@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { useZodForm } from '../../../utils/useZodForm';
 import { trpc } from '../../../utils/trpc';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCoins } from '@fortawesome/free-solid-svg-icons';
+import { faAngleLeft, faCoins } from '@fortawesome/free-solid-svg-icons';
 import FormattedMessage from '../../common/FormattedMessage';
 import { RadioGroup } from '@headlessui/react';
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
@@ -14,6 +14,7 @@ import { formatUnits } from 'ethers/lib/utils';
 type SetChildConfigFormProps = {
   setCeiling: Dispatch<SetStateAction<string>>;
   setPeriodicity: Dispatch<SetStateAction<string>>;
+  returnFn: () => void;
 };
 
 const ChildSettingsSchema = z.object({
@@ -25,6 +26,7 @@ type FormValues = z.infer<typeof ChildSettingsSchema>;
 function SetChildConfigForm({
   setCeiling,
   setPeriodicity,
+  returnFn,
 }: SetChildConfigFormProps) {
   const intl = useIntl();
 
@@ -39,8 +41,7 @@ function SetChildConfigForm({
   const { register, handleSubmit, setValue } = useZodForm({
     schema: ChildSettingsSchema,
     defaultValues: {
-      periodicity: formatUnits(0).toString(),
-      ceiling: Number(0),
+      periodicity: '0',
     },
   });
 
@@ -61,10 +62,10 @@ function SetChildConfigForm({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="container-classic flex flex-col gap-4 rounded-lg p-8"
+      className="flex flex-col gap-4 rounded-lg"
     >
       <div className="flex flex-grow flex-col justify-evenly gap-4">
-        <h2 className="mt-4">
+        <h2>
           <FontAwesomeIcon icon={faCoins} className="mr-4" />
           <FormattedMessage id="account.settings" />
         </h2>
@@ -119,9 +120,19 @@ function SetChildConfigForm({
             </tr>
           </tbody>
         </table>
-        <button className="action-btn">
-          <FormattedMessage id="submit" />
-        </button>
+        <div className="flex space-x-4">
+          <button
+            type="button"
+            className="third-btn"
+            onClick={() => returnFn()}
+          >
+            <FontAwesomeIcon icon={faAngleLeft} className="mr-2" />
+            <FormattedMessage id="return" />
+          </button>
+          <button className="action-btn">
+            <FormattedMessage id="submit" />
+          </button>
+        </div>
       </div>
     </form>
   );

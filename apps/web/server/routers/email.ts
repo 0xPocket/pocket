@@ -101,8 +101,6 @@ export const emailRouter = createRouter()
               type: 'Child',
               child: {
                 create: {
-                  initialCeiling: childConfig.initialCeiling,
-                  initialPeriodicity: childConfig.initialPeriodicity,
                   parentUserId: childConfig.parentUserId,
                 },
               },

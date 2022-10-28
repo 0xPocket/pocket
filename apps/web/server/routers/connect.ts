@@ -27,7 +27,7 @@ export const connectRouter = createRouter().mutation('connect', {
     if (user.type !== 'Parent') {
       throw new TRPCError({
         code: 'BAD_REQUEST',
-        message: 'User not found.',
+        message: 'You must connect with your wallet.',
       });
     }
 

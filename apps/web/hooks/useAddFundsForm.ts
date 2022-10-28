@@ -5,14 +5,13 @@ import { toast } from 'react-toastify';
 import { useAccount } from 'wagmi';
 import { useSmartContract } from '../contexts/contract';
 import { useIntl } from 'react-intl';
-import { UserChild } from '@lib/types/interfaces';
 import { parseUnits } from 'ethers/lib/utils';
 import { useSendMetaTx } from './useSendMetaTx';
 import { usePermitTx } from './usePermitTx';
 import { PocketFaucetAbi } from 'pocket-contract/abi';
 
 export function useAddFundsForm(
-  child: UserChild | null,
+  childAddress: string,
   addChild: boolean,
   ceiling: string,
   periodicity: string,
@@ -51,20 +50,15 @@ export function useAddFundsForm(
       try {
         const res = await signPermit(address!, amount.toString());
 
-        if (res && child?.child?.initialCeiling) {
+        if (res && childAddress) {
           const { signature, deadline } = res;
 
           if (addChild) {
             await write([
-              child.address as `0x${string}`,
+              childAddress as `0x${string}`,
               {
-                ceiling: parseUnits(
-                  child.child.initialCeiling.toString(),
-                  erc20.data?.decimals,
-                ).toBigInt(),
-                periodicity: BigNumber.from(
-                  child.child.initialPeriodicity,
-                ).toBigInt(),
+                ceiling: parseUnits(ceiling, erc20.data?.decimals).toBigInt(),
+                periodicity: BigNumber.from(periodicity).toBigInt(),
                 tokenIndex: BigInt(0),
               },
               amount.toBigInt(),
@@ -75,7 +69,7 @@ export function useAddFundsForm(
             ]);
           } else {
             await write([
-              child.address as `0x${string}`,
+              childAddress as `0x${string}`,
               amount.toBigInt(),
               BigInt(deadline),
               signature.v,
@@ -87,13 +81,14 @@ export function useAddFundsForm(
       } catch (e) {}
     },
     [
-      child?.address,
+      childAddress,
+      ceiling,
+      periodicity,
       address,
       signPermit,
       addChild,
-      child?.child,
-      erc20.data?.decimals,
       write,
+      erc20,
     ],
   );
 

@@ -97,6 +97,7 @@ function AddFundsForm({
       <SetChildConfigForm
         setCeiling={setCeiling}
         setPeriodicity={setPeriodicity}
+        returnFn={returnFn}
       />
     );
   }

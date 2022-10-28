@@ -53,13 +53,11 @@ model Parent {
 }
 
 model PendingChild {
-  id                 Int    @id @default(autoincrement())
-  name               String
-  email              String @unique
-  initialPeriodicity String
-  initialCeiling     Int
-  parent             Parent @relation(fields: [parentUserId], references: [userId])
-  parentUserId       String
+  id           Int    @id @default(autoincrement())
+  name         String
+  email        String @unique
+  parent       Parent @relation(fields: [parentUserId], references: [userId])
+  parentUserId String
 }
 
 model Child {
@@ -70,9 +68,6 @@ model Child {
 
   parent       Parent? @relation(fields: [parentUserId], references: [userId])
   parentUserId String?
-
-  initialPeriodicity String?
-  initialCeiling     Int?
 }
 
 // User Parent Ramp

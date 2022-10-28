@@ -173,8 +173,6 @@ export const parentRouter = createProtectedRouter()
         data: {
           name: input.name,
           email: input.email,
-          initialCeiling: input.ceiling,
-          initialPeriodicity: input.periodicity,
           parentUserId: parent.id,
         },
       });
