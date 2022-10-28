@@ -109,6 +109,9 @@
   "child-form.info": "Your child infos",
   "child-form.created": "Account created !",
 
+  "parent-form.info": "Before all, you need your parent to create an account!",
+  "parent-form.sent": "Invitation sent !",
+
   "funds-form.amount-required": "Amount is required",
   "funds-form.minimum": "Minimum amount is 1",
   "funds-form.insufficient": "Insufficient funds",
@@ -169,15 +172,15 @@
   "legal.privacy": "Privacy policy",
   "legal.terms": "Terms and conditions",
   "legal.terms.confirm": "By signing up, you confirm you have read and agree to Pocket's {privacy} and {terms}.",
-	 
-	"titles.add-account": "Add an account",
-	"titles.connect": "Connect",
-	"titles.dashboard": "Dashboard",
-	"titles.onboard": "Onboard",
-	"titles.email-verification": "Email verification",
-	"titles.privacy-policy": "Privacy policy",
-	"titles.terms-conditions": "Terms and conditions",
 
-	"testnet.disclaimer" : "This is a testnet version running on polygon-mumbai. Do not send any real funds to any addresses displayed on the website, funds can be lost. We provide tokens for you to try our product on registration.",
-	"protect.smallscreen": "Pocket is not optimized for small screens yet !"
+  "titles.add-account": "Add an account",
+  "titles.connect": "Connect",
+  "titles.dashboard": "Dashboard",
+  "titles.onboard": "Onboard",
+  "titles.email-verification": "Email verification",
+  "titles.privacy-policy": "Privacy policy",
+  "titles.terms-conditions": "Terms and conditions",
+
+  "testnet.disclaimer": "This is a testnet version running on polygon-mumbai. Do not send any real funds to any addresses displayed on the website, funds can be lost. We provide tokens for you to try our product on registration.",
+  "protect.smallscreen": "Pocket is not optimized for small screens yet !"
 }

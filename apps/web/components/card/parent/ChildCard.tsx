@@ -122,6 +122,7 @@ function ChildCard({
                 child={child}
                 addFunds={approveAndAddChild}
                 isLoading={isLoadingAddFunds}
+                config={config}
                 returnFn={() => {
                   setSelectedIndex(0);
                 }}

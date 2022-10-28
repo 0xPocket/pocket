@@ -18,7 +18,7 @@ const ChildDashboard = dynamic(
 
 export default function Web() {
   const { data, status } = useSession();
-
+  console.log(data?.user);
   return (
     <PageWrapper>
       <TitleHelper id="titles.dashboard" />

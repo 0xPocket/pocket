@@ -8,15 +8,18 @@ import { useAccount } from 'wagmi';
 import type { BigNumber } from 'ethers';
 import { z } from 'zod';
 import { useZodForm } from '../../../utils/useZodForm';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import FormattedMessage from '../../common/FormattedMessage';
 import { useIntl } from 'react-intl';
 import { Spinner } from '../../common/Spinner';
+import { Config } from 'abitype';
+import AddChildForm from '../../dashboard/parent/AddChildForm';
 
 type AddFundsFormProps = {
   child: UserChild;
   addFunds: (amount: BigNumber) => Promise<void>;
   isLoading: boolean;
+  config: Config;
   returnFn: () => void;
 };
 
@@ -25,10 +28,13 @@ function AddFundsForm({
   addFunds,
   returnFn,
   isLoading,
+  config,
 }: AddFundsFormProps) {
   const { erc20 } = useSmartContract();
   const { address } = useAccount();
   const intl = useIntl();
+  const [ceiling, setCeiling] = useState('0');
+  const [periodicity, setPeriodicity] = useState('0');
 
   const { data: balance } = useContractRead({
     contract: erc20.contract,
@@ -79,6 +85,11 @@ function AddFundsForm({
   useEffect(() => {
     setFocus('topup');
   }, [setFocus]);
+
+  // config.periodicity = 0;
+  if (config.periodicity !== '0' && periodicity == '0') {
+    return <AddChildForm />;
+  }
 
   return (
     <form
