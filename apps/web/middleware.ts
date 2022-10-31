@@ -18,14 +18,21 @@ const handler = (req: NextRequestWithAuth) => {
 };
 
 export const config = {
-  matcher: ['/', '/connect', '/register', '/add-account', '/account/:path*'],
+  matcher: [
+    '/',
+    '/connect',
+    '/link-account',
+    '/register',
+    '/add-account',
+    '/account/:path*',
+  ],
 };
 
 const withRolesHandler = withRoles(handler, {
-  paths: ['/', '/add-account', '/account/:path*'],
+  paths: ['/', '/add-account', '/link-account', '/account/:path*'],
   roles: {
-    Parent: ['/', '/add-account', '/account/:path*'],
-    Child: ['/'],
+    Parent: ['/', '/add-account', '/link-account', '/account/:path*'],
+    Child: ['/', '/link-account'],
   },
 });
 

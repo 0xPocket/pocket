@@ -56,7 +56,7 @@ async function handleMiddleware(
   options: NextAuthMiddlewareOptions | undefined,
   onSuccess?: (token: JWT) => ReturnType<NextMiddleware>,
 ) {
-  const { pathname, origin } = req.nextUrl;
+  const { pathname, search, origin } = req.nextUrl;
 
   const signInPage = options?.pages?.signIn ?? '/api/auth/signin';
   const errorPage = options?.pages?.error ?? '/api/auth/error';
@@ -108,6 +108,7 @@ async function handleMiddleware(
 
   // the user is not logged in, redirect to the sign-in page
   const signInUrl = new URL(signInPage, origin);
+  signInUrl.searchParams.append('callbackUrl', `${pathname}${search}`);
   return NextResponse.redirect(signInUrl);
 }
 
