@@ -47,5 +47,7 @@
   "footer.blog": "Blog",
   "footer.faq": "FAQ",
   "footer.ressources": "Ressources",
-  "footer.about": "About"
+  "footer.about": "About",
+
+  "not_found": "Page not found"
 }
