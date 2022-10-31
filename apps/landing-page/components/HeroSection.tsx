@@ -35,7 +35,11 @@ function HeroSection({}: HeroSectionProps) {
             </h3>
           </div>
 
-          <CallToAction />
+          <CallToAction
+            icon="🚀"
+            url={'https://app.gopocket.co/register'}
+            msg={<FormattedMessage id={'register'} />}
+          />
         </div>
         <div className="relative -z-10 col-span-10 hidden w-full items-center justify-center xl:col-span-6 xl:flex">
           <Image
