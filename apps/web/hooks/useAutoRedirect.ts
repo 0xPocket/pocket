@@ -14,10 +14,11 @@ export function useAutoRedirect({
 }: UseAutoRedirectProps) {
   const router = useRouter();
   const [redirect, setRedirect] = useState(false);
-  const [timer, setTimer] = useState<number>(initialTimer);
+  const [timer, setTimer] = useState<number | undefined>(undefined);
 
   const trigger = () => {
     setRedirect(true);
+    setTimer(initialTimer);
   };
 
   useEffect(() => {
@@ -25,7 +26,7 @@ export function useAutoRedirect({
       const timeout = setTimeout(() => {
         if (timer === INTERVAL) {
           setRedirect(false);
-          setTimer(initialTimer);
+          setTimer(undefined);
           router.push(callbackUrl);
         } else {
           setTimer((prev) => prev && prev - INTERVAL);
@@ -38,6 +39,6 @@ export function useAutoRedirect({
 
   return {
     trigger,
-    timer: timer / 1000,
+    timer: timer ? timer / 1000 : undefined,
   };
 }
