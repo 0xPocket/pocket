@@ -37,6 +37,7 @@
   "optional": "(optionnel)",
   "piggybank": "Tirelire",
   "account.settings": "Paramètres du compte",
+  "account.settings.tooltip": "Paramètres de retrait d'argent de poche. Vous pourrez les changer à tout moment.",
   "account": "Compte",
   "parent": "Parent",
   "child": "Enfant",
@@ -54,6 +55,8 @@
   "card.parent.status.invited": "Un email de configuration a été envoyé à {email}",
   "card.parent.status.active": "Ce compte est actif",
   "card.parent.piggyBank.addFunds": "Ajouter des fonds",
+  "card.parent.settings.periodicity": "Fréquence des retraits",
+  "card.parent.settings.ceiling": "Montant des retraits",
 
   "dashboard.child.claim.fail": "Le retrait a échoué.",
   "dashboard.child.claim.pending": "Retrait en cours, encore quelques secondes et ce sera bon",
@@ -101,8 +104,13 @@
 
   "wallet.my-wallet": "Mon wallet",
   "wallet.funds": "Fonds disponibles",
-  "wallet.top-up": "Ajouter des fonds",
+  "wallet.top-up": "Recharger mon compte",
   "wallet.clipboard": "Adresse copiée dans le presse-papier !",
+  "wallet.clipboardtooltip": "Cliquez pour copier l'adresse",
+  "wallet.myaccount": "Mon compte",
+  "wallet.token-clipboard": "Cliquez pour copier l'adresse de l'USDC",
+  "wallet.polygonscan": "Voir l'USDC sur polygonscan",
+  "wallet.add-token": "Ajouter l'USDC sur Metamask",
 
   "header.open-options": "Ouvrir les options",
 
@@ -170,14 +178,14 @@
   "legal.terms": "Conditions d'utilisation",
   "legal.terms.confirm": "Vous confirmez avoir lu et accepté les {terms} et la {privacy} de Pocket.",
 
-	"titles.add-account": "Ajouter un compte",
-	"titles.connect": "Connection",
-	"titles.dashboard": "Dashboard",
-	"titles.onboard": "Enregistrement",
-	"titles.email-verification": "Verification d'email",
-	"titles.privacy-policy": "Politique de confidentialité",
-	"titles.terms-conditions": "Conditions générales d'utilisation",
+  "titles.add-account": "Ajouter un compte",
+  "titles.connect": "Connection",
+  "titles.dashboard": "Dashboard",
+  "titles.onboard": "Enregistrement",
+  "titles.email-verification": "Verification d'email",
+  "titles.privacy-policy": "Politique de confidentialité",
+  "titles.terms-conditions": "Conditions générales d'utilisation",
 
-	"testnet.disclaimer" : "Ce site est une version testnet fonctionnant sur polygon-mumbai. N'envoyez pas de fonds réels aux adresses affichées sur le site, les fonds peuvent être perdus. Nous fournissons des jetons pour que vous puissiez essayer notre produit lors de votre inscription.",
-	"protect.smallscreen": "Pocket n'est pas encore disponible pour les petits écrans !"
+  "testnet.disclaimer": "Ce site est une version testnet fonctionnant sur polygon-mumbai. N'envoyez pas de fonds réels aux adresses affichées sur le site, les fonds peuvent être perdus. Nous fournissons des jetons pour que vous puissiez essayer notre produit lors de votre inscription.",
+  "protect.smallscreen": "Pocket n'est pas encore disponible pour les petits écrans !"
 }

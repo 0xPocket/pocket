@@ -11,6 +11,7 @@ import FormattedMessage from '../../common/FormattedMessage';
 import { RadioGroup } from '@headlessui/react';
 import { useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
+import Tooltip from '../../common/Tooltip';
 
 type FormValues = z.infer<typeof ParentSchema['createChild']>;
 
@@ -73,16 +74,22 @@ function AddChildForm() {
           label={intl.formatMessage({ id: 'email' })}
           register={register('email')}
         />
-        <h2 className="mt-4">
-          <FontAwesomeIcon icon={faCoins} className="mr-4" />
+        <h2 className="mt-4 flex gap-4">
+          <FontAwesomeIcon icon={faCoins} />
           <FormattedMessage id="account.settings" />
+          <Tooltip className="text-base">
+            <FormattedMessage id="account.settings.tooltip" />
+          </Tooltip>
         </h2>
         <table>
           <tbody className="flex flex-col space-y-4">
             <tr className="flex items-center space-x-8">
               <td>
-                <label>
+                <label className="flex items-center gap-2">
                   <FormattedMessage id="periodicity" />
+                  <Tooltip>
+                    <FormattedMessage id="card.parent.settings.periodicity" />
+                  </Tooltip>
                 </label>
               </td>
               <td className="flex flex-grow justify-end">
@@ -109,8 +116,11 @@ function AddChildForm() {
             </tr>
             <tr className="flex items-center justify-between">
               <td>
-                <label htmlFor="topup">
+                <label htmlFor="topup" className="flex items-center gap-2">
                   <FormattedMessage id="ceiling" />
+                  <Tooltip>
+                    <FormattedMessage id="card.parent.settings.ceiling" />
+                  </Tooltip>
                 </label>
               </td>
               <td className="flex justify-end text-4xl">
