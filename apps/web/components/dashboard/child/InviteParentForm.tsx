@@ -14,11 +14,9 @@ import { useIntl } from 'react-intl';
 type FormValues = z.infer<typeof ChildSchema['inviteParent']>;
 
 function InviteParentForm() {
-  const router = useRouter();
-  const queryClient = trpc.useContext();
   const intl = useIntl();
 
-  const { register, handleSubmit, setValue } = useZodForm({
+  const { register, handleSubmit } = useZodForm({
     schema: ChildSchema['inviteParent'],
   });
 
@@ -40,21 +38,24 @@ function InviteParentForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="container-classic flex flex-col gap-4 rounded-lg p-8"
+      className="container-classic m-auto flex w-2/5 flex-col gap-2 rounded-lg p-8"
     >
-      <h2 className="">
+      <h3 className="text mb-2 ">
         <FontAwesomeIcon icon={faUserPlus} className="mr-4" />
+        <FormattedMessage id="invite-parent" />
+      </h3>
+      <p className="text mb-4 italic">
         <FormattedMessage id="parent-form.info" />
-      </h2>
-      <div className="flex flex-grow flex-col justify-evenly gap-4">
+      </p>
+      <div className="mb-1 flex flex-grow flex-col justify-evenly gap-4">
         <InputText
           label={intl.formatMessage({ id: 'email' })}
           register={register('email')}
         />
-        <button disabled={inviteParent.isLoading} className="action-btn">
-          <FormattedMessage id="submit" />
-        </button>
       </div>
+      <button disabled={inviteParent.isLoading} className="action-btn">
+        <FormattedMessage id="send" />
+      </button>
     </form>
   );
 }

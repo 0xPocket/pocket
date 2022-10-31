@@ -109,13 +109,18 @@
   "child-form.info": "Informations de votre enfant",
   "child-form.created": "Le compte a été crée !",
 
-  "parent-form.info": "Avant toute chose il faut qu'un de tes parents crée un compte !",
+  "parent-form.info": "Avant toute chose, il faut qu'un de tes parents se crée un compte",
+  "invite-parent": "Invite ton parent",
   "parent-form.sent": "Invitation envoyée !",
 
   "funds-form.amount-required": "Le montant est requis",
   "funds-form.minimum": "Montant minimum de 1 requis",
   "funds-form.insufficient": "Fonds insuffisants",
   "funds-form.add-funds-to": "Ajouter des fonds à {name}",
+
+  "periodicity.explanation": "A quelle fréquence votre ado pourra retirer?",
+  "ceiling.explanation": "Combien peut-iel retirer?",
+  "first_set_child_settings": "Premièrement, il faut définir les paramètres de son compte",
 
   "dashboard.common.activity.header.topups": "Vos topups",
   "dashboard.common.activity.header.claims": "Vos retraits",

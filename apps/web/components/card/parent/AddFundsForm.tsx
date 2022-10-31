@@ -3,7 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { UserChild } from '@lib/types/interfaces';
 import { formatUnits, parseUnits } from 'ethers/lib/utils';
 import { useSmartContract } from '../../../contexts/contract';
-import useContractRead from '../../../hooks/useContractRead';
+import useContractRead, {
+  ContractMethodReturn,
+} from '../../../hooks/useContractRead';
 import { useAccount } from 'wagmi';
 import type { BigNumber } from 'ethers';
 import { z } from 'zod';
@@ -12,15 +14,14 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import FormattedMessage from '../../common/FormattedMessage';
 import { useIntl } from 'react-intl';
 import { Spinner } from '../../common/Spinner';
-import { Config } from 'abitype';
-import AddChildForm from '../../dashboard/parent/AddChildForm';
 import SetChildConfigForm from './SetChildConfigForm';
+import { PocketFaucet } from 'pocket-contract/typechain-types';
 
 type AddFundsFormProps = {
   child: UserChild;
   addFunds: (amount: BigNumber) => Promise<void>;
   isLoading: boolean;
-  config: Config;
+  config: ContractMethodReturn<PocketFaucet, 'childToConfig'>;
   periodicity: string;
   setCeiling: Dispatch<SetStateAction<string>>;
   setPeriodicity: Dispatch<SetStateAction<string>>;
@@ -91,8 +92,7 @@ function AddFundsForm({
     setFocus('topup');
   }, [setFocus]);
 
-  // config.periodicity = 0;
-  if (config.periodicity !== '0' && periodicity == '0') {
+  if (config.periodicity.isZero() && periodicity == '0') {
     return (
       <SetChildConfigForm
         setCeiling={setCeiling}

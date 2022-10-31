@@ -111,11 +111,16 @@
 
   "parent-form.info": "Before all, you need your parent to create an account!",
   "parent-form.sent": "Invitation sent !",
+  "invite-parent": "Invite your parent",
 
   "funds-form.amount-required": "Amount is required",
   "funds-form.minimum": "Minimum amount is 1",
   "funds-form.insufficient": "Insufficient funds",
   "funds-form.add-funds-to": "Add funds to {name} account",
+
+  "periodicity.explanation": "How often will you child be able to withdraw money ?",
+  "ceiling.explanation": "How much can he/she withdraw?",
+  "first_set_child_settings": "First you must set up your child account settings",
 
   "dashboard.common.activity.header.topups": "Your topups",
   "dashboard.common.activity.header.claims": "Your claims",

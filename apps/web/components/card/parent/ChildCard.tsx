@@ -1,6 +1,6 @@
 import type { UserChild } from '@lib/types/interfaces';
 import { Tab } from '@headlessui/react';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useContractWrite } from 'wagmi';
 import { useSmartContract } from '../../../contexts/contract';
 import { useAddFundsForm } from '../../../hooks/useAddFundsForm';
@@ -8,8 +8,6 @@ import { useChildSettingsForm } from '../../../hooks/useChildSettingsForm';
 import FormattedMessage from '../../common/FormattedMessage';
 import AddFundsForm from './AddFundsForm';
 import ChildSettingsForm from './ChildSettingsForm';
-import { parseUnits } from 'ethers/lib/utils';
-import { BigNumber } from 'ethers';
 import MainPanel from './MainPanel';
 import useContractRead from '../../../hooks/useContractRead';
 
