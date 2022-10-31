@@ -38,7 +38,8 @@ export function useAutoRedirect({
   }, [redirect, timer, router, callbackUrl, initialTimer]);
 
   return {
+    active: !!timer,
     trigger,
-    timer: timer ? timer / 1000 : undefined,
+    timer: timer ? timer / 1000 : 0,
   };
 }

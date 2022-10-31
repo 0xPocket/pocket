@@ -134,6 +134,12 @@ const RegisterInvite: FC = () => {
         didToken: didToken,
         email: data.email,
         name: data.name,
+        invite: router.query.token
+          ? {
+              token: router.query.token as string,
+              childId: router.query.childId as string,
+            }
+          : undefined,
       });
     }
   };
