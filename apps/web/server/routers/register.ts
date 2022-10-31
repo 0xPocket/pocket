@@ -119,6 +119,15 @@ export const registerRouter = createRouter()
           },
         });
 
+        const child = await prisma.user.findUnique({
+          where: { id: validInvite.childId },
+        });
+
+        ctx.log.info('child linked', {
+          parentEmail: newUser.email,
+          childEmail: child?.email,
+        });
+
         return {
           verifyEmail: false,
         };
@@ -250,12 +259,29 @@ export const registerRouter = createRouter()
               parentUserId: newUser.id,
             },
           });
+          const child = await prisma.user.findUnique({
+            where: { id: validInvite.childId },
+          });
+
+          ctx.log.info('child linked', {
+            parentEmail: newUser.email,
+            childEmail: child?.email,
+          });
         } else {
           await prisma.child.update({
             where: { userId: newUser.id },
             data: {
               parentUserId: validInvite.parentId,
             },
+          });
+
+          const parent = await prisma.user.findUnique({
+            where: { id: validInvite.parentId },
+          });
+
+          ctx.log.info('child linked', {
+            parentEmail: parent?.email,
+            childEmail: newUser.email,
           });
 
           const childConfig = await prisma.pendingChild.findFirst({

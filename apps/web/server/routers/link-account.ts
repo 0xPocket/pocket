@@ -10,13 +10,18 @@ export const linkAccountRouter = createProtectedRouter().mutation('link', {
     parentId: z.string(),
     childId: z.string(),
   }),
-  resolve: async ({ input }) => {
+  resolve: async ({ input, ctx }) => {
+    const parentId =
+      ctx.session.user.type === 'Parent' ? ctx.session.user.id : input.parentId;
+    const childId =
+      ctx.session.user.type === 'Child' ? ctx.session.user.id : input.childId;
+
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const invite = await useVerificationToken({
       token: hashToken(input.token),
       identifier: JSON.stringify({
-        childId: input.childId,
-        parentId: input.parentId,
+        childId,
+        parentId,
       }),
     });
 
@@ -31,12 +36,12 @@ export const linkAccountRouter = createProtectedRouter().mutation('link', {
 
     await prisma.child.update({
       where: {
-        userId: input.childId,
+        userId: childId,
       },
       data: {
         parent: {
           connect: {
-            userId: input.parentId,
+            userId: parentId,
           },
         },
       },

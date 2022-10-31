@@ -98,16 +98,6 @@ export const parentRouter = createProtectedRouter()
   .mutation('createChild', {
     input: ParentSchema.createChild,
     resolve: async ({ ctx, input }) => {
-      const parent = await prisma.user.findUnique({
-        where: {
-          id: ctx.session.user.id,
-        },
-      });
-
-      if (!parent) {
-        throw new TRPCError({ code: 'UNAUTHORIZED' });
-      }
-
       const [existingChild, pendingChild] = await prisma.$transaction([
         prisma.user.findFirst({
           where: {
@@ -115,6 +105,9 @@ export const parentRouter = createProtectedRouter()
               equals: input.email,
               mode: 'insensitive',
             },
+          },
+          include: {
+            child: true,
           },
         }),
         prisma.pendingChild.findFirst({
@@ -127,7 +120,25 @@ export const parentRouter = createProtectedRouter()
         }),
       ]);
 
-      // if the child already exists, we just need to link them to the parent
+      if (pendingChild) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'A user with that email already exists',
+        });
+      }
+
+      if (
+        existingChild &&
+        (existingChild.type === 'Parent' || existingChild?.child?.parentUserId)
+      ) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message:
+            "This child already have a parent associated or it's a parent account.",
+        });
+      }
+
+      // if the child already exists and doesn't have a parent already, we just need to link them to the parent
       if (existingChild) {
         const token = generateVerificationToken();
         const ONE_DAY_IN_SECONDS = 86400;
@@ -163,18 +174,11 @@ export const parentRouter = createProtectedRouter()
         return 'SENT';
       }
 
-      if (pendingChild) {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'A user with that email already exists',
-        });
-      }
-
       const childConfig = await prisma.pendingChild.create({
         data: {
           name: input.name,
           email: input.email,
-          parentUserId: parent.id,
+          parentUserId: ctx.session.user.id,
         },
       });
 
@@ -196,6 +200,7 @@ export const parentRouter = createProtectedRouter()
         token,
         parentId: ctx.session.user.id,
         email: input.email,
+        name: input.name,
         type: 'Child',
       });
 
