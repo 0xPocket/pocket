@@ -5,6 +5,7 @@ dotenv.config({ path: "../../.env" });
 import { buildSendMail, ComponentMail } from "mailing-core";
 import nodemailer from "nodemailer";
 import LinkAccount from "./emails/LinkAccount";
+import RegisterInvite from "./emails/RegisterInvite";
 import VerifyEmail from "./emails/VerifyEmail";
 
 const transport = nodemailer.createTransport({
@@ -23,14 +24,7 @@ const sendMail = buildSendMail({
   configPath: "./mailing.config.json",
 });
 
-type TemplateObjects = {
-  [key: string]: {
-    component: (props: any) => any;
-    subject?: string;
-  };
-};
-
-const TEMPLATES: TemplateObjects = {
+const TEMPLATES = {
   email_verification: {
     component: (props: Omit<InferProps<typeof VerifyEmail>, "body">) => (
       <VerifyEmail
@@ -41,25 +35,17 @@ const TEMPLATES: TemplateObjects = {
     ),
     subject: "Verify your Pocket email address",
   },
-  child_invitation: {
-    component: (props: Omit<InferProps<typeof VerifyEmail>, "body">) => (
-      <VerifyEmail
-        body={
-          <>
-            You've been invited to join Pocket !
-            <br /> Please click on the link below to complete your registration:
-          </>
-        }
-        ctaText="Complete registration"
-        {...props}
-      />
-    ),
-    subject: "You've been invited to join Pocket !",
-  },
   link_invitation: {
     component: (props: InferProps<typeof LinkAccount>) => (
       <LinkAccount ctaText="Link account" {...props} />
     ),
+    subject: "You've been invited to join Pocket !",
+  },
+  register_invitation: {
+    component: (props: InferProps<typeof RegisterInvite>) => (
+      <RegisterInvite ctaText="Register to Pocket" {...props} />
+    ),
+    subject: "You've been invited to join Pocket !",
   },
 };
 
@@ -106,7 +92,7 @@ export function sendEmailWrapper<Key extends EmailTemplateKeys>(
   const { props, template, ...rest } = config;
   const templateFn = TEMPLATES[template];
 
-  const subject = templateFn.subject ? templateFn.subject : config.subject;
+  const subject = config.subject ? config.subject : templateFn.subject;
 
   return sendMailWithHeader({
     ...rest,
