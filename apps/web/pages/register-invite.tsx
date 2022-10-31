@@ -1,6 +1,3 @@
-import { faEnvelopeCircleCheck } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { RadioGroup } from '@headlessui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FC, useEffect, useMemo, useState } from 'react';
@@ -27,7 +24,7 @@ const FormData = z.object({
   ageLimit: z.literal(true),
 });
 
-const Register: FC = () => {
+const RegisterInvite: FC = () => {
   const router = useRouter();
   const [step, setStep] = useState<number>(0);
 
@@ -48,7 +45,7 @@ const Register: FC = () => {
     onSuccess: () => {
       router.push({
         pathname: router.pathname,
-        query: { ...router.query, step: 3 },
+        query: { ...router.query, step: 2 },
       });
     },
   });
@@ -60,29 +57,43 @@ const Register: FC = () => {
     onSuccess: () => {
       router.push({
         pathname: router.pathname,
-        query: { ...router.query, step: 3 },
+        query: { ...router.query, step: 2 },
       });
     },
   });
 
-  const resendEmail = trpc.useMutation(['email.resendVerificationEmail']);
   const userType = watch('userType');
   const connectionType = watch('connectionType');
-  const emailAddress = watch('email');
 
   // Router effect
   useEffect(() => {
-    setStep(router.query.step ? parseInt(router.query.step as string) : 0);
-  }, [router]);
+    if (router.query.type) {
+      setValue('userType', router.query.type as 'Parent' | 'Child', {
+        shouldValidate: true,
+      });
+    }
+    if (router.query.name) {
+      setValue('name', router.query.name as string, { shouldValidate: true });
+    }
+    if (router.query.email) {
+      setValue('email', router.query.email as string, { shouldValidate: true });
+    }
+  }, [router.query.type, router.query.name, router.query.email, setValue]);
 
   useEffect(() => {
-    if (step > 0 && !userType) {
+    if (router.query.step) {
+      setStep(router.query.step ? parseInt(router.query.step as string) : 0);
+    }
+  }, [router.query.step, setValue]);
+
+  useEffect(() => {
+    if (step > 0 && !connectionType) {
       router.push({
         pathname: router.pathname,
         query: { ...router.query, step: 0 },
       });
     }
-  }, [step, router, userType]);
+  }, [step, router, connectionType]);
 
   const isLoading = useMemo(() => {
     return (
@@ -108,6 +119,13 @@ const Register: FC = () => {
         type: userType,
         email: data.email,
         name: data.name,
+        invite: router.query.token
+          ? {
+              token: router.query.token as string,
+              childId: router.query.childId as string,
+              parentId: router.query.parentId as string,
+            }
+          : undefined,
       });
     } else if (data.connectionType === 'Magic') {
       const didToken = await magicSignIn.mutateAsync(data.email);
@@ -129,58 +147,12 @@ const Register: FC = () => {
             <FormattedMessage id="register.title" />
           </h1>
 
-          <Stepper step={step} nbrSteps={4} />
+          <Stepper step={step} nbrSteps={3} />
           <div
             className=" mx-auto flex w-full flex-col justify-center gap-8 rounded-lg
 					text-center"
           >
-            {step === 0 && (
-              <>
-                <h3>
-                  <FormattedMessage id="register.step0.title" />
-                </h3>
-                <RadioGroup
-                  value={userType}
-                  className="flex items-center justify-center space-x-8"
-                >
-                  <RadioGroup.Option
-                    value="Parent"
-                    className={({ checked }) =>
-                      checked
-                        ? 'input-radio-checked big'
-                        : 'input-radio-unchecked big'
-                    }
-                    onClick={() => {
-                      setValue('userType', 'Parent');
-                      router.push({
-                        pathname: router.pathname,
-                        query: { ...router.query, step: 1 },
-                      });
-                    }}
-                  >
-                    <FormattedMessage id="parent" />
-                  </RadioGroup.Option>
-                  <RadioGroup.Option
-                    value="Child"
-                    className={({ checked }) =>
-                      checked
-                        ? 'input-radio-checked big'
-                        : 'input-radio-unchecked big'
-                    }
-                    onClick={() => {
-                      setValue('userType', 'Child');
-                      router.push({
-                        pathname: router.pathname,
-                        query: { ...router.query, step: 1 },
-                      });
-                    }}
-                  >
-                    <FormattedMessage id="child" />
-                  </RadioGroup.Option>
-                </RadioGroup>
-              </>
-            )}
-            {step === 1 && userType && (
+            {step === 0 && userType && (
               <RegisterProviderList
                 userType={userType}
                 callback={(id) => {
@@ -191,12 +163,12 @@ const Register: FC = () => {
                   }
                   router.push({
                     pathname: router.pathname,
-                    query: { ...router.query, step: 2 },
+                    query: { ...router.query, step: 1 },
                   });
                 }}
               />
             )}
-            {step === 2 && (
+            {step === 1 && (
               <form
                 className="flex w-full min-w-[350px] flex-col items-center justify-center gap-8 text-left"
                 onSubmit={handleSubmit(onSubmit)}
@@ -209,11 +181,13 @@ const Register: FC = () => {
                     label={formatMessage({ id: 'name' })}
                     register={register('name')}
                     autoComplete="name"
+                    disabled={!!router.query.name}
                   />
                   <InputText
                     label={formatMessage({ id: 'email' })}
                     register={register('email')}
                     autoComplete="email"
+                    disabled
                   />
                 </div>
                 <div className=" flex items-center">
@@ -241,34 +215,7 @@ const Register: FC = () => {
                 )}
               </form>
             )}
-            {step === 3 && connectionType === 'Ethereum' && (
-              <div className="flex flex-col items-center justify-center gap-8">
-                <FontAwesomeIcon icon={faEnvelopeCircleCheck} size="3x" />
-                <h3>
-                  <FormattedMessage
-                    id="register.step3.title"
-                    values={{ emailAddress }}
-                  />
-                </h3>
-                {/* <p>Follow the instructions to finish your registration</p> */}
-                <div className="flex gap-2 text-sm">
-                  <p>
-                    <FormattedMessage id="register.step3.email.notreceived" />
-                  </p>
-                  {resendEmail.status !== 'success' && (
-                    <a
-                      onClick={() => {
-                        if (resendEmail.status !== 'loading')
-                          resendEmail.mutateAsync({ email: emailAddress });
-                      }}
-                    >
-                      <FormattedMessage id="register.step3.email.sendnew" />
-                    </a>
-                  )}
-                </div>
-              </div>
-            )}
-            {step === 3 && connectionType === 'Magic' && (
+            {step === 2 && (
               <div className="flex flex-col items-center justify-center gap-8">
                 <h3>
                   <FormattedMessage id="register.step3.completed" />
@@ -287,4 +234,4 @@ const Register: FC = () => {
   );
 };
 
-export default Register;
+export default RegisterInvite;

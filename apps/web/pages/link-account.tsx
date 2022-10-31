@@ -3,12 +3,22 @@ import { type FC, useEffect } from 'react';
 import { Spinner } from '../components/common/Spinner';
 import TitleHelper from '../components/common/TitleHelper';
 import PageWrapper from '../components/common/wrappers/PageWrapper';
+import { useAutoRedirect } from '../hooks/useAutoRedirect';
 import { trpc } from '../utils/trpc';
 
 const LinkAccount: FC = () => {
   const router = useRouter();
 
-  const mutation = trpc.useMutation(['linkAccount.link']);
+  const { trigger, timer } = useAutoRedirect({
+    callbackUrl: '/',
+    initialTimer: 5000,
+  });
+
+  const mutation = trpc.useMutation(['linkAccount.link'], {
+    onSuccess: () => {
+      trigger();
+    },
+  });
 
   useEffect(() => {
     if (
@@ -38,7 +48,9 @@ const LinkAccount: FC = () => {
             <p>Error linking your account;</p>
           </>
         )}
-        {mutation.isSuccess && <>Your account has been linked!</>}
+        {mutation.isSuccess && (
+          <>Your account has been linked! Redirecting in {timer}</>
+        )}
       </div>
     </PageWrapper>
   );

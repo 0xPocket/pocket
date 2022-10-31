@@ -32,11 +32,48 @@ export const childRouter = createProtectedRouter()
       },
     });
   })
+  .query('getParent', {
+    resolve: async ({ ctx }) => {
+      return prisma.user.findFirst({
+        where: {
+          type: 'Parent',
+          parent: {
+            children: {
+              some: {
+                userId: ctx.session.user.id,
+              },
+            },
+          },
+        },
+        select: {
+          id: true,
+          name: true,
+          address: true,
+        },
+      });
+    },
+  })
   .mutation('inviteParent', {
     input: z.object({
       email: z.string().email(),
     }),
     resolve: async ({ input, ctx }) => {
+      const user = await prisma.user.findUnique({
+        where: {
+          id: ctx.session.user.id,
+        },
+        select: {
+          child: true,
+        },
+      });
+
+      if (user?.child?.parentUserId) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'You already have a parent.',
+        });
+      }
+
       const existingParent = await prisma.user.findFirst({
         where: {
           email: {
@@ -44,7 +81,17 @@ export const childRouter = createProtectedRouter()
             mode: 'insensitive',
           },
         },
+        include: {
+          child: true,
+        },
       });
+
+      if (existingParent?.child?.userId === ctx.session.user.id) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'This parent is already linked to your account',
+        });
+      }
 
       // send an email to link the parent to the child
       if (existingParent) {
@@ -81,27 +128,38 @@ export const childRouter = createProtectedRouter()
 
         return 'SENT';
       }
-      return 'test';
-    },
-  })
-  .query('getParent', {
-    resolve: async ({ ctx }) => {
-      return prisma.user.findFirst({
-        where: {
-          type: 'Parent',
-          parent: {
-            children: {
-              some: {
-                userId: ctx.session.user.id,
-              },
-            },
-          },
-        },
-        select: {
-          id: true,
-          name: true,
-          address: true,
+
+      // send an email to create a new parent account
+      const token = generateVerificationToken();
+      const ONE_DAY_IN_SECONDS = 86400;
+      const expires = new Date(Date.now() + ONE_DAY_IN_SECONDS * 1000);
+
+      await saveVerificationToken({
+        identifier: JSON.stringify({
+          childId: ctx.session.user.id,
+          email: input.email,
+        }),
+        token: hashToken(token),
+        expires: expires,
+      });
+
+      const params = new URLSearchParams({
+        token,
+        childId: ctx.session.user.id,
+        email: input.email,
+        type: 'Parent',
+      });
+
+      await sendEmailWrapper({
+        to: input.email,
+        template: 'register_invitation',
+        props: {
+          link: `${env.APP_URL}/register-invite?${params}`,
+          from: 'Child',
+          fromName: ctx.session.user.name,
         },
       });
+
+      return 'SENT';
     },
   });

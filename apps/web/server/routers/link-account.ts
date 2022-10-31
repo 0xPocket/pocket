@@ -20,7 +20,6 @@ export const linkAccountRouter = createProtectedRouter().mutation('link', {
       }),
     });
 
-    console.log(invite);
     const invalidInvite = !invite || invite.expires.valueOf() < Date.now();
 
     if (invalidInvite) {
