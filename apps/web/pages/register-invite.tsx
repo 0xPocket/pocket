@@ -15,6 +15,7 @@ import { useEthereumSiwe } from '../hooks/useEthereumSiwe';
 import { useMagicConnect } from '../hooks/useMagicConnect';
 import { trpc } from '../utils/trpc';
 import { useZodForm } from '../utils/useZodForm';
+import { useTimer } from '../hooks/useTimer';
 
 const FormData = z.object({
   userType: z.enum(['Parent', 'Child']),
@@ -37,6 +38,10 @@ const RegisterInvite: FC = () => {
 
   const magicSignIn = useMagicConnect();
   const ethereumSignMessage = useEthereumSiwe({});
+  const { trigger, timer } = useTimer({
+    callback: () => router.push('/connect'),
+    delay: 3000,
+  });
 
   const ethereumRegister = trpc.useMutation('register.ethereum', {
     onError: (error) => {
@@ -47,6 +52,7 @@ const RegisterInvite: FC = () => {
         pathname: router.pathname,
         query: { ...router.query, step: 2 },
       });
+      trigger();
     },
   });
 
@@ -59,6 +65,7 @@ const RegisterInvite: FC = () => {
         pathname: router.pathname,
         query: { ...router.query, step: 2 },
       });
+      trigger();
     },
   });
 
@@ -226,11 +233,12 @@ const RegisterInvite: FC = () => {
                 <h3>
                   <FormattedMessage id="register.step3.completed" />
                 </h3>
-                <Link href="/connect">
-                  <a>
-                    <FormattedMessage id="register.step3.gotoconnect" />
-                  </a>
-                </Link>
+                <p>
+                  <FormattedMessage
+                    id="verify-email.redirect"
+                    values={{ timer }}
+                  />
+                </p>
               </div>
             )}
           </div>

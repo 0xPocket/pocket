@@ -65,7 +65,7 @@
   "dashboard.child.claimMatic.message": "Pour commencer ton voyage dans le web3, nous t'offrons quelques Matics pour payer les frais de tes premières transactions.",
 
   "verify-email.email-verified": "Votre email est verifié !",
-  "verify-email.redirect": "Vous allez être redirigé dans quelques instants...",
+  "verify-email.redirect": "Vous allez être redirigé dans {timer} secondes...",
   "verify-email.problem": "Si le problème persiste, veuillez nous contacter.",
 
   "common.welcome": "Bienvenue sur Pocket !",

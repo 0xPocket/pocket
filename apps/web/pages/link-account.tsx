@@ -3,15 +3,15 @@ import { type FC, useEffect } from 'react';
 import { Spinner } from '../components/common/Spinner';
 import TitleHelper from '../components/common/TitleHelper';
 import PageWrapper from '../components/common/wrappers/PageWrapper';
-import { useAutoRedirect } from '../hooks/useAutoRedirect';
+import { useTimer } from '../hooks/useTimer';
 import { trpc } from '../utils/trpc';
 
 const LinkAccount: FC = () => {
   const router = useRouter();
 
-  const { trigger, timer } = useAutoRedirect({
-    callbackUrl: '/',
-    initialTimer: 5000,
+  const { trigger, timer } = useTimer({
+    callback: () => router.push('/'),
+    delay: 5000,
   });
 
   const mutation = trpc.useMutation(['linkAccount.link'], {
