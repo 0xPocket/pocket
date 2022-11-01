@@ -26,7 +26,7 @@ function ChildCard({
   const [ceiling, setCeiling] = useState('0');
   const [periodicity, setPeriodicity] = useState('0');
 
-  const { pocketContract, erc20 } = useSmartContract();
+  const { pocketContract } = useSmartContract();
 
   const { data: config, refetch: refetchConfig } = useContractRead({
     contract: pocketContract,
@@ -64,10 +64,6 @@ function ChildCard({
     args: [config?.balance, child.address],
   });
 
-  if (!config) {
-    return null;
-  }
-
   return (
     <div
       className={`${className} container-classic min-h-[260px] rounded-lg p-8`}
@@ -104,31 +100,35 @@ function ChildCard({
           </Tab.Panel>
           <Tab.Panel as={'div'} className="h-full">
             <div className="flex h-full flex-col items-end justify-between">
-              <AddFundsForm
-                child={child}
-                addFunds={approveAndAddChild}
-                isLoading={isLoadingAddFunds}
-                config={config}
-                periodicity={periodicity}
-                setCeiling={setCeiling}
-                setPeriodicity={setPeriodicity}
-                returnFn={() => {
-                  setSelectedIndex(0);
-                }}
-              />
+              {config && (
+                <AddFundsForm
+                  child={child}
+                  addFunds={approveAndAddChild}
+                  isLoading={isLoadingAddFunds}
+                  config={config}
+                  periodicity={periodicity}
+                  setCeiling={setCeiling}
+                  setPeriodicity={setPeriodicity}
+                  returnFn={() => {
+                    setSelectedIndex(0);
+                  }}
+                />
+              )}
             </div>
           </Tab.Panel>
           <Tab.Panel as={'div'} className="h-full">
             <div className="flex h-full flex-col items-end justify-between">
-              <ChildSettingsForm
-                changeConfig={changeConfig}
-                config={config}
-                withdrawFundsFromChild={withdrawFundsFromChild}
-                isLoading={isLoadingChildSetting}
-                returnFn={() => {
-                  setSelectedIndex(0);
-                }}
-              />
+              {config && (
+                <ChildSettingsForm
+                  changeConfig={changeConfig}
+                  config={config}
+                  withdrawFundsFromChild={withdrawFundsFromChild}
+                  isLoading={isLoadingChildSetting}
+                  returnFn={() => {
+                    setSelectedIndex(0);
+                  }}
+                />
+              )}
             </div>
           </Tab.Panel>
         </Tab.Panels>

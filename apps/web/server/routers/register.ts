@@ -32,6 +32,43 @@ export const registerRouter = createRouter()
       didToken: z.string(),
     }),
     resolve: async ({ input, ctx }) => {
+      try {
+        mAdmin.token.validate(input.didToken);
+      } catch (e) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Invalid DID token.',
+        });
+      }
+
+      const userAddress = mAdmin.token.getPublicAddress(input.didToken);
+      const userMetadata = await mAdmin.users.getMetadataByPublicAddress(
+        userAddress,
+      );
+
+      if (!userMetadata.email) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'No email.',
+        });
+      }
+
+      const existingUser = await prisma.user.findFirst({
+        where: {
+          email: {
+            equals: userMetadata.email,
+            mode: 'insensitive',
+          },
+        },
+      });
+
+      if (existingUser) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'This user already exists',
+        });
+      }
+
       let validInvite: typeof input.invite = undefined;
 
       if (input.invite) {
@@ -54,34 +91,6 @@ export const registerRouter = createRouter()
         }
 
         validInvite = input.invite;
-      }
-
-      try {
-        mAdmin.token.validate(input.didToken);
-      } catch (e) {
-        throw new Error('Invalid token');
-      }
-
-      const userAddress = mAdmin.token.getPublicAddress(input.didToken);
-      const userMetadata = await mAdmin.users.getMetadataByPublicAddress(
-        userAddress,
-      );
-
-      if (!userMetadata.email) {
-        throw new Error('no email');
-      }
-
-      const existingUser = await prisma.user.findFirst({
-        where: {
-          email: {
-            equals: userMetadata.email,
-            mode: 'insensitive',
-          },
-        },
-      });
-
-      if (existingUser) {
-        throw new Error('User already exists');
       }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -154,6 +163,37 @@ export const registerRouter = createRouter()
       type: z.enum(['Parent', 'Child']),
     }),
     resolve: async ({ input, ctx }) => {
+      const siwe = new SiweMessage(JSON.parse(input.message || '{}'));
+      const valid = await siwe.validate(input.signature || '');
+
+      if (!valid) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Invalid signature',
+        });
+      }
+
+      const existingUser = await prisma.user.findFirst({
+        where: {
+          OR: [
+            {
+              email: {
+                equals: input.email,
+                mode: 'insensitive',
+              },
+            },
+            { address: { equals: siwe.address, mode: 'insensitive' } },
+          ],
+        },
+      });
+
+      if (existingUser) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'This user already exists',
+        });
+      }
+
       let validInvite: typeof input.invite = undefined;
 
       if (input.invite) {
@@ -181,30 +221,6 @@ export const registerRouter = createRouter()
         }
 
         validInvite = input.invite;
-      }
-
-      const siwe = new SiweMessage(JSON.parse(input.message || '{}'));
-      await siwe.validate(input.signature || '');
-
-      const existingUser = await prisma.user.findFirst({
-        where: {
-          OR: [
-            {
-              email: {
-                equals: input.email,
-                mode: 'insensitive',
-              },
-            },
-            { address: { equals: siwe.address, mode: 'insensitive' } },
-          ],
-        },
-      });
-
-      if (existingUser) {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'This user already exists',
-        });
       }
 
       const ip = requestIp.getClientIp(ctx.req as any);
