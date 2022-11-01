@@ -6,9 +6,11 @@ import EmailModalForm from './EmailModalForm';
 import { useEthereumSiwe } from '../../hooks/useEthereumSiwe';
 import { useSignIn } from '../../hooks/useSignIn';
 import { Spinner } from '../common/Spinner';
+import { useIsMounted } from '../../hooks/useIsMounted';
 
 const ProviderList: FC = () => {
   const { connector: activeConnector, status } = useAccount();
+  const isMounted = useIsMounted();
   const ethereumSign = useEthereumSiwe({
     onSuccess: ({ message, signature }) => {
       signIn('ethereum', {
@@ -45,7 +47,10 @@ const ProviderList: FC = () => {
 
   return (
     <>
-      {isLoading || status === 'connecting' || ethereumSign.isLoading ? (
+      {isLoading ||
+      !isMounted ||
+      status === 'connecting' ||
+      ethereumSign.isLoading ? (
         <Spinner />
       ) : (
         <div className={` flex w-full justify-center gap-8`}>
