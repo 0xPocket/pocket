@@ -6,8 +6,8 @@ import Breadcrumb from '../components/common/Breadcrumb';
 import TitleHelper from '../components/common/TitleHelper';
 import { useSession } from 'next-auth/react';
 
-const ChildrenMozaic = dynamic(
-  () => import('../components/dashboard/parent/ChildrenMozaic'),
+const ParentDashboard = dynamic(
+  () => import('../components/dashboard/parent/ParentDashboard'),
   { suspense: true },
 );
 
@@ -26,7 +26,7 @@ export default function Web() {
 
       <Suspense fallback={<Spinner />}>
         {data && <Breadcrumb routes={[]} />}
-        {data?.user.type === 'Parent' && <ChildrenMozaic />}
+        {data?.user.type === 'Parent' && <ParentDashboard />}
         {data?.user.type === 'Child' && <ChildDashboard />}
       </Suspense>
     </PageWrapper>

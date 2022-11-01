@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoins, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import FormattedMessage from '../../common/FormattedMessage';
 import { useIntl } from 'react-intl';
+import Tooltip from '../../common/Tooltip';
 
 type FormValues = z.infer<typeof ParentSchema['createChild']>;
 

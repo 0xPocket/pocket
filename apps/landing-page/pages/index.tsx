@@ -22,8 +22,8 @@ function Index({}: IndexProps) {
           {/* <Carrousel /> */}
           <BackedBySection />
         </div>
-        <Footer />
       </MainContainer>
+      <Footer />
     </>
   );
 }

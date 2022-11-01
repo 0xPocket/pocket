@@ -6,8 +6,9 @@ import { trpc } from '../../../utils/trpc';
 import FormattedMessage from '../../common/FormattedMessage';
 import PendingChildCard from '../../card/parent/PendingChildCard';
 import { Spinner } from '../../common/Spinner';
+import MyAccountCard from './MyAccountCard';
 
-function ChildrenMozaic() {
+function ParentDashboard() {
   const router = useRouter();
 
   const { isLoading, data } = trpc.useQuery(['parent.children']);
@@ -16,6 +17,13 @@ function ChildrenMozaic() {
 
   return (
     <div className="flex flex-col space-y-12">
+      <div className="flex items-center justify-between">
+        <h1>
+          <FormattedMessage id="wallet.myaccount" />
+        </h1>
+      </div>
+      <MyAccountCard />
+
       <div className="flex items-center justify-between">
         <h1>
           <FormattedMessage id="dashboard.title" />
@@ -48,4 +56,4 @@ function ChildrenMozaic() {
   );
 }
 
-export default ChildrenMozaic;
+export default ParentDashboard;

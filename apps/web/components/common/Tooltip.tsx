@@ -61,7 +61,7 @@ const Tooltip: FC<TooltipProps> = ({
           ref={setPopperElement}
           style={styles.popper}
           id="tooltip"
-          className="tooltip-container"
+          className="tooltip-container font-normal"
           {...attributes.popper}
         >
           {children}
