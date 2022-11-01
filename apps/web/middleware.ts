@@ -21,8 +21,9 @@ export const config = {
   matcher: [
     '/',
     '/connect',
-    '/link-account',
     '/register',
+    '/register-invite',
+    '/link-account',
     '/add-account',
     '/account/:path*',
   ],
