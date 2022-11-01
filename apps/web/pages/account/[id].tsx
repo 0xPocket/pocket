@@ -5,6 +5,7 @@ import FormattedMessage from '../../components/common/FormattedMessage';
 import Breadcrumb from '../../components/common/Breadcrumb';
 import TitleHelper from '../../components/common/TitleHelper';
 import { useRouter } from 'next/router';
+import { Spinner } from '../../components/common/Spinner';
 
 function Account() {
   const router = useRouter();
@@ -17,16 +18,14 @@ function Account() {
     },
   );
 
-  if (!child) return null;
-
   return (
     <PageWrapper>
-      <TitleHelper title={child.name!} />
+      <TitleHelper title={child?.name || 'Child'} />
 
-      <Breadcrumb routes={[{ name: child.name!, path: null }]} />
+      <Breadcrumb routes={child ? [{ name: child.name, path: null }] : []} />
       {isLoading ? (
         <>
-          <FormattedMessage id="loading" />
+          <Spinner />
         </>
       ) : child ? (
         <AccountDashboard child={child} />

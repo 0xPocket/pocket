@@ -1,17 +1,18 @@
 import { useRouter } from 'next/router';
 import { type FC, useEffect } from 'react';
+import FormattedMessage from '../components/common/FormattedMessage';
 import { Spinner } from '../components/common/Spinner';
 import TitleHelper from '../components/common/TitleHelper';
 import PageWrapper from '../components/common/wrappers/PageWrapper';
-import { useAutoRedirect } from '../hooks/useAutoRedirect';
+import { useTimer } from '../hooks/useTimer';
 import { trpc } from '../utils/trpc';
 
 const LinkAccount: FC = () => {
   const router = useRouter();
 
-  const { trigger, timer } = useAutoRedirect({
-    callbackUrl: '/',
-    initialTimer: 5000,
+  const { trigger, timer } = useTimer({
+    callback: () => router.push('/'),
+    delay: 5000,
   });
 
   const mutation = trpc.useMutation(['linkAccount.link'], {
@@ -45,11 +46,13 @@ const LinkAccount: FC = () => {
         {mutation.isError && (
           <>
             <h1>{mutation.error.message}</h1>
-            <p>Error linking your account;</p>
+            <p>
+              <FormattedMessage id="error_linking_account" />
+            </p>
           </>
         )}
         {mutation.isSuccess && (
-          <>Your account has been linked! Redirecting in {timer}</>
+          <FormattedMessage id="linking_success_redirect" values={{ timer }} />
         )}
       </div>
     </PageWrapper>

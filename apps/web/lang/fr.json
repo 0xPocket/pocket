@@ -68,7 +68,7 @@
   "dashboard.child.claimMatic.message": "Pour commencer ton voyage dans le web3, nous t'offrons quelques Matics pour payer les frais de tes premières transactions.",
 
   "verify-email.email-verified": "Votre email est verifié !",
-  "verify-email.redirect": "Vous allez être redirigé dans quelques instants...",
+  "verify-email.redirect": "Vous allez être redirigé dans {timer} secondes...",
   "verify-email.problem": "Si le problème persiste, veuillez nous contacter.",
 
   "common.welcome": "Bienvenue sur Pocket !",
@@ -195,5 +195,8 @@
   "titles.terms-conditions": "Conditions générales d'utilisation",
 
   "testnet.disclaimer": "Ce site est une version testnet fonctionnant sur polygon-mumbai. N'envoyez pas de fonds réels aux adresses affichées sur le site, les fonds peuvent être perdus. Nous fournissons des jetons pour que vous puissiez essayer notre produit lors de votre inscription.",
-  "protect.smallscreen": "Pocket n'est pas encore disponible pour les petits écrans !"
+  "protect.smallscreen": "Pocket n'est pas encore disponible pour les petits écrans !",
+
+  "error_linking_account": "Une erreur est survenue lors du jumelage du compte.",
+  "linking_success_redirect": "Votre compte a bien été jumelé! Redirection dans {timer} secondes..."
 }
