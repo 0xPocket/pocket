@@ -41,7 +41,7 @@ function ChildCard({
 
   const { approveAndAddChild, isLoading: isLoadingAddFunds } = useAddFundsForm(
     child,
-    !!config?.lastClaim.isZero(),
+    !!config?.periodicity.isZero(),
     () => {
       refetchConfig();
       setSelectedIndex(0);
@@ -49,7 +49,7 @@ function ChildCard({
   );
 
   const { changeConfig, isLoading: isLoadingChildSetting } =
-    useChildSettingsForm(child.address, !!config?.lastClaim.isZero(), () => {
+    useChildSettingsForm(child.address, !!config?.periodicity.isZero(), () => {
       refetchConfig();
       setSelectedIndex(0);
     });
