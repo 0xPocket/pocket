@@ -12,7 +12,7 @@ export function useEthereumSiwe({ onSuccess }: useEthereumSiweProps) {
   const { address } = useAccount();
   const { chain } = useNetwork();
 
-  return useMutation(
+  const mutation = useMutation(
     async () => {
       const message = new SiweMessage({
         domain: window.location.host,
@@ -35,6 +35,9 @@ export function useEthereumSiwe({ onSuccess }: useEthereumSiweProps) {
     },
     {
       onSuccess,
+      mutationKey: ['ethereumSiwe', chain?.id, address],
     },
   );
+
+  return mutation;
 }
