@@ -33,8 +33,8 @@
   "childcard.liberty.content": "An accompaniment towards autonomy in the ecosystem.",
 
   "simple.section.title": "Join Pocket",
-  "simple.section.subtitle": "Be an early adopter.",
-  "simple.section.content": "Pocket is now available. Start now and become a web3 parent within a few clicks !",
+  "become_web3_parent": "Become a web3 parent",
+  "simple.section.content": "Pocket is now available, start now and see your teen activity within a few clicks !",
 
   "calltoaction.action": "Go to app",
   "calltoaction.error": "You must submit a valid email.",
@@ -47,5 +47,9 @@
   "footer.blog": "Blog",
   "footer.faq": "FAQ",
   "footer.ressources": "Ressources",
-  "footer.about": "About"
+  "footer.about": "About",
+
+  "not_found": "Page not found",
+  "register": "Register",
+  "launch_pocket": "Launch Pocket"
 }

@@ -44,11 +44,11 @@ const MyAccountCard: FC = () => {
             className="action-btn"
             onClick={() => {
               navigator.clipboard.writeText(address);
-              toast.success(<FormattedMessage id="wallet.clipboardtooltip" />);
+              toast.success(<FormattedMessage id="wallet.clipboard" />);
             }}
           >
             <Tooltip icon={faCopy} placement="top">
-              <FormattedMessage id="wallet.clipboard" />
+              <FormattedMessage id="wallet.clipboardtooltip" />
             </Tooltip>
           </button>
         )}
