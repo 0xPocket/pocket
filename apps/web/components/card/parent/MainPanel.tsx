@@ -1,6 +1,7 @@
 import {
   faCircleDollarToSlot,
   faGear,
+  faSquareArrowUpRight,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { UserChild } from '@lib/types/interfaces';
@@ -43,14 +44,13 @@ function MainPanel({
         ) : (
           <Link href={`/account/${child.address}`}>
             <a className="py-3">
-              {
-                <FormattedMessage
-                  id="dashboard.parent.card.go-to"
-                  values={{
-                    name: child.name,
-                  }}
-                />
-              }
+              <FontAwesomeIcon icon={faSquareArrowUpRight} className="mr-2" />
+              <FormattedMessage
+                id="dashboard.parent.card.go-to"
+                values={{
+                  name: child.name,
+                }}
+              />
             </a>
           </Link>
         )}

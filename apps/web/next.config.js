@@ -46,7 +46,7 @@ const nextConfig = () =>
       reactStrictMode: true,
       swcMinify: true,
       images: {
-        domains: ['logos.covalenthq.com'],
+        domains: ['logos.covalenthq.com', 'uxwing.com'],
       },
       eslint: {
         dirs: ['pages', 'utils', 'components', 'server', 'hooks'], // Only run ESLint on the 'pages' and 'utils' directories during production builds (next build)

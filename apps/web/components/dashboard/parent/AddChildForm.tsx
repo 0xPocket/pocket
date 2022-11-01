@@ -6,7 +6,7 @@ import { trpc } from '../../../utils/trpc';
 import { ParentSchema } from '../../../server/schemas';
 import InputText from '../../common/InputText';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCoins, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import FormattedMessage from '../../common/FormattedMessage';
 import { useIntl } from 'react-intl';
 
