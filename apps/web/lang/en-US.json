@@ -187,5 +187,8 @@
   "titles.terms-conditions": "Terms and conditions",
 
   "testnet.disclaimer": "This is a testnet version running on polygon-mumbai. Do not send any real funds to any addresses displayed on the website, funds can be lost. We provide tokens for you to try our product on registration.",
-  "protect.smallscreen": "Pocket is not optimized for small screens yet !"
+  "protect.smallscreen": "Pocket is not optimized for small screens yet !",
+
+  "error_linking_account": "Error linking your account",
+  "linking_success_redirect": "Your account has been linked! Redirecting in {timer} seconds..."
 }
