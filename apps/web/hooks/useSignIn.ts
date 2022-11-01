@@ -1,6 +1,6 @@
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 type SignInParams = ['ethereum' | 'magic', Parameters<typeof signIn>[1]];
@@ -21,24 +21,24 @@ export function useSignIn(): UseSignInReturn {
     }
   }, [router.query.callbackUrl]);
 
-  async function customSignIn(
-    ...params: SignInParams
-  ): Promise<ReturnType<typeof signIn>> {
-    setLoading(true);
-    return signIn(params[0], {
-      ...params[1],
-      redirect: callbackUrl ? true : false,
-      callbackUrl: callbackUrl || undefined,
-    }).then((res) => {
-      if (!res?.ok) {
-        toast.error(res?.error);
-        setLoading(false);
-      } else {
-        window.location.href = '/';
-      }
-      return res;
-    });
-  }
+  const customSignIn = useCallback(
+    async (...params: SignInParams): Promise<ReturnType<typeof signIn>> => {
+      setLoading(true);
+      return signIn(params[0], {
+        ...params[1],
+        redirect: false,
+      }).then(async (res) => {
+        if (!res?.ok) {
+          toast.error(res?.error);
+          setLoading(false);
+        } else {
+          window.location.href = callbackUrl;
+        }
+        return res;
+      });
+    },
+    [callbackUrl],
+  );
 
   return {
     signIn: customSignIn,
