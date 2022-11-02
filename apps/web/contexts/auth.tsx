@@ -66,7 +66,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       nextAuthStatus === 'authenticated' &&
       !logout.isLoading
     ) {
-      console.log('state', new Date());
       setReconnecting(false);
       logout.mutate();
     }
@@ -77,14 +76,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     function onDisconnect() {
-      console.log('onDisconnect', new Date());
       if (!logout.isLoading) {
         logout.mutate();
       }
     }
     function onChange({ account }: { account?: string }) {
       if (account) {
-        console.log('onChange disconnect', new Date());
         onDisconnect();
       }
     }
