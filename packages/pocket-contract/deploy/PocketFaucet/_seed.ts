@@ -75,21 +75,6 @@ const func: DeployFunction = async function ({
     env.NEXT_PUBLIC_CONTRACT_ADDRESS,
     '0'
   );
-
-  await execute(
-    'PocketFaucet',
-    {
-      from: elonmusk,
-      autoMine: true,
-    },
-    'addChild',
-    xavier,
-    {
-      ceiling: parseUnits('10', tokenDecimals),
-      periodicity: 1 * 1 * 5 * 6000,
-      tokenIndex: 0,
-    }
-  );
 };
 
 export default func;

@@ -11,6 +11,7 @@ import {
   generateVerificationToken,
   hashToken,
   saveVerificationToken,
+  useVerificationToken,
 } from '../services/jwt';
 import * as requestIp from 'request-ip';
 import { grantPktToken } from '../services/grantPktToken';
@@ -20,23 +21,24 @@ const mAdmin = new Magic(env.MAGIC_LINK_SECRET_KEY);
 export const registerRouter = createRouter()
   .mutation('magic', {
     input: z.object({
-      token: z.string().optional(),
+      invite: z
+        .object({
+          token: z.string(),
+          childId: z.string(),
+        })
+        .optional(),
       name: z.string(),
       email: z.string().email(),
       didToken: z.string(),
     }),
     resolve: async ({ input, ctx }) => {
-      if (env.NEXT_PUBLIC_PRIVATE_BETA && !input.token) {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'You need a token to register',
-        });
-      }
-
       try {
         mAdmin.token.validate(input.didToken);
       } catch (e) {
-        throw new Error('Invalid token');
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Invalid DID token.',
+        });
       }
 
       const userAddress = mAdmin.token.getPublicAddress(input.didToken);
@@ -45,7 +47,10 @@ export const registerRouter = createRouter()
       );
 
       if (!userMetadata.email) {
-        throw new Error('no email');
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'No email.',
+        });
       }
 
       const existingUser = await prisma.user.findFirst({
@@ -58,30 +63,34 @@ export const registerRouter = createRouter()
       });
 
       if (existingUser) {
-        throw new Error('User already exists');
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'This user already exists',
+        });
       }
 
-      if (env.NEXT_PUBLIC_PRIVATE_BETA) {
-        const token = await prisma.privateBetaToken.findUnique({
-          where: { token: input.token },
+      let validInvite: typeof input.invite = undefined;
+
+      if (input.invite) {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const invite = await useVerificationToken({
+          token: hashToken(input.invite.token),
+          identifier: JSON.stringify({
+            childId: input.invite.childId,
+            email: input.email,
+          }),
         });
 
-        if (!token || token.used) {
+        const invalidInvite = !invite || invite.expires.valueOf() < Date.now();
+
+        if (invalidInvite) {
           throw new TRPCError({
             code: 'BAD_REQUEST',
-            message: 'Invalid token',
+            message: 'Invalid invite',
           });
         }
 
-        await prisma.privateBetaToken.update({
-          data: {
-            used: true,
-            identifier: userMetadata.email,
-          },
-          where: {
-            token: input.token,
-          },
-        });
+        validInvite = input.invite;
       }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -91,12 +100,7 @@ export const registerRouter = createRouter()
         await grantPktToken(userAddress);
       }
 
-      ctx.log.info('new register with magic', {
-        email: userMetadata.email,
-        address: userAddress,
-      });
-
-      return prisma.user.create({
+      const newUser = await prisma.user.create({
         data: {
           name: input.name,
           email: userMetadata.email,
@@ -110,11 +114,48 @@ export const registerRouter = createRouter()
           },
         },
       });
+
+      ctx.log.info('new register with magic', {
+        email: userMetadata.email,
+        address: userAddress,
+      });
+
+      if (validInvite) {
+        await prisma.child.update({
+          where: { userId: validInvite.childId },
+          data: {
+            parentUserId: newUser.id,
+          },
+        });
+
+        const child = await prisma.user.findUnique({
+          where: { id: validInvite.childId },
+        });
+
+        ctx.log.info('child linked', {
+          parentEmail: newUser.email,
+          childEmail: child?.email,
+        });
+
+        return {
+          verifyEmail: false,
+        };
+      }
+
+      return {
+        verifyEmail: false,
+      };
     },
   })
   .mutation('ethereum', {
     input: z.object({
-      token: z.string().optional(),
+      invite: z
+        .object({
+          token: z.string(),
+          childId: z.string().optional(),
+          parentId: z.string().optional(),
+        })
+        .optional(),
       name: z.string(),
       email: z.string().email(),
       message: z.string(),
@@ -122,15 +163,15 @@ export const registerRouter = createRouter()
       type: z.enum(['Parent', 'Child']),
     }),
     resolve: async ({ input, ctx }) => {
-      if (env.NEXT_PUBLIC_PRIVATE_BETA && !input.token) {
+      const siwe = new SiweMessage(JSON.parse(input.message || '{}'));
+      const valid = await siwe.validate(input.signature || '');
+
+      if (!valid) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
-          message: 'You need a token to register',
+          message: 'Invalid signature',
         });
       }
-
-      const siwe = new SiweMessage(JSON.parse(input.message || '{}'));
-      await siwe.validate(input.signature || '');
 
       const existingUser = await prisma.user.findFirst({
         where: {
@@ -153,27 +194,33 @@ export const registerRouter = createRouter()
         });
       }
 
-      if (env.NEXT_PUBLIC_PRIVATE_BETA) {
-        const token = await prisma.privateBetaToken.findUnique({
-          where: { token: input.token },
+      let validInvite: typeof input.invite = undefined;
+
+      if (input.invite) {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const invite = await useVerificationToken({
+          token: hashToken(input.invite.token),
+          identifier: input.invite.childId
+            ? JSON.stringify({
+                childId: input.invite.childId,
+                email: input.email,
+              })
+            : JSON.stringify({
+                parentId: input.invite.parentId,
+                email: input.email,
+              }),
         });
 
-        if (!token || token.used) {
+        const invalidInvite = !invite || invite.expires.valueOf() < Date.now();
+
+        if (invalidInvite) {
           throw new TRPCError({
             code: 'BAD_REQUEST',
-            message: 'Invalid token',
+            message: 'Invalid invite',
           });
         }
 
-        await prisma.privateBetaToken.update({
-          data: {
-            used: true,
-            identifier: input.email,
-          },
-          where: {
-            token: input.token,
-          },
-        });
+        validInvite = input.invite;
       }
 
       const ip = requestIp.getClientIp(ctx.req as any);
@@ -199,23 +246,96 @@ export const registerRouter = createRouter()
           },
         });
       } else {
-        // newUser = await prisma.user.create({
-        //   data: {
-        //     address: siwe.address,
-        //     type: input.type,
-        //     accountType: 'Ethereum',
-        //     child: {
-        //       create: {},
-        //     },
-        //   },
-        // });
-        throw new Error('Not implemented');
+        newUser = await prisma.user.create({
+          data: {
+            name: input.name,
+            email: input.email,
+            address: siwe.address,
+            type: input.type,
+            ipAddress: ip,
+            accountType: 'Ethereum',
+            child: {
+              create: {},
+            },
+          },
+        });
       }
 
       ctx.log.info('new register with ethereum', {
         email: newUser.email,
         address: newUser.address,
+        type: newUser.type,
       });
+
+      if (validInvite) {
+        if (validInvite.childId) {
+          await prisma.child.update({
+            where: { userId: validInvite.childId },
+            data: {
+              parentUserId: newUser.id,
+            },
+          });
+          const child = await prisma.user.findUnique({
+            where: { id: validInvite.childId },
+          });
+
+          ctx.log.info('child linked', {
+            parentEmail: newUser.email,
+            childEmail: child?.email,
+          });
+        } else {
+          await prisma.child.update({
+            where: { userId: newUser.id },
+            data: {
+              parentUserId: validInvite.parentId,
+            },
+          });
+
+          const parent = await prisma.user.findUnique({
+            where: { id: validInvite.parentId },
+          });
+
+          ctx.log.info('child linked', {
+            parentEmail: parent?.email,
+            childEmail: newUser.email,
+          });
+
+          const childConfig = await prisma.pendingChild.findFirst({
+            where: {
+              email: {
+                equals: input.email,
+                mode: 'insensitive',
+              },
+            },
+          });
+
+          if (childConfig) {
+            await prisma.user.update({
+              where: { id: newUser.id },
+              data: {
+                name: childConfig.name,
+              },
+            });
+
+            await prisma.pendingChild.delete({
+              where: {
+                id: childConfig.id,
+              },
+            });
+          }
+        }
+
+        await prisma.user.update({
+          where: { id: newUser.id },
+          data: {
+            emailVerified: new Date(),
+          },
+        });
+
+        return {
+          verifyEmail: false,
+        };
+      }
 
       const token = generateVerificationToken();
       const ONE_DAY_IN_SECONDS = 86400;
@@ -238,6 +358,8 @@ export const registerRouter = createRouter()
         },
       });
 
-      return newUser;
+      return {
+        verifyEmail: true,
+      };
     },
   });

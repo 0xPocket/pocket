@@ -3,20 +3,28 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { UserChild } from '@lib/types/interfaces';
 import { formatUnits, parseUnits } from 'ethers/lib/utils';
 import { useSmartContract } from '../../../contexts/contract';
-import useContractRead from '../../../hooks/useContractRead';
+import useContractRead, {
+  ContractMethodReturn,
+} from '../../../hooks/useContractRead';
 import { useAccount } from 'wagmi';
 import type { BigNumber } from 'ethers';
 import { z } from 'zod';
 import { useZodForm } from '../../../utils/useZodForm';
-import { useEffect } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import FormattedMessage from '../../common/FormattedMessage';
 import { useIntl } from 'react-intl';
 import { Spinner } from '../../common/Spinner';
+import SetChildConfigForm from './SetChildConfigForm';
+import { PocketFaucet } from 'pocket-contract/typechain-types';
 
 type AddFundsFormProps = {
   child: UserChild;
   addFunds: (amount: BigNumber) => Promise<void>;
   isLoading: boolean;
+  config: ContractMethodReturn<PocketFaucet, 'childToConfig'>;
+  periodicity: string;
+  setCeiling: Dispatch<SetStateAction<string>>;
+  setPeriodicity: Dispatch<SetStateAction<string>>;
   returnFn: () => void;
 };
 
@@ -25,6 +33,10 @@ function AddFundsForm({
   addFunds,
   returnFn,
   isLoading,
+  config,
+  periodicity,
+  setCeiling,
+  setPeriodicity,
 }: AddFundsFormProps) {
   const { erc20 } = useSmartContract();
   const { address } = useAccount();
@@ -79,6 +91,16 @@ function AddFundsForm({
   useEffect(() => {
     setFocus('topup');
   }, [setFocus]);
+
+  if (config.periodicity.isZero() && periodicity == '0') {
+    return (
+      <SetChildConfigForm
+        setCeiling={setCeiling}
+        setPeriodicity={setPeriodicity}
+        returnFn={returnFn}
+      />
+    );
+  }
 
   return (
     <form

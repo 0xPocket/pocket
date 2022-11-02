@@ -69,7 +69,7 @@
   "dashboard.child.claimMatic.message": "To start your journey into web3, we grant you some Matic to pay fees for your first transaction.",
 
   "verify-email.email-verified": "Your email is now verified !",
-  "verify-email.redirect": "You will be redirected in few seconds...",
+  "verify-email.redirect": "You will be redirected in {timer} seconds...",
   "verify-email.problem": "If the problem persists, contact us.",
 
   "common.welcome": "Welcome to Pocket !",
@@ -118,10 +118,18 @@
   "child-form.info": "Your child infos",
   "child-form.created": "Account created !",
 
+  "parent-form.info": "Before all, you need your parent to create an account!",
+  "parent-form.sent": "Invitation sent !",
+  "invite-parent": "Invite your parent",
+
   "funds-form.amount-required": "Amount is required",
   "funds-form.minimum": "Minimum amount is 1",
   "funds-form.insufficient": "Insufficient funds",
   "funds-form.add-funds-to": "Add funds to {name} account",
+
+  "periodicity.explanation": "How often will you child be able to withdraw money ?",
+  "ceiling.explanation": "How much can he/she withdraw?",
+  "first_set_child_settings": "First you must set up your child account settings",
 
   "dashboard.common.activity.header.topups": "Your topups",
   "dashboard.common.activity.header.claims": "Your claims",
@@ -188,5 +196,8 @@
   "titles.terms-conditions": "Terms and conditions",
 
   "testnet.disclaimer": "This is a testnet version running on polygon-mumbai. Do not send any real funds to any addresses displayed on the website, funds can be lost. We provide tokens for you to try our product on registration.",
-  "protect.smallscreen": "Pocket is not optimized for small screens yet !"
+  "protect.smallscreen": "Pocket is not optimized for small screens yet !",
+
+  "error_linking_account": "Error linking your account",
+  "linking_success_redirect": "Your account has been linked! Redirecting in {timer} seconds..."
 }

@@ -1,29 +1,31 @@
 import { type FC, useCallback, useState } from 'react';
-import { Connector, useAccount, useConnect, useDisconnect } from 'wagmi';
-import { useIsMounted } from '../../hooks/useIsMounted';
+import { Connector, useAccount, useConnect } from 'wagmi';
 import Image from 'next/future/image';
 import { DialogPopupWrapper } from '../common/wrappers/DialogsWrapper';
 import EmailModalForm from './EmailModalForm';
 import { useEthereumSiwe } from '../../hooks/useEthereumSiwe';
 import { useSignIn } from '../../hooks/useSignIn';
 import { Spinner } from '../common/Spinner';
+import { useIsMounted } from '../../hooks/useIsMounted';
 
 const ProviderList: FC = () => {
-  const { connector: activeConnector } = useAccount();
-  const mounted = useIsMounted();
-  const { disconnectAsync } = useDisconnect();
-  const ethereumSign = useEthereumSiwe({});
-  const { signIn, isLoading } = useSignIn();
-
-  const { connectors, connect } = useConnect({
-    onSuccess: async () => {
-      const { message, signature } = await ethereumSign.mutateAsync();
-
+  const { connector: activeConnector, status } = useAccount();
+  const isMounted = useIsMounted();
+  const ethereumSign = useEthereumSiwe({
+    onSuccess: ({ message, signature }) => {
       signIn('ethereum', {
         message: JSON.stringify(message),
         signature,
         redirect: false,
       });
+    },
+  });
+
+  const { signIn, isLoading } = useSignIn();
+
+  const { connectors, connect } = useConnect({
+    onSuccess: async () => {
+      ethereumSign.mutate();
     },
   });
   const [open, setIsOpen] = useState(false);
@@ -33,22 +35,22 @@ const ProviderList: FC = () => {
       if (connector.id === 'magic') {
         setIsOpen(true);
       } else {
-        if (connector.id === activeConnector?.id) {
-          await disconnectAsync();
+        if (connector.id !== activeConnector?.id) {
+          connect({ connector });
+        } else {
+          ethereumSign.mutate();
         }
-        connect({ connector });
       }
     },
-    [activeConnector, disconnectAsync, connect],
+    [activeConnector, connect, ethereumSign],
   );
-
-  if (!mounted) {
-    return null;
-  }
 
   return (
     <>
-      {isLoading ? (
+      {isLoading ||
+      !isMounted ||
+      status === 'connecting' ||
+      ethereumSign.isLoading ? (
         <Spinner />
       ) : (
         <div className={` flex w-full justify-center gap-8`}>
@@ -56,7 +58,7 @@ const ProviderList: FC = () => {
             <button
               key={connector.id}
               onClick={() => handleConnect(connector)}
-              className="provider-container"
+              className="provider-container disabled:opacity-50"
             >
               <div className="container-classic rounded-md p-8">
                 <div className="provider-img">
