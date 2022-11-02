@@ -45,11 +45,13 @@
   "footer.copyright": "© 2022 Pocket.",
   "footer.contact": "Contact",
   "footer.blog": "Blog",
-  "footer.faq": "FAQ",
+  "faq": "FAQ",
   "footer.ressources": "Ressources",
   "footer.about": "About",
 
   "not_found": "Page not found",
   "register": "Register",
-  "launch_pocket": "Launch Pocket"
+  "launch_pocket": "Launch Pocket",
+  "faq_url": "https://blog.gopocket.co/us-posts/faq",
+  "blog_url": "https://blog.gopocket.co/"
 }

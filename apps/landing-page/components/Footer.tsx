@@ -12,7 +12,7 @@ function Footer({}: FooterProps) {
         </p>
         <a
           className="text block text-base text-gray-light"
-          href="https://blog.gopocket.co"
+          href="https://blog.gopocket.co/fr"
         >
           <FormattedMessage id="footer.blog" />
         </a>
@@ -29,9 +29,9 @@ function Footer({}: FooterProps) {
         </p>
         <a
           className="block text-base text-gray-light"
-          href="https://blog.gopocket.co/posts/FAQ"
+          href="https://blog.gopocket.co/fr-posts/FAQ"
         >
-          <FormattedMessage id="footer.faq" />
+          <FormattedMessage id="faq" />
         </a>
       </div>
       <div className="flex items-center py-12 text-white">
