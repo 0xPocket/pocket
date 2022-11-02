@@ -31,28 +31,42 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const { status: nextAuthStatus, data } = useSession();
 
   const [reconnecting, setReconnecting] = useState(false);
+  const [checkDisconnect, setCheckDisconnect] = useState(false);
 
   const logout = useMutation(() => disconnectAsync(), {
     onSuccess: async () => {
       queryClient.removeQueries();
-      signOut();
+      signOut({ callbackUrl: '/connect' });
     },
   });
 
-  // useEffect to match connecting state between wallet/wagmi and next-auth
+  useEffect(() => {
+    if (!checkDisconnect && nextAuthStatus === 'authenticated') {
+      setCheckDisconnect(true);
+    }
+    if (checkDisconnect && nextAuthStatus === 'unauthenticated') {
+      router.push('/connect');
+      setCheckDisconnect(false);
+    }
+  }, [nextAuthStatus, router, checkDisconnect]);
+
+  // // useEffect to match connecting state between wallet/wagmi and next-auth
   useEffect(() => {
     if (
-      (status === 'reconnecting' || status === 'connecting') &&
-      (nextAuthStatus === 'loading' || nextAuthStatus === 'authenticated') &&
-      reconnecting === false
+      status === 'reconnecting' ||
+      (status === 'connecting' &&
+        nextAuthStatus === 'authenticated' &&
+        reconnecting === false)
     ) {
       setReconnecting(true);
     }
     if (
       reconnecting &&
       status === 'disconnected' &&
-      nextAuthStatus === 'authenticated'
+      nextAuthStatus === 'authenticated' &&
+      !logout.isLoading
     ) {
+      console.log('state', new Date());
       setReconnecting(false);
       logout.mutate();
     }
@@ -63,17 +77,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     function onDisconnect() {
-      logout.mutate();
+      console.log('onDisconnect', new Date());
+      if (!logout.isLoading) {
+        logout.mutate();
+      }
     }
     function onChange({ account }: { account?: string }) {
-      if (
-        account &&
-        account.toLowerCase() !== data?.user.address?.toLowerCase()
-      ) {
+      if (account) {
+        console.log('onChange disconnect', new Date());
         onDisconnect();
       }
     }
-    if (connector?.id !== 'magic') {
+    if (connector?.id !== 'magic' && nextAuthStatus === 'authenticated') {
       connector?.on('disconnect', onDisconnect);
       connector?.on('change', onChange);
     }
@@ -83,14 +98,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         connector?.removeListener('change', onChange);
       }
     };
-  }, [
-    logout,
-    connector,
-    router,
-    queryClient,
-    nextAuthStatus,
-    data?.user.address,
-  ]);
+  }, [logout, connector, nextAuthStatus]);
 
   // WE FORCE SWITCH NETWORK HERE
   useEffect(() => {
