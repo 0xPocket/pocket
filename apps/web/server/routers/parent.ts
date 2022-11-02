@@ -210,7 +210,8 @@ export const parentRouter = createProtectedRouter()
         props: {
           link: `${env.APP_URL}/register-invite?${params}`,
           from: 'Parent',
-          fromName: childConfig.name,
+          name: childConfig.name,
+          fromName: '',
         },
       });
 

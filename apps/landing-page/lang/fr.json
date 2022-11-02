@@ -1,14 +1,14 @@
 {
   "head.title": "L'argent de poche du web3 | Pocket",
-  "head.description": "Pas besoin de tout comprendre aux cryptomonnaies pour en donner à ses ados. Achetez et distribuez de l'argent de poche à vos enfants en un clic.",
+  "head.description": "Pas besoin d'être un expert en cryptomonnaies pour en donner à ses ados. Achetez et distribuez de l'argent de poche à vos enfants en un clic.",
   "head.alt": "Pocket, L'argent de poche du web3",
 
   "header.signin": "Se connecter",
 
   "hero.title.top": "L'argent de poche du web3.",
   "hero.title.bottom": "Simple. Sécurisé.",
-  "hero.subtitle.top": "Pas besoin de tout comprendre aux cryptomonnaies pour en donner à ses ados.",
-  "hero.subtitle.bottom": "Achetez et distribuez de l'argent de poche à vos enfants en un clic.",
+  "hero.subtitle.top": "Pas besoin d'être un expert en cryptomonnaies pour en donner à ses ados.",
+  "hero.subtitle.bottom": "Achetez et distribuez de l'argent de poche à vos enfants en quelques clics.",
 
   "parentcard.title": "Parents",
 
@@ -33,8 +33,8 @@
   "childcard.liberty.content": "Un accompagnement vers une autonomie dans l’écosystème en toute sérénité.",
 
   "simple.section.title": "Rejoignez Pocket",
-  "simple.section.subtitle": "Soyez le premier.",
-  "simple.section.content": "Pocket est désormais disponible. Commencez dès maintenant et devenez un parent du Web3 en quelques clics !",
+  "become_web3_parent": "Devenez un parent du Web3",
+  "simple.section.content": "Pocket est désormais disponible. Voyez l'activité de votre ado en quelques clics !",
 
   "calltoaction.action": "Lancer Pocket",
   "calltoaction.error": "Vous devez rentrer un email valide",
@@ -47,5 +47,9 @@
   "footer.blog": "Blog",
   "footer.faq": "FAQ",
   "footer.ressources": "Ressources",
-  "footer.about": "A propos"
+  "footer.about": "A propos",
+
+  "not_found": "Page introuvable",
+  "register": "S'inscrire",
+  "launch_pocket": "Lancer Pocket"
 }

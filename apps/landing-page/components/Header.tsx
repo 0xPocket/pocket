@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FormattedMessage } from 'react-intl';
+import CallToAction from './CallToAction';
 import { ThemeToggler } from './ThemeToggler';
 
 type HeaderProps = {};
@@ -29,11 +30,10 @@ function Header({}: HeaderProps) {
           <ThemeToggler className="h-6 w-6 cursor-pointer md:h-8 md:w-8" />
 
           <div className="flex items-center  gap-8 text-base">
-            <Link href="https://app.gopocket.co">
-              <button className="action-btn">
-                <FormattedMessage id="header.signin" />
-              </button>
-            </Link>
+            <CallToAction
+              url={'https://app.gopocket.co/'}
+              msg={<FormattedMessage id={'launch_pocket'} />}
+            />
           </div>
         </div>
       </div>

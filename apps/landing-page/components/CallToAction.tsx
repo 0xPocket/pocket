@@ -1,14 +1,27 @@
 import Link from 'next/link';
-import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import React, { ReactElement } from 'react';
 
-const CallToAction: React.FC = () => {
+type CallToActionProps = {
+  url: string;
+  msg: ReactElement;
+  icon?: string;
+  className?: string;
+};
+
+const CallToAction: React.FC<CallToActionProps> = ({
+  url,
+  msg,
+  icon,
+  className,
+}) => {
   return (
-    <div className="flex items-center justify-center gap-8 pt-8 md:justify-start">
-      <Link href="https://app.gopocket.co/register">
-        <button className="action-btn text-xl ">
-          <FormattedMessage id="calltoaction.action" />
-          <span className="ml-2 text-2xl">🚀</span>
+    <div
+      className={`${className} flex items-center justify-center gap-8 md:justify-start`}
+    >
+      <Link href={url}>
+        <button className="action-btn">
+          {msg}
+          {icon && <span className="ml-2 text-xl">{icon}</span>}
         </button>
       </Link>
     </div>
