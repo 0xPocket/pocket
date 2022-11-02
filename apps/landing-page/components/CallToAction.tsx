@@ -19,10 +19,10 @@ const CallToAction: React.FC<CallToActionProps> = ({
       className={`${className} flex items-center justify-center gap-8 md:justify-start`}
     >
       <Link href={url}>
-        <button className="action-btn">
+        <a className="action-btn">
           {msg}
           {icon && <span className="ml-2 text-xl">{icon}</span>}
-        </button>
+        </a>
       </Link>
     </div>
   );
