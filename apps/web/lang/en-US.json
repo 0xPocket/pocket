@@ -199,5 +199,7 @@
   "protect.smallscreen": "Pocket is not optimized for small screens yet !",
 
   "error_linking_account": "Error linking your account",
-  "linking_success_redirect": "Your account has been linked! Redirecting in {timer} seconds..."
+  "linking_success_redirect": "Your account has been linked! Redirecting in {timer} seconds...",
+
+  "child_parent_invitation": "Your parent has received an invite join Pocket !"
 }

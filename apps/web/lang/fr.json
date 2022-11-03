@@ -198,5 +198,7 @@
   "protect.smallscreen": "Pocket n'est pas encore disponible pour les petits écrans !",
 
   "error_linking_account": "Une erreur est survenue lors du jumelage du compte.",
-  "linking_success_redirect": "Votre compte a bien été jumelé! Redirection dans {timer} secondes..."
+  "linking_success_redirect": "Votre compte a bien été jumelé! Redirection dans {timer} secondes...",
+
+  "child_parent_invitation": "Ton parent a recu une invitation pour rejoindre Pocket !"
 }
