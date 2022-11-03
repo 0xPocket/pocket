@@ -13,6 +13,13 @@ type UseSignInReturn = {
 export function useSignIn(): UseSignInReturn {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [callbackUrl, setCallbackUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (router.query.callbackUrl) {
+      setCallbackUrl(router.query.callbackUrl as string);
+    }
+  }, [router.query.callbackUrl]);
 
   const customSignIn = useCallback(
     async (...params: SignInParams): Promise<ReturnType<typeof signIn>> => {
@@ -25,9 +32,10 @@ export function useSignIn(): UseSignInReturn {
           toast.error(res?.error);
           setLoading(false);
         } else {
-          console.log(res);
-          if (res.url) {
-            router.push(res.url);
+          if (callbackUrl) {
+            window.location.href = callbackUrl;
+          } else {
+            window.location.href = '/';
           }
         }
         return res;
