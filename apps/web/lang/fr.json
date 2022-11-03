@@ -153,7 +153,7 @@
 
   "dashboard.parent.childAccountStatus": "Votre enfant n'a pas verifié son compte ! Il devrait regarder ses emails...",
 
-  "dashboard.parent.card.email-sent": "Nous avons envoyé un email a votre enfant.",
+  "dashboard.parent.card.email-sent": "Nous avons envoyé un email à votre enfant afin qu'il finalise son inscription.",
   "dashboard.parent.card.send-new": "Renvoyer un email.",
   "dashboard.parent.card.see-on-polygon": "Voir sur polygonscan",
   "dashboard.parent.card.email-error": "Une erreur s'est produite, si le problème persiste, veuillez nous contacter.",
