@@ -26,6 +26,9 @@ function InviteParentForm() {
     //   router.push('/');
     //   toast.success(<FormattedMessage id="parent-form.sent" />);
     // },
+    onSuccess: () => {
+      toast.success(<FormattedMessage id="parent-form.sent" />);
+    },
     onError: (e) => {
       toast.error(e.message);
     },

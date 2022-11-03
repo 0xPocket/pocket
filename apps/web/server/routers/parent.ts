@@ -61,38 +61,51 @@ export const parentRouter = createProtectedRouter()
     input: z.object({
       id: z.number(),
     }),
-    resolve: async ({ input }) => {
-      return 'TEST';
-      // const childConfig = await prisma.pendingChild.findUnique({
-      //   where: {
-      //     id: input.id,
-      //   },
-      // });
+    resolve: async ({ input, ctx }) => {
+      const childConfig = await prisma.pendingChild.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
 
-      // if (!childConfig) {
-      //   throw new TRPCError({ code: 'NOT_FOUND' });
-      // }
+      if (!childConfig) {
+        throw new TRPCError({ code: 'NOT_FOUND' });
+      }
 
-      // const token = generateVerificationToken();
-      // const ONE_DAY_IN_SECONDS = 86400;
-      // const expires = new Date(Date.now() + ONE_DAY_IN_SECONDS * 1000);
+      const token = generateVerificationToken();
 
-      // await saveVerificationToken({
-      //   identifier: childConfig.email,
-      //   expires,
-      //   token: hashToken(token),
-      // });
+      const ONE_DAY_IN_SECONDS = 86400;
+      const expires = new Date(Date.now() + ONE_DAY_IN_SECONDS * 1000);
 
-      // const params = new URLSearchParams({ token, email: childConfig.email });
+      await saveVerificationToken({
+        identifier: JSON.stringify({
+          parentId: ctx.session.user.id,
+          email: childConfig.email,
+        }),
+        token: hashToken(token),
+        expires: expires,
+      });
 
-      // await sendEmailWrapper({
-      //   to: childConfig.email,
-      //   template: 'child_invitation',
-      //   props: {
-      //     name: childConfig.name,
-      //     link: `${env.APP_URL}/verify-child?${params}`,
-      //   },
-      // });
+      const params = new URLSearchParams({
+        token,
+        parentId: ctx.session.user.id,
+        email: childConfig.email,
+        name: childConfig.name,
+        type: 'Child',
+      });
+
+      await sendEmailWrapper({
+        to: childConfig.email,
+        template: 'register_invitation',
+        props: {
+          link: `${env.APP_URL}/register-invite?${params}`,
+          from: 'Parent',
+          name: childConfig.name,
+          fromName: '',
+        },
+      });
+
+      return 'SENT';
     },
   })
   .mutation('createChild', {
