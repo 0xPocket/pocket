@@ -3,6 +3,8 @@
   "head.description": "No need to be an expert to hand cryptocurrency to your teenagers. Buy and give pocket money to your children with one click.",
   "head.alt": "Pocket, Web3 pocket money",
 
+  "header.signin": "Sign in",
+
   "hero.title.top": "Web3 pocket money.",
   "hero.title.bottom": "Simple. Secured.",
   "hero.subtitle.top": "No need to be an expert to hand cryptocurrency to your teenagers.",
@@ -31,15 +33,25 @@
   "childcard.liberty.content": "An accompaniment towards autonomy in the ecosystem.",
 
   "simple.section.title": "Join Pocket",
-  "simple.section.subtitle": "Be an early adopter.",
-  "simple.section.content": "Pocket is now available. Start now and become a web3 parent within a few clicks !",
+  "become_web3_parent": "Become a web3 parent",
+  "simple.section.content": "Pocket is now available, start now and see your teen activity within a few clicks !",
 
-  "calltoaction.action": "Register",
+  "calltoaction.action": "Go to app",
   "calltoaction.error": "You must submit a valid email.",
   "calltoaction.email": "Email address",
 
   "backedby.title": "Our partners",
 
   "footer.copyright": "© 2022 Pocket.",
-  "footer.contact": "Contact : hello@gopocket.fr"
+  "footer.contact": "Contact",
+  "footer.blog": "Blog",
+  "faq": "FAQ",
+  "footer.ressources": "Ressources",
+  "footer.about": "About",
+
+  "not_found": "Page not found",
+  "register": "Register",
+  "launch_pocket": "Launch Pocket",
+  "faq_url": "https://blog.gopocket.co/us-posts/faq",
+  "blog_url": "https://blog.gopocket.co/"
 }

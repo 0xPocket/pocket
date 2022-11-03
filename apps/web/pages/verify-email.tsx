@@ -4,14 +4,19 @@ import FormattedMessage from '../components/common/FormattedMessage';
 import { Spinner } from '../components/common/Spinner';
 import TitleHelper from '../components/common/TitleHelper';
 import PageWrapper from '../components/common/wrappers/PageWrapper';
+import { useTimer } from '../hooks/useTimer';
 import { trpc } from '../utils/trpc';
 
 const VerifyChild: FC = () => {
   const router = useRouter();
+  const { trigger, timer } = useTimer({
+    callback: () => router.push('/connect'),
+    delay: 3000,
+  });
 
   const mutation = trpc.useMutation(['email.verifyEmail'], {
     onSuccess: () => {
-      setTimeout(() => router.push('/connect'), 3000);
+      trigger();
     },
   });
 
@@ -49,7 +54,7 @@ const VerifyChild: FC = () => {
               <FormattedMessage id="verify-email.email-verified" />
             </h1>
             <p>
-              <FormattedMessage id="verify-email.redirect" />
+              <FormattedMessage id="verify-email.redirect" values={{ timer }} />
             </p>
           </>
         )}

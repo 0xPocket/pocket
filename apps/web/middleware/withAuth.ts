@@ -56,11 +56,12 @@ async function handleMiddleware(
   options: NextAuthMiddlewareOptions | undefined,
   onSuccess?: (token: JWT) => ReturnType<NextMiddleware>,
 ) {
-  const { pathname, origin } = req.nextUrl;
+  const { pathname, search, origin } = req.nextUrl;
 
   const signInPage = options?.pages?.signIn ?? '/api/auth/signin';
   const errorPage = options?.pages?.error ?? '/api/auth/error';
   const registerPage = options?.pages?.register ?? '/api/auth/register';
+  const registerPage2 = '/register-invite';
   const basePath = parseUrl(process.env.NEXTAUTH_URL).path;
   const publicPaths = ['/_next', '/favicon.ico'];
 
@@ -93,7 +94,9 @@ async function handleMiddleware(
 
   const isAuthorized = !!token;
 
-  const isAuthPage = [signInPage, registerPage].includes(pathname);
+  const isAuthPage = [signInPage, registerPage, registerPage2].includes(
+    pathname,
+  );
 
   if (!isAuthorized && isAuthPage) {
     return;
@@ -108,6 +111,7 @@ async function handleMiddleware(
 
   // the user is not logged in, redirect to the sign-in page
   const signInUrl = new URL(signInPage, origin);
+  signInUrl.searchParams.append('callbackUrl', `${pathname}${search}`);
   return NextResponse.redirect(signInUrl);
 }
 

@@ -7,18 +7,23 @@ import ChildCard from '../../card/child/ChildCard';
 import Swapper from './Swapper';
 import { Spinner } from '../../common/Spinner';
 import { trpc } from '../../../utils/trpc';
+import InviteParentForm from './InviteParentForm';
 
 const ChildDashboard: React.FC = () => {
   const { address } = useAccount();
 
-  const { data } = trpc.useQuery(['child.getParent']);
+  const { data, isLoading } = trpc.useQuery(['child.getParent']);
 
-  if (!address) {
+  if (!address || isLoading) {
     return (
       <div className="flex h-[50vh] items-center justify-center">
         <Spinner />
       </div>
     );
+  }
+
+  if (!data) {
+    return <InviteParentForm />;
   }
 
   return (

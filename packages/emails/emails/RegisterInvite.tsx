@@ -1,0 +1,79 @@
+import {
+  Mjml,
+  MjmlBody,
+  MjmlSection,
+  MjmlColumn,
+  MjmlText,
+  MjmlSpacer,
+} from "mjml-react";
+
+import Footer from "../components/Footer";
+import Head from "../components/Head";
+import Header from "../components/Header";
+import { leadingRelaxed, textBase } from "../components/theme";
+import ButtonPrimary from "../components/ButtonPrimary";
+
+type RegisterInviteProps = {
+  from: "Parent" | "Child";
+  name?: string;
+  fromName: string;
+  link: string;
+  ctaText?: string;
+};
+
+const RegisterInvite: React.FC<RegisterInviteProps> = ({
+  name,
+  link,
+  ctaText,
+  from,
+  fromName,
+}) => {
+  return (
+    <Mjml>
+      <Head />
+      <MjmlBody width={600}>
+        <Header />
+        <MjmlSection padding="0 24px 0" cssClass="smooth">
+          <MjmlColumn>
+            <MjmlText
+              padding="16px 0 16px"
+              fontSize={textBase}
+              lineHeight={leadingRelaxed}
+              cssClass="paragraph"
+            >
+              Hello
+              {name && (
+                <MjmlText fontStyle="bold" color={"blue"}>
+                  {" "}
+                  {name}
+                </MjmlText>
+              )}
+              ,
+            </MjmlText>
+            <MjmlText
+              cssClass="paragraph"
+              padding="0"
+              fontSize={textBase}
+              lineHeight={leadingRelaxed}
+            >
+              {from === "Child" ? (
+                <>Your child {fromName} has invited you to join Pocket.</>
+              ) : (
+                <>Your parent {fromName} has invited you to join Pocket.</>
+              )}
+            </MjmlText>
+            {ctaText && (
+              <>
+                <MjmlSpacer height="24px" />
+                <ButtonPrimary link={link} uiText={ctaText} />
+              </>
+            )}
+          </MjmlColumn>
+        </MjmlSection>
+        <Footer />
+      </MjmlBody>
+    </Mjml>
+  );
+};
+
+export default RegisterInvite;

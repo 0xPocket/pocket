@@ -37,6 +37,7 @@
   "optional": "(optionnel)",
   "piggybank": "Tirelire",
   "account.settings": "Paramètres du compte",
+  "account.settings.tooltip": "Paramètres de retrait d'argent de poche. Vous pourrez les changer à tout moment.",
   "account": "Compte",
   "parent": "Parent",
   "child": "Enfant",
@@ -54,6 +55,8 @@
   "card.parent.status.invited": "Un email de configuration a été envoyé à {email}",
   "card.parent.status.active": "Ce compte est actif",
   "card.parent.piggyBank.addFunds": "Ajouter des fonds",
+  "card.parent.settings.periodicity": "Fréquence des retraits",
+  "card.parent.settings.ceiling": "Montant des retraits",
 
   "dashboard.child.claim.fail": "Le retrait a échoué.",
   "dashboard.child.claim.pending": "Retrait en cours, encore quelques secondes et ce sera bon",
@@ -65,7 +68,7 @@
   "dashboard.child.claimMatic.message": "Pour commencer ton voyage dans le web3, nous t'offrons quelques Matics pour payer les frais de tes premières transactions.",
 
   "verify-email.email-verified": "Votre email est verifié !",
-  "verify-email.redirect": "Vous allez être redirigé dans quelques instants...",
+  "verify-email.redirect": "Vous allez être redirigé dans {timer} secondes...",
   "verify-email.problem": "Si le problème persiste, veuillez nous contacter.",
 
   "common.welcome": "Bienvenue sur Pocket !",
@@ -93,7 +96,7 @@
   "route.dashboard": "tableau de bord",
 
   "add-account.how-to": "Comment créer un nouveau compte ?",
-  "add-account.step1": "Complétez ce formulaire avec les informations de votre enfant et les paramétres de son argent de poche récurrent.",
+  "add-account.step1": "Complétez ce formulaire avec les informations de votre enfant.",
   "add-account.step2": "Un email va être envoyé à votre enfant, il faut qu'il suive les instructions pour finaliser son inscription.",
   "add-account.step3": "Le compte est prêt à être utilisé !",
 
@@ -101,18 +104,31 @@
 
   "wallet.my-wallet": "Mon wallet",
   "wallet.funds": "Fonds disponibles",
-  "wallet.top-up": "Ajouter des fonds",
+  "wallet.top-up": "Recharger mon compte",
   "wallet.clipboard": "Adresse copiée dans le presse-papier !",
+  "wallet.clipboardtooltip": "Cliquez pour copier l'adresse",
+  "wallet.myaccount": "Mon compte",
+  "wallet.token-clipboard": "Cliquez pour copier l'adresse de l'USDC",
+  "wallet.polygonscan": "Voir l'USDC sur polygonscan",
+  "wallet.add-token": "Ajouter l'USDC sur Metamask",
 
   "header.open-options": "Ouvrir les options",
 
   "child-form.info": "Informations de votre enfant",
   "child-form.created": "Le compte a été crée !",
 
+  "parent-form.info": "Avant toute chose, il faut qu'un de tes parents se crée un compte",
+  "invite-parent": "Invite ton parent",
+  "parent-form.sent": "Invitation envoyée !",
+
   "funds-form.amount-required": "Le montant est requis",
   "funds-form.minimum": "Montant minimum de 1 requis",
   "funds-form.insufficient": "Fonds insuffisants",
   "funds-form.add-funds-to": "Ajouter des fonds à {name}",
+
+  "periodicity.explanation": "A quelle fréquence votre ado pourra retirer?",
+  "ceiling.explanation": "Combien peut-iel retirer?",
+  "first_set_child_settings": "Premièrement, il faut définir les paramètres de son compte",
 
   "dashboard.common.activity.header.topups": "Vos topups",
   "dashboard.common.activity.header.claims": "Vos retraits",
@@ -137,7 +153,7 @@
 
   "dashboard.parent.childAccountStatus": "Votre enfant n'a pas verifié son compte ! Il devrait regarder ses emails...",
 
-  "dashboard.parent.card.email-sent": "Nous avons envoyé un email a votre enfant.",
+  "dashboard.parent.card.email-sent": "Nous avons envoyé un email à votre enfant afin qu'il finalise son inscription.",
   "dashboard.parent.card.send-new": "Renvoyer un email.",
   "dashboard.parent.card.see-on-polygon": "Voir sur polygonscan",
   "dashboard.parent.card.email-error": "Une erreur s'est produite, si le problème persiste, veuillez nous contacter.",
@@ -170,14 +186,19 @@
   "legal.terms": "Conditions d'utilisation",
   "legal.terms.confirm": "Vous confirmez avoir lu et accepté les {terms} et la {privacy} de Pocket.",
 
-	"titles.add-account": "Ajouter un compte",
-	"titles.connect": "Connection",
-	"titles.dashboard": "Dashboard",
-	"titles.onboard": "Enregistrement",
-	"titles.email-verification": "Verification d'email",
-	"titles.privacy-policy": "Politique de confidentialité",
-	"titles.terms-conditions": "Conditions générales d'utilisation",
+  "titles.add-account": "Ajouter un compte",
+  "titles.connect": "Connection",
+  "titles.dashboard": "Dashboard",
+  "titles.onboard": "Enregistrement",
+  "titles.email-verification": "Verification d'email",
+  "titles.privacy-policy": "Politique de confidentialité",
+  "titles.terms-conditions": "Conditions générales d'utilisation",
 
-	"testnet.disclaimer" : "Ce site est une version testnet fonctionnant sur polygon-mumbai. N'envoyez pas de fonds réels aux adresses affichées sur le site, les fonds peuvent être perdus. Nous fournissons des jetons pour que vous puissiez essayer notre produit lors de votre inscription.",
-	"protect.smallscreen": "Pocket n'est pas encore disponible pour les petits écrans !"
+  "testnet.disclaimer": "Ce site est une version testnet fonctionnant sur polygon-mumbai. N'envoyez pas de fonds réels aux adresses affichées sur le site, les fonds peuvent être perdus. Nous fournissons des jetons pour que vous puissiez essayer notre produit lors de votre inscription.",
+  "protect.smallscreen": "Pocket n'est pas encore disponible pour les petits écrans !",
+
+  "error_linking_account": "Une erreur est survenue lors du jumelage du compte.",
+  "linking_success_redirect": "Votre compte a bien été jumelé! Redirection dans {timer} secondes...",
+
+  "child_parent_invitation": "Ton parent a recu une invitation pour rejoindre Pocket !"
 }

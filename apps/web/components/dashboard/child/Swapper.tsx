@@ -44,7 +44,7 @@ function Swapper({}: SwapperProps) {
       };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-8">
       <h2>
         <FormattedMessage id="card.child.swapper" />
       </h2>

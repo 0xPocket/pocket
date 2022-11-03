@@ -7,7 +7,6 @@ import '@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeab
 import '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
 import './ERC2771ContextUpgradeableCustom.sol';
 
-
 /// @title A pocket money faucet
 /// @author Guillaume Dupont, Sami Darnaud, Solal Dunckel, Theo Palhol
 /// @custom:experimental This is an experimental contract. It should not be used in production.
@@ -141,7 +140,7 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
             true,
             0,
             config.ceiling,
-            block.timestamp - config.periodicity,
+            0,
             config.periodicity,
             _msgSender(),
             config.tokenIndex
@@ -314,10 +313,7 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
         Config memory conf = childToConfig[child];
         if (conf.periodicity == 0) return 0;
         if (conf.lastClaim + conf.periodicity > block.timestamp) return 0;
-        uint256 nbPeriod = (block.timestamp - conf.lastClaim) /
-            conf.periodicity;
-        uint256 claimable = conf.ceiling * nbPeriod;
-        return (claimable < conf.balance ? claimable : conf.balance);
+        return (conf.ceiling < conf.balance ? conf.ceiling : conf.balance);
     }
 
     /// @notice You will receive the pocket money your parent deposited for you.
@@ -329,12 +325,13 @@ contract PocketFaucet is OwnableUpgradeable, ERC2771ContextUpgradeable {
             childToConfig[_msgSender()].active,
             '!claim: account is inactive'
         );
-
         uint256 claimable = computeClaimable(_msgSender());
         require(claimable != 0, '!claim: nothing to claim');
-        uint256 nbPeriod = (block.timestamp - conf.lastClaim) /
-            conf.periodicity;
-        conf.lastClaim = conf.lastClaim + conf.periodicity * nbPeriod;
+
+        if (conf.lastClaim > 0)
+            while (conf.lastClaim + conf.periodicity < block.timestamp)
+                conf.lastClaim += conf.periodicity;
+        else conf.lastClaim = block.timestamp;
 
         conf.balance -= claimable;
         emit FundsClaimed(block.timestamp, _msgSender(), claimable);

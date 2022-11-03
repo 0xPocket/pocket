@@ -37,6 +37,8 @@
   "optional": "(optional)",
   "piggybank": "PiggyBank",
   "account.settings": "Account settings",
+  "account.settings.tooltip": "Pocket money withdraw settings. You will be able to change this at any moment.",
+
   "account": "Account",
   "parent": "Parent",
   "child": "Child",
@@ -54,6 +56,8 @@
   "card.parent.status.invited": "A set-up email has been sent to {email}",
   "card.parent.status.active": "This account is up and running",
   "card.parent.piggyBank.addFunds": "Add funds",
+  "card.parent.settings.periodicity": "Withdraw frequency",
+  "card.parent.settings.ceiling": "Withdraw amount",
 
   "dashboard.child.claim.fail": "Claim failed.",
   "dashboard.child.claim.pending": "Claim pending, please hang on !",
@@ -65,7 +69,7 @@
   "dashboard.child.claimMatic.message": "To start your journey into web3, we grant you some Matic to pay fees for your first transaction.",
 
   "verify-email.email-verified": "Your email is now verified !",
-  "verify-email.redirect": "You will be redirected in few seconds...",
+  "verify-email.redirect": "You will be redirected in {timer} seconds...",
   "verify-email.problem": "If the problem persists, contact us.",
 
   "common.welcome": "Welcome to Pocket !",
@@ -93,7 +97,7 @@
   "route.dashboard": "dashboard",
 
   "add-account.how-to": "How to add a new account ?",
-  "add-account.step1": "Complete this form with your child infos and his recurrent pocket money parameters.",
+  "add-account.step1": "Complete this form with your child infos.",
   "add-account.step2": "An email will be send to the address, follow the few steps to create the child account.",
   "add-account.step3": "The account is set and you're ready to go !",
 
@@ -103,16 +107,29 @@
   "wallet.funds": "Available funds",
   "wallet.top-up": "Top-Up",
   "wallet.clipboard": "Address copied to clipboard !",
+  "wallet.clipboardtooltip": "Click to copy your address",
+  "wallet.myaccount": "My account",
+  "wallet.token-clipboard": "Copy UDSC's address",
+  "wallet.polygonscan": "See USDC on polygonscan",
+  "wallet.add-token": "Add USDC on your Metamask",
 
   "header.open-options": "Open options",
 
   "child-form.info": "Your child infos",
   "child-form.created": "Account created !",
 
+  "parent-form.info": "Before all, you need your parent to create an account!",
+  "parent-form.sent": "Invitation sent !",
+  "invite-parent": "Invite your parent",
+
   "funds-form.amount-required": "Amount is required",
   "funds-form.minimum": "Minimum amount is 1",
   "funds-form.insufficient": "Insufficient funds",
   "funds-form.add-funds-to": "Add funds to {name} account",
+
+  "periodicity.explanation": "How often will you child be able to withdraw money ?",
+  "ceiling.explanation": "How much can he/she withdraw?",
+  "first_set_child_settings": "First you must set up your child account settings",
 
   "dashboard.common.activity.header.topups": "Your topups",
   "dashboard.common.activity.header.claims": "Your claims",
@@ -169,15 +186,20 @@
   "legal.privacy": "Privacy policy",
   "legal.terms": "Terms and conditions",
   "legal.terms.confirm": "By signing up, you confirm you have read and agree to Pocket's {privacy} and {terms}.",
-	 
-	"titles.add-account": "Add an account",
-	"titles.connect": "Connect",
-	"titles.dashboard": "Dashboard",
-	"titles.onboard": "Onboard",
-	"titles.email-verification": "Email verification",
-	"titles.privacy-policy": "Privacy policy",
-	"titles.terms-conditions": "Terms and conditions",
 
-	"testnet.disclaimer" : "This is a testnet version running on polygon-mumbai. Do not send any real funds to any addresses displayed on the website, funds can be lost. We provide tokens for you to try our product on registration.",
-	"protect.smallscreen": "Pocket is not optimized for small screens yet !"
+  "titles.add-account": "Add an account",
+  "titles.connect": "Connect",
+  "titles.dashboard": "Dashboard",
+  "titles.onboard": "Onboard",
+  "titles.email-verification": "Email verification",
+  "titles.privacy-policy": "Privacy policy",
+  "titles.terms-conditions": "Terms and conditions",
+
+  "testnet.disclaimer": "This is a testnet version running on polygon-mumbai. Do not send any real funds to any addresses displayed on the website, funds can be lost. We provide tokens for you to try our product on registration.",
+  "protect.smallscreen": "Pocket is not optimized for small screens yet !",
+
+  "error_linking_account": "Error linking your account",
+  "linking_success_redirect": "Your account has been linked! Redirecting in {timer} seconds...",
+
+  "child_parent_invitation": "Your parent has received an invite join Pocket !"
 }

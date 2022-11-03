@@ -1,14 +1,28 @@
 import Link from 'next/link';
-import React from 'react';
+import React, { ReactElement } from 'react';
 
-const CallToAction: React.FC = () => {
+type CallToActionProps = {
+  url: string;
+  msg: ReactElement;
+  icon?: string;
+  className?: string;
+};
+
+const CallToAction: React.FC<CallToActionProps> = ({
+  url,
+  msg,
+  icon,
+  className,
+}) => {
   return (
-    <div className="flex items-center  gap-8 pt-8">
-      <Link href="https://app.gopocket.co">
-        <button className="action-btn  text-xl ">
-          Go to app
-          <span className="ml-2 text-2xl">🚀</span>
-        </button>
+    <div
+      className={`${className} flex items-center justify-center gap-8 md:justify-start`}
+    >
+      <Link href={url}>
+        <a className="action-btn">
+          {msg}
+          {icon && <span className="ml-2 text-xl">{icon}</span>}
+        </a>
       </Link>
     </div>
   );

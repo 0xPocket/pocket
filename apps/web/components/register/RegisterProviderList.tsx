@@ -3,6 +3,7 @@ import { Connector, useAccount, useConnect } from 'wagmi';
 import { useIsMounted } from '../../hooks/useIsMounted';
 import Image from 'next/future/image';
 import FormattedMessage from '../common/FormattedMessage';
+import { Spinner } from '../common/Spinner';
 
 type ProviderListProps = {
   callback: (id: string) => void;
@@ -20,7 +21,7 @@ const ProviderList: FC<ProviderListProps> = ({ callback, userType }) => {
     },
   });
 
-  const { isConnected, connector: activeConnector } = useAccount();
+  const { isConnected, connector: activeConnector, status } = useAccount();
 
   const handleConnect = useCallback(
     (connector: Connector) => {
@@ -41,36 +42,36 @@ const ProviderList: FC<ProviderListProps> = ({ callback, userType }) => {
     return connectors.filter((c) => c.id !== 'magic');
   }, [userType, connectors]);
 
-  if (!mounted) {
-    return null;
-  }
-
   return (
     <>
       <h3>
         <FormattedMessage id="register.step1.title" />
       </h3>
 
-      <div className={` flex w-full justify-center gap-8`}>
-        {filteredConnectors.map((connector) => (
-          <button
-            key={connector.id}
-            onClick={() => handleConnect(connector)}
-            className="provider-container"
-          >
-            <div className="container-classic rounded-md p-8">
-              <div className="provider-img">
-                <Image
-                  src={`/assets/providers/${connector.id}.svg`}
-                  width={128}
-                  height={128}
-                  alt={connector.name}
-                />
+      {!mounted || status === 'connecting' ? (
+        <Spinner />
+      ) : (
+        <div className={` flex w-full justify-center gap-8`}>
+          {filteredConnectors.map((connector) => (
+            <button
+              key={connector.id}
+              onClick={() => handleConnect(connector)}
+              className="provider-container"
+            >
+              <div className="container-classic rounded-md p-8">
+                <div className="provider-img">
+                  <Image
+                    src={`/assets/providers/${connector.id}.svg`}
+                    width={128}
+                    height={128}
+                    alt={connector.name}
+                  />
+                </div>
               </div>
-            </div>
-          </button>
-        ))}
-      </div>
+            </button>
+          ))}
+        </div>
+      )}
     </>
   );
 };

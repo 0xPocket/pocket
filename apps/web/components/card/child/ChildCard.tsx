@@ -11,6 +11,7 @@ import Balance from '../common/Balance';
 import LinkPolygonScan from '../common/LinkPolygonScan';
 import MetaMaskProfilePicture from '../common/MetaMaskProfilePicture';
 import { useSession } from 'next-auth/react';
+import { formatUnits } from 'ethers/lib/utils';
 
 type ChildCardProps = {
   childAddress: string;
@@ -85,7 +86,7 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
   }, [canClaim, config, claimableAmount, erc20, nextClaim, intl, now]);
 
   return (
-    <div className="flex flex-col space-y-4">
+    <div className="flex flex-col space-y-8">
       <h2>
         <FormattedMessage id="card.child.title" />
       </h2>
@@ -93,13 +94,34 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
         className={`${className} container-classic grid h-full grid-cols-2 rounded-lg p-8`}
       >
         <div className="flex h-full flex-col items-start justify-between">
-          <div className="flex items-center space-x-4">
-            <MetaMaskProfilePicture address={userData?.user.address} />
-            <div className="flex items-end space-x-4">
-              <h1 className="max-w-fit whitespace-nowrap">
-                {userData?.user.name}
-              </h1>
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center space-x-4">
+              <MetaMaskProfilePicture address={userData?.user.address} />
+              <div className="flex items-end space-x-4">
+                <h1 className="max-w-fit whitespace-nowrap">
+                  {userData?.user.name}
+                </h1>
+              </div>
             </div>
+            {config && (
+              <div className="space-y-2 font-thin">
+                <p>
+                  <FormattedMessage id="periodicity" /> :{' '}
+                  {formatUnits(config.periodicity, 0) === '604800' ? (
+                    <FormattedMessage id="weekly" />
+                  ) : (
+                    <FormattedMessage id="monthly" />
+                  )}
+                </p>
+                <p>
+                  <FormattedMessage id="ceiling" /> :{' '}
+                  {Number(
+                    formatUnits(config.ceiling, erc20.data?.decimals),
+                  ).toFixed(2)}
+                  $
+                </p>
+              </div>
+            )}
           </div>
           <LinkPolygonScan address={childAddress} />
         </div>

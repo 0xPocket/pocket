@@ -18,7 +18,6 @@ import { useEthereumSiwe } from '../hooks/useEthereumSiwe';
 import { useMagicConnect } from '../hooks/useMagicConnect';
 import { trpc } from '../utils/trpc';
 import { useZodForm } from '../utils/useZodForm';
-import { env } from 'config/env/client';
 
 const FormData = z.object({
   userType: z.enum(['Parent', 'Child']),
@@ -53,18 +52,6 @@ const Register: FC = () => {
       });
     },
   });
-
-  // BETA TOKEN
-  const [betaToken, setBetaToken] = useState<string>();
-
-  const { isLoading: tokenIsLoading } = trpc.useQuery(
-    ['beta.verifyInvite', { token: router.query.token as string }],
-    {
-      enabled: env.NEXT_PUBLIC_PRIVATE_BETA && !!router.query.token,
-      retry: false,
-      onSuccess: () => setBetaToken(router.query.token as string),
-    },
-  );
 
   const magicLinkRegister = trpc.useMutation('register.magic', {
     onError: (error) => {
@@ -121,7 +108,6 @@ const Register: FC = () => {
         type: userType,
         email: data.email,
         name: data.name,
-        token: betaToken,
       });
     } else if (data.connectionType === 'Magic') {
       const didToken = await magicSignIn.mutateAsync(data.email);
@@ -130,27 +116,9 @@ const Register: FC = () => {
         didToken: didToken,
         email: data.email,
         name: data.name,
-        token: betaToken,
       });
     }
   };
-
-  if (env.NEXT_PUBLIC_PRIVATE_BETA && !betaToken) {
-    return (
-      <PageWrapper>
-        <div className="flex flex-col items-center">
-          {tokenIsLoading ? (
-            <Spinner />
-          ) : (
-            <div className="flex w-[512px] flex-col items-center gap-16">
-              <h1>Pocket is currently in private beta</h1>
-              <p>If you want to try it, reach us on social media</p>
-            </div>
-          )}
-        </div>
-      </PageWrapper>
-    );
-  }
 
   return (
     <PageWrapper>
@@ -197,7 +165,7 @@ const Register: FC = () => {
                     className={({ checked }) =>
                       checked
                         ? 'input-radio-checked big'
-                        : 'input-radio-unchecked big cursor-not-allowed opacity-30'
+                        : 'input-radio-unchecked big'
                     }
                     onClick={() => {
                       setValue('userType', 'Child');
@@ -206,7 +174,6 @@ const Register: FC = () => {
                         query: { ...router.query, step: 1 },
                       });
                     }}
-                    disabled
                   >
                     <FormattedMessage id="child" />
                   </RadioGroup.Option>

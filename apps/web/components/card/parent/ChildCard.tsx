@@ -1,6 +1,6 @@
 import type { UserChild } from '@lib/types/interfaces';
 import { Tab } from '@headlessui/react';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useContractWrite } from 'wagmi';
 import { useSmartContract } from '../../../contexts/contract';
 import { useAddFundsForm } from '../../../hooks/useAddFundsForm';
@@ -8,8 +8,6 @@ import { useChildSettingsForm } from '../../../hooks/useChildSettingsForm';
 import FormattedMessage from '../../common/FormattedMessage';
 import AddFundsForm from './AddFundsForm';
 import ChildSettingsForm from './ChildSettingsForm';
-import { parseUnits } from 'ethers/lib/utils';
-import { BigNumber } from 'ethers';
 import MainPanel from './MainPanel';
 import useContractRead from '../../../hooks/useContractRead';
 
@@ -25,8 +23,10 @@ function ChildCard({
   className,
 }: ChildCardProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [ceiling, setCeiling] = useState('0');
+  const [periodicity, setPeriodicity] = useState('0');
 
-  const { pocketContract, erc20 } = useSmartContract();
+  const { pocketContract } = useSmartContract();
 
   const { data: config, refetch: refetchConfig } = useContractRead({
     contract: pocketContract,
@@ -40,8 +40,10 @@ function ChildCard({
   });
 
   const { approveAndAddChild, isLoading: isLoadingAddFunds } = useAddFundsForm(
-    child,
-    !!config?.lastClaim.isZero(),
+    child.address,
+    !!config?.periodicity.isZero(),
+    ceiling,
+    periodicity,
     () => {
       refetchConfig();
       setSelectedIndex(0);
@@ -49,7 +51,7 @@ function ChildCard({
   );
 
   const { changeConfig, isLoading: isLoadingChildSetting } =
-    useChildSettingsForm(child.address, !!config?.lastClaim.isZero(), () => {
+    useChildSettingsForm(child.address, !!config?.periodicity.isZero(), () => {
       refetchConfig();
       setSelectedIndex(0);
     });
@@ -61,26 +63,6 @@ function ChildCard({
     contractInterface: pocketContract.interface,
     args: [config?.balance, child.address],
   });
-
-  const initialConfig = useMemo(() => {
-    return {
-      periodicity:
-        config && !config.periodicity.isZero()
-          ? config.periodicity
-          : BigNumber.from(child.child?.initialPeriodicity),
-      ceiling:
-        config && !config.ceiling.isZero()
-          ? config.ceiling
-          : parseUnits(
-              child.child!.initialCeiling!.toString(),
-              erc20.data?.decimals,
-            ),
-    };
-  }, [config, erc20, child]);
-
-  if (!config) {
-    return null;
-  }
 
   return (
     <div
@@ -118,28 +100,35 @@ function ChildCard({
           </Tab.Panel>
           <Tab.Panel as={'div'} className="h-full">
             <div className="flex h-full flex-col items-end justify-between">
-              <AddFundsForm
-                child={child}
-                addFunds={approveAndAddChild}
-                isLoading={isLoadingAddFunds}
-                returnFn={() => {
-                  setSelectedIndex(0);
-                }}
-              />
+              {config && (
+                <AddFundsForm
+                  child={child}
+                  addFunds={approveAndAddChild}
+                  isLoading={isLoadingAddFunds}
+                  config={config}
+                  periodicity={periodicity}
+                  setCeiling={setCeiling}
+                  setPeriodicity={setPeriodicity}
+                  returnFn={() => {
+                    setSelectedIndex(0);
+                  }}
+                />
+              )}
             </div>
           </Tab.Panel>
           <Tab.Panel as={'div'} className="h-full">
             <div className="flex h-full flex-col items-end justify-between">
-              <ChildSettingsForm
-                changeConfig={changeConfig}
-                initialConfig={initialConfig}
-                config={config}
-                withdrawFundsFromChild={withdrawFundsFromChild}
-                isLoading={isLoadingChildSetting}
-                returnFn={() => {
-                  setSelectedIndex(0);
-                }}
-              />
+              {config && (
+                <ChildSettingsForm
+                  changeConfig={changeConfig}
+                  config={config}
+                  withdrawFundsFromChild={withdrawFundsFromChild}
+                  isLoading={isLoadingChildSetting}
+                  returnFn={() => {
+                    setSelectedIndex(0);
+                  }}
+                />
+              )}
             </div>
           </Tab.Panel>
         </Tab.Panels>

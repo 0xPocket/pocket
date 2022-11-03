@@ -17,6 +17,13 @@ interface Options {
   additionalMagicOptions?: MagicSDKAdditionalConfiguration<string>;
 }
 
+function getLocale() {
+  if (typeof window !== 'undefined') {
+    return window.navigator.language;
+  }
+  return 'en';
+}
+
 export class MagicConnector extends Connector {
   ready = !IS_SERVER;
 
@@ -121,9 +128,13 @@ export class MagicConnector extends Connector {
   }
 
   getMagicSDK(): Magic {
+    const locale = getLocale();
+
     if (!this.magicSDK) {
       this.magicSDK = new Magic(this.magicOptions.apiKey, {
         ...this.magicOptions.additionalMagicOptions,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        locale: locale as any,
       });
       this.magicSDK.preload();
       return this.magicSDK;

@@ -12,6 +12,7 @@ import type { ContractMethodReturn } from '../../../hooks/useContractRead';
 import { useZodForm } from '../../../utils/useZodForm';
 import FormattedMessage from '../../common/FormattedMessage';
 import { Spinner } from '../../common/Spinner';
+import Tooltip from '../../common/Tooltip';
 
 const ChildSettingsSchema = z.object({
   ceiling: z.number({ invalid_type_error: 'Ceiling is required' }).min(1),
@@ -22,10 +23,6 @@ type FormValues = z.infer<typeof ChildSettingsSchema>;
 
 type ChildSettingsFormProps = {
   config: ContractMethodReturn<PocketFaucet, 'childToConfig'>;
-  initialConfig: {
-    periodicity: BigNumber;
-    ceiling: BigNumber;
-  };
   withdrawFundsFromChild: () => void;
   changeConfig: (amount: FormValues) => Promise<void>;
   returnFn: () => void;
@@ -35,7 +32,6 @@ type ChildSettingsFormProps = {
 function ChildSettingsForm({
   config,
   withdrawFundsFromChild,
-  initialConfig,
   changeConfig,
   returnFn,
   isLoading,
@@ -60,8 +56,8 @@ function ChildSettingsForm({
   const { register, handleSubmit, setValue } = useZodForm({
     schema: ChildSettingsSchema,
     defaultValues: {
-      periodicity: formatUnits(initialConfig.periodicity, 0).toString(),
-      ceiling: Number(formatUnits(initialConfig.ceiling, erc20.data?.decimals)),
+      periodicity: config.periodicity.toString(),
+      ceiling: Number(formatUnits(config.ceiling, erc20.data?.decimals)),
     },
   });
 
@@ -84,8 +80,11 @@ function ChildSettingsForm({
           <tbody className="flex flex-col space-y-4">
             <tr className="flex items-center space-x-8">
               <td>
-                <label>
+                <label className="flex items-center gap-2">
                   <FormattedMessage id="periodicity" />
+                  <Tooltip>
+                    <FormattedMessage id="card.parent.settings.periodicity" />
+                  </Tooltip>
                 </label>
               </td>
               <td className="flex  w-full justify-end">
@@ -112,8 +111,11 @@ function ChildSettingsForm({
             </tr>
             <tr className="flex items-center justify-between">
               <td>
-                <label htmlFor="topup">
+                <label htmlFor="topup" className="flex items-center gap-2">
                   <FormattedMessage id="ceiling" />
+                  <Tooltip>
+                    <FormattedMessage id="card.parent.settings.ceiling" />
+                  </Tooltip>
                 </label>
               </td>
               <td className="flex justify-end text-4xl">
