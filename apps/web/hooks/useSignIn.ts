@@ -25,6 +25,7 @@ export function useSignIn(): UseSignInReturn {
           toast.error(res?.error);
           setLoading(false);
         } else {
+          console.log(res);
           if (res.url) {
             router.push(res.url);
           }
