@@ -13,13 +13,14 @@ const MyAccountCard: FC = () => {
   const { address } = useAccount();
   const { erc20 } = useSmartContract();
   const { showTransak } = useTransak();
-  const { data, isLoading } = useBalance({
+  const { data, isLoading, isIdle } = useBalance({
     addressOrName: address,
     token: erc20.data?.address,
     formatUnits: erc20.data?.decimals,
     enabled: !!erc20.data,
     watch: true,
   });
+
   return (
     <div className="container-classic flex w-full max-w-[350px] flex-col gap-6 rounded-lg p-8">
       <div className="flex items-start justify-between">
@@ -27,7 +28,7 @@ const MyAccountCard: FC = () => {
           <span>
             <FormattedMessage id="wallet.funds" />
           </span>
-          {isLoading ? (
+          {isLoading || isIdle ? (
             <Spinner />
           ) : (
             <div className="flex items-end gap-2">
