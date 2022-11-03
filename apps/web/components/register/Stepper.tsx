@@ -19,8 +19,8 @@ const Stepper: FC<StepperProps> = ({ step, nbrSteps }) => {
                   push({ pathname, query: { ...query, step: i } });
               }}
               className={`step ${step === 0 && 'active'} ${
-                step > 0 && 'completed'
-              }`}
+                step > 0 && 'cursor-pointer'
+              } ${step > 0 && 'completed'}`}
             >
               {i + 1}
             </div>
@@ -58,8 +58,8 @@ const Stepper: FC<StepperProps> = ({ step, nbrSteps }) => {
                   push({ pathname, query: { ...query, step: i } });
               }}
               className={`step ${step === i && 'active'} ${
-                step > i && 'completed'
-              }`}
+                step > i && 'cursor-pointer'
+              } ${step < i && 'cursor-pointer'} ${step > i && 'completed'}`}
             >
               {i + 1}
             </div>
