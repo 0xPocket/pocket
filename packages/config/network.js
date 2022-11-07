@@ -3,7 +3,7 @@
 const chain = require("wagmi/chains");
 
 /**
- * @type {{ [k in 'polygon-mainnet' | "polygon-mumbai" | "localhost"]: { ERC20_ADDRESS: string; CHAIN_ID: number; ALCHEMY_KEY: string; RPC_URL: string; NETWORK_KEY: 'polygon-mainnet' | "polygon-mumbai"; WAGMI_CHAIN: import('wagmi').Chain ; TRUSTED_FORWARDER: string; SIGNER_WALLET: string; } }}
+ * @type {{ [k in 'polygon-mainnet' | "polygon-mumbai" | "localhost"]: { ERC20_ADDRESS: import('wagmi').Address; CHAIN_ID: number; ALCHEMY_KEY: string; RPC_URL: string; NETWORK_KEY: 'polygon-mainnet' | "polygon-mumbai"; WAGMI_CHAIN: import('wagmi').Chain ; TRUSTED_FORWARDER: import('wagmi').Address; SIGNER_WALLET: import('wagmi').Address; } }}
  **/
 const NETWORK_CONFIG = {
   "polygon-mainnet": {

@@ -8,9 +8,9 @@ const BaseTokenBalance: React.FC = () => {
   const { erc20 } = useSmartContract();
   const { data } = useBalance({
     addressOrName: address,
-    token: erc20.data?.address,
-    formatUnits: erc20.data?.decimals,
-    enabled: !!erc20.data,
+    token: erc20?.address,
+    formatUnits: erc20?.decimals,
+    enabled: !!erc20 && !!address,
     watch: true,
   });
   const { data: maticBalance } = useBalance({

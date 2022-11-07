@@ -12,8 +12,8 @@ type ClaimButtonProps = {
 
 const ClaimButton: React.FC<ClaimButtonProps> = ({ disabled, children }) => {
   const { write, isLoading } = useSendMetaTx({
-    contractAddress: env.NEXT_PUBLIC_CONTRACT_ADDRESS,
-    contractInterface: PocketFaucetAbi,
+    address: env.NEXT_PUBLIC_CONTRACT_ADDRESS,
+    abi: PocketFaucetAbi,
     functionName: 'claim',
     onMutate: () => {
       toast.info(<FormattedMessage id="dashboard.child.claim.pending" />, {

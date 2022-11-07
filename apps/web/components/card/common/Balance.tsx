@@ -16,9 +16,9 @@ const Balance: FC<BalanceProps> = ({ balance }) => {
   const { data: session } = useSession();
   const { data: balanceWallet } = useBalance({
     addressOrName: address,
-    token: erc20.data?.address,
-    formatUnits: erc20.data?.decimals,
-    enabled: !!erc20.data,
+    token: erc20?.address,
+    formatUnits: erc20?.decimals,
+    enabled: !!erc20,
     watch: true,
   });
 
@@ -29,16 +29,14 @@ const Balance: FC<BalanceProps> = ({ balance }) => {
       </p>
       <span className="text-4xl">
         {balance
-          ? Number(formatUnits(balance, erc20.data?.decimals)).toFixed(2)
+          ? Number(formatUnits(balance, erc20?.decimals)).toFixed(2)
           : '0.00'}{' '}
         $
       </span>
       {balanceWallet && session?.user.type === 'Child' && (
         <span className="text-gray">
           Balance:{' '}
-          {Number(
-            formatUnits(balanceWallet.value, erc20.data?.decimals),
-          ).toFixed(2)}
+          {Number(formatUnits(balanceWallet.value, erc20?.decimals)).toFixed(2)}
           $
         </span>
       )}

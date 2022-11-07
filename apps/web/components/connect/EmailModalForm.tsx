@@ -21,7 +21,7 @@ type EmailModalFormProps = {
 };
 
 const EmailModalForm: FC<EmailModalFormProps> = ({ closeModal }) => {
-  const { isConnected } = useAccount();
+  const { isConnected, connector } = useAccount();
   const {
     connectors,
     connectAsync,
@@ -54,7 +54,7 @@ const EmailModalForm: FC<EmailModalFormProps> = ({ closeModal }) => {
 
     const didToken = await magicSignIn.mutateAsync(data.email);
 
-    if (!isConnected) {
+    if (!isConnected || connector?.id !== 'magic') {
       await connectAsync({
         connector: connectors.find((c) => c.id === 'magic'),
       });

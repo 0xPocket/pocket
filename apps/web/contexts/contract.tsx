@@ -1,35 +1,18 @@
 import { createContext, useContext, useMemo } from 'react';
-import { useAccount, useContract, useToken } from 'wagmi';
-import type {
-  ERC20Permit,
-  PocketFaucet,
-} from 'pocket-contract/typechain-types';
+import { useToken } from 'wagmi';
 import { env } from 'config/env/client';
-import { ERC20PermitAbi, PocketFaucetAbi } from 'pocket-contract/abi';
-import { useSession } from 'next-auth/react';
-
+import { FetchTokenResult } from '@wagmi/core';
 interface SmartContractProviderProps {
   children: React.ReactNode;
 }
 
 interface ISmartContractContext {
-  erc20: {
-    contract: ERC20Permit;
-    data:
-      | {
-          address: string;
-          decimals: number;
-          name: string;
-          symbol: string;
-        }
-      | undefined;
-  };
-  pocketContract: PocketFaucet;
+  erc20?: FetchTokenResult;
 }
 
 export function createCtx<A extends {} | null>() {
   const ctx = createContext<A | undefined>(undefined);
-  return [ctx, ctx.Provider] as const; // 'as const' makes TypeScript infer a tuple
+  return [ctx, ctx.Provider] as const;
 }
 
 const [SmartContractContext, SmartContractContextProvider] =
@@ -38,33 +21,15 @@ const [SmartContractContext, SmartContractContextProvider] =
 export const SmartContractProvider = ({
   children,
 }: SmartContractProviderProps) => {
-  const { isConnected } = useAccount();
-  const { status } = useSession();
-
   const { data: erc20Data } = useToken({
     address: env.ERC20_ADDRESS,
-    enabled: isConnected && status === 'authenticated',
-  });
-
-  const erc20Contract = useContract<ERC20Permit>({
-    addressOrName: env.ERC20_ADDRESS,
-    contractInterface: ERC20PermitAbi,
-  });
-
-  const pocketContract = useContract<PocketFaucet>({
-    addressOrName: env.NEXT_PUBLIC_CONTRACT_ADDRESS,
-    contractInterface: PocketFaucetAbi,
   });
 
   const value = useMemo(() => {
     return {
-      erc20: {
-        data: erc20Data,
-        contract: erc20Contract,
-      },
-      pocketContract,
+      erc20: erc20Data,
     };
-  }, [erc20Data, erc20Contract, pocketContract]);
+  }, [erc20Data]);
 
   return (
     <SmartContractContextProvider value={value}>

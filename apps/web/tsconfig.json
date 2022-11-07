@@ -5,6 +5,7 @@
     "../../packages/config/**/*.js",
     "next-env.d.ts",
     "next-auth.d.ts",
+    "abi.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "lang/compareLang.js"

@@ -3,25 +3,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { UserChild } from '@lib/types/interfaces';
 import { formatUnits, parseUnits } from 'ethers/lib/utils';
 import { useSmartContract } from '../../../contexts/contract';
-import useContractRead, {
-  ContractMethodReturn,
-} from '../../../hooks/useContractRead';
-import { useAccount } from 'wagmi';
+import { erc20ABI, useAccount, useContractRead } from 'wagmi';
 import type { BigNumber } from 'ethers';
 import { z } from 'zod';
 import { useZodForm } from '../../../utils/useZodForm';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect } from 'react';
 import FormattedMessage from '../../common/FormattedMessage';
 import { useIntl } from 'react-intl';
 import { Spinner } from '../../common/Spinner';
 import SetChildConfigForm from './SetChildConfigForm';
-import { PocketFaucet } from 'pocket-contract/typechain-types';
+import { PocketFaucetAbi } from 'pocket-contract/abi';
+import { ExtractAbiReturnType } from '../../../utils/abi-types';
 
 type AddFundsFormProps = {
   child: UserChild;
   addFunds: (amount: BigNumber) => Promise<void>;
   isLoading: boolean;
-  config: ContractMethodReturn<PocketFaucet, 'childToConfig'>;
+  config: ExtractAbiReturnType<typeof PocketFaucetAbi, 'childToConfig'>;
   periodicity: string;
   setCeiling: Dispatch<SetStateAction<string>>;
   setPeriodicity: Dispatch<SetStateAction<string>>;
@@ -43,10 +41,11 @@ function AddFundsForm({
   const intl = useIntl();
 
   const { data: balance } = useContractRead({
-    contract: erc20.contract,
+    address: erc20?.address,
+    abi: erc20ABI,
     functionName: 'balanceOf',
     args: [address!],
-    enabled: !!address,
+    enabled: !!address && !!erc20,
   });
 
   const ChildSettingsSchema = z.object({
@@ -63,7 +62,7 @@ function AddFundsForm({
         }),
       )
       .max(
-        Number(formatUnits(balance || 1000, erc20.data?.decimals)),
+        Number(formatUnits(balance || 0, erc20?.decimals)),
         intl.formatMessage({
           id: 'funds-form.insufficient',
         }),
@@ -85,7 +84,7 @@ function AddFundsForm({
   });
 
   const onSubmit = async (data: FormValues) => {
-    addFunds(parseUnits(data.topup.toString(), erc20.data?.decimals));
+    addFunds(parseUnits(data.topup.toString(), erc20?.decimals));
   };
 
   useEffect(() => {
@@ -123,7 +122,7 @@ function AddFundsForm({
             placeholder="0"
             type="number"
             min="0"
-            step={1 / 10 ** erc20.data?.decimals!}
+            step={1 / 10 ** erc20?.decimals!}
             onKeyDown={(e) => {
               if (e.key === 'e' || e.key === '-') {
                 e.preventDefault();
@@ -139,9 +138,9 @@ function AddFundsForm({
           {balance && (
             <span className="text-gray">
               Balance:{' '}
-              {Number(
-                formatUnits(balance.toString(), erc20.data?.decimals),
-              ).toFixed(2)}
+              {Number(formatUnits(balance.toString(), erc20?.decimals)).toFixed(
+                2,
+              )}
             </span>
           )}
           <button
@@ -151,7 +150,7 @@ function AddFundsForm({
               if (!balance?.isZero()) {
                 setValue(
                   'topup',
-                  Number(formatUnits(balance || 1000, erc20.data?.decimals)),
+                  Number(formatUnits(balance || 1000, erc20?.decimals)),
                   {
                     shouldValidate: true,
                   },
