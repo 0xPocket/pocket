@@ -17,9 +17,9 @@ function MainTabPanel({}: MainTabPanelProps) {
   const { showTransak } = useTransak();
   const { data, isLoading } = useBalance({
     addressOrName: address,
-    token: erc20.data?.address,
-    formatUnits: erc20.data?.decimals,
-    enabled: !!erc20.data,
+    token: erc20?.address,
+    formatUnits: erc20?.decimals,
+    enabled: !!erc20,
     watch: true,
   });
 

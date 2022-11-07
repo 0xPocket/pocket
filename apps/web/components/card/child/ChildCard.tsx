@@ -1,5 +1,4 @@
 import { useSmartContract } from '../../../contexts/contract';
-import useContractRead from '../../../hooks/useContractRead';
 import moment from 'moment';
 import { useMemo } from 'react';
 import FormattedMessage from '../../common/FormattedMessage';
@@ -12,21 +11,25 @@ import LinkPolygonScan from '../common/LinkPolygonScan';
 import MetaMaskProfilePicture from '../common/MetaMaskProfilePicture';
 import { useSession } from 'next-auth/react';
 import { formatUnits } from 'ethers/lib/utils';
+import { Address, useContractRead } from 'wagmi';
+import { env } from 'config/env/client';
+import { PocketFaucetAbi } from 'pocket-contract/abi';
 
 type ChildCardProps = {
-  childAddress: string;
+  childAddress: Address;
   hasLink?: boolean;
   className?: string;
 };
 
 function ChildCard({ childAddress, className }: ChildCardProps) {
-  const { pocketContract, erc20 } = useSmartContract();
+  const { erc20 } = useSmartContract();
   const intl = useIntl();
 
   const { data: userData } = useSession();
 
   const { data: config } = useContractRead({
-    contract: pocketContract,
+    address: env.NEXT_PUBLIC_CONTRACT_ADDRESS,
+    abi: PocketFaucetAbi,
     functionName: 'childToConfig',
     args: [childAddress],
     enabled: !!childAddress,
@@ -35,7 +38,8 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
   const { data: now, refetch } = useQuery(['now'], () => new Date(), {});
 
   const { data: claimableAmount } = useContractRead({
-    contract: pocketContract,
+    address: env.NEXT_PUBLIC_CONTRACT_ADDRESS,
+    abi: PocketFaucetAbi,
     functionName: 'computeClaimable',
     args: [childAddress],
     enabled: !!childAddress,
@@ -76,7 +80,7 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
           Number(
             ethers.utils.formatUnits(
               claimableAmount.toString(),
-              erc20.data?.decimals,
+              erc20?.decimals,
             ),
           ).toFixed(2) +
           '$'}
@@ -115,9 +119,9 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
                 </p>
                 <p>
                   <FormattedMessage id="ceiling" /> :{' '}
-                  {Number(
-                    formatUnits(config.ceiling, erc20.data?.decimals),
-                  ).toFixed(2)}
+                  {Number(formatUnits(config.ceiling, erc20?.decimals)).toFixed(
+                    2,
+                  )}
                   $
                 </p>
               </div>

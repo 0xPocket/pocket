@@ -2,7 +2,7 @@ import { env } from 'config/env/client';
 import { BigNumber } from 'ethers';
 import { useCallback } from 'react';
 import { toast } from 'react-toastify';
-import { useAccount } from 'wagmi';
+import { Address, useAccount } from 'wagmi';
 import { useSmartContract } from '../contexts/contract';
 import { useIntl } from 'react-intl';
 import { parseUnits } from 'ethers/lib/utils';
@@ -11,7 +11,7 @@ import { usePermitTx } from './usePermitTx';
 import { PocketFaucetAbi } from 'pocket-contract/abi';
 
 export function useAddFundsForm(
-  childAddress: string,
+  childAddress: Address,
   addChild: boolean,
   ceiling: string,
   periodicity: string,
@@ -22,12 +22,12 @@ export function useAddFundsForm(
   const intl = useIntl();
 
   const { signPermit, isLoading: permitIsLoading } = usePermitTx({
-    contractAddress: erc20.contract.address,
+    contractAddress: erc20?.address,
   });
 
   const { write, isLoading } = useSendMetaTx({
-    contractAddress: env.NEXT_PUBLIC_CONTRACT_ADDRESS,
-    contractInterface: PocketFaucetAbi,
+    address: env.NEXT_PUBLIC_CONTRACT_ADDRESS,
+    abi: PocketFaucetAbi,
     functionName: addChild ? 'addChildAndFundsPermit' : 'addFundsPermit',
     onMutate: () => {
       toast.dismiss();
@@ -55,26 +55,26 @@ export function useAddFundsForm(
 
           if (addChild) {
             await write([
-              childAddress as `0x${string}`,
+              childAddress,
               {
-                ceiling: parseUnits(ceiling, erc20.data?.decimals).toBigInt(),
-                periodicity: BigNumber.from(periodicity).toBigInt(),
-                tokenIndex: BigInt(0),
+                ceiling: parseUnits(ceiling, erc20?.decimals),
+                periodicity: BigNumber.from(periodicity),
+                tokenIndex: BigNumber.from(0),
               },
-              amount.toBigInt(),
-              BigInt(deadline),
+              amount,
+              BigNumber.from(deadline),
               signature.v,
-              signature.r as `0x${string}`,
-              signature.s as `0x${string}`,
+              signature.r,
+              signature.s,
             ]);
           } else {
             await write([
-              childAddress as `0x${string}`,
-              amount.toBigInt(),
-              BigInt(deadline),
+              childAddress,
+              amount,
+              BigNumber.from(deadline),
               signature.v,
-              signature.r as `0x${string}`,
-              signature.s as `0x${string}`,
+              signature.r,
+              signature.s,
             ]);
           }
         }

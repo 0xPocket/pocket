@@ -1,14 +1,13 @@
 import { faAngleLeft, faWrench } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { RadioGroup } from '@headlessui/react';
-import type { BigNumber } from 'ethers';
 import { formatUnits } from 'ethers/lib/utils';
-import type { PocketFaucet } from 'pocket-contract/typechain-types';
+import { PocketFaucetAbi } from 'pocket-contract/abi';
 import { useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { z } from 'zod';
 import { useSmartContract } from '../../../contexts/contract';
-import type { ContractMethodReturn } from '../../../hooks/useContractRead';
+import { ExtractAbiReturnType } from '../../../utils/abi-types';
 import { useZodForm } from '../../../utils/useZodForm';
 import FormattedMessage from '../../common/FormattedMessage';
 import { Spinner } from '../../common/Spinner';
@@ -22,8 +21,7 @@ const ChildSettingsSchema = z.object({
 type FormValues = z.infer<typeof ChildSettingsSchema>;
 
 type ChildSettingsFormProps = {
-  config: ContractMethodReturn<PocketFaucet, 'childToConfig'>;
-  withdrawFundsFromChild: () => void;
+  config: ExtractAbiReturnType<typeof PocketFaucetAbi, 'childToConfig'>;
   changeConfig: (amount: FormValues) => Promise<void>;
   returnFn: () => void;
   isLoading: boolean;
@@ -31,7 +29,6 @@ type ChildSettingsFormProps = {
 
 function ChildSettingsForm({
   config,
-  withdrawFundsFromChild,
   changeConfig,
   returnFn,
   isLoading,
@@ -57,7 +54,7 @@ function ChildSettingsForm({
     schema: ChildSettingsSchema,
     defaultValues: {
       periodicity: config.periodicity.toString(),
-      ceiling: Number(formatUnits(config.ceiling, erc20.data?.decimals)),
+      ceiling: Number(formatUnits(config.ceiling, erc20?.decimals)),
     },
   });
 

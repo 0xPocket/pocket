@@ -1,5 +1,4 @@
 import { toast } from 'react-toastify';
-import { useRouter } from 'next/router';
 import { z } from 'zod';
 import { useZodForm } from '../../../utils/useZodForm';
 import { trpc } from '../../../utils/trpc';
@@ -8,7 +7,6 @@ import InputText from '../../common/InputText';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import FormattedMessage from '../../common/FormattedMessage';
-import { useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 type FormValues = z.infer<typeof ChildSchema['inviteParent']>;
@@ -21,11 +19,6 @@ function InviteParentForm() {
   });
 
   const inviteParent = trpc.useMutation(['child.inviteParent'], {
-    // onSuccess: () => {
-    //   queryClient.invalidateQueries('child.createParent');
-    //   router.push('/');
-    //   toast.success(<FormattedMessage id="parent-form.sent" />);
-    // },
     onSuccess: () => {
       toast.success(<FormattedMessage id="parent-form.sent" />);
     },

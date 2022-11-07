@@ -1,15 +1,15 @@
 import type { UserChild } from '@lib/types/interfaces';
 import { Tab } from '@headlessui/react';
 import { useState } from 'react';
-import { useContractWrite } from 'wagmi';
-import { useSmartContract } from '../../../contexts/contract';
+import { useContractRead } from 'wagmi';
 import { useAddFundsForm } from '../../../hooks/useAddFundsForm';
 import { useChildSettingsForm } from '../../../hooks/useChildSettingsForm';
 import FormattedMessage from '../../common/FormattedMessage';
 import AddFundsForm from './AddFundsForm';
 import ChildSettingsForm from './ChildSettingsForm';
 import MainPanel from './MainPanel';
-import useContractRead from '../../../hooks/useContractRead';
+import { PocketFaucetAbi } from 'pocket-contract/abi';
+import { env } from 'config/env/client';
 
 type ChildCardProps = {
   child: UserChild;
@@ -26,10 +26,9 @@ function ChildCard({
   const [ceiling, setCeiling] = useState('0');
   const [periodicity, setPeriodicity] = useState('0');
 
-  const { pocketContract } = useSmartContract();
-
   const { data: config, refetch: refetchConfig } = useContractRead({
-    contract: pocketContract,
+    address: env.NEXT_PUBLIC_CONTRACT_ADDRESS,
+    abi: PocketFaucetAbi,
     functionName: 'childToConfig',
     args: [child.address!],
     enabled: !!child.address,
@@ -56,13 +55,14 @@ function ChildCard({
       setSelectedIndex(0);
     });
 
-  const { write: withdrawFundsFromChild } = useContractWrite({
-    mode: 'recklesslyUnprepared',
-    addressOrName: pocketContract.address,
-    functionName: 'withdrawFundsFromChild',
-    contractInterface: pocketContract.interface,
-    args: [config?.balance, child.address],
-  });
+  // const { config: withdrawFundsFromChildConfig } = usePrepareContractWrite({
+  //   address: env.NEXT_PUBLIC_CONTRACT_ADDRESS,
+  //   abi: PocketFaucetAbi,
+  //   functionName: 'withdrawFundsFromChild',
+  //   args: config && [config.balance, child.address],
+  // });
+
+  // const withdrawFundsFromChild = useContractWrite(withdrawFundsFromChildConfig);
 
   return (
     <div
@@ -122,7 +122,6 @@ function ChildCard({
                 <ChildSettingsForm
                   changeConfig={changeConfig}
                   config={config}
-                  withdrawFundsFromChild={withdrawFundsFromChild}
                   isLoading={isLoadingChildSetting}
                   returnFn={() => {
                     setSelectedIndex(0);

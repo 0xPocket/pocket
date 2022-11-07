@@ -37,7 +37,7 @@
     "@types/react-scroll": "^1.8.3",
     "@uniswap/v3-periphery": "1.4.1",
     "@uniswap/widgets": "^2.11.0",
-    "abitype": "^0.1.5",
+    "abitype": "^0.1.7",
     "alchemy-sdk": "^2.1.1",
     "axios": "^1.1.2",
     "ethers": "^5.7.1",
@@ -63,7 +63,7 @@
     "request-ip": "^3.3.0",
     "siwe": "^1.1.6",
     "superjson": "^1.10.1",
-    "wagmi": "^0.6.8",
+    "wagmi": "^0.7.12",
     "zod": "^3.19.0"
   },
   "devDependencies": {

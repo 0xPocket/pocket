@@ -11,6 +11,7 @@ import { createProtectedRouter } from '../createRouter';
 import { getParsedEthersError } from '@enzoferey/ethers-error-parser';
 import axios from 'axios';
 import { DOMAIN_SELECTOR_HASH, relayerSigner, TYPE_HASH } from '../ethereum';
+import { Address } from 'abitype';
 
 const http = axios.create({
   baseURL: 'https://api.starton.io/v2',
@@ -22,7 +23,7 @@ const http = axios.create({
 type StartonSmartContractCallResponse = {
   id: string;
   to: string;
-  transactionHash: string;
+  transactionHash: Address;
   projectId: string;
   createdAt: string;
   updatedAt: string;
