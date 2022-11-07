@@ -15,6 +15,8 @@ function useTransak() {
         process.env.NODE_ENV === 'production' ? 'PRODUCTION' : 'STAGING', // STAGING/PRODUCTION
       widgetHeight: '625px',
       widgetWidth: '500px',
+      fiatAmount: 50,
+      defaultPaymentMethod: 'credit_debit_card',
       // Examples of some of the customization parameters you can pass
       disableWalletAddressForm: true,
       cryptoCurrencyCode: 'USDC',
