@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from 'react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { Alchemy } from 'alchemy-sdk';
 import type { Network } from 'alchemy-sdk';

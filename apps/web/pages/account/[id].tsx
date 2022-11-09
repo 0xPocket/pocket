@@ -11,8 +11,8 @@ function Account() {
   const router = useRouter();
   const id = router.query.id as string;
 
-  const { isLoading, data: child } = trpc.useQuery(
-    ['parent.childByAddress', { address: id }],
+  const { isLoading, data: child } = trpc.parent.childByAddress.useQuery(
+    { address: id },
     {
       enabled: !!id,
     },

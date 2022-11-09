@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useConnect } from 'wagmi';
 import { MagicConnector } from '../utils/MagicConnector';
 

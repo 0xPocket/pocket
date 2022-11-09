@@ -3,9 +3,8 @@
   "include": [
     "../../packages/types/**/*.ts",
     "../../packages/config/**/*.js",
+    "../../packages/types/*.d.ts",
     "next-env.d.ts",
-    "next-auth.d.ts",
-    "abi.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "lang/compareLang.js"

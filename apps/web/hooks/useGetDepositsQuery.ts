@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Address, useContract, useProvider } from 'wagmi';
 import { useSmartContract } from '../contexts/contract';
 import { formatUnits } from 'ethers/lib/utils';

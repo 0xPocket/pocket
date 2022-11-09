@@ -11,9 +11,9 @@ import MyAccountCard from './MyAccountCard';
 function ParentDashboard() {
   const router = useRouter();
 
-  const { isLoading, data } = trpc.useQuery(['parent.children']);
+  const { isLoading, data } = trpc.parent.children.useQuery();
   const { isLoading: pendingChildrenLoading, data: pendingChildren } =
-    trpc.useQuery(['parent.pendingChildren']);
+    trpc.parent.pendingChildren.useQuery();
 
   return (
     <div className="flex flex-col space-y-12">

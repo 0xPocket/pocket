@@ -1,6 +1,6 @@
 import { CovalentReturn } from '@lib/types/interfaces';
 import axios from 'axios';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import TokenTable from './TokenTable';
 import PieChartComp from './PieChart';
@@ -24,7 +24,7 @@ const fetchUserTokens = async (address: string) => {
 };
 
 function TokenContent({ childAddress }: TokenContentProps) {
-  const { data: blacklist, isSuccess } = trpc.useQuery(['token.blacklist']);
+  const { data: blacklist, isSuccess } = trpc.token.blacklist.useQuery();
 
   const { isLoading, data } = useQuery(
     ['child.token-content', childAddress],

@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import FormattedMessage from '../../common/FormattedMessage';
 import { useIntl } from 'react-intl';
 import { ethers } from 'ethers';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import ClaimButton from './ClaimButton';
 import Balance from '../common/Balance';
 import LinkPolygonScan from '../common/LinkPolygonScan';

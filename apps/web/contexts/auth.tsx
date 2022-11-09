@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAccount, useDisconnect, useNetwork, useSwitchNetwork } from 'wagmi';
 import { createCtx } from '../utils/createContext';
 import { signOut, useSession } from 'next-auth/react';

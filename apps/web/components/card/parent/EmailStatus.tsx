@@ -10,7 +10,7 @@ type EmailStatusProps = {
 };
 
 const EmailStatus: FC<EmailStatusProps> = ({ child }) => {
-  const resendEmail = trpc.useMutation('parent.resendChildVerificationEmail', {
+  const resendEmail = trpc.email.resendInviteEmail.useMutation({
     onError: () => {
       toast.error(<FormattedMessage id="dashboard.parent.card.email-error" />);
     },

@@ -41,7 +41,7 @@ const Register: FC = () => {
   const magicSignIn = useMagicConnect();
   const ethereumSignMessage = useEthereumSiwe({});
 
-  const ethereumRegister = trpc.useMutation('register.ethereum', {
+  const ethereumRegister = trpc.register.ethereum.useMutation({
     onError: (error) => {
       toast.error(error.message);
     },
@@ -53,7 +53,7 @@ const Register: FC = () => {
     },
   });
 
-  const magicLinkRegister = trpc.useMutation('register.magic', {
+  const magicLinkRegister = trpc.register.magic.useMutation({
     onError: (error) => {
       toast.error(error.message);
     },
@@ -65,7 +65,7 @@ const Register: FC = () => {
     },
   });
 
-  const resendEmail = trpc.useMutation(['email.resendVerificationEmail']);
+  const resendEmail = trpc.email.resendVerificationEmail.useMutation();
   const userType = watch('userType');
   const connectionType = watch('connectionType');
   const emailAddress = watch('email');
@@ -114,7 +114,6 @@ const Register: FC = () => {
 
       magicLinkRegister.mutate({
         didToken: didToken,
-        email: data.email,
         name: data.name,
       });
     }

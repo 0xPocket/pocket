@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { z } from 'zod';
 import { useZodForm } from '../../../utils/useZodForm';
 import { trpc } from '../../../utils/trpc';
-import { ParentSchema } from '../../../server/schemas';
+import { ParentSchema } from '@pocket/api/schemas';
 import InputText from '../../common/InputText';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
@@ -21,10 +21,11 @@ function AddChildForm() {
     schema: ParentSchema['createChild'],
   });
 
-  const addChild = trpc.useMutation(['parent.createChild'], {
+  const addChild = trpc.parent.createChild.useMutation({
     onSuccess: () => {
-      queryClient.invalidateQueries('parent.pendingChildren');
-      router.push('/');
+      queryClient.parent.pendingChildren.invalidate().then(() => {
+        router.push('/');
+      });
       toast.success(<FormattedMessage id="child-form.created" />);
     },
     onError: (e) => {

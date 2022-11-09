@@ -14,7 +14,7 @@ const VerifyChild: FC = () => {
     delay: 3000,
   });
 
-  const mutation = trpc.useMutation(['email.verifyEmail'], {
+  const mutation = trpc.email.verifyEmail.useMutation({
     onSuccess: () => {
       trigger();
     },

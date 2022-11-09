@@ -12,7 +12,7 @@ import InviteParentForm from './InviteParentForm';
 const ChildDashboard: React.FC = () => {
   const { address } = useAccount();
 
-  const { data, isLoading } = trpc.useQuery(['child.getParent']);
+  const { data, isLoading } = trpc.child.getParent.useQuery();
 
   if (!address || isLoading) {
     return (
