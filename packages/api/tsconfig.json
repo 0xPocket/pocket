@@ -1,0 +1,11 @@
+{
+  "extends": "tsconfig/nextjs.json",
+  "include": [
+    "./next-auth",
+    "./trpc",
+    "./schemas",
+    "transformer.ts",
+    "../config/env/*.js",
+    "../types/*.d.ts"
+  ]
+}
