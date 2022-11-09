@@ -2,7 +2,8 @@
   "name": "@lib/prisma",
   "private": true,
   "version": "1.0.0",
-  "main": "src/index.ts",
+  "main": "./index.ts",
+  "types": "./index.d.ts",
   "scripts": {
     "clean": "rm -rf .turbo && rm -rf node_modules",
     "build": "prisma generate",
@@ -27,6 +28,6 @@
     "@prisma/client": "4.4.0"
   },
   "prisma": {
-    "seed": "ts-node ./src/seed.ts"
+    "seed": "ts-node ./seed.ts"
   }
 }
