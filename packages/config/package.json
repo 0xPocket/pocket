@@ -15,16 +15,16 @@
   ],
   "sideEffects": false,
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.39.0",
+    "@typescript-eslint/eslint-plugin": "^5.42.1",
     "eslint-config-next": "^12.3.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-react": "7.31.9",
+    "eslint-plugin-react": "7.31.10",
     "prettier-plugin-prisma": "^4.4.0",
     "prettier-plugin-tailwindcss": "^0.1.13"
   },
   "devDependencies": {
-    "eslint": "^8.25.0",
+    "eslint": "^8.27.0",
     "prettier": "^2.7.1"
   }
 }
