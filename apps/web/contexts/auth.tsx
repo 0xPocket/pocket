@@ -51,71 +51,71 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, [nextAuthStatus, router, checkDisconnect]);
 
   // // useEffect to match connecting state between wallet/wagmi and next-auth
-  useEffect(() => {
-    if (
-      status === 'reconnecting' ||
-      (status === 'connecting' &&
-        nextAuthStatus === 'authenticated' &&
-        reconnecting === false)
-    ) {
-      setReconnecting(true);
-    }
-    if (
-      reconnecting &&
-      status === 'disconnected' &&
-      nextAuthStatus === 'authenticated' &&
-      !logout.isLoading
-    ) {
-      setReconnecting(false);
-      logout.mutate();
-    }
-    if (status === 'connected' && nextAuthStatus === 'authenticated') {
-      setReconnecting(false);
-    }
-  }, [status, reconnecting, nextAuthStatus, logout]);
+  // useEffect(() => {
+  //   if (
+  //     status === 'reconnecting' ||
+  //     (status === 'connecting' &&
+  //       nextAuthStatus === 'authenticated' &&
+  //       reconnecting === false)
+  //   ) {
+  //     setReconnecting(true);
+  //   }
+  //   if (
+  //     reconnecting &&
+  //     status === 'disconnected' &&
+  //     nextAuthStatus === 'authenticated' &&
+  //     !logout.isLoading
+  //   ) {
+  //     setReconnecting(false);
+  //     logout.mutate();
+  //   }
+  //   if (status === 'connected' && nextAuthStatus === 'authenticated') {
+  //     setReconnecting(false);
+  //   }
+  // }, [status, reconnecting, nextAuthStatus, logout]);
 
-  useEffect(() => {
-    function onDisconnect() {
-      if (!logout.isLoading) {
-        logout.mutate();
-      }
-    }
-    function onChange({ account }: { account?: string }) {
-      if (account) {
-        onDisconnect();
-      }
-    }
-    if (connector?.id !== 'magic' && nextAuthStatus === 'authenticated') {
-      connector?.on('disconnect', onDisconnect);
-      connector?.on('change', onChange);
-    }
-    return () => {
-      if (connector?.id !== 'magic') {
-        connector?.removeListener('disconnect', onDisconnect);
-        connector?.removeListener('change', onChange);
-      }
-    };
-  }, [logout, connector, nextAuthStatus]);
+  // useEffect(() => {
+  //   function onDisconnect() {
+  //     if (!logout.isLoading) {
+  //       logout.mutate();
+  //     }
+  //   }
+  //   function onChange({ account }: { account?: string }) {
+  //     if (account) {
+  //       onDisconnect();
+  //     }
+  //   }
+  //   if (connector?.id !== 'magic' && nextAuthStatus === 'authenticated') {
+  //     connector?.on('disconnect', onDisconnect);
+  //     connector?.on('change', onChange);
+  //   }
+  //   return () => {
+  //     if (connector?.id !== 'magic') {
+  //       connector?.removeListener('disconnect', onDisconnect);
+  //       connector?.removeListener('change', onChange);
+  //     }
+  //   };
+  // }, [logout, connector, nextAuthStatus]);
 
-  // WE FORCE SWITCH NETWORK HERE
-  useEffect(() => {
-    if (
-      nextAuthStatus === 'authenticated' &&
-      connector?.id !== 'magic' &&
-      chain &&
-      !switchNetworkLoading &&
-      switchNetwork &&
-      chain.id !== env.CHAIN_ID
-    )
-      switchNetwork(env.CHAIN_ID);
-  }, [
-    chain,
-    chain?.id,
-    switchNetwork,
-    connector,
-    nextAuthStatus,
-    switchNetworkLoading,
-  ]);
+  // // WE FORCE SWITCH NETWORK HERE
+  // useEffect(() => {
+  //   if (
+  //     nextAuthStatus === 'authenticated' &&
+  //     connector?.id !== 'magic' &&
+  //     chain &&
+  //     !switchNetworkLoading &&
+  //     switchNetwork &&
+  //     chain.id !== env.CHAIN_ID
+  //   )
+  //     switchNetwork(env.CHAIN_ID);
+  // }, [
+  //   chain,
+  //   chain?.id,
+  //   switchNetwork,
+  //   connector,
+  //   nextAuthStatus,
+  //   switchNetworkLoading,
+  // ]);
 
   return (
     <AuthContextProvider
