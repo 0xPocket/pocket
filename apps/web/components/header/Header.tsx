@@ -3,9 +3,11 @@ import DropdownMenu from './DropdownMenu';
 import { Header } from '../common/HeaderComponent';
 import { env } from 'config/env/client';
 import { useAccount } from 'wagmi';
+import { useIsMounted } from '../../hooks/useIsMounted';
 
 function GlobalHeader() {
   const { isConnected } = useAccount();
+  const isMounted = useIsMounted();
 
   return (
     <Header>
@@ -18,7 +20,7 @@ function GlobalHeader() {
         </Header.Title>
       </Header.BlockLeft>
       <Header.BlockRight>
-        {isConnected && <WalletPopover />}
+        {isMounted && isConnected && <WalletPopover />}
         <DropdownMenu />
       </Header.BlockRight>
     </Header>

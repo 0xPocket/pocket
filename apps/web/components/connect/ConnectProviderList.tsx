@@ -43,11 +43,13 @@ const ProviderList: FC = () => {
     [activeConnector, connect, ethereumSign],
   );
 
-  console.log(status);
-
   return (
     <>
-      {isLoading || !isMounted || open || ethereumSign.isLoading ? (
+      {isLoading ||
+      !isMounted ||
+      status === 'connecting' ||
+      open ||
+      ethereumSign.isLoading ? (
         <Spinner />
       ) : isConnected ? (
         <>
@@ -60,7 +62,6 @@ const ProviderList: FC = () => {
         </>
       ) : (
         <div className={` flex w-full justify-center gap-8`}>
-          <div>{status}</div>
           {connectors
             .filter((x) => x.ready)
             .map((connector) => (
