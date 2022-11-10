@@ -1,11 +1,11 @@
-import { useAuth } from '../../contexts/auth';
 import WalletPopover from '../wallet/WalletPopover';
 import DropdownMenu from './DropdownMenu';
 import { Header } from '../common/HeaderComponent';
 import { env } from 'config/env/client';
+import { useAccount } from 'wagmi';
 
 function GlobalHeader() {
-  const { loggedIn } = useAuth();
+  const { isConnected } = useAccount();
 
   return (
     <Header>
@@ -18,7 +18,7 @@ function GlobalHeader() {
         </Header.Title>
       </Header.BlockLeft>
       <Header.BlockRight>
-        {loggedIn && <WalletPopover />}
+        {isConnected && <WalletPopover />}
         <DropdownMenu />
       </Header.BlockRight>
     </Header>

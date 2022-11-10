@@ -1,14 +1,14 @@
 import { useSession } from 'next-auth/react';
 import { FC, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
-import { useAuth } from '../../contexts/auth';
+import { useSignOut } from '../../hooks/useSignOut';
 import { DialogPopupWrapper } from '../common/wrappers/DialogsWrapper';
 
 const SwitchAccountModal: FC = () => {
   const [open, setOpen] = useState(false);
   const { data: session, status } = useSession();
   const { isConnected, address } = useAccount();
-  const { signOut } = useAuth();
+  const signOut = useSignOut();
 
   const handleClose = () => {
     signOut.mutate();

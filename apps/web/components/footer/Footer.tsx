@@ -1,9 +1,9 @@
 import FormattedMessage from '../common/FormattedMessage';
 import React, { useState } from 'react';
-import { useAuth } from '../../contexts/auth';
 import BugDialog from './BugDialog';
 import ContactDialog from './ContactDialog';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
 type FooterProps = React.DetailedHTMLProps<
   React.HTMLAttributes<HTMLElement>,
@@ -13,7 +13,7 @@ type FooterProps = React.DetailedHTMLProps<
 function Footer(props: FooterProps) {
   const [contactOpen, setContactOpen] = useState(false);
   const [bugOpen, setBugOpen] = useState(false);
-  const { loggedIn } = useAuth();
+  const { status } = useSession();
 
   return (
     <footer {...props}>
@@ -31,7 +31,7 @@ function Footer(props: FooterProps) {
             </a>
           </Link>
           <a onClick={() => setContactOpen(true)}>Contact</a>
-          {loggedIn && (
+          {status === 'authenticated' && (
             <a className="text-danger" onClick={() => setBugOpen(true)}>
               <FormattedMessage id="footer.report-bug" />
             </a>

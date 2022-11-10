@@ -8,7 +8,6 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
-import { AuthProvider } from '../contexts/auth';
 import { MagicConnector } from '../utils/MagicConnector';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
 import { env } from 'config/env/client';
@@ -87,18 +86,16 @@ function App({
         <WagmiConfig client={wagmiClient}>
           <QueryClientProvider client={client}>
             <SessionProvider session={session}>
-              <AuthProvider>
-                <SmartContractProvider>
-                  <Script src="/theme.js" strategy="beforeInteractive"></Script>
-                  <Component {...pageProps} />
-                  <ToastContainer
-                    toastClassName="toast-container"
-                    position="bottom-right"
-                    autoClose={3000}
-                  />
-                  <ReactQueryDevtools />
-                </SmartContractProvider>
-              </AuthProvider>
+              <SmartContractProvider>
+                <Script src="/theme.js" strategy="beforeInteractive"></Script>
+                <Component {...pageProps} />
+                <ToastContainer
+                  toastClassName="toast-container"
+                  position="bottom-right"
+                  autoClose={3000}
+                />
+                <ReactQueryDevtools />
+              </SmartContractProvider>
             </SessionProvider>
           </QueryClientProvider>
         </WagmiConfig>

@@ -1,6 +1,7 @@
 import { env } from 'config/env/client';
 import { FC, useEffect, useState } from 'react';
-import { useAccount, useDisconnect, useNetwork, useSwitchNetwork } from 'wagmi';
+import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
+import { useSignOut } from '../../hooks/useSignOut';
 import { Spinner } from '../common/Spinner';
 import { DialogPopupWrapper } from '../common/wrappers/DialogsWrapper';
 
@@ -11,7 +12,7 @@ const NetworkModal: FC = () => {
   const { switchNetwork, isLoading } = useSwitchNetwork({
     chainId: env.CHAIN_ID,
   });
-  const { disconnect } = useDisconnect();
+  const signOut = useSignOut();
 
   useEffect(() => {
     if (isConnected && switchNetwork && chain?.id !== env.CHAIN_ID) {
@@ -22,7 +23,7 @@ const NetworkModal: FC = () => {
   }, [chain, switchNetwork, isConnected]);
 
   const handleClose = () => {
-    disconnect();
+    signOut.mutate();
   };
 
   return (
@@ -34,7 +35,7 @@ const NetworkModal: FC = () => {
           <button className="action-btn" onClick={() => switchNetwork!()}>
             Switch network
           </button>
-          <button className="third-btn py-0" onClick={() => disconnect()}>
+          <button className="third-btn py-0" onClick={() => handleClose()}>
             go back
           </button>
         </>
