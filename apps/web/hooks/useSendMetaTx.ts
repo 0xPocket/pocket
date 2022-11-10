@@ -43,7 +43,7 @@ export function useSendMetaTx<
   const { address: accountAddress } = useAccount();
   const providerWagmi = useProvider();
   const [loading, setLoading] = useState(false);
-  const sendMetaTx = trpc.useMutation(['relayer.forward'], {
+  const sendMetaTx = trpc.relayer.forward.useMutation({
     onMutate: () => {
       toast.info('Transaction sent, please wait a few seconds...');
     },

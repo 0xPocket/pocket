@@ -2,7 +2,7 @@ import { type Dispatch, type FC, useEffect } from 'react';
 import { useZodForm } from '../../utils/useZodForm';
 import { trpc } from '../../utils/trpc';
 import InputText from '../common/InputText';
-import { ContactSchema } from '../../server/schemas';
+import { ContactSchema } from '@pocket/api/schemas';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
@@ -22,7 +22,7 @@ const ContactDialog: FC<ContactDialogProps> = ({ isOpen, setIsOpen }) => {
     schema: ContactSchema['submit'],
   });
 
-  const contact = trpc.useMutation(['contact.submit'], {
+  const contact = trpc.contact.submit.useMutation({
     onSuccess: () => {
       toast.success(<FormattedMessage id="footer.contact.success" />);
       setIsOpen(false);

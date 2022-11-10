@@ -1,5 +1,5 @@
-import { User, Parent } from "@prisma/client";
-import { Child } from "@prisma/client";
+import { User, Parent } from "@lib/prisma";
+import { Child } from "@lib/prisma";
 
 export * from "./Test.interface";
 export * from "./BackResError.interface";

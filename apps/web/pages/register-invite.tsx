@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FC, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -43,7 +42,7 @@ const RegisterInvite: FC = () => {
     delay: 3000,
   });
 
-  const ethereumRegister = trpc.useMutation('register.ethereum', {
+  const ethereumRegister = trpc.register.ethereum.useMutation({
     onError: (error) => {
       toast.error(error.message);
     },
@@ -56,7 +55,7 @@ const RegisterInvite: FC = () => {
     },
   });
 
-  const magicLinkRegister = trpc.useMutation('register.magic', {
+  const magicLinkRegister = trpc.register.magic.useMutation({
     onError: (error) => {
       toast.error(error.message);
     },
@@ -139,7 +138,6 @@ const RegisterInvite: FC = () => {
 
       magicLinkRegister.mutate({
         didToken: didToken,
-        email: data.email,
         name: data.name,
         invite: router.query.token
           ? {

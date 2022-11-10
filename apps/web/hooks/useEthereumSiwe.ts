@@ -1,5 +1,5 @@
 import { getCsrfToken } from 'next-auth/react';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { SiweMessage } from 'siwe';
 import { useAccount, useNetwork, useSignMessage } from 'wagmi';
 

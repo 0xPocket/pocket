@@ -16,7 +16,7 @@ function MainTabPanel({}: MainTabPanelProps) {
   const { erc20 } = useSmartContract();
   const { showTransak } = useTransak();
   const { data, isLoading } = useBalance({
-    addressOrName: address,
+    address,
     token: erc20?.address,
     formatUnits: erc20?.decimals,
     enabled: !!erc20,

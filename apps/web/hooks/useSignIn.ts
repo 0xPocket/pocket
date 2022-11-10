@@ -41,7 +41,7 @@ export function useSignIn(): UseSignInReturn {
         return res;
       });
     },
-    [router],
+    [callbackUrl],
   );
 
   return {

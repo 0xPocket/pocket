@@ -34,7 +34,7 @@ const EmailModalForm: FC<EmailModalFormProps> = ({ closeModal }) => {
   });
   const { signIn, isLoading: signInIsLoading } = useSignIn();
 
-  const checkEmail = trpc.useMutation('connect.connect', {
+  const checkEmail = trpc.connect.connect.useMutation({
     onError: (err) => {
       toast.error(err.message);
     },

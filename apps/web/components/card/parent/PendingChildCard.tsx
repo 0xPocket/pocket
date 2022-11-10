@@ -1,7 +1,7 @@
 import AccountStatus from './AccountStatus';
 import EmailStatus from './EmailStatus';
 import MetaMaskProfilePicture from '../common/MetaMaskProfilePicture';
-import type { PendingChild } from '@prisma/client';
+import type { PendingChild } from '@lib/prisma';
 
 type PendingChildCardProps = {
   child: PendingChild;

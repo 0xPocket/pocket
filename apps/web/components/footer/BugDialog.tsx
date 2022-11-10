@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { trpc } from '../../utils/trpc';
 import InputText from '../common/InputText';
 import { useZodForm } from '../../utils/useZodForm';
-import { TicketSchema } from '../../server/schemas';
+import { TicketSchema } from '@pocket/api/schemas';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBug, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import FormattedMessage from '../common/FormattedMessage';
@@ -26,7 +26,7 @@ const BugDialog: FC<BugDialogProps> = ({ isOpen, setIsOpen }) => {
     },
   });
 
-  const reportBug = trpc.useMutation(['ticket.submit'], {
+  const reportBug = trpc.ticket.submit.useMutation({
     onSuccess: () => {
       toast.success(<FormattedMessage id="footer.report-success" />);
       setIsOpen(false);

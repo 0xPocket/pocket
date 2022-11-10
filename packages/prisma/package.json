@@ -2,18 +2,20 @@
   "name": "@lib/prisma",
   "private": true,
   "version": "1.0.0",
-  "main": "src/index.ts",
+  "main": "./index.ts",
+  "types": "./index.ts",
   "scripts": {
     "clean": "rm -rf .turbo && rm -rf node_modules",
-    "build": "prisma generate",
-    "generate": "prisma generate",
-    "dev": "yarn seed",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push --skip-generate",
+    "db:deploy": "prisma migrate deploy",
+    "db:drop": "prisma migrate reset --skip-seed",
+    "db:seed": "prisma db seed",
     "studio": "prisma studio",
     "deploy": "prisma migrate deploy",
     "seed": "prisma db seed",
     "migrate": "prisma migrate dev",
-    "push": "prisma db push --skip-generate",
-    "drop": "prisma migrate reset --skip-seed && yarn push",
+    "drop": "prisma migrate reset --skip-seed",
     "docker:up": "docker-compose up -d --build",
     "docker:down": "docker-compose down"
   },
@@ -27,6 +29,6 @@
     "@prisma/client": "4.4.0"
   },
   "prisma": {
-    "seed": "ts-node ./src/seed.ts"
+    "seed": "ts-node ./seed.ts"
   }
 }

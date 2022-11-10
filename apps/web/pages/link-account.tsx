@@ -15,7 +15,7 @@ const LinkAccount: FC = () => {
     delay: 5000,
   });
 
-  const mutation = trpc.useMutation(['linkAccount.link'], {
+  const mutation = trpc.email.linkAccount.useMutation({
     onSuccess: () => {
       trigger();
     },

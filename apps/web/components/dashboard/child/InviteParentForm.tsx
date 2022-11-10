@@ -2,7 +2,7 @@ import { toast } from 'react-toastify';
 import { z } from 'zod';
 import { useZodForm } from '../../../utils/useZodForm';
 import { trpc } from '../../../utils/trpc';
-import { ChildSchema } from '../../../server/schemas';
+import { ChildSchema } from '@pocket/api/schemas';
 import InputText from '../../common/InputText';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
@@ -18,7 +18,7 @@ function InviteParentForm() {
     schema: ChildSchema['inviteParent'],
   });
 
-  const inviteParent = trpc.useMutation(['child.inviteParent'], {
+  const inviteParent = trpc.child.inviteParent.useMutation({
     onSuccess: () => {
       toast.success(<FormattedMessage id="parent-form.sent" />);
     },
