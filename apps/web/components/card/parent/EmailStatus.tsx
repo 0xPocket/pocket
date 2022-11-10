@@ -1,4 +1,4 @@
-import type { PendingChild } from '@prisma/client';
+import type { PendingChild } from '@lib/prisma';
 import type { FC } from 'react';
 import { toast } from 'react-toastify';
 import { trpc } from '../../../utils/trpc';

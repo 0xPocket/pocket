@@ -11,7 +11,7 @@
   "scripts": {
     "postinstall": "manypkg check",
     "clean": "turbo clean && rm -rf node_modules && rm -rf .turbo",
-    "dev": "turbo dev --parallel",
+    "dev": "turbo dev",
     "reset": "turbo reset",
     "build": "turbo build",
     "start": "turbo start",

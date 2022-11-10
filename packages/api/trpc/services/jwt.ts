@@ -1,7 +1,6 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, prisma } from "@lib/prisma";
 import { createHash, randomBytes } from "crypto";
 import { env } from "config/env/server";
-import { prisma } from "@lib/prisma";
 
 export function hashToken(token: string) {
   return createHash("sha256")
