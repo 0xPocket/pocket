@@ -7,14 +7,14 @@ const BaseTokenBalance: React.FC = () => {
   const { address } = useAccount();
   const { erc20 } = useSmartContract();
   const { data } = useBalance({
-    addressOrName: address,
+    address,
     token: erc20?.address,
     formatUnits: erc20?.decimals,
     enabled: !!erc20 && !!address,
     watch: true,
   });
   const { data: maticBalance } = useBalance({
-    addressOrName: address,
+    address,
   });
 
   if (!data) {

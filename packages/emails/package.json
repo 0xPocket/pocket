@@ -9,8 +9,8 @@
   },
   "dependencies": {
     "dotenv": "^16.0.3",
-    "mailing": "^0.8.15",
-    "mailing-core": "^0.8.15"
+    "mailing": "^0.8.16",
+    "mailing-core": "^0.8.16"
   },
   "devDependencies": {
     "mjml": "^4.12.0",

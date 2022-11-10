@@ -4,6 +4,7 @@
     "../../packages/types/**/*.ts",
     "../../packages/config/**/*.js",
     "../../packages/types/*.d.ts",
+    "abi.d.ts",
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",

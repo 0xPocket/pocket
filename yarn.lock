@@ -3509,10 +3509,10 @@
   dependencies:
     "@vibrant/types" "^3.2.1-alpha.1"
 
-"@wagmi/core@^0.6.12":
-  version "0.6.12"
-  resolved "https://registry.yarnpkg.com/@wagmi/core/-/core-0.6.12.tgz#19d35424840a8c9f5396869e24464e2137ea8fc2"
-  integrity sha512-RYwjfzFlZ8cljrlZ6+monaWKmtVQYALutlrESP/CYklGg+3DAjwv7n95EU5gS7Y9mvZbiLKZxg4XjFB3mVohfA==
+"@wagmi/core@0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@wagmi/core/-/core-0.7.1.tgz#4f516e51180e75c8f5d05a1c5a9d6a8fbd9fd8fe"
+  integrity sha512-9GBlpbntXchJLyWhZMJTFu0WB4qG0XbtcPJQSh/6v5P5hYZ2yvYltfOl+DIiyjCHuOpqr7MoP2Hv5diqQoN6fQ==
   dependencies:
     abitype "^0.1.7"
     eventemitter3 "^4.0.7"
@@ -11531,10 +11531,10 @@ magic-sdk@^10.0.0:
     "@magic-sdk/types" "^9.0.0"
     localforage "^1.7.4"
 
-mailing-core@^0.8.15:
-  version "0.8.15"
-  resolved "https://registry.yarnpkg.com/mailing-core/-/mailing-core-0.8.15.tgz#e65301d0eec5945e30cc0b4ecb8676a8bd1a13d9"
-  integrity sha512-D4tQOhVgjdIfmigpK7xZnXCNdO0gz2J5C3BMGeAfxcwfF0XdW8LvsUKyj7if71lsJc29YfUYHNGzW/pbWuFT7A==
+mailing-core@^0.8.16:
+  version "0.8.16"
+  resolved "https://registry.yarnpkg.com/mailing-core/-/mailing-core-0.8.16.tgz#2d6bc5438d78ebffb91e023186757dd7887b3a23"
+  integrity sha512-EtrtgJ+hRF9YL20Ge9o52Rs77xQP5PrEaKWM+Ddc86woBj0fgNkTz7d6KsdBMtYdVUrBiUQo/czt+dmLhXCmeg==
   dependencies:
     chalk "^4.1.2"
     fs-extra "^10.1.0"
@@ -11545,10 +11545,10 @@ mailing-core@^0.8.15:
     open "^8.4.0"
     posthog-node "^2.0.2"
 
-mailing@^0.8.15:
-  version "0.8.15"
-  resolved "https://registry.yarnpkg.com/mailing/-/mailing-0.8.15.tgz#0fe670490f271f814957a60e6e51ee512684cc5a"
-  integrity sha512-I6QL+t0NtX8dqJWeGxxZc4pwxGLHqUWNsxG87z110+2qtF/jGjCmPyZSU9P7tDfdrk5KASInN3qiOt1UIIrMOA==
+mailing@^0.8.16:
+  version "0.8.16"
+  resolved "https://registry.yarnpkg.com/mailing/-/mailing-0.8.16.tgz#684d06b43903037e170cd116fdec414648e410b6"
+  integrity sha512-Yz3kIXZfR76rmCjtOAWzv0DGo+6xtIrx26gqqE9dzSpXQzSqLY7DE2Fy0Xevz61KJl6Y7//DdCAJvjCJMvLrVg==
   dependencies:
     "@babel/parser" "^7.18.11"
     "@prisma/client" "^4.4.0"
@@ -11579,7 +11579,7 @@ mailing@^0.8.15:
     html-minifier-terser "^7.0.0"
     iron-session "^6.2.1"
     lodash "^4.17.21"
-    mailing-core "^0.8.15"
+    mailing-core "^0.8.16"
     mjml "^4.12.0"
     mjml-react "^2.0.7"
     node-fetch "^2.6.7"
@@ -12674,10 +12674,10 @@ next-compose-plugins@^2.2.1:
   resolved "https://registry.yarnpkg.com/next-compose-plugins/-/next-compose-plugins-2.2.1.tgz#020fc53f275a7e719d62521bef4300fbb6fde5ab"
   integrity sha512-OjJ+fV15FXO2uQXQagLD4C0abYErBjyjE0I0FHpOEIB8upw0hg1ldFP6cqHTJBH1cZqy96OeR3u1dJ+Ez2D4Bg==
 
-next-seo@^5.14.0:
-  version "5.14.0"
-  resolved "https://registry.yarnpkg.com/next-seo/-/next-seo-5.14.0.tgz#961376571d50c76c3d469c607900774065f62907"
-  integrity sha512-VpbVFXbDzy31qoKBH7xoxtzh+nDhEWYOBnlc18zkXmypRd3X9vxdwh7rlr3q2BQTfbfk2J/a6Y2vEb+oTcCW0w==
+next-seo@^5.14.1:
+  version "5.14.1"
+  resolved "https://registry.yarnpkg.com/next-seo/-/next-seo-5.14.1.tgz#d07322edc37634fbd9beca51fb04177910d8031c"
+  integrity sha512-NiJeQbxYP3z+EMp52q8k3Q+OfX2+Yv2WehERDj98r2wjXxL+woKpRBdsSVYolTD0Hm8IWs42SzaISE93RoQdOw==
 
 next-tick@^1.1.0:
   version "1.1.0"
@@ -14314,10 +14314,10 @@ react-google-recaptcha@^2.1.0:
     prop-types "^15.5.0"
     react-async-script "^1.1.1"
 
-react-hook-form@^7.39.1:
-  version "7.39.1"
-  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.39.1.tgz#ded87d4b3f6692d1f9219515f78ca282b6e1ebf7"
-  integrity sha512-MiF9PCILN5KulhSGbnjohMiTOrB47GerDTichMNP0y2cPUu1GTRFqbunOxCE9N1499YTLMV/ne4gFzqCp1rxrQ==
+react-hook-form@^7.39.2:
+  version "7.39.2"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.39.2.tgz#1003ed63dcc4efc96be686e9aef481f63b58715b"
+  integrity sha512-rCeCa1+sIcgI9PjgGmev9bVqHCwYwhjkbsXitr+giQ/P0mf/AGwUBtCdKC1lRu7egrxbLwqO9cWNWpXW4FrsHA==
 
 react-intl@^6.2.1:
   version "6.2.1"
@@ -16197,10 +16197,10 @@ tailwindcss@^3.1.8:
     quick-lru "^5.1.1"
     resolve "^1.22.1"
 
-tailwindcss@^3.2.2:
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-3.2.2.tgz#705f78cec8f4de2feb52abdb7a8a056e67f2d736"
-  integrity sha512-c2GtSdqg+harR4QeoTmex0Ngfg8IIHNeLQH5yr2B9uZbZR1Xt1rYbjWOWTcj3YLTZhrmZnPowoQDbSRFyZHQ5Q==
+tailwindcss@^3.2.3:
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-3.2.3.tgz#c5ee3cb95dae7a80592d43a460d277915c7b2938"
+  integrity sha512-Xt9D4PK4zuuQCEB8bwK9JUCKmTgUwyac/6b0/42Vqhgl6YJkep+Wf5wq+5uXYfmrupdAD0YY2NY1hyZp1HjRrg==
   dependencies:
     arg "^5.0.2"
     chokidar "^3.5.3"
@@ -17077,16 +17077,16 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
-wagmi@^0.7.13:
-  version "0.7.14"
-  resolved "https://registry.yarnpkg.com/wagmi/-/wagmi-0.7.14.tgz#e5b24651145c311378a70f6515ae9c50b6c2de49"
-  integrity sha512-kRDo36q14RYByBc28iWEyX/k6dR7CXuyfJo/Ye4Vxm/rk6eyYVd8/3iybFjOQaPdcEVRzt8JZPqOCv4YveGiQQ==
+wagmi@^0.8.1:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/wagmi/-/wagmi-0.8.1.tgz#7d6d78c13a5dc6cc4d782aed216c623d8e0e0f15"
+  integrity sha512-jt9JWhtKDZEGfXGwgYKU6JmfuPhKzNlJMcYgoyMTYstBPzresj+RHvbhu5Lrcro7XfUYZ6Yr8TF5KQhg+0uR2g==
   dependencies:
     "@coinbase/wallet-sdk" "^3.5.3"
     "@tanstack/query-sync-storage-persister" "^4.14.5"
     "@tanstack/react-query" "^4.14.5"
     "@tanstack/react-query-persist-client" "^4.14.5"
-    "@wagmi/core" "^0.6.12"
+    "@wagmi/core" "0.7.1"
     "@walletconnect/ethereum-provider" "^1.8.0"
     abitype "^0.1.7"
     use-sync-external-store "^1.2.0"

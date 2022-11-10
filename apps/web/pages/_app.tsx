@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { configureChains, createClient, WagmiConfig } from 'wagmi';
+import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { AuthProvider } from '../contexts/auth';
@@ -26,8 +26,13 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 const messages = { fr, 'en-US': en };
 export type IntlMessageID = keyof typeof en;
 
+const chains_map = {
+  'polygon-mainnet': chain.polygon,
+  'polygon-mumbai': chain.polygonMumbai,
+};
+
 const { chains, provider } = configureChains(
-  [env.WAGMI_CHAIN],
+  [chains_map[env.NETWORK_KEY]],
   [
     jsonRpcProvider({
       rpc: () => ({

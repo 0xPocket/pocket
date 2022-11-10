@@ -17,6 +17,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.1.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@headlessui/react": "^1.7.4",
+    "@lib/prisma": "*",
     "@magic-ext/oauth": "^4.0.0",
     "@magic-sdk/admin": "^1.4.1",
     "@magic-sdk/provider": "^10.0.0",
@@ -52,13 +53,13 @@
     "pocket-contract": "*",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-hook-form": "^7.39.1",
+    "react-hook-form": "^7.39.2",
     "react-intl": "^6.2.1",
     "react-popper": "^2.3.0",
     "react-toastify": "^9.1.1",
     "recharts": "2.1.16",
     "siwe": "^1.1.6",
-    "wagmi": "^0.7.13",
+    "wagmi": "^0.8.1",
     "zod": "^3.19.0"
   },
   "devDependencies": {
@@ -70,7 +71,7 @@
     "next-transpile-modules": "9.0.0",
     "postcss": "^8.4.18",
     "react-redux": "^8.0.2",
-    "tailwindcss": "^3.2.2",
+    "tailwindcss": "^3.2.3",
     "tsconfig": "*",
     "typescript": "^4.7.3"
   },

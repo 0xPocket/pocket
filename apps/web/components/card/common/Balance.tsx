@@ -15,7 +15,7 @@ const Balance: FC<BalanceProps> = ({ balance }) => {
   const { address } = useAccount();
   const { data: session } = useSession();
   const { data: balanceWallet } = useBalance({
-    addressOrName: address,
+    address,
     token: erc20?.address,
     formatUnits: erc20?.decimals,
     enabled: !!erc20,

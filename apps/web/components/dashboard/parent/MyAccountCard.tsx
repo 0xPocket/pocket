@@ -14,7 +14,7 @@ const MyAccountCard: FC = () => {
   const { erc20 } = useSmartContract();
   const { showTransak } = useTransak();
   const { data, isLoading, isIdle } = useBalance({
-    addressOrName: address,
+    address,
     token: erc20?.address,
     formatUnits: erc20?.decimals,
     enabled: !!erc20,
