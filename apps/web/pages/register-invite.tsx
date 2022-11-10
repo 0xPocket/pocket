@@ -15,6 +15,8 @@ import { useMagicConnect } from '../hooks/useMagicConnect';
 import { trpc } from '../utils/trpc';
 import { useZodForm } from '../utils/useZodForm';
 import { useTimer } from '../hooks/useTimer';
+import { useConnect } from 'wagmi';
+import { useSignIn } from '../hooks/useSignIn';
 
 const FormData = z.object({
   userType: z.enum(['Parent', 'Child']),
@@ -46,25 +48,35 @@ const RegisterInvite: FC = () => {
     onError: (error) => {
       toast.error(error.message);
     },
-    onSuccess: () => {
-      router.push({
-        pathname: router.pathname,
-        query: { ...router.query, step: 2 },
+    onSuccess: (_, { message, signature }) => {
+      signIn('ethereum', {
+        message,
+        signature,
+        redirect: false,
       });
-      trigger();
     },
   });
+
+  const { connectAsync, connectors } = useConnect();
+  const { signIn, isLoading: signInIsLoading } = useSignIn();
+
+  const emailAddress = watch('email');
 
   const magicLinkRegister = trpc.register.magic.useMutation({
     onError: (error) => {
       toast.error(error.message);
     },
-    onSuccess: () => {
-      router.push({
-        pathname: router.pathname,
-        query: { ...router.query, step: 2 },
+    onSuccess: async () => {
+      const didToken = await magicSignIn.mutateAsync(emailAddress);
+
+      await connectAsync({
+        connector: connectors.find((c) => c.id === 'magic'),
       });
-      trigger();
+
+      signIn('magic', {
+        token: didToken,
+        redirect: false,
+      });
     },
   });
 
@@ -106,11 +118,13 @@ const RegisterInvite: FC = () => {
       ethereumRegister.isLoading ||
       ethereumSignMessage.isLoading ||
       magicLinkRegister.isLoading ||
+      signInIsLoading ||
       magicSignIn.isLoading
     );
   }, [
     ethereumRegister.isLoading,
     ethereumSignMessage.isLoading,
+    signInIsLoading,
     magicLinkRegister.isLoading,
     magicSignIn.isLoading,
   ]);

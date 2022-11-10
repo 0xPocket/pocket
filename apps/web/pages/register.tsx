@@ -18,6 +18,8 @@ import { useEthereumSiwe } from '../hooks/useEthereumSiwe';
 import { useMagicConnect } from '../hooks/useMagicConnect';
 import { trpc } from '../utils/trpc';
 import { useZodForm } from '../utils/useZodForm';
+import { useConnect } from 'wagmi';
+import { useSignIn } from '../hooks/useSignIn';
 
 const FormData = z.object({
   userType: z.enum(['Parent', 'Child']),
@@ -53,22 +55,31 @@ const Register: FC = () => {
     },
   });
 
-  const magicLinkRegister = trpc.register.magic.useMutation({
-    onError: (error) => {
-      toast.error(error.message);
-    },
-    onSuccess: () => {
-      router.push({
-        pathname: router.pathname,
-        query: { ...router.query, step: 3 },
-      });
-    },
-  });
-
   const resendEmail = trpc.email.resendVerificationEmail.useMutation();
   const userType = watch('userType');
   const connectionType = watch('connectionType');
   const emailAddress = watch('email');
+
+  const { connectAsync, connectors } = useConnect();
+  const { signIn, isLoading: signInIsLoading } = useSignIn();
+
+  const magicLinkRegister = trpc.register.magic.useMutation({
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onSuccess: async () => {
+      const didToken = await magicSignIn.mutateAsync(emailAddress);
+
+      await connectAsync({
+        connector: connectors.find((c) => c.id === 'magic'),
+      });
+
+      signIn('magic', {
+        token: didToken,
+        redirect: false,
+      });
+    },
+  });
 
   // Router effect
   useEffect(() => {
@@ -89,12 +100,14 @@ const Register: FC = () => {
       ethereumRegister.isLoading ||
       ethereumSignMessage.isLoading ||
       magicLinkRegister.isLoading ||
+      signInIsLoading ||
       magicSignIn.isLoading
     );
   }, [
     ethereumRegister.isLoading,
     ethereumSignMessage.isLoading,
     magicLinkRegister.isLoading,
+    signInIsLoading,
     magicSignIn.isLoading,
   ]);
 
@@ -265,18 +278,6 @@ const Register: FC = () => {
                     </a>
                   )}
                 </div>
-              </div>
-            )}
-            {step === 3 && connectionType === 'Magic' && (
-              <div className="flex flex-col items-center justify-center gap-8">
-                <h3>
-                  <FormattedMessage id="register.step3.completed" />
-                </h3>
-                <Link href="/connect">
-                  <a>
-                    <FormattedMessage id="register.step3.gotoconnect" />
-                  </a>
-                </Link>
               </div>
             )}
           </div>
