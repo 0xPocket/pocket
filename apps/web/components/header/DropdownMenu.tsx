@@ -46,7 +46,10 @@ const DropdownMenu: FC = ({}) => {
                 </div>
                 {loggedIn && (
                   <Menu.Item>
-                    <button onClick={() => signOut()} className="third-btn">
+                    <button
+                      onClick={() => signOut.mutate()}
+                      className="third-btn"
+                    >
                       <FontAwesomeIcon
                         icon={faRightFromBracket}
                         className="mr-2"

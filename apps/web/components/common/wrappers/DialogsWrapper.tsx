@@ -1,5 +1,5 @@
-import { Dialog, Transition } from "@headlessui/react";
-import { Dispatch, Fragment, SetStateAction } from "react";
+import { Dialog, Transition } from '@headlessui/react';
+import { Dispatch, Fragment, SetStateAction } from 'react';
 
 type DialogFullWrapperProps = {
   isOpen: boolean | undefined;
