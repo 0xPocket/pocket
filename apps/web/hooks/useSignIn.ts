@@ -1,9 +1,9 @@
-import { signIn } from 'next-auth/react';
+import { signIn, type SignInOptions } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-type SignInParams = ['ethereum' | 'magic', Parameters<typeof signIn>[1]];
+type SignInParams = ['ethereum' | 'magic', SignInOptions];
 
 type UseSignInReturn = {
   signIn: (...params: SignInParams) => Promise<ReturnType<typeof signIn>>;

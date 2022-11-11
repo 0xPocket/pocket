@@ -26,7 +26,7 @@ export const connectRouter = t.router({
         });
       }
 
-      if (user.type !== "Parent") {
+      if (user.accountType === "Ethereum") {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "You must connect with your wallet.",

@@ -14,7 +14,6 @@ import { useEthereumSiwe } from '../hooks/useEthereumSiwe';
 import { useMagicConnect } from '../hooks/useMagicConnect';
 import { trpc } from '../utils/trpc';
 import { useZodForm } from '../utils/useZodForm';
-import { useTimer } from '../hooks/useTimer';
 import { useConnect } from 'wagmi';
 import { useSignIn } from '../hooks/useSignIn';
 
@@ -39,10 +38,6 @@ const RegisterInvite: FC = () => {
 
   const magicSignIn = useMagicConnect();
   const ethereumSignMessage = useEthereumSiwe({});
-  const { trigger, timer } = useTimer({
-    callback: () => router.push('/connect'),
-    delay: 3000,
-  });
 
   const ethereumRegister = trpc.register.ethereum.useMutation({
     onError: (error) => {
@@ -172,7 +167,7 @@ const RegisterInvite: FC = () => {
             <FormattedMessage id="register.title" />
           </h1>
 
-          <Stepper step={step} nbrSteps={3} />
+          <Stepper step={step} nbrSteps={2} />
           <div
             className=" mx-auto flex w-full flex-col justify-center gap-8 rounded-lg
 					text-center"
@@ -239,19 +234,6 @@ const RegisterInvite: FC = () => {
                   </button>
                 )}
               </form>
-            )}
-            {step === 2 && (
-              <div className="flex flex-col items-center justify-center gap-8">
-                <h3>
-                  <FormattedMessage id="register.step3.completed" />
-                </h3>
-                <p>
-                  <FormattedMessage
-                    id="verify-email.redirect"
-                    values={{ timer }}
-                  />
-                </p>
-              </div>
             )}
           </div>
         </div>
