@@ -265,13 +265,4 @@
     @apply w-full;
   }
 
-  .protect-small-screen {
-    @apply background absolute inset-0 z-[100] hidden items-center justify-center;
-  }
-
-  @media screen and (max-width: 1000px) {
-    .protect-small-screen {
-      @apply flex;
-    }
-  }
 }
