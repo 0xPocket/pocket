@@ -32,7 +32,7 @@ function ParentDashboard() {
       {isLoading || pendingChildrenLoading ? (
         <Spinner />
       ) : (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid gap-4 md:grid-cols-2">
           <>
             {data?.map((child) => (
               <ChildCard key={child.id} child={child} />
