@@ -15,7 +15,7 @@ function NftCard({ nft, isLoading = false }: NftCardProps) {
   if (nft)
     // TODO: better height/size between placeholder / text / see more for consistent sizes
     return (
-      <div className="container-classic col-span-4 flex flex-col overflow-hidden rounded-md">
+      <div className="container-classic col-span-12 flex flex-col overflow-hidden rounded-md sm:col-span-6 md:col-span-4">
         {nft.media[0]?.gateway !== undefined ? (
           <img
             src={nft.media[0]?.gateway}
@@ -43,7 +43,7 @@ function NftCard({ nft, isLoading = false }: NftCardProps) {
     <div
       className={`${
         isLoading ? 'opacity-50' : 'opacity-30'
-      } container-classic col-span-4 flex flex-col overflow-hidden rounded-md opacity-30`}
+      } container-classic  hidden flex-col overflow-hidden rounded-md opacity-30 sm:col-span-6 md:col-span-4 md:flex`}
     >
       <div className={`${isLoading && 'skeleton'} aspect-square`}></div>
       <div className="flex flex-grow flex-col justify-between space-y-4 p-2">
