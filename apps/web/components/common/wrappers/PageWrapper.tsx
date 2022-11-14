@@ -44,7 +44,9 @@ const PageWrapper: FC<PageWrapperProps> = ({
       )}
       {!noHeader && <Header />}
       {!noContainer ? (
-        <div className="container relative mx-auto my-12">{children}</div>
+        <div className="container relative mx-auto my-4 xl:my-12">
+          {children}
+        </div>
       ) : (
         children
       )}
