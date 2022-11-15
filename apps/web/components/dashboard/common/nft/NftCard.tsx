@@ -15,7 +15,7 @@ function NftCard({ nft, isLoading = false }: NftCardProps) {
   if (nft)
     // TODO: better height/size between placeholder / text / see more for consistent sizes
     return (
-      <div className="container-classic col-span-12 flex flex-col overflow-hidden rounded-md sm:col-span-6 md:col-span-4">
+      <div className="container-classic col-span-6 flex flex-col overflow-hidden rounded-md md:col-span-4">
         {nft.media[0]?.gateway !== undefined ? (
           <img
             src={nft.media[0]?.gateway}
