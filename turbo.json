@@ -4,6 +4,7 @@
   "globalEnv": ["ANALYZE"],
   "pipeline": {
     "db:generate": {
+      "env": ["DATABASE_URL"],
       "inputs": ["prisma/schema.prisma"],
       "outputs": [
         "./../../node_modules/@prisma/client/**",

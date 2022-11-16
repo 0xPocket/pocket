@@ -1,13 +1,14 @@
 import type { NextAuthOptions, Session } from "next-auth";
+import { getCsrfToken } from "next-auth/react";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { SiweMessage } from "siwe";
 import { prisma } from "@lib/prisma";
 import { env } from "config/env/server";
 import { verifyDidToken } from "../trpc/services/magic";
+import type { IncomingMessage } from "http";
 
-export const nextAuthOptions: NextAuthOptions = {
-  secret: env.NEXTAUTH_SECRET,
-  providers: [
+export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
+  const providers = [
     CredentialsProvider({
       name: "Magic",
       id: "magic",
@@ -63,6 +64,24 @@ export const nextAuthOptions: NextAuthOptions = {
 
         const siwe = new SiweMessage(JSON.parse(message || "{}"));
 
+        const nextAuthUrl =
+          env.NEXTAUTH_URL ||
+          (env.VERCEL_URL ? `https://${env.VERCEL_URL}` : null);
+
+        if (!nextAuthUrl) {
+          throw new Error("Invalid domain");
+        }
+
+        const nextAuthHost = new URL(nextAuthUrl).host;
+
+        if (siwe.domain !== nextAuthHost) {
+          throw new Error("Invalid domain");
+        }
+
+        if (siwe.nonce !== (await getCsrfToken({ req }))) {
+          throw new Error("Invalid nonce");
+        }
+
         try {
           await siwe.validate(signature || "");
         } catch (e) {
@@ -91,51 +110,56 @@ export const nextAuthOptions: NextAuthOptions = {
         return existingUser;
       },
     }),
-  ],
-  session: {
-    strategy: "jwt",
-  },
-  pages: {
-    signIn: "/connect",
-  },
-  callbacks: {
-    async redirect({ baseUrl, url }) {
-      const redirectUrl = decodeURIComponent(url);
-      const callbackIndex = redirectUrl.indexOf("callbackUrl=");
-      if (callbackIndex > -1) {
-        const callbackPath = redirectUrl.slice(callbackIndex + 12);
-        // If I try to login from my homepage, the nested callbackUrl contains the full baseUrl.
-        // This behavior seems to be triggerd if you call `signIn()` from a page.
-        return callbackPath.includes(baseUrl)
-          ? callbackPath
-          : baseUrl + callbackPath;
-      }
-      return url;
-    },
-    session: async ({ session, token }) => {
-      const newSession: Session = {
-        ...session,
-        user: {
-          ...session.user,
-          address: token.address,
-          type: token.type,
-          id: token.sub!,
-        },
-      };
-      return newSession;
-    },
-    jwt: async ({ token, user }) => {
-      if (user) {
-        return {
-          ...token,
-          email: user.email,
-          address: user.address,
-          type: user.type,
-          name: user.name,
-        };
-      }
+  ];
 
-      return token;
+  return {
+    secret: env.NEXTAUTH_SECRET,
+    providers,
+    session: {
+      strategy: "jwt",
     },
-  },
-};
+    pages: {
+      signIn: "/connect",
+    },
+    callbacks: {
+      async redirect({ baseUrl, url }) {
+        const redirectUrl = decodeURIComponent(url);
+        const callbackIndex = redirectUrl.indexOf("callbackUrl=");
+        if (callbackIndex > -1) {
+          const callbackPath = redirectUrl.slice(callbackIndex + 12);
+          // If I try to login from my homepage, the nested callbackUrl contains the full baseUrl.
+          // This behavior seems to be triggerd if you call `signIn()` from a page.
+          return callbackPath.includes(baseUrl)
+            ? callbackPath
+            : baseUrl + callbackPath;
+        }
+        return url;
+      },
+      session: async ({ session, token }) => {
+        const newSession: Session = {
+          ...session,
+          user: {
+            ...session.user,
+            address: token.address,
+            type: token.type,
+            id: token.sub!,
+          },
+        };
+        return newSession;
+      },
+      jwt: async ({ token, user }) => {
+        if (user) {
+          return {
+            ...token,
+            email: user.email,
+            address: user.address,
+            type: user.type,
+            name: user.name,
+          };
+        }
+
+        return token;
+      },
+    },
+  };
+}

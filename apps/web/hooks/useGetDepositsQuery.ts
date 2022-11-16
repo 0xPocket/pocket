@@ -1,11 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { Address, useContract, useProvider } from 'wagmi';
+import { useContract, useProvider } from 'wagmi';
 import { useSmartContract } from '../contexts/contract';
 import { formatUnits } from 'ethers/lib/utils';
 import { useMemo } from 'react';
 import type { Event } from './useGetClaimsQuery';
 import { env } from 'config/env/client';
 import { PocketFaucetAbi } from 'pocket-contract/abi';
+import { Address } from 'abitype';
 
 export const useGetDepositsQuery = (
   childAddress?: Address,

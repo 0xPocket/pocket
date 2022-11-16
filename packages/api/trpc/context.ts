@@ -8,6 +8,7 @@ import type { Logger } from "next-axiom";
 
 import { NextApiRequest } from "next";
 import { getServerAuthSession } from "../next-auth/get-server-auth-session";
+import { env } from "config/env/server";
 
 /**
  * Replace this with an object if you want to pass things to createContextInner
@@ -45,7 +46,7 @@ export const createContext = async (
   const logger = (req as any)?.log as Logger;
 
   // randomly slow the api for testing
-  if (process.env.NODE_ENV === "development" && Math.random() > 0.5) {
+  if (env.NODE_ENV === "development" && Math.random() > 0.5) {
     await new Promise((resolve) =>
       setTimeout(resolve, Math.random() * 2000 + 500)
     );

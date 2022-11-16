@@ -32,7 +32,7 @@
     "@lib/types": "*",
     "@types/jsonwebtoken": "^8.5.8",
     "@types/request-ip": "^0.0.37",
-    "abitype": "^0.1.7",
+    "abitype": "^0.1.8",
     "next": "12.3.2",
     "pocket-contract": "*",
     "typescript": "^4.7.3"

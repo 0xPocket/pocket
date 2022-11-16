@@ -92,6 +92,8 @@ export const parentRouter = t.router({
             fromName: ctx.session.user.name,
           },
         });
+
+        return true;
       }
 
       const childConfig = await ctx.prisma.pendingChild.create({
