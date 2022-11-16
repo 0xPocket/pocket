@@ -8,9 +8,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
-import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
-import { MagicConnector } from '../utils/MagicConnector';
-import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
 import { env } from 'config/env/client';
 import { SessionProvider } from 'next-auth/react';
 import fr from '../lang/fr.json';
@@ -23,6 +20,18 @@ import Script from 'next/script';
 import { trpc } from '../utils/trpc';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+import {
+  injectedWallet,
+  rainbowWallet,
+  walletConnectWallet,
+  ledgerWallet,
+  braveWallet,
+  metaMaskWallet,
+  coinbaseWallet,
+} from '@rainbow-me/rainbowkit/wallets';
+
+import '@rainbow-me/rainbowkit/styles.css';
+
 const messages = { fr, 'en-US': en };
 export type IntlMessageID = keyof typeof en;
 
@@ -30,6 +39,14 @@ const chains_map = {
   'polygon-mainnet': chain.polygon,
   'polygon-mumbai': chain.polygonMumbai,
 };
+
+import {
+  connectorsForWallets,
+  darkTheme,
+  RainbowKitProvider,
+} from '@rainbow-me/rainbowkit';
+import { MagicConnector } from '../utils/MagicConnector';
+import { RainbowKitSiweNextAuthProvider } from '../contexts/RainbowKitNextAuthProvider';
 
 const { chains, provider } = configureChains(
   [chains_map[env.NETWORK_KEY]],
@@ -42,11 +59,31 @@ const { chains, provider } = configureChains(
   ],
 );
 
+const connectors = connectorsForWallets([
+  {
+    groupName: 'Recommended',
+    wallets: [
+      injectedWallet({ chains }),
+      walletConnectWallet({ chains }),
+      metaMaskWallet({ chains }),
+    ],
+  },
+  {
+    groupName: 'Other',
+    wallets: [
+      rainbowWallet({ chains }),
+      coinbaseWallet({ appName: 'Pocket', chains }),
+      braveWallet({ chains }),
+      ledgerWallet({ chains }),
+    ],
+  },
+]);
+
 function App({
   Component,
   pageProps: { session, ...pageProps },
 }: AppProps<{ session: Session }>) {
-  const { locale } = useRouter();
+  const { locale, route } = useRouter();
   const [client] = useState(new QueryClient());
 
   const [wagmiClient] = useState(() =>
@@ -67,13 +104,7 @@ function App({
           },
           chains: chains,
         }),
-        new MetaMaskConnector({ chains }),
-        new WalletConnectConnector({
-          chains,
-          options: {
-            qrcode: true,
-          },
-        }),
+        ...connectors(),
       ],
     }),
   );
@@ -85,20 +116,27 @@ function App({
         messages={messages[locale as 'fr' | 'en-US']}
       >
         <WagmiConfig client={wagmiClient}>
-          <QueryClientProvider client={client}>
-            <SessionProvider session={session}>
-              <SmartContractProvider>
-                <Script src="/theme.js" strategy="beforeInteractive"></Script>
-                <Component {...pageProps} />
-                <ToastContainer
-                  toastClassName="toast-container"
-                  position="bottom-right"
-                  autoClose={3000}
-                />
-                <ReactQueryDevtools />
-              </SmartContractProvider>
-            </SessionProvider>
-          </QueryClientProvider>
+          <SessionProvider session={session}>
+            <RainbowKitSiweNextAuthProvider enabled={route === '/connect'}>
+              <RainbowKitProvider chains={chains} theme={darkTheme()}>
+                <QueryClientProvider client={client}>
+                  <SmartContractProvider>
+                    <Script
+                      src="/theme.js"
+                      strategy="beforeInteractive"
+                    ></Script>
+                    <Component {...pageProps} />
+                    <ToastContainer
+                      toastClassName="toast-container"
+                      position="bottom-right"
+                      autoClose={3000}
+                    />
+                    <ReactQueryDevtools />
+                  </SmartContractProvider>
+                </QueryClientProvider>
+              </RainbowKitProvider>
+            </RainbowKitSiweNextAuthProvider>
+          </SessionProvider>
         </WagmiConfig>
       </IntlProvider>
     </ThemeProvider>

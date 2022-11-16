@@ -16,11 +16,7 @@ const EmailSchema = z.object({
   email: z.string().email(),
 });
 
-type EmailModalFormProps = {
-  closeModal: () => void;
-};
-
-const EmailModalForm: FC<EmailModalFormProps> = ({ closeModal }) => {
+const EmailConnectForm: FC = () => {
   const { isConnected, connector } = useAccount();
   const {
     connectors,
@@ -48,7 +44,6 @@ const EmailModalForm: FC<EmailModalFormProps> = ({ closeModal }) => {
         email: data.email,
       });
     } catch (e) {
-      closeModal();
       return;
     }
 
@@ -76,49 +71,41 @@ const EmailModalForm: FC<EmailModalFormProps> = ({ closeModal }) => {
   }, [checkEmail, magicSignIn, connectIsLoading, signInIsLoading]);
 
   return (
-    <>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex min-w-[300px] flex-col items-center gap-8"
-      >
-        <h2>
-          <FormattedMessage id="connect.email.connect" />
-        </h2>
-        <div className="flex w-full flex-col gap-4">
-          <InputText register={register('email')} label="Email" />
-          {/* <input
-          {...register('email')}
-          className="input-text w-48"
-          autoComplete="email"
-          placeholder="my@email.com"
-        /> */}
-          {isLoading ? (
-            <Spinner />
-          ) : (
-            <button
-              type="submit"
-              className={`action-btn flex-none`}
-              disabled={!formState.isValid}
-            >
-              <FormattedMessage id="signIn" />
-            </button>
-          )}
-        </div>
-        <div className=" flex items-center justify-center text-xs">
-          Powered by{' '}
-          <a href="https://magic.link" target="_blank" rel="noreferrer">
-            <Image
-              src="/assets/providers/magic_logo.svg"
-              width={65}
-              height={24}
-              alt="magic.link"
-              className="ml-2"
-            />
-          </a>
-        </div>
-      </form>
-    </>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex min-w-[300px] flex-col items-center"
+    >
+      <h2 className="mb-8">
+        <FormattedMessage id="connect.email.connect" />
+      </h2>
+      <div className="flex w-full flex-col gap-4">
+        <InputText register={register('email')} label="Email" />
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <button
+            type="submit"
+            className={`action-btn flex-none`}
+            disabled={!formState.isValid}
+          >
+            <FormattedMessage id="signIn" />
+          </button>
+        )}
+      </div>
+      <div className=" mt-4 flex items-center justify-center text-xs">
+        Powered by{' '}
+        <a href="https://magic.link" target="_blank" rel="noreferrer">
+          <Image
+            src="/assets/providers/magic_logo.svg"
+            width={65}
+            height={24}
+            alt="magic.link"
+            className="ml-2"
+          />
+        </a>
+      </div>
+    </form>
   );
 };
 
-export default EmailModalForm;
+export default EmailConnectForm;

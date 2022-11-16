@@ -2,13 +2,14 @@ import { env } from 'config/env/client';
 import { BigNumber } from 'ethers';
 import { useCallback } from 'react';
 import { toast } from 'react-toastify';
-import { Address, useAccount } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { useSmartContract } from '../contexts/contract';
 import { useIntl } from 'react-intl';
 import { parseUnits } from 'ethers/lib/utils';
 import { useSendMetaTx } from './useSendMetaTx';
 import { usePermitTx } from './usePermitTx';
 import { PocketFaucetAbi } from 'pocket-contract/abi';
+import { Address } from 'abitype';
 
 export function useAddFundsForm(
   childAddress: Address,
