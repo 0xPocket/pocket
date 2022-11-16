@@ -7,6 +7,7 @@ import nodemailer from "nodemailer";
 import LinkAccount from "./emails/LinkAccount";
 import RegisterInvite from "./emails/RegisterInvite";
 import VerifyEmail from "./emails/VerifyEmail";
+import VerifyEmailCode from "./emails/VerifyEmailCode";
 
 const transport = nodemailer.createTransport({
   port: 465,
@@ -25,11 +26,10 @@ const sendMail = buildSendMail({
 });
 
 const TEMPLATES = {
-  email_verification: {
-    component: (props: Omit<InferProps<typeof VerifyEmail>, "body">) => (
-      <VerifyEmail
-        body={<>Please click on the link below to verify your email:</>}
-        ctaText="Verify Email"
+  email_code_verification: {
+    component: (props: Omit<InferProps<typeof VerifyEmailCode>, "body">) => (
+      <VerifyEmailCode
+        body={<>Please enter this verification code to verify your account:</>}
         {...props}
       />
     ),

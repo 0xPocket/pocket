@@ -1,7 +1,6 @@
 import { faEnvelopeCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { RadioGroup } from '@headlessui/react';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FC, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -27,6 +26,10 @@ const FormData = z.object({
   email: z.string().email(),
   name: z.string().min(2),
   ageLimit: z.literal(true),
+});
+
+const VerifiactionFormData = z.object({
+  code: z.string(),
 });
 
 const Register: FC = () => {
@@ -55,7 +58,7 @@ const Register: FC = () => {
     },
   });
 
-  const resendEmail = trpc.email.resendVerificationEmail.useMutation();
+  const resendCode = trpc.email.resendCode.useMutation();
   const userType = watch('userType');
   const connectionType = watch('connectionType');
   const emailAddress = watch('email');
@@ -81,6 +84,15 @@ const Register: FC = () => {
     },
   });
 
+  const {
+    register: verificationRegister,
+    handleSubmit: handleSubmitVerification,
+  } = useZodForm({
+    schema: VerifiactionFormData,
+    mode: 'onChange',
+    reValidateMode: 'onChange',
+  });
+
   // Router effect
   useEffect(() => {
     setStep(router.query.step ? parseInt(router.query.step as string) : 0);
@@ -95,9 +107,20 @@ const Register: FC = () => {
     }
   }, [step, router, userType]);
 
+  const verificationCode = trpc.email.verifyCode.useMutation({
+    onSuccess: () => {
+      signIn('ethereum', {
+        message: ethereumRegister.variables?.message,
+        signature: ethereumRegister.variables?.signature,
+        redirect: false,
+      });
+    },
+  });
+
   const isLoading = useMemo(() => {
     return (
       ethereumRegister.isLoading ||
+      verificationCode.isLoading ||
       ethereumSignMessage.isLoading ||
       magicLinkRegister.isLoading ||
       signInIsLoading ||
@@ -105,6 +128,7 @@ const Register: FC = () => {
     );
   }, [
     ethereumRegister.isLoading,
+    verificationCode.isLoading,
     ethereumSignMessage.isLoading,
     magicLinkRegister.isLoading,
     signInIsLoading,
@@ -263,15 +287,37 @@ const Register: FC = () => {
                   />
                 </h3>
                 {/* <p>Follow the instructions to finish your registration</p> */}
+                <form
+                  className="flex w-full min-w-[350px] flex-col items-center justify-center gap-8 text-left"
+                  onSubmit={handleSubmitVerification((data) => {
+                    verificationCode.mutate({
+                      email: emailAddress,
+                      code: data.code,
+                    });
+                  })}
+                >
+                  <input
+                    {...verificationRegister('code')}
+                    className="rounded p-3 py-2 text-black"
+                    placeholder="Verification code"
+                  />
+                  {isLoading ? (
+                    <Spinner />
+                  ) : (
+                    <button className="action-btn">
+                      <FormattedMessage id="submit" />
+                    </button>
+                  )}
+                </form>
                 <div className="flex gap-2 text-sm">
                   <p>
                     <FormattedMessage id="register.step3.email.notreceived" />
                   </p>
-                  {resendEmail.status !== 'success' && (
+                  {resendCode.status !== 'success' && (
                     <a
                       onClick={() => {
-                        if (resendEmail.status !== 'loading')
-                          resendEmail.mutateAsync({ email: emailAddress });
+                        if (resendCode.status !== 'loading')
+                          resendCode.mutateAsync({ email: emailAddress });
                       }}
                     >
                       <FormattedMessage id="register.step3.email.sendnew" />

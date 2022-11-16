@@ -7,7 +7,7 @@ import { verifyDidToken } from "../services/magic";
 import { grantPktToken } from "../services/grantPktToken";
 import { env } from "config/env/server";
 import { SiweMessage } from "siwe";
-import { sendVerificationEmail } from "../services/emailVerification";
+import { sendCodeVerificationEmail } from "../services/emailVerification";
 
 export const registerRouter = t.router({
   magic: t.procedure
@@ -262,7 +262,7 @@ export const registerRouter = t.router({
         };
       }
 
-      await sendVerificationEmail({
+      await sendCodeVerificationEmail({
         email: newUser.email,
         name: newUser.name,
       });
