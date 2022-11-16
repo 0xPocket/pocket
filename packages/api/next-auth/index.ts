@@ -69,17 +69,17 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
           (env.VERCEL_URL ? `https://${env.VERCEL_URL}` : null);
 
         if (!nextAuthUrl) {
-          return null;
+          throw new Error("Invalid domain");
         }
 
         const nextAuthHost = new URL(nextAuthUrl).host;
 
         if (siwe.domain !== nextAuthHost) {
-          return null;
+          throw new Error("Invalid domain");
         }
 
         if (siwe.nonce !== (await getCsrfToken({ req }))) {
-          return null;
+          throw new Error("Invalid nonce");
         }
 
         try {
