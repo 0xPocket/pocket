@@ -9,13 +9,13 @@ function Connect() {
     <PageWrapper>
       <TitleHelper id="titles.connect" />
       <div className="mt-28 flex flex-col items-center">
-        <h1 className="mb-8">
+        <h1 className="mb-8 text-center">
           <FormattedMessage id="connect.chose" />
         </h1>
 
         <div className="w-[512px]">
           <div
-            className=" mx-auto flex w-full flex-col justify-center gap-8 rounded-lg p-8
+            className="mx-auto flex w-full flex-col justify-center gap-8 rounded-lg p-8
 					text-center"
           >
             <ConnectProviderList />
