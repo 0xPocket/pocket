@@ -46,7 +46,7 @@ const BugDialog: FC<BugDialogProps> = ({ isOpen, setIsOpen }) => {
       </h1>
       <form
         onSubmit={handleSubmit((data) => reportBug.mutate(data))}
-        className="flex min-w-[360px] flex-col gap-6 rounded-lg"
+        className="flex flex-col gap-6 rounded-lg"
       >
         <InputText
           label={

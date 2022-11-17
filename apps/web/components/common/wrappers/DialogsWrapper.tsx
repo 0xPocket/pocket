@@ -1,5 +1,5 @@
-import { Dialog, Transition } from "@headlessui/react";
-import { Dispatch, Fragment, SetStateAction } from "react";
+import { Dialog, Transition } from '@headlessui/react';
+import { Dispatch, Fragment, SetStateAction } from 'react';
 
 type DialogFullWrapperProps = {
   isOpen: boolean | undefined;
@@ -53,7 +53,9 @@ export function DialogPopupWrapper({
     <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
       <div className="fixed inset-0 flex items-center justify-center bg-black/30">
         <Dialog.Panel>
-          <div className="container-classic rounded-lg p-8">{children}</div>
+          <div className="container-classic max-w-lg rounded-lg p-8 md:w-[512px]">
+            {children}
+          </div>
         </Dialog.Panel>
       </div>
     </Dialog>
