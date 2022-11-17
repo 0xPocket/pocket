@@ -16,7 +16,7 @@ function AddAccount({}: AddAccountProps) {
     <PageWrapper>
       <TitleHelper id="titles.add-account" />
 
-      <div className="mt-28 grid grid-cols-2 gap-28">
+      <div className="grid gap-8 md:mt-28 md:grid-cols-2 md:gap-28">
         <div className="relative flex flex-col space-y-14 p-8">
           <h2 className="text-center">
             <FormattedMessage id="add-account.how-to" />
