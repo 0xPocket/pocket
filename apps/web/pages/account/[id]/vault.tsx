@@ -31,7 +31,7 @@ export default function VaultPage() {
     token: erc20?.address,
   });
 
-  const { showTransak } = useTransak();
+  const { status, showTransak } = useTransak();
 
   let showUSDCButton = erc20Balance?.value.isZero();
 
@@ -74,12 +74,23 @@ export default function VaultPage() {
           </ul>
           <div className="flex flex-col  gap-4">
             {showUSDCButton && (
-              <button
-                onClick={() => showTransak()}
-                className="action-btn h-14 basis-1/2 rounded-xl font-bold"
-              >
-                Acheter des USDC avant
-              </button>
+              <>
+                {!status && (
+                  <button
+                    onClick={() => showTransak({})}
+                    className="action-btn h-14 basis-1/2 rounded-xl font-bold"
+                  >
+                    Acheter des USDC avant
+                  </button>
+                )}
+                {status === 'order_successful' && (
+                  <>
+                    <p>On attend toujours tes cryptos...</p>
+                    <Spinner />
+                  </>
+                )}
+                {status === 'order_completed' && <p>C'est good !</p>}
+              </>
             )}
             <Link href={`/account/${id}/vault`} passHref>
               <button
