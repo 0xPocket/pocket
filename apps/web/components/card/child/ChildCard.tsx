@@ -11,9 +11,10 @@ import LinkPolygonScan from '../common/LinkPolygonScan';
 import MetaMaskProfilePicture from '../common/MetaMaskProfilePicture';
 import { useSession } from 'next-auth/react';
 import { formatUnits } from 'ethers/lib/utils';
-import { Address, useContractRead } from 'wagmi';
+import { useContractRead } from 'wagmi';
 import { env } from 'config/env/client';
 import { PocketFaucetAbi } from 'pocket-contract/abi';
+import { Address } from 'abitype';
 
 type ChildCardProps = {
   childAddress: Address;

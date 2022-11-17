@@ -1,9 +1,9 @@
-import { type FC, useCallback, useMemo } from 'react';
-import { Connector, useAccount, useConnect } from 'wagmi';
+import { type FC } from 'react';
+import { useAccount } from 'wagmi';
 import { useIsMounted } from '../../hooks/useIsMounted';
-import Image from 'next/future/image';
 import FormattedMessage from '../common/FormattedMessage';
 import { Spinner } from '../common/Spinner';
+import RainbowKitButton from '../connect/RainbowKitButton';
 
 type ProviderListProps = {
   callback: (id: string) => void;
@@ -13,63 +13,34 @@ type ProviderListProps = {
 const ProviderList: FC<ProviderListProps> = ({ callback, userType }) => {
   const mounted = useIsMounted();
 
-  const { connectors, connect } = useConnect({
-    onSuccess: (connector) => {
-      if (connector.connector) {
-        callback(connector.connector?.id);
-      }
-    },
-  });
-
-  const { isConnected, connector: activeConnector, status } = useAccount();
-
-  const handleConnect = useCallback(
-    (connector: Connector) => {
-      if (
-        (isConnected && connector.id === activeConnector?.id) ||
-        connector.id === 'magic'
-      ) {
-        callback(connector.id);
-      } else {
-        connect({ connector });
-      }
-    },
-    [connect, isConnected, activeConnector, callback],
-  );
-
-  const filteredConnectors = useMemo(() => {
-    if (userType === 'Parent') return connectors;
-    return connectors.filter((c) => c.id !== 'magic');
-  }, [userType, connectors]);
+  const { isConnected, status } = useAccount();
 
   return (
     <>
-      <h3>
-        <FormattedMessage id="register.step1.title" />
-      </h3>
+      {!isConnected && (
+        <h3>
+          <FormattedMessage id="register.step1.title" />
+        </h3>
+      )}
 
       {!mounted || status === 'connecting' ? (
         <Spinner />
       ) : (
-        <div className={` flex w-full justify-center gap-8`}>
-          {filteredConnectors.map((connector) => (
-            <button
-              key={connector.id}
-              onClick={() => handleConnect(connector)}
-              className="provider-container"
-            >
-              <div className="container-classic rounded-md p-8">
-                <div className="provider-img">
-                  <Image
-                    src={`/assets/providers/${connector.id}.svg`}
-                    width={128}
-                    height={128}
-                    alt={connector.name}
-                  />
-                </div>
-              </div>
-            </button>
-          ))}
+        <div
+          className={`flex flex-col items-center justify-center gap-4 md:flex-row`}
+        >
+          {!isConnected && userType === 'Parent' && (
+            <>
+              <button
+                onClick={() => callback('magic')}
+                className="flex h-10 items-center rounded-xl bg-primary p-4 font-sans font-bold transition-all hover:scale-[1.025]"
+              >
+                Sign in with Email
+              </button>
+              <div>OR</div>
+            </>
+          )}
+          <RainbowKitButton callback={callback as any} />
         </div>
       )}
     </>

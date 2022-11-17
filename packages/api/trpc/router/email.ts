@@ -3,22 +3,22 @@ import { TRPCError } from "@trpc/server";
 import { env } from "config/env/server";
 import { z } from "zod";
 import { parentProcedure, protectedProcedure } from "../procedures";
-import { sendVerificationEmail } from "../services/emailVerification";
+import { sendCodeVerificationEmail } from "../services/emailVerification";
 import { generateRegisterParams } from "../services/registerInvite";
 import { verifyInvite } from "../services/verifyInvite";
 import { t } from "../trpc";
 
 export const emailRouter = t.router({
-  verifyEmail: t.procedure
+  verifyCode: t.procedure
     .input(
       z.object({
         email: z.string(),
-        token: z.string(),
+        code: z.string(),
       })
     )
     .mutation(async ({ input, ctx }) => {
       await verifyInvite({
-        token: input.token,
+        token: input.code,
         identifier: input.email,
       });
 
@@ -34,7 +34,7 @@ export const emailRouter = t.router({
       return user;
     }),
 
-  resendVerificationEmail: t.procedure
+  resendCode: t.procedure
     .input(
       z.object({
         email: z.string().email(),
@@ -56,7 +56,7 @@ export const emailRouter = t.router({
         });
       }
 
-      return sendVerificationEmail({
+      return sendCodeVerificationEmail({
         email: user.email,
         name: user.name,
       });

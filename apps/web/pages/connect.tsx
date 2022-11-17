@@ -9,9 +9,9 @@ function Connect() {
     <PageWrapper>
       <TitleHelper id="titles.connect" />
       <div className="mt-28 flex flex-col items-center">
-        <h1 className="mb-8 text-center">
+        {/* <h1 className="mb-8 text-center">
           <FormattedMessage id="connect.chose" />
-        </h1>
+        </h1> */}
 
         <div className="w-[512px]">
           <div

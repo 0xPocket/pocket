@@ -1,38 +1,38 @@
 import { sendEmailWrapper } from "@pocket/emails";
-import { env } from "config/env/server";
-import {
-  generateVerificationToken,
-  hashToken,
-  saveVerificationToken,
-} from "./jwt";
+import { hashToken, saveVerificationToken } from "./jwt";
 
+import crypto from "crypto";
 type SendVerificationEmailParams = {
   email: string;
   name: string;
 };
 
-export async function sendVerificationEmail(
+function generateRandomCode() {
+  return crypto.randomInt(100000, 999999).toString();
+}
+
+const TEN_MINUTES_IN_SECONDS = 600;
+
+export async function sendCodeVerificationEmail(
   params: SendVerificationEmailParams
 ) {
-  const token = generateVerificationToken();
+  const code = generateRandomCode();
 
-  const ONE_DAY_IN_SECONDS = 86400;
-  const expires = new Date(Date.now() + ONE_DAY_IN_SECONDS * 1000);
+  const expires = new Date(Date.now() + TEN_MINUTES_IN_SECONDS * 1000);
 
   await saveVerificationToken({
     identifier: params.email,
     expires,
-    token: hashToken(token),
+    token: hashToken(code),
   });
-
-  const urlParams = new URLSearchParams({ token, email: params.email });
 
   await sendEmailWrapper({
     to: params.email,
-    template: "email_verification",
+    template: "email_code_verification",
+    subject: `${code} is your Pocket verification code`,
     props: {
       name: params.name,
-      link: `${env.APP_URL}/verify-email?${urlParams}`,
+      code,
     },
   });
 

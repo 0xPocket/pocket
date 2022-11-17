@@ -14,7 +14,8 @@ import { useEthereumSiwe } from '../hooks/useEthereumSiwe';
 import { useMagicConnect } from '../hooks/useMagicConnect';
 import { trpc } from '../utils/trpc';
 import { useZodForm } from '../utils/useZodForm';
-import { useTimer } from '../hooks/useTimer';
+import { useConnect } from 'wagmi';
+import { useSignIn } from '../hooks/useSignIn';
 
 const FormData = z.object({
   userType: z.enum(['Parent', 'Child']),
@@ -37,34 +38,40 @@ const RegisterInvite: FC = () => {
 
   const magicSignIn = useMagicConnect();
   const ethereumSignMessage = useEthereumSiwe({});
-  const { trigger, timer } = useTimer({
-    callback: () => router.push('/connect'),
-    delay: 3000,
-  });
 
   const ethereumRegister = trpc.register.ethereum.useMutation({
     onError: (error) => {
       toast.error(error.message);
     },
-    onSuccess: () => {
-      router.push({
-        pathname: router.pathname,
-        query: { ...router.query, step: 2 },
+    onSuccess: (_, { message, signature }) => {
+      signIn('ethereum', {
+        message,
+        signature,
+        redirect: false,
       });
-      trigger();
     },
   });
+
+  const { connectAsync, connectors } = useConnect();
+  const { signIn, isLoading: signInIsLoading } = useSignIn();
+
+  const emailAddress = watch('email');
 
   const magicLinkRegister = trpc.register.magic.useMutation({
     onError: (error) => {
       toast.error(error.message);
     },
-    onSuccess: () => {
-      router.push({
-        pathname: router.pathname,
-        query: { ...router.query, step: 2 },
+    onSuccess: async () => {
+      const didToken = await magicSignIn.mutateAsync(emailAddress);
+
+      await connectAsync({
+        connector: connectors.find((c) => c.id === 'magic'),
       });
-      trigger();
+
+      signIn('magic', {
+        token: didToken,
+        redirect: false,
+      });
     },
   });
 
@@ -106,11 +113,13 @@ const RegisterInvite: FC = () => {
       ethereumRegister.isLoading ||
       ethereumSignMessage.isLoading ||
       magicLinkRegister.isLoading ||
+      signInIsLoading ||
       magicSignIn.isLoading
     );
   }, [
     ethereumRegister.isLoading,
     ethereumSignMessage.isLoading,
+    signInIsLoading,
     magicLinkRegister.isLoading,
     magicSignIn.isLoading,
   ]);
@@ -158,7 +167,7 @@ const RegisterInvite: FC = () => {
             <FormattedMessage id="register.title" />
           </h1>
 
-          <Stepper step={step} nbrSteps={3} />
+          <Stepper step={step} nbrSteps={2} />
           <div
             className=" mx-auto flex w-full flex-col justify-center gap-8 rounded-lg
 					text-center"
@@ -225,19 +234,6 @@ const RegisterInvite: FC = () => {
                   </button>
                 )}
               </form>
-            )}
-            {step === 2 && (
-              <div className="flex flex-col items-center justify-center gap-8">
-                <h3>
-                  <FormattedMessage id="register.step3.completed" />
-                </h3>
-                <p>
-                  <FormattedMessage
-                    id="verify-email.redirect"
-                    values={{ timer }}
-                  />
-                </p>
-              </div>
             )}
           </div>
         </div>

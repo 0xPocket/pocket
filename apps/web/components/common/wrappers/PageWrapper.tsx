@@ -7,6 +7,8 @@ import { env } from 'config/env/client';
 import FormattedMessage from '../FormattedMessage';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import NetworkModal from '../../connect/NetworkModal';
+import SwitchAccountModal from '../../connect/SwitchAccountModal';
 
 type PageWrapperProps = {
   children: React.ReactNode;
@@ -50,6 +52,8 @@ const PageWrapper: FC<PageWrapperProps> = ({
       ) : (
         children
       )}
+      <NetworkModal />
+      <SwitchAccountModal />
       <BackgoundSplit className="-top-80 -left-96" />
       <BackgoundSplit className="-bottom-[50vh] -right-96" />
       {!noFooter && <Footer />}

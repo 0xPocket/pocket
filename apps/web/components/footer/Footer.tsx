@@ -1,14 +1,14 @@
 import FormattedMessage from '../common/FormattedMessage';
 import React, { useState } from 'react';
-import { useAuth } from '../../contexts/auth';
 import BugDialog from './BugDialog';
 import ContactDialog from './ContactDialog';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
 function Footer() {
   const [contactOpen, setContactOpen] = useState(false);
   const [bugOpen, setBugOpen] = useState(false);
-  const { loggedIn } = useAuth();
+  const { status } = useSession();
 
   return (
     <footer className="absolute bottom-0 left-0 right-0 m-4 grid grid-cols-2 space-y-4 md:flex md:flex-col ">
@@ -27,7 +27,7 @@ function Footer() {
           </a>
         </Link>
         <a onClick={() => setContactOpen(true)}>Contact</a>
-        {loggedIn && (
+        {status === 'authenticated' && (
           <a className="text-danger" onClick={() => setBugOpen(true)}>
             <FormattedMessage id="footer.report-bug" />
           </a>
