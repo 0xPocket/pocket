@@ -45,6 +45,9 @@ module.exports = {
         lightest: '#f1f5f9',
         DEFAULT: '#64748b',
       },
+			pink: {
+				DEFAULT: 'rgba(224,95,144,1)',
+			},
 			badges: {
 				bgblue : 'rgb(195 221 253)',
 				textblue: 'rgb(30 66 159)',
