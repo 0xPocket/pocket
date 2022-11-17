@@ -8,24 +8,20 @@ function Connect() {
   return (
     <PageWrapper>
       <TitleHelper id="titles.connect" />
-      <div className="mt-28 flex flex-col items-center">
-        {/* <h1 className="mb-8 text-center">
-          <FormattedMessage id="connect.chose" />
-        </h1> */}
-
-        <div className="w-[512px]">
+      <div className="flex flex-col items-center">
+        <div className="max-w-lg">
           <div
             className="mx-auto flex w-full flex-col justify-center gap-8 rounded-lg p-8
 					text-center"
           >
             <ConnectProviderList />
           </div>
-          <div className="mt-4 flex justify-center gap-2">
-            <p>
+          <div className="mt-8 flex justify-center">
+            <p className="inline-block">
               <FormattedMessage id="connect.noaccount" />
             </p>
             <Link href="/register">
-              <a>
+              <a className="ml-2">
                 <FormattedMessage id="connect.create" />
               </a>
             </Link>

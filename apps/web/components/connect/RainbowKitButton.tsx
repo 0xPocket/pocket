@@ -1,5 +1,6 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useDisconnect } from 'wagmi';
+import FormattedMessage from '../common/FormattedMessage';
 import { Spinner } from '../common/Spinner';
 
 const RainbowKitButton = ({ callback }: { callback?: () => void }) => {
@@ -22,14 +23,14 @@ const RainbowKitButton = ({ callback }: { callback?: () => void }) => {
           (!authenticationStatus || authenticationStatus === 'authenticated');
 
         return (
-          <div>
+          <>
             {(() => {
               if (!connected) {
                 return (
                   <button
                     onClick={openConnectModal}
                     type="button"
-                    className="flex h-10 items-center rounded-xl bg-primary p-4 font-sans font-bold transition-all hover:scale-[1.025]"
+                    className="action-btn w-full"
                   >
                     Connect Wallet
                   </button>
@@ -40,19 +41,24 @@ const RainbowKitButton = ({ callback }: { callback?: () => void }) => {
               }
               return (
                 <div className="space-y-4">
-                  <h3>Connected with {account.displayName}</h3>
+                  <h3>
+                    <FormattedMessage
+                      id="register.step1.connectedwith"
+                      values={{ address: account.displayName }}
+                    />
+                  </h3>
                   <div className="flex justify-center gap-4">
                     <button onClick={() => disconnect()} className="third-btn">
-                      disconnect
+                      <FormattedMessage id="disconnect" />
                     </button>
                     <button onClick={() => callback()} className="action-btn">
-                      Continue
+                      <FormattedMessage id="continue" />
                     </button>
                   </div>
                 </div>
               );
             })()}
-          </div>
+          </>
         );
       }}
     </ConnectButton.Custom>
