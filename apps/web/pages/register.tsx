@@ -123,7 +123,7 @@ const Register: FC = () => {
     <PageWrapper>
       <TitleHelper title="Register" />
       <div className="flex flex-col items-center">
-        <div className="flex flex-col items-center gap-16 md:w-[512px]">
+        <div className="flex max-w-lg flex-col items-center gap-16">
           <h1>
             <FormattedMessage id="register.title" />
           </h1>
@@ -249,7 +249,6 @@ const Register: FC = () => {
                     values={{ emailAddress }}
                   />
                 </h3>
-                {/* <p>Follow the instructions to finish your registration</p> */}
                 <div className="flex gap-2 text-sm">
                   <p>
                     <FormattedMessage id="register.step3.email.notreceived" />

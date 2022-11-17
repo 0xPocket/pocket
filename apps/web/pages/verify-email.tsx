@@ -38,7 +38,7 @@ const VerifyChild: FC = () => {
     <PageWrapper>
       <TitleHelper id="titles.onboard" />
 
-      <div className="flex flex-col items-center justify-center gap-4">
+      <div className="flex flex-col items-center justify-center gap-4 text-center">
         {mutation.isLoading && <Spinner />}
         {mutation.isError && (
           <>

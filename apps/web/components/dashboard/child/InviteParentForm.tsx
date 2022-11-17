@@ -34,7 +34,7 @@ function InviteParentForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="container-classic m-auto flex w-2/5 flex-col gap-2 rounded-lg p-8"
+      className="container-classic m-auto flex max-w-lg flex-col gap-2 rounded-lg p-8"
     >
       <h3 className="text mb-2 ">
         <FontAwesomeIcon icon={faUserPlus} className="mr-4" />
