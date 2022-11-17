@@ -44,14 +44,14 @@ function Swapper({}: SwapperProps) {
       };
 
   return (
-    <div className="space-y-8">
+    <div className="col-span-6 space-y-8 lg:col-span-3">
       <h2>
         <FormattedMessage id="card.child.swapper" />
       </h2>
       <SwapWidget
         theme={theme}
         defaultChainId={env.CHAIN_ID}
-        className="container-classic"
+        className="container-classic "
         defaultInputTokenAddress={env.ERC20_ADDRESS}
         jsonRpcUrlMap={jsonrpcmap}
         locale={mapLanguage[intl.locale as 'fr' | 'en']}

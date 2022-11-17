@@ -90,7 +90,7 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
   }, [canClaim, config, claimableAmount, erc20, nextClaim, intl, now]);
 
   return (
-    <div className="flex flex-col space-y-8">
+    <div className="col-span-6 flex flex-col space-y-8 lg:col-span-3">
       <h2>
         <FormattedMessage id="card.child.title" />
       </h2>
