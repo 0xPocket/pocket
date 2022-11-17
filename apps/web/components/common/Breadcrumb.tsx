@@ -1,6 +1,11 @@
-import { faAngleRight, faHome } from '@fortawesome/free-solid-svg-icons';
+import {
+  faAngleRight,
+  faArrowLeft,
+  faHome,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import type { FC, ReactNode } from 'react';
 
 type route = {
@@ -13,7 +18,29 @@ type BreadcrumbProps = {
   routes: route[];
 };
 
+// isMobile hook
+
+function useIsMobile() {
+  return typeof window !== 'undefined' && window.innerWidth < 768;
+}
+
 const Breadcrumb: FC<BreadcrumbProps> = ({ routes }) => {
+  const isMobile = useIsMobile();
+  const router = useRouter();
+
+  if (isMobile) {
+    if (router.route.split('/').length <= 2) {
+      return null;
+    }
+    return (
+      <div className="mb-12 flex items-center space-x-4">
+        <button onClick={() => router.back()} className="text-2xl">
+          <FontAwesomeIcon icon={faArrowLeft} />
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="mb-12 flex items-center space-x-4">
       {routes.length === 0 ? (

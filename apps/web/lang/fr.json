@@ -5,7 +5,7 @@
   "loading": "Chargement",
   "signIn": "Se connecter",
   "disconnect": "Se déconnecter",
-	"continue": "Suivant",
+  "continue": "Suivant",
   "signout": "Se déconnecter",
   "submit": "Valider",
   "name": "Nom",
@@ -42,6 +42,8 @@
   "account": "Compte",
   "parent": "Parent",
   "child": "Enfant",
+
+  "view_profile": "Voir le profil",
 
   "email.resent": "Nouvel email envoyé !",
 
@@ -85,7 +87,7 @@
   "register.title": "Créer un compte",
   "register.step0.title": "Type de compte",
   "register.step1.title": "Choisissez la méthode de connexion",
-	"register.step1.connectedwith": "Connecté avec {address}",
+  "register.step1.connectedwith": "Connecté avec {address}",
   "register.step2.title": "Complétez vos informations",
   "register.step3.title": "Un email a été envoyé à {emailAddress} !",
   "register.step3.email.notreceived": "Vous n'avez rien reçu?",

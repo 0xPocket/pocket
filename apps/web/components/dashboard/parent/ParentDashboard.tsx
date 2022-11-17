@@ -17,12 +17,12 @@ function ParentDashboard() {
 
   return (
     <div className="flex flex-col space-y-12">
-      <div className="flex items-center justify-between">
+      {/* <div className="flex items-center justify-between">
         <h1>
           <FormattedMessage id="wallet.myaccount" />
         </h1>
       </div>
-      <MyAccountCard />
+      <MyAccountCard /> */}
 
       <div className="flex items-center justify-between">
         <h1>

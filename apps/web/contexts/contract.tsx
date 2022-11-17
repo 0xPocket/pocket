@@ -1,7 +1,9 @@
 import { createContext, useContext, useMemo } from 'react';
-import { useToken } from 'wagmi';
+import { useContractRead, useToken } from 'wagmi';
 import { env } from 'config/env/client';
 import { FetchTokenResult } from '@wagmi/core';
+import { PocketFaucetAbi } from 'pocket-contract/abi';
+import { BigNumber } from 'ethers';
 interface SmartContractProviderProps {
   children: React.ReactNode;
 }
@@ -21,8 +23,16 @@ const [SmartContractContext, SmartContractContextProvider] =
 export const SmartContractProvider = ({
   children,
 }: SmartContractProviderProps) => {
+  const { data: token } = useContractRead({
+    address: env.NEXT_PUBLIC_CONTRACT_ADDRESS,
+    abi: PocketFaucetAbi,
+    functionName: 'baseTokens',
+    args: [BigNumber.from(0)],
+  });
+
   const { data: erc20Data } = useToken({
-    address: env.ERC20_ADDRESS,
+    address: token,
+    enabled: !!token,
   });
 
   const value = useMemo(() => {

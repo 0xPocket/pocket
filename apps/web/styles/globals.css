@@ -59,7 +59,7 @@
   }
 
   .success-btn {
-    @apply base-btn disabled-btn  bg-primary text-bright;
+    @apply base-btn disabled-btn  bg-success-dark text-bright;
   }
 
   .danger-btn {
