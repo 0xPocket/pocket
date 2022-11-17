@@ -27,7 +27,7 @@ const TokenReportPopup: FC<TokenReportPopupProps> = ({ items }) => {
   });
 
   return (
-    <div className="flex items-end justify-end text-sm">
+    <div className="mt-8 flex items-end justify-end text-sm">
       <div
         className="flex cursor-pointer items-center text-danger"
         onClick={() => setPopupOpen(true)}
