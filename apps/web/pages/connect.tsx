@@ -16,16 +16,14 @@ function Connect() {
           >
             <ConnectProviderList />
           </div>
-          <div className="mt-8 flex justify-center">
-            <p className="inline-block">
-              <FormattedMessage id="connect.noaccount" />
-            </p>
+          <p className="mt-8 text-center">
+            <FormattedMessage id="connect.noaccount" />
             <Link href="/register">
               <a className="ml-2">
                 <FormattedMessage id="connect.create" />
               </a>
             </Link>
-          </div>
+          </p>
         </div>
       </div>
     </PageWrapper>

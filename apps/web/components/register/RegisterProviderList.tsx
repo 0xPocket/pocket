@@ -31,10 +31,7 @@ const ProviderList: FC<ProviderListProps> = ({ callback, userType }) => {
         >
           {!isConnected && userType === 'Parent' && (
             <>
-              <button
-                onClick={() => callback('magic')}
-                className="flex h-10 items-center rounded-xl bg-primary p-4 font-sans font-bold transition-all hover:scale-[1.025]"
-              >
+              <button onClick={() => callback('magic')} className="action-btn ">
                 Sign in with Email
               </button>
               <div>OR</div>

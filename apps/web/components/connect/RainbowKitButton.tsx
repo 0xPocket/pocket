@@ -30,7 +30,7 @@ const RainbowKitButton = ({ callback }: { callback?: () => void }) => {
                   <button
                     onClick={openConnectModal}
                     type="button"
-                    className="action-btn w-full"
+                    className="action-btn"
                   >
                     Connect Wallet
                   </button>
