@@ -1,14 +1,13 @@
 import { env } from 'config/env/client';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 import transakSDK from '@transak/transak-sdk';
 import { useSession } from 'next-auth/react';
+import pusherJs from 'pusher-js';
 
-type TransakStatus =
-  | 'order_canceled'
-  | 'order_created'
-  | 'order_failed'
+export type TransakOrderStatus =
   | 'order_successful'
+  | 'order_processing'
   | 'order_completed';
 
 type ShowTransakParams = {
@@ -23,9 +22,27 @@ function useTransak() {
   const { address } = useAccount();
   const { data: session } = useSession();
   const [modalStatus, setModalStatus] = useState<'open' | 'closed'>('closed');
-  const [orderStatus, setStatus] = useState<TransakStatus>();
+  const [orderStatus, setStatus] = useState<TransakOrderStatus>();
+  const [orderId, setOrderId] = useState<string>();
 
   const isMobile = useIsMobile();
+
+  useEffect(() => {
+    const pusher = new pusherJs('1d9ffac87de599c61283', { cluster: 'ap2' });
+
+    if (orderId) {
+      const channel = pusher.subscribe(orderId);
+      channel.bind('ORDER_PROCESSING', () => {
+        setStatus('order_processing');
+      });
+      channel.bind('ORDER_COMPLETED', () => {
+        setStatus('order_completed');
+      });
+    }
+    return () => {
+      pusher.disconnect();
+    };
+  }, [orderId]);
 
   const showTransak = useCallback(
     ({ address: targetAddress }: ShowTransakParams) => {
@@ -62,30 +79,17 @@ function useTransak() {
         }, 1);
       });
 
-      transak.on('TRANSAK_ORDER_FAILED', () => {
-        setStatus('order_failed');
-      });
-
-      transak.on('TRANSAK_ORDER_CANCELLED', () => {
-        setStatus('order_canceled');
-      });
-
-      transak.on('TRANSAK_ORDER_CREATED', () => {
-        setStatus('order_created');
-      });
-
       transak.on('TRANSAK_ORDER_SUCCESSFUL', (data) => {
-        if (data.status.status === 'COMPLETED') {
-          setStatus('order_completed');
-        } else {
-          transak.close();
+        if (data.status.status === 'PROCESSING') {
           setStatus('order_successful');
+          setOrderId(data.status.id);
+          transak.close();
         }
       });
 
       transak.init();
     },
-    [session?.user, address],
+    [session?.user, address, isMobile],
   );
 
   return { state: modalStatus, status: orderStatus, showTransak };

@@ -1,19 +1,36 @@
 type TransakSDKOptions = {
   apiKey: string;
-  environment: 'PRODUCTION' | 'STAGING';
-  widgetHeight: string;
-  widgetWidth: string;
-  fiatAmount?: number;
-  defaultPaymentMethod?: string;
-  defaultCryptoAmount?: number;
-  disableWalletAddressForm?: boolean;
+  environment: environments;
   cryptoCurrencyCode?: string;
-  network: 'ethereum' | 'polygon';
+  fiatCurrencyCode?: string;
+  themeColor?: string;
+  defaultCryptoCurrency?: string;
+  defaultFiatCurrency?: string;
   walletAddress?: string;
-  themeColor: string;
-  fiatCurrency: string;
+  fiatAmount?: number;
+  defaultFiatAmount?: number;
+  defaultCryptoAmount?: number;
+  fiatCurrency?: string;
+  countryCode?: string;
+  paymentMethod?: string;
+  defaultPaymentMethod?: string;
+  isAutoFillUserData?: boolean;
+  isFeeCalculationHidden?: boolean;
   email?: string;
+  disablePaymentMethods?: string;
+  partnerOrderId?: string;
+  partnerCustomerId?: string;
+  exchangeScreenTitle?: string;
+  hideMenu?: boolean;
+  accessToken?: string;
+  hideExchangeScreen?: boolean;
+  isDisableCrypto?: boolean;
   redirectURL?: string;
+  disableWalletAddressForm?: boolean;
+  defaultNetwork?: string;
+  network?: string;
+  widgetWidth?: string | number;
+  widgetHeight?: string | number;
 };
 
 const TransakEvents = {
