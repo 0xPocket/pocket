@@ -28,8 +28,10 @@ const Breadcrumb: FC<BreadcrumbProps> = ({ routes }) => {
   const isMobile = useIsMobile();
   const router = useRouter();
 
+  const splittedPathname = router.asPath.split('/').filter(Boolean);
+
   if (isMobile) {
-    if (router.route.split('/').length <= 2) {
+    if (splittedPathname.length === 0) {
       return null;
     }
     return (

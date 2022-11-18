@@ -91,6 +91,10 @@
     @apply without-ring mr-2 w-full appearance-none bg-transparent text-right text-4xl outline-none;
   }
 
+  .input-number-bis {
+    @apply without-ring mr-2 appearance-none bg-transparent text-right outline-none;
+  }
+
   .input-radio {
     @apply relative flex cursor-pointer items-center justify-center rounded-lg border  px-3 py-2 shadow-sm focus:outline-none disabled:cursor-not-allowed;
   }
@@ -264,5 +268,4 @@
   .fill.completed {
     @apply w-full;
   }
-
 }
