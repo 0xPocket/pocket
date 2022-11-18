@@ -57,7 +57,9 @@ const VaultForm: FC<VaultFormProps> = ({ childAddress }) => {
       className="flex h-full w-full flex-col items-center justify-center gap-12"
     >
       <div className="space-y-6">
-        <p className="font-bold">A quelle frequence pourra til retirer ?</p>
+        <p className="font-bold">
+          <FormattedMessage id="vault.firsttime.frequency" />
+        </p>
         <RadioGroup<'div', 'weekly' | 'monthly'>
           value={periodicity}
           onChange={(value: 'weekly' | 'monthly') =>
@@ -79,7 +81,9 @@ const VaultForm: FC<VaultFormProps> = ({ childAddress }) => {
         </RadioGroup>
       </div>
       <div className="space-y-6">
-        <p className="font-bold">Combien pourra til retirer a chaque fois ?</p>
+        <p className="font-bold">
+          <FormattedMessage id="vault.firsttime.howmuch" />
+        </p>
         <input
           className="input-number-bis"
           placeholder="0"
@@ -93,7 +97,7 @@ const VaultForm: FC<VaultFormProps> = ({ childAddress }) => {
       </div>
       <div className="space-y-6">
         <p className="font-bold">
-          Combien voulez vous deposer dans sa tirelire ?
+          <FormattedMessage id="vault.firsttime.deposit" />
         </p>
         <input
           className="input-number-bis"

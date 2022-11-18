@@ -39,18 +39,17 @@ export default function AccountSend() {
       ) : child ? (
         <div className="flex w-full flex-col items-center justify-center gap-12">
           <p className="text-center font-bold">
-            Souhaitez-vous lui donner de l’argent une seule fois ou de maniére
-            récurente ?
+            <FormattedMessage id="send.firsttime.choice" />
           </p>
           <div className="flex  gap-4">
             <Link href={`/account/${id}/direct`} passHref>
               <button className="action-btn h-14 basis-1/2 rounded-xl font-bold">
-                Une seule fois
+                <FormattedMessage id="send.firsttime.choiceOnce" />
               </button>
             </Link>
             <Link href={`/account/${id}/vault`} passHref>
               <button className="action-btn h-14 basis-1/2 rounded-xl font-bold">
-                De maniére récurente
+                <FormattedMessage id="send.firsttime.choiceRecurrent" />
               </button>
             </Link>
           </div>

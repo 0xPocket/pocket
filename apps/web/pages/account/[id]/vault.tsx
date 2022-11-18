@@ -72,20 +72,18 @@ export default function VaultPage() {
             {!status && (
               <>
                 <p className="text-center font-bold">
-                  Pour donner réguliérement de l’argent à votre enfant sans y
-                  penser, il vous faut lui créer une tirelire. Comment
-                  fonctionnera t’elle ?
+                  <FormattedMessage id="vault.tutorial.first" />
                 </p>
                 <ul className="list-disc space-y-8 px-4">
                   <li>
-                    C’est une tirelire dans laquelle vous déposez son argent de
-                    poche en avance
+                    <FormattedMessage id="vault.tutorial.second" />
                   </li>
                   <li>
-                    Vous définissez à quelle fréquence votre enfant peut retirer
-                    son argent
+                    <FormattedMessage id="vault.tutorial.third" />
                   </li>
-                  <li>Et vous définissez le montant qu’il pourra retirer </li>
+                  <li>
+                    <FormattedMessage id="vault.tutorial.forth" />
+                  </li>
                 </ul>
               </>
             )}
@@ -95,7 +93,7 @@ export default function VaultPage() {
                   onClick={() => showTransak({})}
                   className="action-btn h-14 basis-1/2 rounded-xl font-bold"
                 >
-                  Acheter des USDC avant
+                  <FormattedMessage id="vault.tutorial.buyUSDC" />
                 </button>
               )}
               {status && <TransakStatus status={status} />}
@@ -104,7 +102,7 @@ export default function VaultPage() {
                 onClick={() => setStep('form')}
                 // disabled={showTransakButton || status !== 'order_completed'}
               >
-                {"C'est parti !"}
+                <FormattedMessage id="vault.tutorial.letsgo" />
               </button>
             </div>
           </div>
