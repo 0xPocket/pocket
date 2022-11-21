@@ -159,31 +159,53 @@ const VaultFormWithTutorial: FC<VaultFormWithTutorialProps> = ({
         <p className="font-bold">
           <FormattedMessage id="vault.firsttime.howmuch" />
         </p>
-        <input
-          className="input-number-bis"
-          placeholder="0"
-          type="number"
-          min="0"
-          {...register('ceiling', {
-            valueAsNumber: true,
-          })}
-        />
-        <span>$</span>
+        <div className="flex justify-center">
+          <input
+            className="input-number-bis w-4"
+            placeholder="0"
+            type="number"
+            min="0"
+            onKeyDownCapture={(el) => {
+              if (el.key === 'Delete' || el.key === 'Backspace') {
+                el.currentTarget.style.width = `${el.currentTarget.value.length}ch`;
+              } else {
+                el.currentTarget.style.width = `${
+                  el.currentTarget.value.length + 1
+                }ch`;
+              }
+            }}
+            {...register('ceiling', {
+              valueAsNumber: true,
+            })}
+          />
+          <span>$</span>
+        </div>
       </div>
       <div className="space-y-6">
         <p className="font-bold">
           Combien voulez vous deposer dans sa tirelire ?
         </p>
-        <input
-          className="input-number-bis"
-          placeholder="0"
-          type="number"
-          min="0"
-          {...register('amount', {
-            valueAsNumber: true,
-          })}
-        />
-        <span>$</span>
+        <div className="flex justify-center">
+          <input
+            className="input-number-bis w-4"
+            placeholder="0"
+            type="number"
+            min="0"
+            onKeyDownCapture={(el) => {
+              if (el.key === 'Delete' || el.key === 'Backspace') {
+                el.currentTarget.style.width = `${el.currentTarget.value.length}ch`;
+              } else {
+                el.currentTarget.style.width = `${
+                  el.currentTarget.value.length + 1
+                }ch`;
+              }
+            }}
+            {...register('amount', {
+              valueAsNumber: true,
+            })}
+          />
+          <span>$</span>
+        </div>
         {!erc20Balance?.value.isZero() && (
           <div className="flex w-full items-center justify-center gap-2 text-center">
             {erc20Balance && (
