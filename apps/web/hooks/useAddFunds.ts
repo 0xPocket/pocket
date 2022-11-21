@@ -10,7 +10,7 @@ import { usePermitTx } from './usePermitTx';
 import { PocketFaucetAbi } from 'pocket-contract/abi';
 import { Address } from 'abitype';
 
-export function useAddChildAndFunds() {
+export function useAddFunds() {
   const { erc20 } = useSmartContract();
   const { address } = useAccount();
   const intl = useIntl();
@@ -22,7 +22,7 @@ export function useAddChildAndFunds() {
   const { write, isLoading } = useSendMetaTx({
     address: env.NEXT_PUBLIC_CONTRACT_ADDRESS,
     abi: PocketFaucetAbi,
-    functionName: 'addChildAndFundsPermit',
+    functionName: 'addFundsPermit',
     onMutate: () => {
       toast.dismiss();
       toast.info(intl.formatMessage({ id: 'transaction.pending' }), {
@@ -38,13 +38,8 @@ export function useAddChildAndFunds() {
     },
   });
 
-  const addChildAndFunds = useCallback(
-    async (props: {
-      childAddress: Address;
-      ceiling: BigNumber;
-      periodicity: BigNumber;
-      amount: BigNumber;
-    }) => {
+  const addFunds = useCallback(
+    async (props: { childAddress: Address; amount: BigNumber }) => {
       try {
         if (!address) {
           return;
@@ -56,11 +51,6 @@ export function useAddChildAndFunds() {
 
           await write([
             props.childAddress,
-            {
-              ceiling: props.ceiling,
-              periodicity: props.periodicity,
-              tokenIndex: BigNumber.from(0),
-            },
             props.amount,
             BigNumber.from(deadline),
             signature.v,
@@ -74,7 +64,7 @@ export function useAddChildAndFunds() {
   );
 
   return {
-    addChildAndFunds,
+    addFunds,
     isLoading: permitIsLoading || isLoading,
   };
 }

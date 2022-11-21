@@ -12,6 +12,7 @@ export type TransakOrderStatus =
 
 type ShowTransakParams = {
   address?: string;
+  amount?: number;
 };
 
 function useIsMobile() {
@@ -45,7 +46,7 @@ function useTransak() {
   }, [orderId]);
 
   const showTransak = useCallback(
-    ({ address: targetAddress }: ShowTransakParams) => {
+    ({ address: targetAddress, amount }: ShowTransakParams) => {
       if (!address || !session?.user?.email) {
         throw new Error('No address or email');
       }
@@ -56,7 +57,7 @@ function useTransak() {
         widgetHeight: '625px',
         widgetWidth: isMobile ? '390px' : '500px',
         // fiatAmount: 50,
-        defaultCryptoAmount: 50.01,
+        defaultCryptoAmount: amount ? amount : 50.01,
         defaultPaymentMethod: 'credit_debit_card',
         // Examples of some of the customization parameters you can pass
         disableWalletAddressForm: true,
