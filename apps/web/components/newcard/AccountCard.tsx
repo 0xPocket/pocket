@@ -1,14 +1,11 @@
 import { UserChild } from '@lib/types/interfaces';
-import { formatUnits } from 'ethers/lib/utils.js';
 import Link from 'next/link';
 import type { FC } from 'react';
-import { useSmartContract } from '../../contexts/contract';
 import { useChildBalance } from '../../hooks/useChildBalance';
 import { useChildConfig } from '../../hooks/useChildConfig';
 import MetaMaskProfilePicture from '../card/common/MetaMaskProfilePicture';
 import FormattedMessage from '../common/FormattedMessage';
 import FormattedNumber from '../common/FormattedNumber';
-import { Spinner } from '../common/Spinner';
 
 type AccountCardProps = {
   child: UserChild;

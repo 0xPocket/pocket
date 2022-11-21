@@ -4,7 +4,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { trpc } from '../../../utils/trpc';
 import FormattedMessage from '../../common/FormattedMessage';
 import { Spinner } from '../../common/Spinner';
-import MyAccountCard from './MyAccountCard';
+// import MyAccountCard from './MyAccountCard';
 import AccountCard from '../../newcard/AccountCard';
 import PendingCard from '../../newcard/PendingCard';
 

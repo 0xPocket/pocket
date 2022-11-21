@@ -1,11 +1,11 @@
 import TokenContent from '../common/token/TokenContent';
 import NftContent from '../common/nft/NftContent';
 import { UserChild } from '@lib/types/interfaces';
-import ChildCard from '../../card/parent/ChildCard';
 import ActivityContent from '../common/activity/ActivityContent';
 import FormattedMessage from '../../common/FormattedMessage';
 import { useAccount } from 'wagmi';
 import AccountCard from '../../newcard/AccountCard';
+import ChildSettingsForm from '../../SettingsCard';
 
 type AccountDashboardProps = { child: UserChild };
 
@@ -16,6 +16,7 @@ function AccountDashboard({ child }: AccountDashboardProps) {
     <div className="space-y-20">
       <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
         <AccountCard child={child} />
+        <ChildSettingsForm child={child} />
       </div>
       <div className="grid gap-8 lg:grid-cols-2">
         <NftContent childAddress={child.address} fill_nbr={6} />
