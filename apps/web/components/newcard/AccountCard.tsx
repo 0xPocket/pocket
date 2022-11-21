@@ -1,20 +1,18 @@
 import { UserChild } from '@lib/types/interfaces';
-import { formatUnits } from 'ethers/lib/utils.js';
 import Link from 'next/link';
 import type { FC } from 'react';
-import { useSmartContract } from '../../contexts/contract';
 import { useChildBalance } from '../../hooks/useChildBalance';
 import { useChildConfig } from '../../hooks/useChildConfig';
 import MetaMaskProfilePicture from '../card/common/MetaMaskProfilePicture';
 import FormattedMessage from '../common/FormattedMessage';
 import FormattedNumber from '../common/FormattedNumber';
-import { Spinner } from '../common/Spinner';
 
 type AccountCardProps = {
   child: UserChild;
+  viewProfile: boolean;
 };
 
-const AccountCard: FC<AccountCardProps> = ({ child }) => {
+const AccountCard: FC<AccountCardProps> = ({ child, viewProfile = false }) => {
   const { data: childConfig } = useChildConfig({ address: child.address });
   const { data: childBalance } = useChildBalance({ address: child.address });
 
@@ -53,11 +51,13 @@ const AccountCard: FC<AccountCardProps> = ({ child }) => {
             <FormattedMessage id="send" />
           </button>
         </Link>
-        <Link href={`/account/${child.address}`}>
-          <a className="flex items-center justify-center px-4 py-2 ">
-            <FormattedMessage id="view_profile" />
-          </a>
-        </Link>
+        {viewProfile && (
+          <Link href={`/account/${child.address}`}>
+            <a className="flex items-center justify-center px-4 py-2 ">
+              <FormattedMessage id="view_profile" />
+            </a>
+          </Link>
+        )}
       </div>
     </div>
   );

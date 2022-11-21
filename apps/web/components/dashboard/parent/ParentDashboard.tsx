@@ -35,7 +35,7 @@ function ParentDashboard() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <>
             {data?.map((child) => (
-              <AccountCard child={child} key={child.id} />
+              <AccountCard child={child} key={child.id} viewProfile />
             ))}
             {pendingChildren?.map((child) => (
               <PendingCard key={child.id} pendingChild={child} />
