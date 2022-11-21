@@ -9,9 +9,10 @@ import FormattedNumber from '../common/FormattedNumber';
 
 type AccountCardProps = {
   child: UserChild;
+  viewProfile: boolean;
 };
 
-const AccountCard: FC<AccountCardProps> = ({ child }) => {
+const AccountCard: FC<AccountCardProps> = ({ child, viewProfile = false }) => {
   const { data: childConfig } = useChildConfig({ address: child.address });
   const { data: childBalance } = useChildBalance({ address: child.address });
 
@@ -50,11 +51,13 @@ const AccountCard: FC<AccountCardProps> = ({ child }) => {
             <FormattedMessage id="send" />
           </button>
         </Link>
-        <Link href={`/account/${child.address}`}>
-          <a className="flex items-center justify-center px-4 py-2 ">
-            <FormattedMessage id="view_profile" />
-          </a>
-        </Link>
+        {viewProfile && (
+          <Link href={`/account/${child.address}`}>
+            <a className="flex items-center justify-center px-4 py-2 ">
+              <FormattedMessage id="view_profile" />
+            </a>
+          </Link>
+        )}
       </div>
     </div>
   );

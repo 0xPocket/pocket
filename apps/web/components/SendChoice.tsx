@@ -40,18 +40,17 @@ const SendChoice: FC<SendChoiseProps> = ({ childAddress }) => {
   return (
     <div className="flex w-full flex-col items-center justify-center gap-12">
       <p className="text-center font-bold">
-        Voulez-vous lui envoyer directement de l’argent ou recharger sa tirelire
-        ?
+        <FormattedMessage id="send.secondtime.choice" />
       </p>
       <div className="flex  gap-4">
         <Link href={`/account/${childAddress}/direct`} passHref>
           <button className="action-btn h-14 basis-1/2 rounded-xl font-bold">
-            Envoyer directement
+            <FormattedMessage id="send.secondtime.choiceOnce" />
           </button>
         </Link>
         <Link href={`/account/${childAddress}/vault`} passHref>
           <button className="action-btn h-14 basis-1/2 rounded-xl font-bold">
-            Recharger sa tirelire
+            <FormattedMessage id="send.secondtime.choiceRecurrent" />
           </button>
         </Link>
       </div>

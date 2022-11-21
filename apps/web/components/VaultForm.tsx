@@ -68,7 +68,7 @@ const VaultForm: FC<VaultFormProps> = ({ childAddress }) => {
           <div className="flex w-full items-center justify-center gap-2 text-center">
             {erc20Balance && (
               <span className="text-sm text-gray">
-                Balance: {erc20Balance.formatted}
+                <FormattedMessage id="balance" />: {erc20Balance.formatted}
               </span>
             )}
             <button

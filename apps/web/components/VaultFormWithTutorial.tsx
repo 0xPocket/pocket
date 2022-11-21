@@ -183,7 +183,7 @@ const VaultFormWithTutorial: FC<VaultFormWithTutorialProps> = ({
       </div>
       <div className="space-y-6">
         <p className="font-bold">
-          Combien voulez vous deposer dans sa tirelire ?
+          <FormattedMessage id="vault.firsttime.deposit" />
         </p>
         <div className="flex justify-center">
           <input
@@ -210,7 +210,7 @@ const VaultFormWithTutorial: FC<VaultFormWithTutorialProps> = ({
           <div className="flex w-full items-center justify-center gap-2 text-center">
             {erc20Balance && (
               <span className="text-sm text-gray">
-                Balance: {erc20Balance.formatted}
+                <FormattedMessage id="balance" />: {erc20Balance.formatted}
               </span>
             )}
             <button
