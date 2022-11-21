@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { FC } from 'react';
 import { useChildConfig } from '../hooks/useChildConfig';
+import FormattedMessage from './common/FormattedMessage';
 import { Spinner } from './common/Spinner';
 
 type SendChoiseProps = {
@@ -18,18 +19,17 @@ const SendChoice: FC<SendChoiseProps> = ({ childAddress }) => {
     return (
       <div className="flex w-full flex-col items-center justify-center gap-12">
         <p className="text-center font-bold">
-          Souhaitez-vous lui donner de l’argent une seule fois ou de maniére
-          récurente ?
+          <FormattedMessage id="send.firsttime.choice" />
         </p>
         <div className="flex  gap-4">
           <Link href={`/account/${childAddress}/direct`} passHref>
             <button className="action-btn h-14 basis-1/2 rounded-xl font-bold">
-              Une seule fois
+              <FormattedMessage id="send.firsttime.choiceOnce" />
             </button>
           </Link>
           <Link href={`/account/${childAddress}/vault`} passHref>
             <button className="action-btn h-14 basis-1/2 rounded-xl font-bold">
-              De maniére récurente
+              <FormattedMessage id="send.firsttime.choiceRecurrent" />
             </button>
           </Link>
         </div>

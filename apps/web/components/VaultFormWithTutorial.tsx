@@ -82,20 +82,18 @@ const VaultFormWithTutorial: FC<VaultFormWithTutorialProps> = ({
         {!status && (
           <>
             <p className="text-center font-bold">
-              Pour donner réguliérement de l’argent à votre enfant sans y
-              penser, il vous faut lui créer une tirelire. Comment fonctionnera
-              t’elle ?
+              <FormattedMessage id="vault.tutorial.first" />
             </p>
             <ul className="list-disc space-y-8 px-4">
               <li>
-                C’est une tirelire dans laquelle vous déposez son argent de
-                poche en avance
+                <FormattedMessage id="vault.tutorial.second" />
               </li>
               <li>
-                Vous définissez à quelle fréquence votre enfant peut retirer son
-                argent
+                <FormattedMessage id="vault.tutorial.third" />
               </li>
-              <li>Et vous définissez le montant qu’il pourra retirer </li>
+              <li>
+                <FormattedMessage id="vault.tutorial.forth" />
+              </li>
             </ul>
           </>
         )}
@@ -105,7 +103,7 @@ const VaultFormWithTutorial: FC<VaultFormWithTutorialProps> = ({
               onClick={() => showTransak({})}
               className="action-btn h-14 basis-1/2 rounded-xl font-bold"
             >
-              Acheter des USDC avant
+              <FormattedMessage id="vault.tutorial.buyUSDC" />
             </button>
           )}
           {status && <TransakStatus status={status} />}
@@ -114,7 +112,7 @@ const VaultFormWithTutorial: FC<VaultFormWithTutorialProps> = ({
             onClick={() => setStep('form')}
             disabled={showTransakButton}
           >
-            {"C'est parti !"}
+            <FormattedMessage id="vault.tutorial.letsgo" />
           </button>
         </div>
       </div>
@@ -134,7 +132,9 @@ const VaultFormWithTutorial: FC<VaultFormWithTutorialProps> = ({
       className="flex h-full w-full flex-col items-center justify-center gap-12"
     >
       <div className="space-y-6">
-        <p className="font-bold">A quelle frequence pourra til retirer ?</p>
+        <p className="font-bold">
+          <FormattedMessage id="vault.firsttime.frequency" />
+        </p>
         <RadioGroup<'div', 'weekly' | 'monthly'>
           value={periodicity}
           onChange={(value: 'weekly' | 'monthly') =>
@@ -156,7 +156,9 @@ const VaultFormWithTutorial: FC<VaultFormWithTutorialProps> = ({
         </RadioGroup>
       </div>
       <div className="space-y-6">
-        <p className="font-bold">Combien pourra til retirer a chaque fois ?</p>
+        <p className="font-bold">
+          <FormattedMessage id="vault.firsttime.howmuch" />
+        </p>
         <input
           className="input-number-bis"
           placeholder="0"

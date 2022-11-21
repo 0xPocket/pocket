@@ -164,6 +164,21 @@
   "dashboard.parent.card.email-sent-to": "Email envoyé à {email}",
   "dashboard.parent.card.go-to": "Aller sur le profil de {name}",
 
+	"send.firsttime.choice": "Souhaitez-vous lui donner de l’argent une seule fois ou de maniére récurente ?",
+	"send.firsttime.choiceOnce": "Une seule fois",
+	"send.firsttime.choiceRecurrent": "De maniére récurente",
+
+	"vault.tutorial.first": "Pour donner réguliérement de l’argent à votre enfant sans y penser, il vous faut lui créer une tirelire. Comment fonctionnera t’elle?",
+	"vault.tutorial.second": "C’est une tirelire dans laquelle vous déposez son argent de poche en avance",
+	"vault.tutorial.third": "Vous définissez à quelle fréquence votre enfant peut retirer son argent",
+	"vault.tutorial.forth": "Et vous définissez le montant qu’il pourra retirer",
+	"vault.tutorial.buyUSDC": "Acheter des USDC avant",
+	"vault.tutorial.letsgo": "C'est parti !",
+
+	"vault.firsttime.frequency": "À quelle frequence pourra-t-il retirer ?",
+	"vault.firsttime.howmuch": "Combien pourra-t-il retirer à chaque fois ?",
+	"vault.firsttime.deposit": "Combien voulez vous deposer dans sa tirelire ?",
+
   "footer.rightReserved": "2022 Pocket",
   "footer.report-bug": "Signaler un bug",
   "footer.report-success": "Merci pour le signalement, nous reviendrons vers vous dès que possible si nécessaire !",

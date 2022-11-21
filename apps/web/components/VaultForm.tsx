@@ -52,7 +52,7 @@ const VaultForm: FC<VaultFormProps> = ({ childAddress }) => {
     >
       <div className="space-y-6">
         <p className="font-bold">
-          Combien voulez vous deposer dans sa tirelire ?
+          <FormattedMessage id="vault.firsttime.deposit" />
         </p>
         <input
           className="input-number-bis"
