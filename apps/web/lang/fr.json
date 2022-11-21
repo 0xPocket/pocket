@@ -186,6 +186,10 @@
   "vault.firsttime.howmuch": "Combien pourra-t-il retirer à chaque fois ?",
   "vault.firsttime.deposit": "Combien voulez vous deposer dans sa tirelire ?",
 
+  "transak.processing": "Les cryptos sont en cours de livraison, ça ne devrait plus être long !",
+  "transak.successful": "Le paiement est un succès ! Merci de garder cette page ouverte afin de finaliser le processus d'envoie a votre enfant une fois les cryptos reçu.",
+  "transak.completed": "Vous avez bien reçu vos cryptos !",
+
   "footer.rightReserved": "2022 Pocket",
   "footer.report-bug": "Signaler un bug",
   "footer.report-success": "Merci pour le signalement, nous reviendrons vers vous dès que possible si nécessaire !",

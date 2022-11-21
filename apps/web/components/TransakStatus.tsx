@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import type { TransakOrderStatus } from '../hooks/useTransak';
+import FormattedMessage from './common/FormattedMessage';
 import { Spinner } from './common/Spinner';
 
 type TransakStatusProps = {
@@ -11,7 +12,7 @@ const TransakStatus: FC<TransakStatusProps> = ({ status }) => {
     return (
       <>
         <p>
-          Les cryptos sont en cours de livraison, ca ne devrait pas tarder !
+          <FormattedMessage id="transak.processing" />
         </p>
         <Spinner />
       </>
@@ -21,12 +22,17 @@ const TransakStatus: FC<TransakStatusProps> = ({ status }) => {
   if (status === 'order_successful') {
     return (
       <>
-        <p>On attend toujours tes cryptos...</p>
+        <FormattedMessage id="transak.successful" />
         <Spinner />
       </>
     );
   }
-  return <div>Vous avez bien recu les cryptos !</div>;
+
+  return (
+    <div>
+      <FormattedMessage id="transak.completed" />
+    </div>
+  );
 };
 
 export default TransakStatus;

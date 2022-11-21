@@ -169,7 +169,7 @@
   "send.firsttime.choiceOnce": "Only once",
   "send.firsttime.choiceRecurrent": "Recurrently",
 
-  "send.secondtime.choice": "Voulez-vous lui envoyer directement de l’argent ou recharger sa tirelire ?",
+  "send.secondtime.choice": "Do you want to send money directly or topup his piggy bank ?",
   "send.secondtime.choiceOnce": "Send directly",
   "send.secondtime.choiceRecurrent": "Topup his piggy bank",
 
@@ -185,6 +185,10 @@
   "vault.firsttime.frequency": "At what frequency will it be able to withdraw?",
   "vault.firsttime.howmuch": "How much can he withdraw each time?",
   "vault.firsttime.deposit": "How much do you want to deposit in his piggy bank?",
+
+  "transak.processing": "Cryptos are now delivering, it shouldn't take long!",
+  "transak.successful": "Your payment went through ! Please keep this page open until the transaction is confirmed.",
+  "transak.completed": "You have received your cryptos!",
 
   "footer.rightReserved": "2022 Pocket",
   "footer.report-bug": "Report a bug",

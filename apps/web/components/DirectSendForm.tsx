@@ -113,7 +113,9 @@ const DirectSendForm: FC<DirectSendFormProps> = ({ childAddress }) => {
       className="flex h-full w-full flex-col items-center justify-center gap-12"
     >
       <div className="space-y-6">
-        <p className="font-bold">Combien souhaitez-vous lui envoyer ?</p>
+        <p className="font-bold">
+          <FormattedMessage id="send.direct.howmuch" />
+        </p>
         <input
           className="input-number-bis"
           placeholder="0"
@@ -134,7 +136,7 @@ const DirectSendForm: FC<DirectSendFormProps> = ({ childAddress }) => {
           <div className="flex w-full items-center justify-center gap-2 text-center">
             {erc20Balance && (
               <span className="text-sm text-gray">
-                Balance: {erc20Balance.formatted}
+                <FormattedMessage id="balance" />: {erc20Balance.formatted}
               </span>
             )}
             <button
