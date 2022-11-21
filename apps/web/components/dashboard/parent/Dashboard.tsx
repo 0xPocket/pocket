@@ -5,6 +5,7 @@ import ChildCard from '../../card/parent/ChildCard';
 import ActivityContent from '../common/activity/ActivityContent';
 import FormattedMessage from '../../common/FormattedMessage';
 import { useAccount } from 'wagmi';
+import AccountCard from '../../newcard/AccountCard';
 
 type AccountDashboardProps = { child: UserChild };
 
@@ -13,12 +14,8 @@ function AccountDashboard({ child }: AccountDashboardProps) {
 
   return child.address ? (
     <div className="space-y-20">
-      <div className="grid grid-cols-6 gap-8">
-        <ChildCard
-          child={child}
-          className="col-span-6 lg:col-span-3"
-          polygonscanLink
-        />
+      <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+        <AccountCard child={child} />
       </div>
       <div className="grid gap-8 lg:grid-cols-2">
         <NftContent childAddress={child.address} fill_nbr={6} />
