@@ -9,7 +9,7 @@ import FormattedNumber from '../common/FormattedNumber';
 
 type AccountCardProps = {
   child: UserChild;
-  viewProfile: boolean;
+  viewProfile?: boolean;
 };
 
 const AccountCard: FC<AccountCardProps> = ({ child, viewProfile = false }) => {
