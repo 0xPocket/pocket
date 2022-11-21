@@ -23,7 +23,7 @@ export const relayerRouter = t.router({
       z.object({
         request: z.object({
           from: z.string(),
-          to: z.string(),
+          to: z.string().transform((val) => val.toLowerCase()),
           value: z.number(),
           gas: z.number(),
           nonce: z.number(),
@@ -37,7 +37,9 @@ export const relayerRouter = t.router({
     .mutation(async ({ input, ctx }) => {
       const { request, signature } = input;
 
-      const accepts = request.to === env.NEXT_PUBLIC_CONTRACT_ADDRESS;
+      const accepts =
+        request.to === env.NEXT_PUBLIC_CONTRACT_ADDRESS ||
+        request.to === env.ERC20_ADDRESS;
 
       if (!accepts)
         throw new TRPCError({
