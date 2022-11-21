@@ -4,12 +4,10 @@ import FormattedMessage from '../../../components/common/FormattedMessage';
 import { Spinner } from '../../../components/common/Spinner';
 import TitleHelper from '../../../components/common/TitleHelper';
 import PageWrapper from '../../../components/common/wrappers/PageWrapper';
-import VaultForm from '../../../components/VaultForm';
-import VaultFormWithTutorial from '../../../components/VaultFormWithTutorial';
-import { useChildConfig } from '../../../hooks/useChildConfig';
+import DirectSendForm from '../../../components/DirectSendForm';
 import { trpc } from '../../../utils/trpc';
 
-export default function VaultPage() {
+export default function DirectSend() {
   const router = useRouter();
   const id = router.query.id as string;
 
@@ -20,12 +18,8 @@ export default function VaultPage() {
     },
   );
 
-  const { data: childConfig, isLoading: childConfigLoading } = useChildConfig({
-    address: id,
-  });
-
   return (
-    <PageWrapper noFooter>
+    <PageWrapper>
       <TitleHelper title={child?.name || 'Child'} />
 
       <Breadcrumb
@@ -34,19 +28,17 @@ export default function VaultPage() {
             ? [
                 { name: child.name, path: `/account/${id}` },
                 { name: 'Send', path: `/account/${id}/send` },
-                { name: 'Vault', path: null },
+                { name: 'Direct', path: null },
               ]
             : []
         }
       />
-      {isLoading || childConfigLoading ? (
-        <Spinner />
+      {isLoading ? (
+        <>
+          <Spinner />
+        </>
       ) : child ? (
-        childConfig?.periodicity.isZero() ? (
-          <VaultFormWithTutorial childAddress={id} />
-        ) : (
-          <VaultForm childAddress={id} />
-        )
+        <DirectSendForm childAddress={id} />
       ) : (
         <div>
           <FormattedMessage id="account.not-found" />

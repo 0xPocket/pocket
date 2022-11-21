@@ -1,22 +1,14 @@
-import { RadioGroup } from '@headlessui/react';
-import { BigNumber } from 'ethers';
+import { parseUnits } from 'ethers/lib/utils.js';
 import { FC } from 'react';
+import { useAccount, useBalance } from 'wagmi';
 import { z } from 'zod';
-import { useAddChildAndFunds } from '../hooks/useAddChildAndFunds';
+import { useSmartContract } from '../contexts/contract';
+import { useAddFunds } from '../hooks/useAddFunds';
 import { useZodForm } from '../utils/useZodForm';
 import FormattedMessage from './common/FormattedMessage';
 import { Spinner } from './common/Spinner';
 
-const PeriodicityOptions = z.enum(['weekly', 'monthly']);
-
-const PeriodicityValues = {
-  weekly: '604800',
-  monthly: '2592000',
-};
-
 const VaultFormSchema = z.object({
-  periodicity: PeriodicityOptions,
-  ceiling: z.number(),
   amount: z.number(),
 });
 
@@ -30,71 +22,34 @@ const VaultForm: FC<VaultFormProps> = ({ childAddress }) => {
     register,
     formState: { isValid },
     setValue,
-    watch,
   } = useZodForm({
     reValidateMode: 'onChange',
     mode: 'all',
     schema: VaultFormSchema,
-    defaultValues: {
-      periodicity: 'weekly',
-    },
   });
 
-  const { addChildAndFunds } = useAddChildAndFunds();
+  const { addFunds } = useAddFunds();
 
-  const periodicity = watch('periodicity');
+  const { erc20 } = useSmartContract();
+
+  const { address } = useAccount();
+
+  const { data: erc20Balance } = useBalance({
+    address,
+    token: erc20?.address,
+    watch: true,
+  });
 
   return (
     <form
       onSubmit={handleSubmit((data) => {
-        addChildAndFunds({
+        addFunds({
           childAddress,
-          periodicity: BigNumber.from(PeriodicityValues[data.periodicity]),
-          ceiling: BigNumber.from(data.ceiling),
-          amount: BigNumber.from(data.amount),
+          amount: parseUnits(data.amount.toString(), erc20?.decimals),
         });
       })}
       className="flex h-full w-full flex-col items-center justify-center gap-12"
     >
-      <div className="space-y-6">
-        <p className="font-bold">
-          <FormattedMessage id="vault.firsttime.frequency" />
-        </p>
-        <RadioGroup<'div', 'weekly' | 'monthly'>
-          value={periodicity}
-          onChange={(value: 'weekly' | 'monthly') =>
-            setValue('periodicity', value)
-          }
-          className="flex w-full items-center justify-center  space-x-8"
-        >
-          {PeriodicityOptions.options.map((option) => (
-            <RadioGroup.Option
-              key={option}
-              value={option}
-              className={({ checked }) =>
-                checked ? 'input-radio-checked' : 'input-radio-unchecked'
-              }
-            >
-              <FormattedMessage id={option} />
-            </RadioGroup.Option>
-          ))}
-        </RadioGroup>
-      </div>
-      <div className="space-y-6">
-        <p className="font-bold">
-          <FormattedMessage id="vault.firsttime.howmuch" />
-        </p>
-        <input
-          className="input-number-bis"
-          placeholder="0"
-          type="number"
-          min="0"
-          {...register('ceiling', {
-            valueAsNumber: true,
-          })}
-        />
-        <span>$</span>
-      </div>
       <div className="space-y-6">
         <p className="font-bold">
           <FormattedMessage id="vault.firsttime.deposit" />
@@ -109,8 +64,29 @@ const VaultForm: FC<VaultFormProps> = ({ childAddress }) => {
           })}
         />
         <span>$</span>
+        {!erc20Balance?.value.isZero() && (
+          <div className="flex w-full items-center justify-center gap-2 text-center">
+            {erc20Balance && (
+              <span className="text-sm text-gray">
+                Balance: {erc20Balance.formatted}
+              </span>
+            )}
+            <button
+              className="rounded bg-primary px-2 text-sm"
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                setValue('amount', Number(erc20Balance?.formatted), {
+                  shouldValidate: true,
+                });
+              }}
+            >
+              Max
+            </button>
+          </div>
+        )}
       </div>
-      <button type="submit" className="action-btn">
+      <button type="submit" className="action-btn" disabled={!isValid}>
         {false ? <Spinner base /> : <span className="mr-2">🚀</span>}
         <FormattedMessage id="send" />
       </button>

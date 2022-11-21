@@ -6,7 +6,7 @@ import {
   useWaitForTransaction,
 } from 'wagmi';
 import { useCallback, useState } from 'react';
-import type { Abi, ExtractAbiFunctionNames } from 'abitype';
+import type { Abi, Address, ExtractAbiFunctionNames } from 'abitype';
 import type { ExtractAbiFunctionParams } from '../utils/abi-types';
 import { generateMetaTransaction } from '../utils/generateMetaTx';
 import { type providers } from 'ethers';
@@ -21,7 +21,7 @@ type UseSendMetaTx<
   TMethod extends ExtractAbiFunctionNames<TAbi>,
 > = {
   abi: TAbi;
-  address: string;
+  address?: Address;
   functionName: TMethod;
   onSuccess?: (data: providers.TransactionReceipt) => void;
   onError?: (err: Error | TRPCError) => void;
@@ -73,7 +73,7 @@ export function useSendMetaTx<
 
   const sendTransaction = useCallback(
     async (args: TArgs) => {
-      if (!accountAddress) {
+      if (!accountAddress || !address) {
         return;
       }
 
