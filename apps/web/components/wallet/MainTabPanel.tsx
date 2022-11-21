@@ -65,7 +65,7 @@ function MainTabPanel({}: MainTabPanelProps) {
       {status === 'authenticated' &&
         userData &&
         userData.user.type === 'Parent' && (
-          <button onClick={showTransak} className="action-btn">
+          <button onClick={() => showTransak({})} className="action-btn">
             <FormattedMessage id="wallet.top-up" />
           </button>
         )}

@@ -55,7 +55,7 @@ const MyAccountCard: FC = () => {
         )}
       </div>
 
-      <button onClick={showTransak} className="action-btn">
+      <button onClick={() => showTransak({})} className="action-btn">
         <FormattedMessage id="wallet.top-up" />
       </button>
     </div>
