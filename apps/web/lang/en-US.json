@@ -165,20 +165,26 @@
   "dashboard.parent.card.email-sent-to": "Email sent to {email}",
   "dashboard.parent.card.go-to": "Go to {name}'s profile",
 
-	"send.firsttime.choice": "Do you want to give money only once or on a recurring basis?",
-	"send.firsttime.choiceOnce": "Only once",
-	"send.firsttime.choiceRecurrent": "Recurrently",
+  "send.firsttime.choice": "Do you want to give money only once or on a recurring basis?",
+  "send.firsttime.choiceOnce": "Only once",
+  "send.firsttime.choiceRecurrent": "Recurrently",
 
-	"vault.tutorial.first": "To give money to your child on a regular basis without thinking about it, you need to create a piggy bank. How will it work?",
-	"vault.tutorial.second": "It is a piggy bank in which you deposit his pocket money in advance",
-	"vault.tutorial.third": "You define how often your child can withdraw his or her money",
-	"vault.tutorial.forth": "And you define the amount he can withdraw",
-	"vault.tutorial.buyUSDC": "Buy USDC first",
-	"vault.tutorial.letsgo": "Let's go !",
+  "send.secondtime.choice": "Voulez-vous lui envoyer directement de l’argent ou recharger sa tirelire ?",
+  "send.secondtime.choiceOnce": "Send directly",
+  "send.secondtime.choiceRecurrent": "Topup his piggy bank",
 
-	"vault.firsttime.frequency": "At what frequency will it be able to withdraw?",
-	"vault.firsttime.howmuch": "How much can he withdraw each time?",
-	"vault.firsttime.deposit": "How much do you want to deposit in his piggy bank?",
+  "send.direct.howmuch": "How much do you want to send ?",
+
+  "vault.tutorial.first": "To give money to your child on a regular basis without thinking about it, you need to create a piggy bank. How will it work?",
+  "vault.tutorial.second": "It is a piggy bank in which you deposit his pocket money in advance",
+  "vault.tutorial.third": "You define how often your child can withdraw his or her money",
+  "vault.tutorial.forth": "And you define the amount he can withdraw",
+  "vault.tutorial.buyUSDC": "Buy USDC first",
+  "vault.tutorial.letsgo": "Let's go !",
+
+  "vault.firsttime.frequency": "At what frequency will it be able to withdraw?",
+  "vault.firsttime.howmuch": "How much can he withdraw each time?",
+  "vault.firsttime.deposit": "How much do you want to deposit in his piggy bank?",
 
   "footer.rightReserved": "2022 Pocket",
   "footer.report-bug": "Report a bug",
