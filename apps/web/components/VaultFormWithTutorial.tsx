@@ -50,11 +50,13 @@ const VaultFormWithTutorial: FC<VaultFormWithTutorialProps> = ({
 
   const [step, setStep] = useState<'tutorial' | 'form'>('tutorial');
 
-  const { data: childConfig } = useChildConfig({ address: childAddress });
+  const { data: childConfig, isLoading: childConfigIsLoading } = useChildConfig(
+    { address: childAddress },
+  );
 
   const { status, showTransak } = useTransak();
 
-  const { addChildAndFunds } = useAddChildAndFunds();
+  const { addChildAndFunds, isLoading } = useAddChildAndFunds();
 
   const { erc20 } = useSmartContract();
 
@@ -76,9 +78,13 @@ const VaultFormWithTutorial: FC<VaultFormWithTutorialProps> = ({
 
   const periodicity = watch('periodicity');
 
+  if (childConfigIsLoading) {
+    return <Spinner />;
+  }
+
   if (step === 'tutorial') {
     return (
-      <div className="flex w-full flex-col items-center justify-center gap-12">
+      <div className="flex w-full flex-col items-center justify-center gap-8">
         {!status && (
           <>
             <p className="text-center font-bold">
@@ -100,7 +106,7 @@ const VaultFormWithTutorial: FC<VaultFormWithTutorialProps> = ({
         <div className="flex flex-col  gap-4">
           {showTransakButton && (
             <button
-              onClick={() => showTransak({})}
+              onClick={() => showTransak({ tracking: true })}
               className="action-btn h-14 basis-1/2 rounded-xl font-bold"
             >
               <FormattedMessage id="vault.tutorial.buyUSDC" />
@@ -129,7 +135,7 @@ const VaultFormWithTutorial: FC<VaultFormWithTutorialProps> = ({
           amount: parseUnits(data.amount.toString(), erc20?.decimals),
         });
       })}
-      className="flex h-full w-full flex-col items-center justify-center gap-12"
+      className="flex h-full w-full flex-col items-center justify-center gap-8"
     >
       <div className="space-y-6">
         <p className="font-bold">
@@ -228,8 +234,14 @@ const VaultFormWithTutorial: FC<VaultFormWithTutorialProps> = ({
           </div>
         )}
       </div>
-      <button type="submit" className="action-btn" disabled={!isValid}>
-        {false ? <Spinner base /> : <span className="mr-2">🚀</span>}
+      <button
+        type="submit"
+        className="action-btn"
+        disabled={
+          !isValid || isLoading || (status && status !== 'order_completed')
+        }
+      >
+        {isLoading ? <Spinner base /> : <span className="mr-2">🚀</span>}
         <FormattedMessage id="send" />
       </button>
     </form>

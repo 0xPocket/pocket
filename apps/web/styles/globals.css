@@ -92,7 +92,7 @@
   }
 
   .input-number-bis {
-    @apply without-ring mr-2 appearance-none bg-transparent text-right outline-none;
+    @apply without-ring mr-2 appearance-none bg-transparent text-right outline-none text-2xl;
   }
 
   .input-radio {

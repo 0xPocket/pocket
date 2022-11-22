@@ -1,5 +1,5 @@
 import { parseUnits } from 'ethers/lib/utils.js';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { useAccount, useBalance } from 'wagmi';
 import { z } from 'zod';
 import { useSmartContract } from '../contexts/contract';
@@ -22,13 +22,19 @@ const VaultForm: FC<VaultFormProps> = ({ childAddress }) => {
     register,
     formState: { isValid },
     setValue,
+    setFocus,
+    reset,
   } = useZodForm({
     reValidateMode: 'onChange',
     mode: 'all',
     schema: VaultFormSchema,
   });
 
-  const { addFunds } = useAddFunds();
+  const { addFunds, isLoading } = useAddFunds({
+    onSuccess: () => {
+      reset();
+    },
+  });
 
   const { erc20 } = useSmartContract();
 
@@ -40,6 +46,10 @@ const VaultForm: FC<VaultFormProps> = ({ childAddress }) => {
     watch: true,
   });
 
+  useEffect(() => {
+    setFocus('amount');
+  }, [setFocus]);
+
   return (
     <form
       onSubmit={handleSubmit((data) => {
@@ -48,22 +58,34 @@ const VaultForm: FC<VaultFormProps> = ({ childAddress }) => {
           amount: parseUnits(data.amount.toString(), erc20?.decimals),
         });
       })}
-      className="flex h-full w-full flex-col items-center justify-center gap-12"
+      className="flex h-full w-full flex-col items-center justify-center gap-8"
     >
       <div className="space-y-6">
         <p className="font-bold">
           <FormattedMessage id="vault.firsttime.deposit" />
         </p>
-        <input
-          className="input-number-bis"
-          placeholder="0"
-          type="number"
-          min="0"
-          {...register('amount', {
-            valueAsNumber: true,
-          })}
-        />
-        <span>$</span>
+        <div className="flex items-center justify-center">
+          <input
+            className="input-number-bis w-4"
+            placeholder="0"
+            type="number"
+            autoComplete="off"
+            min="0"
+            onKeyDownCapture={(el) => {
+              if (el.key === 'Delete' || el.key === 'Backspace') {
+                el.currentTarget.style.width = `${el.currentTarget.value.length}ch`;
+              } else {
+                el.currentTarget.style.width = `${
+                  el.currentTarget.value.length + 1
+                }ch`;
+              }
+            }}
+            {...register('amount', {
+              valueAsNumber: true,
+            })}
+          />
+          <span>$</span>
+        </div>
         {!erc20Balance?.value.isZero() && (
           <div className="flex w-full items-center justify-center gap-2 text-center">
             {erc20Balance && (
@@ -86,8 +108,12 @@ const VaultForm: FC<VaultFormProps> = ({ childAddress }) => {
           </div>
         )}
       </div>
-      <button type="submit" className="action-btn" disabled={!isValid}>
-        {false ? <Spinner base /> : <span className="mr-2">🚀</span>}
+      <button
+        type="submit"
+        className="action-btn"
+        disabled={!isValid || isLoading}
+      >
+        {isLoading ? <Spinner base /> : <span className="mr-2">🚀</span>}
         <FormattedMessage id="send" />
       </button>
     </form>

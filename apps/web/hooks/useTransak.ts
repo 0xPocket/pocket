@@ -13,6 +13,7 @@ export type TransakOrderStatus =
 type ShowTransakParams = {
   address?: string;
   amount?: number;
+  tracking?: boolean;
 };
 
 function useIsMobile() {
@@ -46,7 +47,11 @@ function useTransak() {
   }, [orderId]);
 
   const showTransak = useCallback(
-    ({ address: targetAddress, amount }: ShowTransakParams) => {
+    ({
+      address: targetAddress,
+      amount,
+      tracking = false,
+    }: ShowTransakParams) => {
       if (!address || !session?.user?.email) {
         throw new Error('No address or email');
       }
@@ -81,7 +86,7 @@ function useTransak() {
       });
 
       transak.on('TRANSAK_ORDER_SUCCESSFUL', (data) => {
-        if (data.status.status === 'PROCESSING') {
+        if (tracking && data.status.status === 'PROCESSING') {
           setStatus('order_successful');
           setOrderId(data.status.id);
           transak.close();

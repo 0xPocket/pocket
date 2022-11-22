@@ -53,6 +53,10 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
     formState: { isDirty },
   } = useZodForm({
     schema: ChildSettingsSchema,
+    defaultValues: {
+      ceiling: 0,
+      periodicity: 'weekly',
+    },
   });
 
   const onSubmit = async (data: FormValues) => {
@@ -157,7 +161,7 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
         <div className="flex space-x-4">
           <button
             type="submit"
-            className="success-btn"
+            className="action-btn"
             disabled={
               isLoading || !changeConfig || isLoadingChildSetting || !isDirty
             }

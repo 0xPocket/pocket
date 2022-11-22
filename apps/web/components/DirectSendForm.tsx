@@ -1,7 +1,7 @@
 import { BigNumber } from 'ethers';
 import { parseUnits } from 'ethers/lib/utils.js';
 import { USDCAbi } from 'pocket-contract/abi/USDCAbi';
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { toast } from 'react-toastify';
 import { useAccount, useBalance } from 'wagmi';
@@ -53,10 +53,14 @@ const DirectSendForm: FC<DirectSendFormProps> = ({ childAddress }) => {
     },
   });
 
+  const isTransak = useMemo(() => {
+    return erc20Balance?.value.isZero();
+  }, [erc20Balance]);
+
   const DirectSendFormSchema = z.object({
     amount: z
       .number()
-      .min(1)
+      .min(isTransak ? 30 : 1)
       .max(Number(erc20Balance?.formatted) || 999999999),
   });
 
@@ -73,7 +77,7 @@ const DirectSendForm: FC<DirectSendFormProps> = ({ childAddress }) => {
     schema: DirectSendFormSchema,
   });
 
-  const { signTransfer, isLoading: signIsLoading } = useTransferTx({
+  const { signTransfer, isLoading: transferSignatureLoading } = useTransferTx({
     contractAddress: erc20?.address,
   });
 
@@ -84,7 +88,7 @@ const DirectSendForm: FC<DirectSendFormProps> = ({ childAddress }) => {
   return (
     <form
       onSubmit={handleSubmit(async (data) => {
-        if (erc20Balance?.value.isZero()) {
+        if (isTransak) {
           showTransak({ address: childAddress, amount: data.amount });
         } else {
           if (address) {
@@ -110,29 +114,40 @@ const DirectSendForm: FC<DirectSendFormProps> = ({ childAddress }) => {
           }
         }
       })}
-      className="flex h-full w-full flex-col items-center justify-center gap-12"
+      className="flex h-full w-full flex-col items-center justify-center gap-8"
     >
       <div className="space-y-6">
         <p className="font-bold">
           <FormattedMessage id="send.direct.howmuch" />
         </p>
-        <input
-          className="input-number-bis"
-          placeholder="0"
-          type="number"
-          min="0"
-          onKeyDown={(e) => {
-            if (e.key === 'e' || e.key === '-') {
-              e.preventDefault();
-            }
-          }}
-          {...register('amount', {
-            valueAsNumber: true,
-            max: Number(erc20Balance?.formatted),
-          })}
-        />
-        <span>$</span>
-        {!erc20Balance?.value.isZero() && (
+        <div className="flex items-center justify-center">
+          <input
+            className="input-number-bis w-4"
+            placeholder="0"
+            type="number"
+            autoComplete="off"
+            min="0"
+            onKeyDown={(e) => {
+              if (e.key === 'e' || e.key === '-') {
+                e.preventDefault();
+              }
+            }}
+            onKeyDownCapture={(el) => {
+              if (el.key === 'Delete' || el.key === 'Backspace') {
+                el.currentTarget.style.width = `${el.currentTarget.value.length}ch`;
+              } else {
+                el.currentTarget.style.width = `${
+                  el.currentTarget.value.length + 1
+                }ch`;
+              }
+            }}
+            {...register('amount', {
+              valueAsNumber: true,
+            })}
+          />
+          <span>$</span>
+        </div>
+        {!isTransak && (
           <div className="flex w-full items-center justify-center gap-2 text-center">
             {erc20Balance && (
               <span className="text-sm text-gray">
@@ -157,9 +172,13 @@ const DirectSendForm: FC<DirectSendFormProps> = ({ childAddress }) => {
       <button
         type="submit"
         className="action-btn"
-        disabled={!isValid || isLoading || signIsLoading}
+        disabled={!isValid || isLoading || transferSignatureLoading}
       >
-        {false ? <Spinner base /> : <span className="mr-2">🚀</span>}
+        {isLoading || transferSignatureLoading ? (
+          <Spinner base />
+        ) : (
+          <span className="mr-2">🚀</span>
+        )}
         <FormattedMessage id="send" />
       </button>
     </form>

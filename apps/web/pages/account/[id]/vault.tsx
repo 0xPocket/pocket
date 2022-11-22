@@ -11,10 +11,10 @@ import { trpc } from '../../../utils/trpc';
 
 export default function VaultPage() {
   const router = useRouter();
-  const id = router.query.id as string;
+  const id = router.query.id as string | undefined;
 
   const { isLoading, data: child } = trpc.parent.childByAddress.useQuery(
-    { address: id },
+    { address: id! },
     {
       enabled: !!id,
     },
@@ -43,9 +43,9 @@ export default function VaultPage() {
         <Spinner />
       ) : child ? (
         childConfig?.periodicity.isZero() ? (
-          <VaultFormWithTutorial childAddress={id} />
+          <VaultFormWithTutorial childAddress={child.address} />
         ) : (
-          <VaultForm childAddress={id} />
+          <VaultForm childAddress={child.address} />
         )
       ) : (
         <div>
