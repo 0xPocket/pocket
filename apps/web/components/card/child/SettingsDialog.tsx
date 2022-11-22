@@ -29,13 +29,17 @@ const SettingsDialog: FC<SettingsDialogProps> = ({ config }) => {
           {/* <h1>My Vault Settings</h1> */}
           <div className="grid gap-12 md:grid-cols-2">
             <div className="space-y-4 md:space-y-8">
-              <h2 className="text-center">Vault balance</h2>
+              <h2 className="text-center">
+                <FormattedMessage id="vault.balance" />
+              </h2>
               <div className="text-center text-4xl text-pink md:text-6xl ">
                 $<FormattedNumber value={config.balance} />
               </div>
             </div>
             <div className="space-y-4 md:space-y-8">
-              <h2 className="text-center">Settings</h2>
+              <h2 className="text-center">
+                <FormattedMessage id="settings" />
+              </h2>
               <div className="">
                 <p className="flex items-center justify-between">
                   <FormattedMessage id="periodicity" /> :

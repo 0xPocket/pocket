@@ -84,9 +84,9 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
         <FormattedMessage id="card.child.title" />
       </h2>
       <div
-        className={`${className} container-classic grid  h-[250px] grid-cols-2 rounded-lg p-8 md:h-[320px]`}
+        className={`${className} container-classic flex h-[250px] flex-col justify-between rounded-lg p-8 md:h-[320px]`}
       >
-        <div className="flex h-full flex-col items-start justify-between">
+        <div className="flex  items-start justify-between">
           <div className="flex flex-col gap-4">
             <div className="flex items-center space-x-4">
               <MetaMaskProfilePicture
@@ -101,9 +101,6 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
               {config && <SettingsDialog config={config} />}
             </div>
           </div>
-          <LinkPolygonScan address={childAddress} />
-        </div>
-        <div className="flex h-full flex-col items-end justify-between">
           <div className="flex flex-col items-end">
             <p>
               <FormattedMessage id="balance" />
@@ -112,7 +109,9 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
               <FormattedNumber value={balanceWallet?.value} />$
             </span>
           </div>
-
+        </div>
+        <div className="flex items-center justify-between">
+          <LinkPolygonScan address={childAddress} />
           <ClaimButton
             disabled={!canClaim || config?.balance.isZero()}
             nextClaim={nextClaim}
