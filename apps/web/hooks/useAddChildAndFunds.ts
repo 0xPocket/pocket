@@ -10,7 +10,11 @@ import { usePermitTx } from './usePermitTx';
 import { PocketFaucetAbi } from 'pocket-contract/abi';
 import { Address } from 'abitype';
 
-export function useAddChildAndFunds() {
+type UseAddChildAndFundsProps = {
+  onSuccess?: () => void;
+};
+
+export function useAddChildAndFunds({ onSuccess }: UseAddChildAndFundsProps) {
   const { erc20 } = useSmartContract();
   const { address } = useAccount();
   const intl = useIntl();
@@ -32,6 +36,7 @@ export function useAddChildAndFunds() {
     onSuccess: async () => {
       toast.dismiss();
       toast.success(intl.formatMessage({ id: 'add-child-and-funds.success' }));
+      onSuccess?.();
     },
     onError() {
       toast.error(intl.formatMessage({ id: 'add-child-and-funds.error' }));

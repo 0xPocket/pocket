@@ -12,7 +12,7 @@ const FormattedNumber: FC<FormattedNumberProps> = ({ value }) => {
 
   const formattedValue = useMemo(() => {
     if (!value) return '0.00';
-    return formatUnits(value, erc20?.decimals);
+    return Number(formatUnits(value, erc20?.decimals)).toFixed(2);
   }, [value, erc20?.decimals]);
 
   return <>{formattedValue}</>;

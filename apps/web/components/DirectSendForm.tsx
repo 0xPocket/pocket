@@ -1,5 +1,6 @@
 import { BigNumber } from 'ethers';
 import { parseUnits } from 'ethers/lib/utils.js';
+import Link from 'next/link';
 import { USDCAbi } from 'pocket-contract/abi/USDCAbi';
 import { FC, useEffect, useMemo } from 'react';
 import { useIntl } from 'react-intl';
@@ -12,6 +13,7 @@ import useTransak from '../hooks/useTransak';
 import { useTransferTx } from '../hooks/useTransferTx';
 import { useZodForm } from '../utils/useZodForm';
 import FormattedMessage from './common/FormattedMessage';
+import FormattedNumber from './common/FormattedNumber';
 import { Spinner } from './common/Spinner';
 
 type DirectSendFormProps = {
@@ -19,7 +21,7 @@ type DirectSendFormProps = {
 };
 
 const DirectSendForm: FC<DirectSendFormProps> = ({ childAddress }) => {
-  const { showTransak } = useTransak();
+  const { showTransak, status } = useTransak();
 
   const { address } = useAccount();
 
@@ -85,11 +87,41 @@ const DirectSendForm: FC<DirectSendFormProps> = ({ childAddress }) => {
     setFocus('amount');
   }, [setFocus]);
 
+  if (status) {
+    return (
+      <div className="flex h-full w-full flex-col items-center justify-center gap-2">
+        {status === 'order_completed' ? (
+          <>
+            <h3 className="font-bold">Order is complete !</h3>
+            <Link href={`/child/${childAddress}`}>
+              <a className="action-btn mt-4">Go back</a>
+            </Link>
+          </>
+        ) : (
+          <>
+            <h3 className=" font-bold">
+              Transak is processing the order, please wait...
+            </h3>
+            <p className="mb-4 text-sm text-gray">
+              {"You will also receive an email when it's done !"}
+            </p>
+            <Spinner />
+          </>
+        )}
+      </div>
+    );
+  }
+
   return (
     <form
       onSubmit={handleSubmit(async (data) => {
-        if (isTransak) {
-          showTransak({ address: childAddress, amount: data.amount });
+        if (!isTransak) {
+          showTransak({
+            address: childAddress,
+            amount: data.amount,
+            tracking: true,
+            autoClose: false,
+          });
         } else {
           if (address) {
             const res = await signTransfer(
@@ -116,11 +148,12 @@ const DirectSendForm: FC<DirectSendFormProps> = ({ childAddress }) => {
       })}
       className="flex h-full w-full flex-col items-center justify-center gap-8"
     >
-      <div className="space-y-6">
+      <div className="flex flex-col items-center space-y-6">
         <p className="font-bold">
           <FormattedMessage id="send.direct.howmuch" />
         </p>
         <div className="flex items-center justify-center">
+          <span>$</span>
           <input
             className="input-number-bis w-4"
             placeholder="0"
@@ -134,7 +167,9 @@ const DirectSendForm: FC<DirectSendFormProps> = ({ childAddress }) => {
             }}
             onKeyDownCapture={(el) => {
               if (el.key === 'Delete' || el.key === 'Backspace') {
-                el.currentTarget.style.width = `${el.currentTarget.value.length}ch`;
+                el.currentTarget.style.width = `${
+                  el.currentTarget.value.length || 1
+                }ch`;
               } else {
                 el.currentTarget.style.width = `${
                   el.currentTarget.value.length + 1
@@ -145,13 +180,14 @@ const DirectSendForm: FC<DirectSendFormProps> = ({ childAddress }) => {
               valueAsNumber: true,
             })}
           />
-          <span>$</span>
         </div>
+        {isTransak && <p className="mx-auto text-sm text-gray">Minimum: $30</p>}
         {!isTransak && (
           <div className="flex w-full items-center justify-center gap-2 text-center">
             {erc20Balance && (
               <span className="text-sm text-gray">
-                <FormattedMessage id="balance" />: {erc20Balance.formatted}
+                <FormattedMessage id="balance" />:{' '}
+                <FormattedNumber value={erc20Balance.value} />
               </span>
             )}
             <button

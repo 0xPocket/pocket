@@ -14,6 +14,7 @@ type ShowTransakParams = {
   address?: string;
   amount?: number;
   tracking?: boolean;
+  autoClose?: boolean;
 };
 
 function useIsMobile() {
@@ -51,6 +52,7 @@ function useTransak() {
       address: targetAddress,
       amount,
       tracking = false,
+      autoClose = false,
     }: ShowTransakParams) => {
       if (!address || !session?.user?.email) {
         throw new Error('No address or email');
@@ -89,7 +91,9 @@ function useTransak() {
         if (tracking && data.status.status === 'PROCESSING') {
           setStatus('order_successful');
           setOrderId(data.status.id);
-          transak.close();
+          if (autoClose) {
+            transak.close();
+          }
         }
       });
 

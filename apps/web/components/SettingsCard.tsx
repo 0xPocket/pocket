@@ -144,6 +144,7 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
                 </label>
               </td>
               <td className="flex justify-end text-4xl">
+                <span>$</span>
                 <input
                   className="input-number max-w-[250px]"
                   placeholder="0"
@@ -153,7 +154,6 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
                     valueAsNumber: true,
                   })}
                 />
-                <span>$</span>
               </td>
             </tr>
           </tbody>

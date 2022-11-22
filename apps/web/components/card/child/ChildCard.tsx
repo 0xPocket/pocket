@@ -124,7 +124,7 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
               <FormattedMessage id="balance" />
             </p>
             <span className="text-4xl">
-              <FormattedNumber value={balanceWallet?.value} />$
+              $<FormattedNumber value={balanceWallet?.value} />
             </span>
           </div>
 

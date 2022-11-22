@@ -1,6 +1,7 @@
 import { RadioGroup } from '@headlessui/react';
 import { BigNumber } from 'ethers';
 import { parseUnits } from 'ethers/lib/utils.js';
+import { useRouter } from 'next/router';
 import { FC, useEffect, useState } from 'react';
 import { useAccount, useBalance } from 'wagmi';
 import { z } from 'zod';
@@ -10,6 +11,7 @@ import { useChildConfig } from '../hooks/useChildConfig';
 import useTransak from '../hooks/useTransak';
 import { useZodForm } from '../utils/useZodForm';
 import FormattedMessage from './common/FormattedMessage';
+import FormattedNumber from './common/FormattedNumber';
 import { Spinner } from './common/Spinner';
 import TransakStatus from './TransakStatus';
 
@@ -55,8 +57,13 @@ const VaultFormWithTutorial: FC<VaultFormWithTutorialProps> = ({
   );
 
   const { status, showTransak } = useTransak();
+  const router = useRouter();
 
-  const { addChildAndFunds, isLoading } = useAddChildAndFunds();
+  const { addChildAndFunds, isLoading } = useAddChildAndFunds({
+    onSuccess: () => {
+      router.push(`/account/${childAddress}`);
+    },
+  });
 
   const { erc20 } = useSmartContract();
 
@@ -106,7 +113,7 @@ const VaultFormWithTutorial: FC<VaultFormWithTutorialProps> = ({
         <div className="flex flex-col  gap-4">
           {showTransakButton && (
             <button
-              onClick={() => showTransak({ tracking: true })}
+              onClick={() => showTransak({ tracking: true, autoClose: true })}
               className="action-btn h-14 basis-1/2 rounded-xl font-bold"
             >
               <FormattedMessage id="vault.tutorial.buyUSDC" />
@@ -166,6 +173,7 @@ const VaultFormWithTutorial: FC<VaultFormWithTutorialProps> = ({
           <FormattedMessage id="vault.firsttime.howmuch" />
         </p>
         <div className="flex justify-center">
+          <span>$</span>
           <input
             className="input-number-bis w-4"
             placeholder="0"
@@ -173,7 +181,9 @@ const VaultFormWithTutorial: FC<VaultFormWithTutorialProps> = ({
             min="0"
             onKeyDownCapture={(el) => {
               if (el.key === 'Delete' || el.key === 'Backspace') {
-                el.currentTarget.style.width = `${el.currentTarget.value.length}ch`;
+                el.currentTarget.style.width = `${
+                  el.currentTarget.value.length || 1
+                }ch`;
               } else {
                 el.currentTarget.style.width = `${
                   el.currentTarget.value.length + 1
@@ -184,7 +194,6 @@ const VaultFormWithTutorial: FC<VaultFormWithTutorialProps> = ({
               valueAsNumber: true,
             })}
           />
-          <span>$</span>
         </div>
       </div>
       <div className="space-y-6">
@@ -192,6 +201,8 @@ const VaultFormWithTutorial: FC<VaultFormWithTutorialProps> = ({
           <FormattedMessage id="vault.firsttime.deposit" />
         </p>
         <div className="flex justify-center">
+          <span>$</span>
+
           <input
             className="input-number-bis w-4"
             placeholder="0"
@@ -199,7 +210,9 @@ const VaultFormWithTutorial: FC<VaultFormWithTutorialProps> = ({
             min="0"
             onKeyDownCapture={(el) => {
               if (el.key === 'Delete' || el.key === 'Backspace') {
-                el.currentTarget.style.width = `${el.currentTarget.value.length}ch`;
+                el.currentTarget.style.width = `${
+                  el.currentTarget.value.length || 1
+                }ch`;
               } else {
                 el.currentTarget.style.width = `${
                   el.currentTarget.value.length + 1
@@ -210,13 +223,13 @@ const VaultFormWithTutorial: FC<VaultFormWithTutorialProps> = ({
               valueAsNumber: true,
             })}
           />
-          <span>$</span>
         </div>
         {!erc20Balance?.value.isZero() && (
           <div className="flex w-full items-center justify-center gap-2 text-center">
             {erc20Balance && (
               <span className="text-sm text-gray">
-                <FormattedMessage id="balance" />: {erc20Balance.formatted}
+                <FormattedMessage id="balance" />:{' '}
+                <FormattedNumber value={erc20Balance.value} />
               </span>
             )}
             <button

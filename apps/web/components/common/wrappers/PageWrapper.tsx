@@ -28,7 +28,7 @@ const PageWrapper: FC<PageWrapperProps> = ({
   const [open, setOpen] = useState(true);
 
   return (
-    <div className="relative min-h-screen overflow-hidden px-4 pb-52 md:pb-28">
+    <div className="relative min-h-screen overflow-hidden px-4 pb-44 md:pb-36">
       {open && env.NETWORK_KEY === 'polygon-mumbai' && (
         <div className="relative mt-2 flex items-center justify-between gap-4 rounded-lg bg-primary px-4">
           <p className="flex-grow text-center text-sm font-bold">

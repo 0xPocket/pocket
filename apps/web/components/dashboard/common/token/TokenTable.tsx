@@ -64,7 +64,7 @@ function TokenTable({ tokenList }: TokenTableProps) {
         },
         cell: (cell) => (
           <div className="text-right tracking-wider">
-            <>{cell.getValue()} $</>
+            <>${cell.getValue()}</>
           </div>
         ),
         id: 'quote',

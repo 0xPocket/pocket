@@ -1,4 +1,5 @@
 import { parseUnits } from 'ethers/lib/utils.js';
+import { useRouter } from 'next/router';
 import { FC, useEffect } from 'react';
 import { useAccount, useBalance } from 'wagmi';
 import { z } from 'zod';
@@ -6,6 +7,7 @@ import { useSmartContract } from '../contexts/contract';
 import { useAddFunds } from '../hooks/useAddFunds';
 import { useZodForm } from '../utils/useZodForm';
 import FormattedMessage from './common/FormattedMessage';
+import FormattedNumber from './common/FormattedNumber';
 import { Spinner } from './common/Spinner';
 
 const VaultFormSchema = z.object({
@@ -17,13 +19,13 @@ type VaultFormProps = {
 };
 
 const VaultForm: FC<VaultFormProps> = ({ childAddress }) => {
+  const router = useRouter();
   const {
     handleSubmit,
     register,
     formState: { isValid },
     setValue,
     setFocus,
-    reset,
   } = useZodForm({
     reValidateMode: 'onChange',
     mode: 'all',
@@ -32,7 +34,7 @@ const VaultForm: FC<VaultFormProps> = ({ childAddress }) => {
 
   const { addFunds, isLoading } = useAddFunds({
     onSuccess: () => {
-      reset();
+      router.push(`/account/${childAddress}`);
     },
   });
 
@@ -73,7 +75,9 @@ const VaultForm: FC<VaultFormProps> = ({ childAddress }) => {
             min="0"
             onKeyDownCapture={(el) => {
               if (el.key === 'Delete' || el.key === 'Backspace') {
-                el.currentTarget.style.width = `${el.currentTarget.value.length}ch`;
+                el.currentTarget.style.width = `${
+                  el.currentTarget.value.length || 1
+                }ch`;
               } else {
                 el.currentTarget.style.width = `${
                   el.currentTarget.value.length + 1
@@ -90,7 +94,8 @@ const VaultForm: FC<VaultFormProps> = ({ childAddress }) => {
           <div className="flex w-full items-center justify-center gap-2 text-center">
             {erc20Balance && (
               <span className="text-sm text-gray">
-                <FormattedMessage id="balance" />: {erc20Balance.formatted}
+                <FormattedMessage id="balance" />:{' '}
+                <FormattedNumber value={erc20Balance.value} />
               </span>
             )}
             <button
