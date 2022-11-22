@@ -3,7 +3,7 @@ import { PocketFaucetAbi } from 'pocket-contract/abi';
 import { useContractRead } from 'wagmi';
 
 type UseChildConfigProps = {
-  address: string;
+  address: string | undefined;
 };
 
 export function useChildConfig({ address }: UseChildConfigProps) {
@@ -11,7 +11,8 @@ export function useChildConfig({ address }: UseChildConfigProps) {
     address: env.NEXT_PUBLIC_CONTRACT_ADDRESS,
     abi: PocketFaucetAbi,
     functionName: 'childToConfig',
-    args: [address],
+    args: [address!],
+    enabled: !!address,
     watch: true,
   });
 }
