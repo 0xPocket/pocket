@@ -7,7 +7,6 @@ import ClaimButton from './ClaimButton';
 import LinkPolygonScan from '../common/LinkPolygonScan';
 import MetaMaskProfilePicture from '../common/MetaMaskProfilePicture';
 import { useSession } from 'next-auth/react';
-import { formatUnits } from 'ethers/lib/utils';
 import { useAccount, useContractRead } from 'wagmi';
 import { env } from 'config/env/client';
 import { PocketFaucetAbi } from 'pocket-contract/abi';
@@ -15,6 +14,7 @@ import { Address } from 'abitype';
 import { useChildConfig } from '../../../hooks/useChildConfig';
 import FormattedNumber from '../../common/FormattedNumber';
 import { useChildBalance } from '../../../hooks/useChildBalance';
+import SettingsDialog from './SettingsDialog';
 
 type ChildCardProps = {
   childAddress: Address;
@@ -84,37 +84,22 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
         <FormattedMessage id="card.child.title" />
       </h2>
       <div
-        className={`${className} container-classic grid h-full grid-cols-2 rounded-lg p-8`}
+        className={`${className} container-classic grid  h-[250px] grid-cols-2 rounded-lg p-8 md:h-[320px]`}
       >
         <div className="flex h-full flex-col items-start justify-between">
           <div className="flex flex-col gap-4">
             <div className="flex items-center space-x-4">
-              <MetaMaskProfilePicture address={userData?.user.address} />
+              <MetaMaskProfilePicture
+                address={userData?.user.address}
+                size={50}
+              />
               <div className="flex items-end space-x-4">
                 <h1 className="max-w-fit whitespace-nowrap">
                   {userData?.user.name}
                 </h1>
               </div>
+              {config && <SettingsDialog config={config} />}
             </div>
-            {config && (
-              <div className="space-y-2 font-thin">
-                <p>
-                  <FormattedMessage id="periodicity" /> :{' '}
-                  {formatUnits(config.periodicity, 0) === '604800' ? (
-                    <FormattedMessage id="weekly" />
-                  ) : (
-                    <FormattedMessage id="monthly" />
-                  )}
-                </p>
-                <p>
-                  <FormattedMessage id="ceiling" /> :{' '}
-                  {Number(formatUnits(config.ceiling, erc20?.decimals)).toFixed(
-                    2,
-                  )}
-                  $
-                </p>
-              </div>
-            )}
           </div>
           <LinkPolygonScan address={childAddress} />
         </div>
