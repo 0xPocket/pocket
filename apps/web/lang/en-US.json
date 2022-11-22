@@ -55,6 +55,7 @@
 
   "card.child.piggyBank.status.nothing": "Nothing to claim",
   "card.child.piggyBank.status.next": "Next claim in",
+	"vault.balance": "Vault balance",
 
   "card.parent.status.invited": "A set-up email has been sent to {email}",
   "card.parent.status.active": "This account is up and running",

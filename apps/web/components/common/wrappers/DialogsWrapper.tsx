@@ -53,7 +53,7 @@ export function DialogPopupWrapper({
     <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
       <div className="fixed inset-0 flex items-center justify-center bg-black/30">
         <Dialog.Panel>
-          <div className="container-classic max-w-lg rounded-lg p-8 md:w-[512px]">
+          <div className="container-classic max-w-xl rounded-lg p-8">
             {children}
           </div>
         </Dialog.Panel>
