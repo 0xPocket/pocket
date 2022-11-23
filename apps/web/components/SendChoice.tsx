@@ -39,7 +39,7 @@ const SendChoice: FC<SendChoiseProps> = ({ childAddress }) => {
 
   return (
     <div className="flex w-full flex-col items-center justify-center gap-12">
-      <p className="text-center font-bold">
+      <p className="text-center">
         <FormattedMessage id="send.secondtime.choice" />
       </p>
       <div className="flex  gap-4">

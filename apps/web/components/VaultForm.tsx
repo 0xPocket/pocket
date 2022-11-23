@@ -82,7 +82,7 @@ const VaultForm: FC<VaultFormProps> = ({ childAddress }) => {
           }
         >
           <button
-            className="rounded bg-success px-2 text-sm"
+            className="rounded bg-success-dark px-2 text-sm"
             type="button"
             onClick={() => showTransak({ tracking: true, autoClose: true })}
           >
