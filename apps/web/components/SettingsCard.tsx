@@ -94,87 +94,92 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
   }
 
   return (
-    <div className="container-classic rounded-lg p-4">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex h-full flex-col items-end justify-between space-y-4"
-      >
-        <table>
-          <tbody className="flex flex-col space-y-4">
-            <tr className="flex items-center space-x-8">
-              <td>
-                <label className="flex items-center gap-2">
-                  <FormattedMessage id="periodicity" />
-                  <Tooltip>
-                    <FormattedMessage id="card.parent.settings.periodicity" />
-                  </Tooltip>
-                </label>
-              </td>
-              <td className="flex  w-full justify-end">
-                <RadioGroup
-                  value={periodicity}
-                  onChange={(value: 'weekly' | 'monthly') =>
-                    setValue('periodicity', value, { shouldDirty: true })
-                  }
-                  className="flex items-center justify-end  space-x-8"
-                >
-                  {PeriodicityOptions.options.map((option) => (
-                    <RadioGroup.Option
-                      key={option}
-                      value={option}
-                      className={({ checked }) =>
-                        checked
-                          ? 'input-radio-checked'
-                          : 'input-radio-unchecked'
-                      }
-                    >
-                      <FormattedMessage id={option} />
-                    </RadioGroup.Option>
-                  ))}
-                </RadioGroup>
-              </td>
-            </tr>
-            <tr className="flex items-center justify-between">
-              <td>
-                <label htmlFor="topup" className="flex items-center gap-2">
-                  <FormattedMessage id="ceiling" />
-                  <Tooltip>
-                    <FormattedMessage id="card.parent.settings.ceiling" />
-                  </Tooltip>
-                </label>
-              </td>
-              <td className="flex justify-end text-4xl">
-                <span>$</span>
-                <input
-                  className="input-number max-w-[250px]"
-                  placeholder="0"
-                  type="number"
-                  min="0"
-                  {...register('ceiling', {
-                    valueAsNumber: true,
-                  })}
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div className="flex space-x-4">
-          <button
-            type="submit"
-            className="action-btn"
-            disabled={
-              isLoading || !changeConfig || isLoadingChildSetting || !isDirty
-            }
-          >
-            {isLoading ? (
-              <Spinner base />
-            ) : (
-              <FontAwesomeIcon icon={faWrench} className="mr-2" />
-            )}
-            <FormattedMessage id="apply" />
-          </button>
-        </div>
-      </form>
+    <div className="space-y-8">
+      <h2>
+        <FormattedMessage id="vault_settings" />
+      </h2>
+      <div className="container-classic rounded-lg p-4">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex h-full flex-col items-end justify-between space-y-4"
+        >
+          <table>
+            <tbody className="flex flex-col space-y-4">
+              <tr className="flex items-center space-x-8">
+                <td>
+                  <label className="flex items-center gap-2">
+                    <FormattedMessage id="periodicity" />
+                    <Tooltip>
+                      <FormattedMessage id="card.parent.settings.periodicity" />
+                    </Tooltip>
+                  </label>
+                </td>
+                <td className="flex  w-full justify-end">
+                  <RadioGroup
+                    value={periodicity}
+                    onChange={(value: 'weekly' | 'monthly') =>
+                      setValue('periodicity', value, { shouldDirty: true })
+                    }
+                    className="flex items-center justify-end  space-x-8"
+                  >
+                    {PeriodicityOptions.options.map((option) => (
+                      <RadioGroup.Option
+                        key={option}
+                        value={option}
+                        className={({ checked }) =>
+                          checked
+                            ? 'input-radio-checked'
+                            : 'input-radio-unchecked'
+                        }
+                      >
+                        <FormattedMessage id={option} />
+                      </RadioGroup.Option>
+                    ))}
+                  </RadioGroup>
+                </td>
+              </tr>
+              <tr className="flex items-center justify-between">
+                <td>
+                  <label htmlFor="topup" className="flex items-center gap-2">
+                    <FormattedMessage id="ceiling" />
+                    <Tooltip>
+                      <FormattedMessage id="card.parent.settings.ceiling" />
+                    </Tooltip>
+                  </label>
+                </td>
+                <td className="flex justify-end text-4xl">
+                  <span>$</span>
+                  <input
+                    className="input-number max-w-[250px]"
+                    placeholder="0"
+                    type="number"
+                    min="0"
+                    {...register('ceiling', {
+                      valueAsNumber: true,
+                    })}
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div className="flex space-x-4">
+            <button
+              type="submit"
+              className="action-btn"
+              disabled={
+                isLoading || !changeConfig || isLoadingChildSetting || !isDirty
+              }
+            >
+              {isLoading ? (
+                <Spinner base />
+              ) : (
+                <FontAwesomeIcon icon={faWrench} className="mr-2" />
+              )}
+              <FormattedMessage id="apply" />
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

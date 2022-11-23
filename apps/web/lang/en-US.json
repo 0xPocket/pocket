@@ -1,6 +1,13 @@
 {
   "dashboard.title": "My children",
   "dashboard.addChild": "Add a child",
+  "vault_settings": "Vault settings",
+  "your_child": "Your child",
+  "transak_processing": "Transak is processing the order, please wait...",
+  "go_dashboard": "Go back to dashboard",
+  "order_complete": "Your order is complete",
+  "email_done": "You will also receive an email when it's done !",
+  "buy_usdc": "Acheter des USDC",
 
   "loading": "Loading",
   "signIn": "Sign in",
@@ -55,7 +62,7 @@
 
   "card.child.piggyBank.status.nothing": "Nothing to claim",
   "card.child.piggyBank.status.next": "Next claim in",
-	"vault.balance": "Vault balance",
+  "vault.balance": "Vault balance",
 
   "card.parent.status.invited": "A set-up email has been sent to {email}",
   "card.parent.status.active": "This account is up and running",

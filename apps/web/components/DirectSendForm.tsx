@@ -92,18 +92,22 @@ const DirectSendForm: FC<DirectSendFormProps> = ({ childAddress }) => {
       <div className="flex h-full w-full flex-col items-center justify-center gap-2">
         {status === 'order_completed' ? (
           <>
-            <h3 className="font-bold">Order is complete !</h3>
+            <h3 className="font-bold">
+              <FormattedMessage id="order_complete" />
+            </h3>
             <Link href={`/child/${childAddress}`}>
-              <a className="action-btn mt-4">Go back</a>
+              <a className="action-btn mt-4">
+                <FormattedMessage id="go_dashboard" />
+              </a>
             </Link>
           </>
         ) : (
           <>
-            <h3 className=" font-bold">
-              Transak is processing the order, please wait...
+            <h3 className=" mx-auto text-center font-bold ">
+              <FormattedMessage id="transak_processing" />
             </h3>
             <p className="mb-4 text-sm text-gray">
-              {"You will also receive an email when it's done !"}
+              <FormattedMessage id="email_done" />
             </p>
             <Spinner />
           </>
@@ -115,7 +119,7 @@ const DirectSendForm: FC<DirectSendFormProps> = ({ childAddress }) => {
   return (
     <form
       onSubmit={handleSubmit(async (data) => {
-        if (!isTransak) {
+        if (isTransak) {
           showTransak({
             address: childAddress,
             amount: data.amount,

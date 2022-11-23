@@ -1,6 +1,13 @@
 {
   "dashboard.title": "Mes enfants",
   "dashboard.addChild": "Ajouter un enfant",
+  "vault_settings": "Paramètres de la tirelire",
+  "your_child": "Votre enfant",
+  "transak_processing": "Votre ordre Transak est en cours de traitement...",
+  "go_dashboard": "Retourner à l'accueil",
+  "order_complete": "Votre achat est validé",
+  "email_done": "Vous recevrez un email quand ce sera fini!",
+  "buy_usdc": "Acheter des USDC",
 
   "loading": "Chargement",
   "signIn": "Se connecter",
@@ -55,7 +62,7 @@
 
   "card.child.piggyBank.status.nothing": "Rien à retirer",
   "card.child.piggyBank.status.next": "Prochain retrait dans",
-	"vault.balance": "Balance",
+  "vault.balance": "Balance",
 
   "card.parent.status.invited": "Un email de configuration a été envoyé à {email}",
   "card.parent.status.active": "Ce compte est actif",
@@ -188,7 +195,7 @@
   "vault.firsttime.deposit": "Combien voulez vous deposer dans sa tirelire ?",
 
   "transak.processing": "Les cryptos sont en cours de livraison, ça ne devrait plus être long !",
-  "transak.successful": "Le paiement est un succès ! Merci de garder cette page ouverte afin de finaliser le processus d'envoie a votre enfant une fois les cryptos reçu.",
+  "transak.successful": "Le paiement est un succès ! Merci de patienter le temps que vos cryptos soient livrées. Cela devrait prendre 2 minutes maximun.",
   "transak.completed": "Vous avez bien reçu vos cryptos !",
 
   "footer.rightReserved": "2022 Pocket",

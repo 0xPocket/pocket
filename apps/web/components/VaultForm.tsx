@@ -5,10 +5,12 @@ import { useAccount, useBalance } from 'wagmi';
 import { z } from 'zod';
 import { useSmartContract } from '../contexts/contract';
 import { useAddFunds } from '../hooks/useAddFunds';
+import useTransak from '../hooks/useTransak';
 import { useZodForm } from '../utils/useZodForm';
 import FormattedMessage from './common/FormattedMessage';
 import FormattedNumber from './common/FormattedNumber';
 import { Spinner } from './common/Spinner';
+import TransakStatus from './TransakStatus';
 
 const VaultFormSchema = z.object({
   amount: z.number(),
@@ -31,6 +33,8 @@ const VaultForm: FC<VaultFormProps> = ({ childAddress }) => {
     mode: 'all',
     schema: VaultFormSchema,
   });
+
+  const { status, showTransak } = useTransak();
 
   const { addFunds, isLoading } = useAddFunds({
     onSuccess: () => {
@@ -90,37 +94,47 @@ const VaultForm: FC<VaultFormProps> = ({ childAddress }) => {
           />
           <span>$</span>
         </div>
-        {!erc20Balance?.value.isZero() && (
-          <div className="flex w-full items-center justify-center gap-2 text-center">
-            {erc20Balance && (
-              <span className="text-sm text-gray">
-                <FormattedMessage id="balance" />:{' '}
-                <FormattedNumber value={erc20Balance.value} />
-              </span>
-            )}
-            <button
-              className="rounded bg-primary px-2 text-sm"
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                setValue('amount', Number(erc20Balance?.formatted), {
-                  shouldValidate: true,
-                });
-              }}
-            >
-              Max
-            </button>
-          </div>
-        )}
+
+        <div className="flex w-full items-center justify-center gap-2 text-center">
+          {erc20Balance && (
+            <span className="text-sm text-gray">
+              <FormattedMessage id="balance" />:{' '}
+              <FormattedNumber value={erc20Balance.value} />
+            </span>
+          )}
+          <button
+            className="rounded bg-primary px-2 text-sm"
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              setValue('amount', Number(erc20Balance?.formatted), {
+                shouldValidate: true,
+              });
+            }}
+          >
+            Max
+          </button>
+          <button
+            className="rounded bg-success px-2 text-sm"
+            type="button"
+            onClick={() => showTransak({ tracking: true, autoClose: true })}
+          >
+            <FormattedMessage id="buy_usdc" />
+          </button>
+        </div>
       </div>
-      <button
-        type="submit"
-        className="action-btn"
-        disabled={!isValid || isLoading}
-      >
-        {isLoading ? <Spinner base /> : <span className="mr-2">🚀</span>}
-        <FormattedMessage id="send" />
-      </button>
+      {status && status !== 'order_completed' ? (
+        <TransakStatus status={status} />
+      ) : (
+        <button
+          type="submit"
+          className="action-btn"
+          disabled={!isValid || isLoading}
+        >
+          {isLoading ? <Spinner base /> : <span className="mr-2">🚀</span>}
+          <FormattedMessage id="send" />
+        </button>
+      )}
     </form>
   );
 };
