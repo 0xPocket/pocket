@@ -8,7 +8,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import FormattedMessage from '../common/FormattedMessage';
 import LangToggler from './LangToggler';
-import { ThemeToggler } from './ThemeToggler';
 import { useSignOut } from '../../hooks/useSignOut';
 import { useSession } from 'next-auth/react';
 
@@ -43,8 +42,7 @@ const DropdownMenu: FC = ({}) => {
               >
                 <div className="flex w-full items-center justify-evenly py-2">
                   <LangToggler />
-                  <div className="h-6  border-l"></div>
-                  <ThemeToggler />
+                  {/* <div className="h-6  border-l"></div> */}
                 </div>
                 {status === 'authenticated' && (
                   <Menu.Item>

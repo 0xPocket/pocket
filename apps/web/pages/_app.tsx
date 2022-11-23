@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-before-interactive-script-outside-document */
 import type { AppProps } from 'next/app';
 import '../styles/globals.css';
 import { SmartContractProvider } from '../contexts/contract';
@@ -14,9 +13,7 @@ import fr from '../lang/fr.json';
 import en from '../lang/en-US.json';
 import { useRouter } from 'next/router';
 import { IntlProvider } from 'react-intl';
-import { ThemeProvider } from '../contexts/theme';
 import type { Session } from 'next-auth';
-import Script from 'next/script';
 import { trpc } from '../utils/trpc';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
@@ -110,36 +107,30 @@ function App({
   );
 
   return (
-    <ThemeProvider>
-      <IntlProvider
-        locale={locale as 'fr' | 'en-US'}
-        messages={messages[locale as 'fr' | 'en-US']}
-      >
-        <WagmiConfig client={wagmiClient}>
-          <SessionProvider session={session}>
-            <RainbowKitSiweNextAuthProvider enabled={route === '/connect'}>
-              <RainbowKitProvider chains={chains} theme={darkTheme()}>
-                <QueryClientProvider client={client}>
-                  <SmartContractProvider>
-                    <Script
-                      src="/theme.js"
-                      strategy="beforeInteractive"
-                    ></Script>
-                    <Component {...pageProps} />
-                    <ToastContainer
-                      toastClassName="toast-container"
-                      position="bottom-right"
-                      autoClose={3000}
-                    />
-                    <ReactQueryDevtools />
-                  </SmartContractProvider>
-                </QueryClientProvider>
-              </RainbowKitProvider>
-            </RainbowKitSiweNextAuthProvider>
-          </SessionProvider>
-        </WagmiConfig>
-      </IntlProvider>
-    </ThemeProvider>
+    <IntlProvider
+      locale={locale as 'fr' | 'en-US'}
+      messages={messages[locale as 'fr' | 'en-US']}
+    >
+      <WagmiConfig client={wagmiClient}>
+        <SessionProvider session={session}>
+          <RainbowKitSiweNextAuthProvider enabled={route === '/connect'}>
+            <RainbowKitProvider chains={chains} theme={darkTheme()}>
+              <QueryClientProvider client={client}>
+                <SmartContractProvider>
+                  <Component {...pageProps} />
+                  <ToastContainer
+                    toastClassName="toast-container"
+                    position="bottom-right"
+                    autoClose={3000}
+                  />
+                  <ReactQueryDevtools />
+                </SmartContractProvider>
+              </QueryClientProvider>
+            </RainbowKitProvider>
+          </RainbowKitSiweNextAuthProvider>
+        </SessionProvider>
+      </WagmiConfig>
+    </IntlProvider>
   );
 }
 

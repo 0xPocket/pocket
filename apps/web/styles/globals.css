@@ -42,15 +42,15 @@
 
   /* generics */
   .background {
-    @apply bg-bright-bg text-dark-lightest dark:bg-dark dark:text-white;
+    @apply bg-dark text-white;
   }
 
   .container-classic {
-    @apply border border-dark border-opacity-10 bg-bright-dark dark:border-white-darker dark:bg-dark-light dark:shadow-lg;
+    @apply border border-white-darker  bg-dark-light shadow-lg;
   }
 
   .border-classic {
-    @apply border border-dark border-opacity-10 dark:border-white-darker;
+    @apply border border-white-darker border-opacity-10;
   }
 
   /* btn */
@@ -125,7 +125,7 @@
   }
 
   .cat-badge-default {
-    @apply cat-badge bg-badges-bgdefaultlight text-badges-textdefaultlight dark:bg-badges-bgdefaultdark dark:text-badges-textdefaultdark;
+    @apply cat-badge  bg-badges-bgdefaultdark text-badges-textdefaultdark;
   }
   /* table */
 
@@ -138,7 +138,7 @@
   }
 
   .table-head {
-    @apply sticky top-0 bg-bright-dark dark:bg-dark-light;
+    @apply sticky top-0  bg-dark-light;
   }
 
   .table-header {
@@ -150,7 +150,7 @@
   }
 
   .table-row:not(:last-child) {
-    @apply border-b border-dark border-opacity-10 font-light dark:border-bright-bg dark:border-opacity-10;
+    @apply border-b border-bright-bg border-opacity-10 font-light;
   }
 
   .table-cell {
@@ -203,7 +203,7 @@
 
   /* toastify */
   .toast-container {
-    @apply container-classic  text-dark-lightest  dark:text-white !important;
+    @apply container-classic border  border-white-darker bg-dark-light  text-white !important;
   }
 
   /* tooltip */
@@ -246,7 +246,7 @@
   }
 
   .step {
-    @apply flex h-6 w-6 select-none items-center justify-center rounded-full border border-transparent bg-gray-lightest  transition-all dark:bg-dark-light;
+    @apply flex h-6 w-6 select-none items-center justify-center rounded-full border border-transparent   bg-dark-light transition-all;
   }
 
   .step.active {
@@ -258,7 +258,7 @@
   }
 
   .btw-step {
-    @apply h-1 flex-grow bg-gray-lightest dark:bg-dark-light;
+    @apply h-1 flex-grow bg-dark-light;
   }
 
   .fill {
