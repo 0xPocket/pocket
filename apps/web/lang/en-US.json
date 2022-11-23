@@ -46,6 +46,12 @@
   "piggybank": "PiggyBank",
   "account.settings": "Account settings",
   "account.settings.tooltip": "Pocket money withdraw settings. You will be able to change this at any moment.",
+  "not_found": "Page not found",
+
+  "in_piggybank": "In his piggybank",
+
+  "you_must_switch_network": "You must switch network to use Pocket !",
+  "switch_network": "Switch network",
 
   "account": "Account",
   "parent": "Parent",

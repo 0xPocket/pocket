@@ -13,6 +13,7 @@ import { useZodForm } from '../utils/useZodForm';
 import FormattedMessage from './common/FormattedMessage';
 import FormattedNumber from './common/FormattedNumber';
 import { Spinner } from './common/Spinner';
+import InputNumber from './InputNumber';
 import TransakStatus from './TransakStatus';
 
 const PeriodicityOptions = z.enum(['weekly', 'monthly']);
@@ -172,80 +173,16 @@ const VaultFormWithTutorial: FC<VaultFormWithTutorialProps> = ({
         <p className="font-bold">
           <FormattedMessage id="vault.firsttime.howmuch" />
         </p>
-        <div className="flex justify-center">
-          <span>$</span>
-          <input
-            className="input-number-bis w-4"
-            placeholder="0"
-            type="number"
-            min="0"
-            onKeyDownCapture={(el) => {
-              if (el.key === 'Delete' || el.key === 'Backspace') {
-                el.currentTarget.style.width = `${
-                  el.currentTarget.value.length || 1
-                }ch`;
-              } else {
-                el.currentTarget.style.width = `${
-                  el.currentTarget.value.length + 1
-                }ch`;
-              }
-            }}
-            {...register('ceiling', {
-              valueAsNumber: true,
-            })}
-          />
-        </div>
+        <InputNumber register={register('ceiling', { valueAsNumber: true })} />
       </div>
       <div className="space-y-6">
         <p className="font-bold">
           <FormattedMessage id="vault.firsttime.deposit" />
         </p>
-        <div className="flex justify-center">
-          <span>$</span>
-
-          <input
-            className="input-number-bis w-4"
-            placeholder="0"
-            type="number"
-            min="0"
-            onKeyDownCapture={(el) => {
-              if (el.key === 'Delete' || el.key === 'Backspace') {
-                el.currentTarget.style.width = `${
-                  el.currentTarget.value.length || 1
-                }ch`;
-              } else {
-                el.currentTarget.style.width = `${
-                  el.currentTarget.value.length + 1
-                }ch`;
-              }
-            }}
-            {...register('amount', {
-              valueAsNumber: true,
-            })}
-          />
-        </div>
-        {!erc20Balance?.value.isZero() && (
-          <div className="flex w-full items-center justify-center gap-2 text-center">
-            {erc20Balance && (
-              <span className="text-sm text-gray">
-                <FormattedMessage id="balance" />:{' '}
-                <FormattedNumber value={erc20Balance.value} />
-              </span>
-            )}
-            <button
-              className="rounded bg-primary px-2 text-sm"
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                setValue('amount', Number(erc20Balance?.formatted), {
-                  shouldValidate: true,
-                });
-              }}
-            >
-              Max
-            </button>
-          </div>
-        )}
+        <InputNumber
+          register={register('amount', { valueAsNumber: true })}
+          withBalance={!erc20Balance?.value.isZero()}
+        />
       </div>
       <button
         type="submit"

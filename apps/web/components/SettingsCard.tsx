@@ -12,6 +12,7 @@ import { useZodForm } from '../utils/useZodForm';
 import FormattedMessage from './common/FormattedMessage';
 import { Spinner } from './common/Spinner';
 import Tooltip from './common/Tooltip';
+import InputNumber from './InputNumber';
 
 const PeriodicityOptions = z.enum(['weekly', 'monthly']);
 
@@ -147,18 +148,19 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
                     </Tooltip>
                   </label>
                 </td>
-                <td className="flex justify-end text-4xl">
-                  <span>$</span>
-                  <input
-                    className="input-number max-w-[250px]"
-                    placeholder="0"
-                    type="number"
-                    min="0"
-                    {...register('ceiling', {
-                      valueAsNumber: true,
-                    })}
+                <td className="flex w-full justify-end text-4xl">
+                  <InputNumber
+                    register={register('ceiling', { valueAsNumber: true })}
+                    initWidth={
+                      config
+                        ? Number(
+                            formatUnits(config?.ceiling, erc20?.decimals),
+                          ).toString().length
+                        : 0
+                    }
                   />
                 </td>
+                {/* <InputNumber register={register('ceiling', { valueAsNumber: true })} /> */}
               </tr>
             </tbody>
           </table>

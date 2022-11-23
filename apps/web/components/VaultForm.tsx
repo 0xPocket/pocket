@@ -10,6 +10,7 @@ import { useZodForm } from '../utils/useZodForm';
 import FormattedMessage from './common/FormattedMessage';
 import FormattedNumber from './common/FormattedNumber';
 import { Spinner } from './common/Spinner';
+import InputNumber from './InputNumber';
 import TransakStatus from './TransakStatus';
 
 const VaultFormSchema = z.object({
@@ -70,50 +71,16 @@ const VaultForm: FC<VaultFormProps> = ({ childAddress }) => {
         <p className="font-bold">
           <FormattedMessage id="vault.firsttime.deposit" />
         </p>
-        <div className="flex items-center justify-center">
-          <input
-            className="input-number-bis w-4"
-            placeholder="0"
-            type="number"
-            autoComplete="off"
-            min="0"
-            onKeyDownCapture={(el) => {
-              if (el.key === 'Delete' || el.key === 'Backspace') {
-                el.currentTarget.style.width = `${
-                  el.currentTarget.value.length || 1
-                }ch`;
-              } else {
-                el.currentTarget.style.width = `${
-                  el.currentTarget.value.length + 1
-                }ch`;
-              }
-            }}
-            {...register('amount', {
-              valueAsNumber: true,
-            })}
-          />
-          <span>$</span>
-        </div>
 
-        <div className="flex w-full items-center justify-center gap-2 text-center">
-          {erc20Balance && (
-            <span className="text-sm text-gray">
-              <FormattedMessage id="balance" />:{' '}
-              <FormattedNumber value={erc20Balance.value} />
-            </span>
-          )}
-          <button
-            className="rounded bg-primary px-2 text-sm"
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              setValue('amount', Number(erc20Balance?.formatted), {
-                shouldValidate: true,
-              });
-            }}
-          >
-            Max
-          </button>
+        <InputNumber
+          register={register('amount', { valueAsNumber: true })}
+          withBalance={true}
+          onMax={() =>
+            setValue('amount', Number(erc20Balance?.formatted), {
+              shouldValidate: true,
+            })
+          }
+        >
           <button
             className="rounded bg-success px-2 text-sm"
             type="button"
@@ -121,7 +88,7 @@ const VaultForm: FC<VaultFormProps> = ({ childAddress }) => {
           >
             <FormattedMessage id="buy_usdc" />
           </button>
-        </div>
+        </InputNumber>
       </div>
       {status && status !== 'order_completed' ? (
         <TransakStatus status={status} />

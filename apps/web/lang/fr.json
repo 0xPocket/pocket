@@ -46,6 +46,12 @@
   "piggybank": "Tirelire",
   "account.settings": "Paramètres du compte",
   "account.settings.tooltip": "Paramètres de retrait d'argent de poche. Vous pourrez les changer à tout moment.",
+  "not_found": "Page introuvable",
+
+  "in_piggybank": "Dans sa tirelire",
+
+  "you_must_switch_network": "Vous devez changer de réseau pour utiliser Pocket !",
+  "switch_network": "Changer de réseau",
 
   "account": "Compte",
   "parent": "Parent",

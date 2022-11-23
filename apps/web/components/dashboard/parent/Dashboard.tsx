@@ -15,7 +15,12 @@ function AccountDashboard({ child }: AccountDashboardProps) {
   return child.address ? (
     <div className="space-y-20">
       <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
-        <AccountCard child={child} />
+        <div className="space-y-8">
+          <h2>
+            <FormattedMessage id="your_child" />
+          </h2>
+          <AccountCard child={child} />
+        </div>
         <ChildSettingsForm child={child} />
       </div>
       <div className="grid gap-8 lg:grid-cols-2">

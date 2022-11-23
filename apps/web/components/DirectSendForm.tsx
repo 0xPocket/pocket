@@ -15,6 +15,7 @@ import { useZodForm } from '../utils/useZodForm';
 import FormattedMessage from './common/FormattedMessage';
 import FormattedNumber from './common/FormattedNumber';
 import { Spinner } from './common/Spinner';
+import InputNumber from './InputNumber';
 
 type DirectSendFormProps = {
   childAddress: string;
@@ -95,7 +96,7 @@ const DirectSendForm: FC<DirectSendFormProps> = ({ childAddress }) => {
             <h3 className="font-bold">
               <FormattedMessage id="order_complete" />
             </h3>
-            <Link href={`/child/${childAddress}`}>
+            <Link href={`/account/${childAddress}`}>
               <a className="action-btn mt-4">
                 <FormattedMessage id="go_dashboard" />
               </a>
@@ -156,58 +157,16 @@ const DirectSendForm: FC<DirectSendFormProps> = ({ childAddress }) => {
         <p className="font-bold">
           <FormattedMessage id="send.direct.howmuch" />
         </p>
-        <div className="flex items-center justify-center">
-          <span>$</span>
-          <input
-            className="input-number-bis w-4"
-            placeholder="0"
-            type="number"
-            autoComplete="off"
-            min="0"
-            onKeyDown={(e) => {
-              if (e.key === 'e' || e.key === '-') {
-                e.preventDefault();
-              }
-            }}
-            onKeyDownCapture={(el) => {
-              if (el.key === 'Delete' || el.key === 'Backspace') {
-                el.currentTarget.style.width = `${
-                  el.currentTarget.value.length || 1
-                }ch`;
-              } else {
-                el.currentTarget.style.width = `${
-                  el.currentTarget.value.length + 1
-                }ch`;
-              }
-            }}
-            {...register('amount', {
-              valueAsNumber: true,
-            })}
-          />
-        </div>
+        <InputNumber
+          register={register('amount', { valueAsNumber: true })}
+          withBalance={!isTransak}
+          onMax={() =>
+            setValue('amount', Number(erc20Balance?.formatted), {
+              shouldValidate: true,
+            })
+          }
+        />
         {isTransak && <p className="mx-auto text-sm text-gray">Minimum: $30</p>}
-        {!isTransak && (
-          <div className="flex w-full items-center justify-center gap-2 text-center">
-            {erc20Balance && (
-              <span className="text-sm text-gray">
-                <FormattedMessage id="balance" />:{' '}
-                <FormattedNumber value={erc20Balance.value} />
-              </span>
-            )}
-            <button
-              className="rounded bg-primary px-2 text-sm"
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                setValue('amount', Number(erc20Balance?.formatted), {
-                  shouldValidate: true,
-                });
-              }}
-            >
-              Max
-            </button>
-          </div>
-        )}
       </div>
       <button
         type="submit"
