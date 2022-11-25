@@ -4,10 +4,14 @@ import { Header } from '../common/HeaderComponent';
 import { env } from 'config/env/client';
 import { useAccount } from 'wagmi';
 import { useIsMounted } from '../../hooks/useIsMounted';
+import LangToggler from './LangToggler';
+import { useSession } from 'next-auth/react';
 
 function GlobalHeader() {
   const { isConnected } = useAccount();
+
   const isMounted = useIsMounted();
+  const { status } = useSession();
 
   return (
     <Header>
@@ -21,7 +25,8 @@ function GlobalHeader() {
       </Header.BlockLeft>
       <Header.BlockRight>
         {isMounted && isConnected && <WalletPopover />}
-        <DropdownMenu />
+        <LangToggler />
+        {status === 'authenticated' && <DropdownMenu />}
       </Header.BlockRight>
     </Header>
   );

@@ -28,12 +28,7 @@ const PageWrapper: FC<PageWrapperProps> = ({
   const [open, setOpen] = useState(true);
 
   return (
-    <div className="relative min-h-screen overflow-hidden px-4 pb-20">
-      {/* <div className="protect-small-screen">
-        <p>
-          <FormattedMessage id="protect.smallscreen" />
-        </p>
-      </div> */}
+    <div className="relative min-h-screen overflow-hidden px-4 pb-52 md:pb-36">
       {open && env.NETWORK_KEY === 'polygon-mumbai' && (
         <div className="relative mt-2 flex items-center justify-between gap-4 rounded-lg bg-primary px-4">
           <p className="flex-grow text-center text-sm font-bold">
@@ -51,7 +46,9 @@ const PageWrapper: FC<PageWrapperProps> = ({
       )}
       {!noHeader && <Header />}
       {!noContainer ? (
-        <div className="container relative mx-auto my-12">{children}</div>
+        <div className="container relative mx-auto my-4 xl:my-12">
+          {children}
+        </div>
       ) : (
         children
       )}
@@ -59,7 +56,7 @@ const PageWrapper: FC<PageWrapperProps> = ({
       <SwitchAccountModal />
       <BackgoundSplit className="-top-80 -left-96" />
       <BackgoundSplit className="-bottom-[50vh] -right-96" />
-      {!noFooter && <Footer className="absolute bottom-0 left-0 right-0" />}
+      {!noFooter && <Footer />}
       {!noTermsModal && <TermsModal />}
     </div>
   );

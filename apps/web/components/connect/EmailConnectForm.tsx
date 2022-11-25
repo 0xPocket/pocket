@@ -75,9 +75,9 @@ const EmailConnectForm: FC = () => {
       onSubmit={handleSubmit(onSubmit)}
       className="flex min-w-[300px] flex-col items-center"
     >
-      <h2 className="mb-8">
+      <p className="mb-4 text-xl">
         <FormattedMessage id="connect.email.connect" />
-      </h2>
+      </p>
       <div className="flex w-full flex-col gap-4">
         <InputText register={register('email')} label="Email" />
         {isLoading ? (

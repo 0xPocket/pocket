@@ -1,10 +1,18 @@
 {
   "dashboard.title": "My children",
   "dashboard.addChild": "Add a child",
+  "vault_settings": "Vault settings",
+  "your_child": "Your child",
+  "transak_processing": "Transak is processing the order, please wait...",
+  "go_dashboard": "Go back to dashboard",
+  "order_complete": "Your order is complete",
+  "email_done": "You will also receive an email when it's done !",
+  "buy_usdc": "Acheter des USDC",
 
   "loading": "Loading",
   "signIn": "Sign in",
   "disconnect": "Disconnect",
+  "continue": "Continue",
   "signout": "Logout",
   "submit": "Submit",
   "name": "Name",
@@ -38,10 +46,19 @@
   "piggybank": "PiggyBank",
   "account.settings": "Account settings",
   "account.settings.tooltip": "Pocket money withdraw settings. You will be able to change this at any moment.",
+  "not_found": "Page not found",
+  "terms_conditions": "Terms and Conditions",
+
+  "in_piggybank": "In his piggybank",
+
+  "you_must_switch_network": "You must switch network to use Pocket !",
+  "switch_network": "Switch network",
 
   "account": "Account",
   "parent": "Parent",
   "child": "Child",
+
+  "view_profile": "View profile",
 
   "email.resent": "New email sent !",
 
@@ -52,6 +69,7 @@
 
   "card.child.piggyBank.status.nothing": "Nothing to claim",
   "card.child.piggyBank.status.next": "Next claim in",
+  "vault.balance": "Vault balance",
 
   "card.parent.status.invited": "A set-up email has been sent to {email}",
   "card.parent.status.active": "This account is up and running",
@@ -85,6 +103,7 @@
   "register.title": "Register to Pocket",
   "register.step0.title": "Select your account type",
   "register.step1.title": "Choose your connection method",
+  "register.step1.connectedwith": "Connected with {address}",
   "register.step2.title": "Complete your infos",
   "register.step3.title": "An email as been sent to {emailAddress} !",
   "register.step3.email.notreceived": "Didn't receive?",
@@ -160,6 +179,31 @@
   "dashboard.parent.card.email-error": "An error occured, if the problem persits contact us",
   "dashboard.parent.card.email-sent-to": "Email sent to {email}",
   "dashboard.parent.card.go-to": "Go to {name}'s profile",
+
+  "send.firsttime.choice": "Do you want to give money only once or on a recurring basis?",
+  "send.firsttime.choiceOnce": "Only once",
+  "send.firsttime.choiceRecurrent": "Recurrently",
+
+  "send.secondtime.choice": "Do you want to send money directly or topup his piggy bank ?",
+  "send.secondtime.choiceOnce": "Send directly",
+  "send.secondtime.choiceRecurrent": "Topup his piggy bank",
+
+  "send.direct.howmuch": "How much do you want to send ?",
+
+  "vault.tutorial.first": "To give money to your child on a regular basis without thinking about it, you need to create a piggy bank. How will it work?",
+  "vault.tutorial.second": "It is a piggy bank in which you deposit his pocket money in advance",
+  "vault.tutorial.third": "You define how often your child can withdraw his or her money",
+  "vault.tutorial.forth": "And you define the amount he can withdraw",
+  "vault.tutorial.buyUSDC": "Buy USDC first",
+  "vault.tutorial.letsgo": "Let's go !",
+
+  "vault.firsttime.frequency": "At what frequency will it be able to withdraw?",
+  "vault.firsttime.howmuch": "How much can he withdraw each time?",
+  "vault.firsttime.deposit": "How much do you want to deposit in his piggy bank?",
+
+  "transak.processing": "Cryptos are now delivering, it shouldn't take long!",
+  "transak.successful": "Your payment went through ! Please keep this page open until the transaction is confirmed.",
+  "transak.completed": "You have received your cryptos!",
 
   "footer.rightReserved": "2022 Pocket",
   "footer.report-bug": "Report a bug",

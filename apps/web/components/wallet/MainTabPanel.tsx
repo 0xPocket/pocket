@@ -8,6 +8,7 @@ import { useSession } from 'next-auth/react';
 import { Spinner } from '../common/Spinner';
 import { faCopy } from '@fortawesome/free-regular-svg-icons';
 import TokenInfo from './TokenInfo';
+import FormattedNumber from '../common/FormattedNumber';
 
 type MainTabPanelProps = {};
 
@@ -53,8 +54,10 @@ function MainTabPanel({}: MainTabPanelProps) {
           <Spinner />
         ) : (
           <div className="flex items-end gap-2">
-            <h2 className="number">{Number(data?.formatted).toFixed(2)}</h2>
             <span className="text-3xl font-bold">$</span>
+            <h2 className="number">
+              <FormattedNumber value={data?.value} />
+            </h2>
             <Tooltip placement="top">
               <FormattedMessage id="tooltip.wallet.erc20" />
             </Tooltip>
@@ -65,7 +68,7 @@ function MainTabPanel({}: MainTabPanelProps) {
       {status === 'authenticated' &&
         userData &&
         userData.user.type === 'Parent' && (
-          <button onClick={showTransak} className="action-btn">
+          <button onClick={() => showTransak({})} className="action-btn">
             <FormattedMessage id="wallet.top-up" />
           </button>
         )}

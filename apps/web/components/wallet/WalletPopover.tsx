@@ -18,10 +18,11 @@ function WalletPopover({}: WalletPopoverProps) {
   });
 
   return (
-    <Popover className="relative">
+    <Popover>
       <Popover.Button ref={setReferenceElement}>
         <FontAwesomeIcon icon={faWallet} />
       </Popover.Button>
+      <Popover.Overlay className="fixed inset-0 z-20 bg-black opacity-30" />
       <Transition
         as={Fragment}
         enter="transition ease-out duration-100"
@@ -37,7 +38,7 @@ function WalletPopover({}: WalletPopoverProps) {
           style={styles.popper}
           {...attributes.popper}
         >
-          <div className="container-classic mt-2 flex min-w-[360px]  flex-col items-center rounded-md p-4">
+          <div className="container-classic mt-2 flex min-w-[360px] flex-col items-center rounded-md p-4">
             <MainTabPanel />
           </div>
         </Popover.Panel>

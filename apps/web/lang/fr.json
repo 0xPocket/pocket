@@ -1,10 +1,18 @@
 {
   "dashboard.title": "Mes enfants",
   "dashboard.addChild": "Ajouter un enfant",
+  "vault_settings": "Paramètres de la tirelire",
+  "your_child": "Votre enfant",
+  "transak_processing": "Votre ordre Transak est en cours de traitement...",
+  "go_dashboard": "Retourner à l'accueil",
+  "order_complete": "Votre achat est validé",
+  "email_done": "Vous recevrez un email quand ce sera fini!",
+  "buy_usdc": "Acheter des USDC",
 
   "loading": "Chargement",
   "signIn": "Se connecter",
   "disconnect": "Se déconnecter",
+  "continue": "Suivant",
   "signout": "Se déconnecter",
   "submit": "Valider",
   "name": "Nom",
@@ -38,9 +46,19 @@
   "piggybank": "Tirelire",
   "account.settings": "Paramètres du compte",
   "account.settings.tooltip": "Paramètres de retrait d'argent de poche. Vous pourrez les changer à tout moment.",
+  "not_found": "Page introuvable",
+  "terms_conditions": "Termes et conditions",
+
+  "in_piggybank": "Dans sa tirelire",
+
+  "you_must_switch_network": "Vous devez changer de réseau pour utiliser Pocket !",
+  "switch_network": "Changer de réseau",
+
   "account": "Compte",
   "parent": "Parent",
   "child": "Enfant",
+
+  "view_profile": "Voir le profil",
 
   "email.resent": "Nouvel email envoyé !",
 
@@ -51,6 +69,7 @@
 
   "card.child.piggyBank.status.nothing": "Rien à retirer",
   "card.child.piggyBank.status.next": "Prochain retrait dans",
+  "vault.balance": "Balance",
 
   "card.parent.status.invited": "Un email de configuration a été envoyé à {email}",
   "card.parent.status.active": "Ce compte est actif",
@@ -77,13 +96,14 @@
   "onboarding.more-info": "Nous avons besoin de plus d'informations !",
 
   "connect.chose": "Choisissez votre méthode de connexion",
-  "connect.noaccount": "Vous n'avez pas encore de compte ?",
+  "connect.noaccount": "Pas encore inscrit ?",
   "connect.create": "Créer un compte",
   "connect.email.connect": "Se connecter avec son email",
 
   "register.title": "Créer un compte",
   "register.step0.title": "Type de compte",
   "register.step1.title": "Choisissez la méthode de connexion",
+  "register.step1.connectedwith": "Connecté avec {address}",
   "register.step2.title": "Complétez vos informations",
   "register.step3.title": "Un email a été envoyé à {emailAddress} !",
   "register.step3.email.notreceived": "Vous n'avez rien reçu?",
@@ -159,6 +179,31 @@
   "dashboard.parent.card.email-error": "Une erreur s'est produite, si le problème persiste, veuillez nous contacter.",
   "dashboard.parent.card.email-sent-to": "Email envoyé à {email}",
   "dashboard.parent.card.go-to": "Aller sur le profil de {name}",
+
+  "send.firsttime.choice": "Souhaitez-vous lui donner de l’argent une seule fois ou de maniére récurente ?",
+  "send.firsttime.choiceOnce": "Une seule fois",
+  "send.firsttime.choiceRecurrent": "De maniére récurente",
+
+  "send.secondtime.choice": "Voulez-vous lui envoyer directement de l’argent ou recharger sa tirelire ?",
+  "send.secondtime.choiceOnce": "Envoyer directement",
+  "send.secondtime.choiceRecurrent": "Recharger sa tirelire",
+
+  "send.direct.howmuch": "Combien souhaitez-vous lui envoyer ?",
+
+  "vault.tutorial.first": "Pour donner réguliérement de l’argent à votre enfant sans y penser, il vous faut lui créer une tirelire. Comment fonctionnera t’elle?",
+  "vault.tutorial.second": "C’est une tirelire dans laquelle vous déposez son argent de poche en avance",
+  "vault.tutorial.third": "Vous définissez à quelle fréquence votre enfant peut retirer son argent",
+  "vault.tutorial.forth": "Et vous définissez le montant qu’il pourra retirer",
+  "vault.tutorial.buyUSDC": "Acheter des USDC avant",
+  "vault.tutorial.letsgo": "C'est parti !",
+
+  "vault.firsttime.frequency": "À quelle frequence pourra-t-il retirer ?",
+  "vault.firsttime.howmuch": "Combien pourra-t-il retirer à chaque fois ?",
+  "vault.firsttime.deposit": "Combien voulez vous deposer dans sa tirelire ?",
+
+  "transak.processing": "Les cryptos sont en cours de livraison, ça ne devrait plus être long !",
+  "transak.successful": "Le paiement est un succès ! Merci de patienter le temps que vos cryptos soient livrées. Cela devrait prendre 2 minutes maximun.",
+  "transak.completed": "Vous avez bien reçu vos cryptos !",
 
   "footer.rightReserved": "2022 Pocket",
   "footer.report-bug": "Signaler un bug",

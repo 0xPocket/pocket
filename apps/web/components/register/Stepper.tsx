@@ -8,7 +8,7 @@ const Stepper: FC<StepperProps> = ({ step, nbrSteps }) => {
   const { pathname, push, query } = useRouter();
 
   return (
-    <div className="stepper relative flex w-full items-center justify-between">
+    <div className="stepper relative flex w-full items-center justify-between md:w-[512px]">
       {steps.map((el, i) => {
         if (i === 0) {
           return (

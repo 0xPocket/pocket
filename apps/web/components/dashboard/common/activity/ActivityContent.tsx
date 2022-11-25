@@ -27,7 +27,7 @@ function ActivityContent({
   );
 
   return (
-    <div className="flex flex-col space-y-8">
+    <div className="flex min-h-[500px] flex-col space-y-8">
       <Tab.Group>
         <div className="flex justify-between">
           <h2>

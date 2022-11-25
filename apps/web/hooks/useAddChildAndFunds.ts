@@ -5,19 +5,16 @@ import { toast } from 'react-toastify';
 import { useAccount } from 'wagmi';
 import { useSmartContract } from '../contexts/contract';
 import { useIntl } from 'react-intl';
-import { parseUnits } from 'ethers/lib/utils';
 import { useSendMetaTx } from './useSendMetaTx';
 import { usePermitTx } from './usePermitTx';
 import { PocketFaucetAbi } from 'pocket-contract/abi';
 import { Address } from 'abitype';
 
-export function useAddFundsForm(
-  childAddress: Address,
-  addChild: boolean,
-  ceiling: string,
-  periodicity: string,
-  returnFn: () => void,
-) {
+type UseAddChildAndFundsProps = {
+  onSuccess?: () => void;
+};
+
+export function useAddChildAndFunds({ onSuccess }: UseAddChildAndFundsProps) {
   const { erc20 } = useSmartContract();
   const { address } = useAccount();
   const intl = useIntl();
@@ -29,72 +26,60 @@ export function useAddFundsForm(
   const { write, isLoading } = useSendMetaTx({
     address: env.NEXT_PUBLIC_CONTRACT_ADDRESS,
     abi: PocketFaucetAbi,
-    functionName: addChild ? 'addChildAndFundsPermit' : 'addFundsPermit',
+    functionName: 'addChildAndFundsPermit',
     onMutate: () => {
       toast.dismiss();
       toast.info(intl.formatMessage({ id: 'transaction.pending' }), {
         isLoading: true,
       });
-      returnFn();
     },
     onSuccess: async () => {
       toast.dismiss();
       toast.success(intl.formatMessage({ id: 'add-child-and-funds.success' }));
+      onSuccess?.();
     },
     onError() {
       toast.error(intl.formatMessage({ id: 'add-child-and-funds.error' }));
     },
   });
 
-  const approveAndAddChild = useCallback(
-    async (amount: BigNumber) => {
+  const addChildAndFunds = useCallback(
+    async (props: {
+      childAddress: Address;
+      ceiling: BigNumber;
+      periodicity: BigNumber;
+      amount: BigNumber;
+    }) => {
       try {
-        const res = await signPermit(address!, amount.toString());
+        if (!address) {
+          return;
+        }
+        const res = await signPermit(address, props.amount.toString());
 
-        if (res && childAddress) {
+        if (res) {
           const { signature, deadline } = res;
 
-          if (addChild) {
-            await write([
-              childAddress,
-              {
-                ceiling: parseUnits(ceiling, erc20?.decimals),
-                periodicity: BigNumber.from(periodicity),
-                tokenIndex: BigNumber.from(0),
-              },
-              amount,
-              BigNumber.from(deadline),
-              signature.v,
-              signature.r,
-              signature.s,
-            ]);
-          } else {
-            await write([
-              childAddress,
-              amount,
-              BigNumber.from(deadline),
-              signature.v,
-              signature.r,
-              signature.s,
-            ]);
-          }
+          await write([
+            props.childAddress,
+            {
+              ceiling: props.ceiling,
+              periodicity: props.periodicity,
+              tokenIndex: BigNumber.from(0),
+            },
+            props.amount,
+            BigNumber.from(deadline),
+            signature.v,
+            signature.r,
+            signature.s,
+          ]);
         }
       } catch (e) {}
     },
-    [
-      childAddress,
-      ceiling,
-      periodicity,
-      address,
-      signPermit,
-      addChild,
-      write,
-      erc20,
-    ],
+    [address, signPermit, write],
   );
 
   return {
-    approveAndAddChild,
+    addChildAndFunds,
     isLoading: permitIsLoading || isLoading,
   };
 }

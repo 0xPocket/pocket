@@ -1,14 +1,14 @@
 import { FC, useEffect, useRef } from 'react';
 import generateIdenticon from '@metamask/jazzicon';
 
-type props = { address?: string | null };
+type props = { address?: string | null; size?: number };
 
-const MetaMaskProfilePicture: FC<props> = ({ address }) => {
+const MetaMaskProfilePicture: FC<props> = ({ address, size = 75 }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const myDomElement = generateIdenticon(
-      75,
+      size,
       parseInt(
         address
           ? address.slice(2, 10)
@@ -24,7 +24,7 @@ const MetaMaskProfilePicture: FC<props> = ({ address }) => {
     }
   }, [address]);
 
-  return <div ref={ref}></div>;
+  return <div ref={ref} className="flex items-center"></div>;
 };
 
 export default MetaMaskProfilePicture;

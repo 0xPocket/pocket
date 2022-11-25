@@ -26,13 +26,12 @@ const ProviderList: FC<ProviderListProps> = ({ callback, userType }) => {
       {!mounted || status === 'connecting' ? (
         <Spinner />
       ) : (
-        <div className={` flex items-center justify-center gap-8`}>
+        <div
+          className={`flex flex-col items-center justify-center gap-4 md:flex-row`}
+        >
           {!isConnected && userType === 'Parent' && (
             <>
-              <button
-                onClick={() => callback('magic')}
-                className="flex h-10 items-center rounded-xl bg-primary p-4 font-sans font-bold transition-all hover:scale-[1.025]"
-              >
+              <button onClick={() => callback('magic')} className="action-btn ">
                 Sign in with Email
               </button>
               <div>OR</div>

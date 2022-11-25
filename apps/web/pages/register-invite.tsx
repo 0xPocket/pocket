@@ -162,7 +162,7 @@ const RegisterInvite: FC = () => {
     <PageWrapper>
       <TitleHelper title="Register" />
       <div className="flex flex-col items-center">
-        <div className="flex w-[512px] flex-col items-center gap-16">
+        <div className="flex max-w-lg flex-col items-center gap-16">
           <h1>
             <FormattedMessage id="register.title" />
           </h1>

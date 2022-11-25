@@ -54,7 +54,7 @@ const VerifyEmailCode: React.FC<VerifyEmailCodeProps> = ({
               <>{body}</>
             </MjmlText>
             <MjmlSpacer height="24px" />
-            <MjmlText fontSize={48} color={"white"} align="center">
+            <MjmlText cssClass="paragraph" fontSize={48} align="center">
               {code}
             </MjmlText>
             <MjmlSpacer height="24px" />

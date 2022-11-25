@@ -38,7 +38,7 @@ function TokenTable({ tokenList }: TokenTableProps) {
 
         accessorKey: 'contract_name',
         cell: ({ getValue }) => {
-          return <div>{getValue() as number}</div>;
+          return <div>{getValue() as string}</div>;
         },
       },
       {
@@ -58,14 +58,13 @@ function TokenTable({ tokenList }: TokenTableProps) {
       },
       {
         header: () => <FormattedMessage id="value" />,
-        // 'Value'
         accessorFn: (row) => {
           const roundValue = Math.floor(Number(row.quote) * 100) / 100;
           return roundValue;
         },
         cell: (cell) => (
           <div className="text-right tracking-wider">
-            <>{cell.getValue()} $</>
+            <>${cell.getValue()}</>
           </div>
         ),
         id: 'quote',

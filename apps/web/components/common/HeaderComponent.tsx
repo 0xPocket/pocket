@@ -58,7 +58,7 @@ type HeaderProps = {
 export function Header({ children }: HeaderProps) {
   return (
     <header className="z-50 flex">
-      <div className="mx-8 flex h-28 w-full items-center justify-between">
+      <div className="flex h-28 w-full items-center justify-between xl:mx-8">
         {children}
       </div>
     </header>
