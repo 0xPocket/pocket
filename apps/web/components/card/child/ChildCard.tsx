@@ -86,7 +86,7 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
       <div
         className={`${className} container-classic flex h-[250px] flex-col justify-between rounded-lg p-8 md:h-[320px]`}
       >
-        <div className="flex  items-start justify-between">
+        <div className="flex flex-wrap items-start justify-between gap-4 sm:gap-0">
           <div className="flex flex-col gap-4">
             <div className="flex items-center space-x-4">
               <MetaMaskProfilePicture
@@ -101,11 +101,11 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
               {config && <SettingsDialog config={config} />}
             </div>
           </div>
-          <div className="flex flex-col items-end">
+          <div className="flex flex-col items-start sm:items-end">
             <p>
               <FormattedMessage id="balance" />
             </p>
-            <span className="text-4xl">
+            <span className="text-xl sm:text-4xl">
               $<FormattedNumber value={balanceWallet?.value} />
             </span>
           </div>

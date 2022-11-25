@@ -13,7 +13,6 @@ import useTransak from '../hooks/useTransak';
 import { useTransferTx } from '../hooks/useTransferTx';
 import { useZodForm } from '../utils/useZodForm';
 import FormattedMessage from './common/FormattedMessage';
-import FormattedNumber from './common/FormattedNumber';
 import { Spinner } from './common/Spinner';
 import InputNumber from './InputNumber';
 

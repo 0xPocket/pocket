@@ -8,13 +8,12 @@ import { useAddFunds } from '../hooks/useAddFunds';
 import useTransak from '../hooks/useTransak';
 import { useZodForm } from '../utils/useZodForm';
 import FormattedMessage from './common/FormattedMessage';
-import FormattedNumber from './common/FormattedNumber';
 import { Spinner } from './common/Spinner';
 import InputNumber from './InputNumber';
 import TransakStatus from './TransakStatus';
 
 const VaultFormSchema = z.object({
-  amount: z.number(),
+  amount: z.number().min(1),
 });
 
 type VaultFormProps = {
