@@ -99,10 +99,10 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
       <h2>
         <FormattedMessage id="vault_settings" />
       </h2>
-      <div className="container-classic rounded-lg p-4">
+      <div className="container-classic rounded-lg p-2">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex h-full flex-col items-end justify-between space-y-4"
+          className="flex h-full flex-col items-end justify-between space-y-8"
         >
           <table>
             <tbody className="flex flex-col space-y-4">
@@ -115,7 +115,7 @@ function ChildSettingsForm({ child }: ChildSettingsFormProps) {
                     </Tooltip>
                   </label>
                 </td>
-                <td className="flex  w-full justify-end">
+                <td className="flex w-full justify-end">
                   <RadioGroup
                     value={periodicity}
                     onChange={(value: 'weekly' | 'monthly') =>

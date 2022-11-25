@@ -40,10 +40,6 @@ const DropdownMenu: FC = ({}) => {
                 static
                 className="container-classic absolute right-0 mt-2 flex w-56 origin-top-right flex-col items-center rounded-md p-4"
               >
-                <div className="flex w-full items-center justify-evenly py-2">
-                  <LangToggler />
-                  {/* <div className="h-6  border-l"></div> */}
-                </div>
                 {status === 'authenticated' && (
                   <Menu.Item>
                     <button

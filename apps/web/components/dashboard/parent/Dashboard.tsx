@@ -21,7 +21,9 @@ function AccountDashboard({ child }: AccountDashboardProps) {
           </h2>
           <AccountCard child={child} />
         </div>
-        <ChildSettingsForm child={child} />
+        <div className="space-y-8">
+          <ChildSettingsForm child={child} />
+        </div>
       </div>
       <div className="grid gap-8 lg:grid-cols-2">
         <NftContent childAddress={child.address} fill_nbr={6} />

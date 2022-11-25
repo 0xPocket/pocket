@@ -22,9 +22,15 @@ export function TermsModal() {
         onSubmit={handleSubmit(() => accept())}
         className="flex max-w-lg flex-col items-center justify-center gap-4"
       >
-        <h1 className="text-2xl font-bold">Terms and Conditions</h1>
+        <h1 className="text-2xl font-bold">
+          <FormattedMessage id="terms_conditions" />
+        </h1>
         <div className="flex items-center gap-4">
-          <input {...register('terms')} type="checkbox" className="h-4 w-4" />
+          <input
+            {...register('terms')}
+            type="checkbox"
+            className="h-8 w-8 md:h-4 md:w-4"
+          />
           <label className="text-gray-900 dark:text-gray-300 ml-2 text-sm font-medium">
             <FormattedMessage
               id="legal.terms.confirm"
