@@ -33,7 +33,9 @@ const clientSchema = z.object({
     "polygon-mumbai",
     "localhost",
   ]),
-  NEXT_PUBLIC_CONTRACT_ADDRESS: z.string(),
+  NEXT_PUBLIC_CONTRACT_ADDRESS: z
+    .string()
+    .transform((val) => val.toLowerCase()),
   NEXT_PUBLIC_COVALENT_KEY: z.string(),
   NEXT_PUBLIC_MAGIC_LINK_PUBLIC_KEY: z.string(),
   NEXT_PUBLIC_APP_URL: z.string().url(),

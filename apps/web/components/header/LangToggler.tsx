@@ -6,29 +6,27 @@ const LangToggler: FC = () => {
   const { locale, asPath, push } = useRouter();
 
   return (
-    <Menu.Item>
-      <div>
-        {locale === 'en-US' ? (
-          <button
-            onClick={() => {
-              document.cookie = 'NEXT_LOCALE=fr; path=/; max-age=31536000';
-              push(asPath, asPath, { locale: 'fr' });
-            }}
-          >
-            <a className="text-2xl">🇫🇷</a>
-          </button>
-        ) : (
-          <button
-            onClick={() => {
-              document.cookie = 'NEXT_LOCALE=en-US; path=/; max-age=31536000';
-              push(asPath, asPath, { locale: 'en-US' });
-            }}
-          >
-            <a className="text-2xl">🇺🇸</a>
-          </button>
-        )}
-      </div>
-    </Menu.Item>
+    <div className="z-50">
+      {locale === 'en-US' ? (
+        <button
+          onClick={() => {
+            document.cookie = 'NEXT_LOCALE=fr; path=/; max-age=31536000';
+            push(asPath, asPath, { locale: 'fr' });
+          }}
+        >
+          <a className="text-2xl">🇫🇷</a>
+        </button>
+      ) : (
+        <button
+          onClick={() => {
+            document.cookie = 'NEXT_LOCALE=en-US; path=/; max-age=31536000';
+            push(asPath, asPath, { locale: 'en-US' });
+          }}
+        >
+          <a className="text-2xl">🇺🇸</a>
+        </button>
+      )}
+    </div>
   );
 };
 

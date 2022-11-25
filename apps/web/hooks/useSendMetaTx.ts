@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   ProviderRpcError,
   useAccount,
@@ -7,7 +6,7 @@ import {
   useWaitForTransaction,
 } from 'wagmi';
 import { useCallback, useState } from 'react';
-import type { Abi, ExtractAbiFunctionNames } from 'abitype';
+import type { Abi, Address, ExtractAbiFunctionNames } from 'abitype';
 import type { ExtractAbiFunctionParams } from '../utils/abi-types';
 import { generateMetaTransaction } from '../utils/generateMetaTx';
 import { type providers } from 'ethers';
@@ -21,8 +20,8 @@ type UseSendMetaTx<
   TAbi extends Abi,
   TMethod extends ExtractAbiFunctionNames<TAbi>,
 > = {
-  contractInterface: TAbi;
-  contractAddress: string;
+  abi: TAbi;
+  address?: Address;
   functionName: TMethod;
   onSuccess?: (data: providers.TransactionReceipt) => void;
   onError?: (err: Error | TRPCError) => void;
@@ -34,17 +33,17 @@ export function useSendMetaTx<
   TMethod extends ExtractAbiFunctionNames<TAbi>,
   TArgs extends ExtractAbiFunctionParams<TAbi, TMethod>,
 >({
-  contractInterface,
-  contractAddress,
+  abi,
+  address,
   functionName,
   onSuccess,
   onError,
   onMutate,
 }: UseSendMetaTx<TAbi, TMethod>) {
-  const { address } = useAccount();
+  const { address: accountAddress } = useAccount();
   const providerWagmi = useProvider();
   const [loading, setLoading] = useState(false);
-  const sendMetaTx = trpc.useMutation(['relayer.forward'], {
+  const sendMetaTx = trpc.relayer.forward.useMutation({
     onMutate: () => {
       toast.info('Transaction sent, please wait a few seconds...');
     },
@@ -60,7 +59,7 @@ export function useSendMetaTx<
   const { signTypedDataAsync } = useSignTypedData();
 
   const { isLoading, isError, isSuccess, status } = useWaitForTransaction({
-    hash: sendMetaTx.data?.txHash,
+    hash: sendMetaTx.data?.txHash as `0x${string}`,
     enabled: !!sendMetaTx.data?.txHash,
     onSuccess: (data) => {
       setLoading(false);
@@ -74,7 +73,7 @@ export function useSendMetaTx<
 
   const sendTransaction = useCallback(
     async (args: TArgs) => {
-      if (!address) {
+      if (!accountAddress || !address) {
         return;
       }
 
@@ -84,16 +83,15 @@ export function useSendMetaTx<
         const toSign = await generateMetaTransaction({
           forwarderAddress: env.TRUSTED_FORWARDER,
           forwarderInterface: ForwarderAbi,
-          contractAddress: contractAddress,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          contractInterface: contractInterface as any,
+          contractAddress: address,
+          contractInterface: abi,
           provider: providerWagmi,
           domain: {
             name: 'Pocket',
             version: '0.0.1',
           },
           chainId: env.CHAIN_ID,
-          from: address,
+          from: accountAddress,
           functionName,
           args,
         });
@@ -113,12 +111,12 @@ export function useSendMetaTx<
     },
     [
       address,
-      contractAddress,
-      contractInterface,
       functionName,
       signTypedDataAsync,
       providerWagmi,
       sendMetaTx,
+      abi,
+      accountAddress,
     ],
   );
 

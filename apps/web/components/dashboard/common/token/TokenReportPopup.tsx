@@ -18,7 +18,7 @@ type TokenReportPopupProps = {
 const TokenReportPopup: FC<TokenReportPopupProps> = ({ items }) => {
   const [selectedToken, setSelectedToken] = useState<CovalentItem>(items[0]);
   const [popupOpen, setPopupOpen] = useState(false);
-  const reportToken = trpc.useMutation(['token.report'], {
+  const reportToken = trpc.token.report.useMutation({
     onSuccess: () => {
       toast.success(
         <FormattedMessage id="dashboard.common.token.report.sent" />,
@@ -27,7 +27,7 @@ const TokenReportPopup: FC<TokenReportPopupProps> = ({ items }) => {
   });
 
   return (
-    <div className="flex items-end justify-end text-sm">
+    <div className="mt-8 flex items-end justify-end text-sm">
       <div
         className="flex cursor-pointer items-center text-danger"
         onClick={() => setPopupOpen(true)}

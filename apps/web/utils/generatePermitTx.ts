@@ -92,6 +92,7 @@ export async function generatePermitTx({
     erc20Contract.address,
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { EIP712Domain: _unused, ...types } = typeData.types;
 
   return {

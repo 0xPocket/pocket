@@ -1,31 +1,53 @@
-import { createReactQueryHooks } from '@trpc/react';
-// ℹ️ Type-only import:
-// https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export
-import type { inferProcedureInput, inferProcedureOutput } from '@trpc/server';
-import type { AppRouter } from '../server';
+// src/utils/trpc.ts
+import type { AppRouter } from '@pocket/api/trpc';
+import { transformer } from '@pocket/api/transformer';
+import { httpBatchLink, loggerLink } from '@trpc/client';
 
-/**
- * A set of strongly-typed React hooks from your `AppRouter` type signature with `createReactQueryHooks`.
- * @link https://trpc.io/docs/react#3-create-trpc-hooks
- */
-export const trpc = createReactQueryHooks<AppRouter>();
+import { createTRPCNext } from '@trpc/next';
+import { env } from 'config/env/client';
 
-/**
- * This is a helper method to infer the output of a query resolver
- * @example type HelloOutput = inferQueryOutput<'hello'>
- */
-export type inferQueryOutput<
-  TRouteKey extends keyof AppRouter['_def']['queries'],
-> = inferProcedureOutput<AppRouter['_def']['queries'][TRouteKey]>;
+function getBaseUrl() {
+  if (typeof window !== 'undefined')
+    // browser should use relative path
+    return '';
+  if (env.APP_URL)
+    // reference for vercel.com
+    return `https://${env.APP_URL}`;
+  // assume localhost
+  return `http://localhost:3000`;
+}
 
-export type inferQueryInput<
-  TRouteKey extends keyof AppRouter['_def']['queries'],
-> = inferProcedureInput<AppRouter['_def']['queries'][TRouteKey]>;
-
-export type inferMutationInput<
-  TRouteKey extends keyof AppRouter['_def']['mutations'],
-> = inferProcedureInput<AppRouter['_def']['mutations'][TRouteKey]>;
-
-export type inferMutationOutput<
-  TRouteKey extends keyof AppRouter['_def']['mutations'],
-> = inferProcedureOutput<AppRouter['_def']['mutations'][TRouteKey]>;
+export const trpc = createTRPCNext<AppRouter>({
+  config() {
+    return {
+      transformer,
+      links: [
+        loggerLink({
+          enabled: (opts) =>
+            (process.env.NODE_ENV === 'development' &&
+              typeof window !== 'undefined') ||
+            (opts.direction === 'down' && opts.result instanceof Error),
+        }),
+        httpBatchLink({
+          /**
+           * If you want to use SSR, you need to use the server's full URL
+           * @link https://trpc.io/docs/ssr
+           **/
+          url: `${getBaseUrl()}/api/trpc`,
+        }),
+      ],
+      /**
+       * @link https://tanstack.com/query/v4/docs/reference/QueryClient
+       **/
+      queryClientConfig: {
+        defaultOptions: {
+          queries: {
+            staleTime: 600 * 1000,
+            cacheTime: 600 * 1000,
+          },
+        },
+      },
+    };
+  },
+  ssr: false,
+});

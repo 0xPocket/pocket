@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from 'react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { Alchemy } from 'alchemy-sdk';
 import type { Network } from 'alchemy-sdk';
@@ -53,7 +53,6 @@ function NftContent({ childAddress, fill_nbr = 0 }: NftContentProps) {
       <div className="grid grid-cols-12 gap-4">
         <>
           {content &&
-            // ! nft.tokenId is not unique, we must use index for unique div key
             content.pages[page]?.ownedNfts.map((nft, index) => (
               <NftCard nft={nft} key={index} />
             ))}

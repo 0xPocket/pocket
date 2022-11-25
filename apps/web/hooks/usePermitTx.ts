@@ -11,7 +11,7 @@ import { generatePermitTx } from '../utils/generatePermitTx';
 import { useSmartContract } from '../contexts/contract';
 
 type UsePermitTx = {
-  contractAddress: string;
+  contractAddress?: string;
 };
 
 export function usePermitTx({ contractAddress }: UsePermitTx) {
@@ -28,7 +28,7 @@ export function usePermitTx({ contractAddress }: UsePermitTx) {
 
   const signPermit = useCallback(
     async (owner: string, value: string) => {
-      if (!address || !erc20.data) {
+      if (!address || !erc20 || !contractAddress) {
         return;
       }
 
@@ -42,7 +42,7 @@ export function usePermitTx({ contractAddress }: UsePermitTx) {
           value: value,
           provider: providerWagmi,
           domain: {
-            name: erc20.data.name,
+            name: erc20.name,
             version: '1',
           },
         });
@@ -60,7 +60,7 @@ export function usePermitTx({ contractAddress }: UsePermitTx) {
         console.error('Error:', err.message);
       }
     },
-    [address, contractAddress, erc20.data, signTypedDataAsync, providerWagmi],
+    [address, contractAddress, erc20, signTypedDataAsync, providerWagmi],
   );
 
   return {

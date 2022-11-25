@@ -14,10 +14,10 @@ const MyAccountCard: FC = () => {
   const { erc20 } = useSmartContract();
   const { showTransak } = useTransak();
   const { data, isLoading, isIdle } = useBalance({
-    addressOrName: address,
-    token: erc20.data?.address,
-    formatUnits: erc20.data?.decimals,
-    enabled: !!erc20.data,
+    address,
+    token: erc20?.address,
+    formatUnits: erc20?.decimals,
+    enabled: !!erc20,
     watch: true,
   });
 
@@ -32,8 +32,8 @@ const MyAccountCard: FC = () => {
             <Spinner />
           ) : (
             <div className="flex items-end gap-2">
-              <h2 className="number">{Number(data?.formatted).toFixed(2)}</h2>
               <span className="text-3xl font-bold">$</span>
+              <h2 className="number">{Number(data?.formatted).toFixed(2)}</h2>
               <Tooltip placement="top">
                 <FormattedMessage id="tooltip.wallet.erc20" />
               </Tooltip>
@@ -55,7 +55,7 @@ const MyAccountCard: FC = () => {
         )}
       </div>
 
-      <button onClick={showTransak} className="action-btn">
+      <button onClick={() => showTransak({})} className="action-btn">
         <FormattedMessage id="wallet.top-up" />
       </button>
     </div>

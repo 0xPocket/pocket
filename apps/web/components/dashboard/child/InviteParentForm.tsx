@@ -1,14 +1,12 @@
 import { toast } from 'react-toastify';
-import { useRouter } from 'next/router';
 import { z } from 'zod';
 import { useZodForm } from '../../../utils/useZodForm';
 import { trpc } from '../../../utils/trpc';
-import { ChildSchema } from '../../../server/schemas';
+import { ChildSchema } from '@pocket/api/schemas';
 import InputText from '../../common/InputText';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import FormattedMessage from '../../common/FormattedMessage';
-import { useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 type FormValues = z.infer<typeof ChildSchema['inviteParent']>;
@@ -20,12 +18,7 @@ function InviteParentForm() {
     schema: ChildSchema['inviteParent'],
   });
 
-  const inviteParent = trpc.useMutation(['child.inviteParent'], {
-    // onSuccess: () => {
-    //   queryClient.invalidateQueries('child.createParent');
-    //   router.push('/');
-    //   toast.success(<FormattedMessage id="parent-form.sent" />);
-    // },
+  const inviteParent = trpc.child.inviteParent.useMutation({
     onSuccess: () => {
       toast.success(<FormattedMessage id="parent-form.sent" />);
     },
@@ -41,7 +34,7 @@ function InviteParentForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="container-classic m-auto flex w-2/5 flex-col gap-2 rounded-lg p-8"
+      className="container-classic m-auto flex max-w-lg flex-col gap-2 rounded-lg p-8"
     >
       <h3 className="text mb-2 ">
         <FontAwesomeIcon icon={faUserPlus} className="mr-4" />

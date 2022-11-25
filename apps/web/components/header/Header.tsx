@@ -1,11 +1,17 @@
-import { useAuth } from '../../contexts/auth';
 import WalletPopover from '../wallet/WalletPopover';
 import DropdownMenu from './DropdownMenu';
 import { Header } from '../common/HeaderComponent';
 import { env } from 'config/env/client';
+import { useAccount } from 'wagmi';
+import { useIsMounted } from '../../hooks/useIsMounted';
+import LangToggler from './LangToggler';
+import { useSession } from 'next-auth/react';
 
 function GlobalHeader() {
-  const { loggedIn } = useAuth();
+  const { isConnected } = useAccount();
+
+  const isMounted = useIsMounted();
+  const { status } = useSession();
 
   return (
     <Header>
@@ -18,8 +24,9 @@ function GlobalHeader() {
         </Header.Title>
       </Header.BlockLeft>
       <Header.BlockRight>
-        {loggedIn && <WalletPopover />}
-        <DropdownMenu />
+        {isMounted && isConnected && <WalletPopover />}
+        <LangToggler />
+        {status === 'authenticated' && <DropdownMenu />}
       </Header.BlockRight>
     </Header>
   );

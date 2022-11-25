@@ -10,12 +10,14 @@ type LinkPolygonScanProps = {
 
 const LinkPolygonScan: FC<LinkPolygonScanProps> = ({ address }) => {
   return (
-    <Link href={`https://polygonscan.com/address/${address}`}>
-      <a className="py-3" target="_blank" rel="noopener noreferrer">
-        <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="mr-2" />
-        <FormattedMessage id="dashboard.parent.card.see-on-polygon" />
-      </a>
-    </Link>
+    <div className="">
+      <Link href={`https://polygonscan.com/address/${address}`}>
+        <a className="py-3" target="_blank" rel="noopener noreferrer">
+          <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="mr-2" />
+          <FormattedMessage id="dashboard.parent.card.see-on-polygon" />
+        </a>
+      </Link>
+    </div>
   );
 };
 

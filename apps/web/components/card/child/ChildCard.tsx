@@ -1,50 +1,53 @@
 import { useSmartContract } from '../../../contexts/contract';
-import useContractRead from '../../../hooks/useContractRead';
 import moment from 'moment';
 import { useMemo } from 'react';
 import FormattedMessage from '../../common/FormattedMessage';
-import { useIntl } from 'react-intl';
 import { ethers } from 'ethers';
-import { useQuery } from 'react-query';
 import ClaimButton from './ClaimButton';
-import Balance from '../common/Balance';
 import LinkPolygonScan from '../common/LinkPolygonScan';
 import MetaMaskProfilePicture from '../common/MetaMaskProfilePicture';
 import { useSession } from 'next-auth/react';
-import { formatUnits } from 'ethers/lib/utils';
+import { useAccount, useContractRead } from 'wagmi';
+import { env } from 'config/env/client';
+import { PocketFaucetAbi } from 'pocket-contract/abi';
+import { Address } from 'abitype';
+import { useChildConfig } from '../../../hooks/useChildConfig';
+import FormattedNumber from '../../common/FormattedNumber';
+import { useChildBalance } from '../../../hooks/useChildBalance';
+import SettingsDialog from './SettingsDialog';
 
 type ChildCardProps = {
-  childAddress: string;
+  childAddress: Address;
   hasLink?: boolean;
   className?: string;
 };
 
 function ChildCard({ childAddress, className }: ChildCardProps) {
-  const { pocketContract, erc20 } = useSmartContract();
-  const intl = useIntl();
+  const { erc20 } = useSmartContract();
 
   const { data: userData } = useSession();
 
-  const { data: config } = useContractRead({
-    contract: pocketContract,
-    functionName: 'childToConfig',
-    args: [childAddress],
-    enabled: !!childAddress,
-    watch: true,
+  const { data: config } = useChildConfig({
+    address: childAddress,
   });
-  const { data: now, refetch } = useQuery(['now'], () => new Date(), {});
+
+  const { address } = useAccount();
 
   const { data: claimableAmount } = useContractRead({
-    contract: pocketContract,
+    address: env.NEXT_PUBLIC_CONTRACT_ADDRESS,
+    abi: PocketFaucetAbi,
     functionName: 'computeClaimable',
     args: [childAddress],
     enabled: !!childAddress,
     watch: true,
-    onSuccess: () => refetch(),
+  });
+
+  const { data: balanceWallet } = useChildBalance({
+    address: address,
   });
 
   const nextClaim = useMemo(() => {
-    if (!config) return;
+    if (!config || config.lastClaim.isZero() || config.balance.isZero()) return;
     return moment(config.lastClaim.mul(1000).toNumber()).add(
       config.periodicity.toNumber(),
       'seconds',
@@ -57,81 +60,64 @@ function ChildCard({ childAddress, className }: ChildCardProps) {
   }, [claimableAmount]);
 
   const textClaim = useMemo(() => {
-    if (!canClaim && !config?.balance.isZero())
-      return (
-        <>
-          <FormattedMessage id="card.child.piggyBank.status.next" />{' '}
-          {moment
-            .duration(moment().diff(nextClaim))
-            .locale(intl.locale)
-            .humanize() + '...'}
-        </>
-      );
-    else if (!canClaim || !claimableAmount)
+    if (!claimableAmount || !config || config.balance.isZero())
       return <FormattedMessage id="card.child.piggyBank.status.nothing" />;
+    const amount = config.balance.gt(config.ceiling)
+      ? config.ceiling
+      : config.balance;
+
     return (
       <>
         <FormattedMessage id="withdraw" />
         {' ' +
           Number(
-            ethers.utils.formatUnits(
-              claimableAmount.toString(),
-              erc20.data?.decimals,
-            ),
+            ethers.utils.formatUnits(amount?.toString(), erc20?.decimals),
           ).toFixed(2) +
           '$'}
       </>
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [canClaim, config, claimableAmount, erc20, nextClaim, intl, now]);
+  }, [config, claimableAmount, erc20]);
 
   return (
-    <div className="flex flex-col space-y-8">
+    <div className="col-span-6 flex flex-col space-y-8 lg:col-span-3">
       <h2>
         <FormattedMessage id="card.child.title" />
       </h2>
       <div
-        className={`${className} container-classic grid h-full grid-cols-2 rounded-lg p-8`}
+        className={`${className} container-classic flex h-[250px] flex-col justify-between rounded-lg p-8 md:h-[320px]`}
       >
-        <div className="flex h-full flex-col items-start justify-between">
+        <div className="flex flex-wrap items-start justify-between gap-4 sm:gap-0">
           <div className="flex flex-col gap-4">
             <div className="flex items-center space-x-4">
-              <MetaMaskProfilePicture address={userData?.user.address} />
+              <MetaMaskProfilePicture
+                address={userData?.user.address}
+                size={50}
+              />
               <div className="flex items-end space-x-4">
                 <h1 className="max-w-fit whitespace-nowrap">
                   {userData?.user.name}
                 </h1>
               </div>
+              {config && <SettingsDialog config={config} />}
             </div>
-            {config && (
-              <div className="space-y-2 font-thin">
-                <p>
-                  <FormattedMessage id="periodicity" /> :{' '}
-                  {formatUnits(config.periodicity, 0) === '604800' ? (
-                    <FormattedMessage id="weekly" />
-                  ) : (
-                    <FormattedMessage id="monthly" />
-                  )}
-                </p>
-                <p>
-                  <FormattedMessage id="ceiling" /> :{' '}
-                  {Number(
-                    formatUnits(config.ceiling, erc20.data?.decimals),
-                  ).toFixed(2)}
-                  $
-                </p>
-              </div>
-            )}
           </div>
-          <LinkPolygonScan address={childAddress} />
+          <div className="flex flex-col items-start sm:items-end">
+            <p>
+              <FormattedMessage id="balance" />
+            </p>
+            <span className="text-xl sm:text-4xl">
+              $<FormattedNumber value={balanceWallet?.value} />
+            </span>
+          </div>
         </div>
-        <div className="flex h-full flex-col items-end justify-between">
-          <Balance balance={config?.balance} />
-          {config && (
-            <ClaimButton disabled={!canClaim || config.balance.isZero()}>
-              {textClaim}
-            </ClaimButton>
-          )}
+        <div className="flex items-center justify-between">
+          <LinkPolygonScan address={childAddress} />
+          <ClaimButton
+            disabled={!canClaim || config?.balance.isZero()}
+            nextClaim={nextClaim}
+          >
+            {textClaim}
+          </ClaimButton>
         </div>
       </div>
     </div>

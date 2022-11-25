@@ -9,6 +9,8 @@ const plugins = [];
 
 const withTM = require('next-transpile-modules')([
   '@pocket/emails',
+  '@pocket/api',
+  '@lib/prisma',
   'pocket-contract',
 ]);
 

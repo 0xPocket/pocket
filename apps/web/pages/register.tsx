@@ -1,7 +1,6 @@
 import { faEnvelopeCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { RadioGroup } from '@headlessui/react';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FC, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -18,6 +17,8 @@ import { useEthereumSiwe } from '../hooks/useEthereumSiwe';
 import { useMagicConnect } from '../hooks/useMagicConnect';
 import { trpc } from '../utils/trpc';
 import { useZodForm } from '../utils/useZodForm';
+import { useConnect } from 'wagmi';
+import { useSignIn } from '../hooks/useSignIn';
 
 const FormData = z.object({
   userType: z.enum(['Parent', 'Child']),
@@ -25,6 +26,10 @@ const FormData = z.object({
   email: z.string().email(),
   name: z.string().min(2),
   ageLimit: z.literal(true),
+});
+
+const VerifiactionFormData = z.object({
+  code: z.string(),
 });
 
 const Register: FC = () => {
@@ -41,7 +46,7 @@ const Register: FC = () => {
   const magicSignIn = useMagicConnect();
   const ethereumSignMessage = useEthereumSiwe({});
 
-  const ethereumRegister = trpc.useMutation('register.ethereum', {
+  const ethereumRegister = trpc.register.ethereum.useMutation({
     onError: (error) => {
       toast.error(error.message);
     },
@@ -53,22 +58,40 @@ const Register: FC = () => {
     },
   });
 
-  const magicLinkRegister = trpc.useMutation('register.magic', {
-    onError: (error) => {
-      toast.error(error.message);
-    },
-    onSuccess: () => {
-      router.push({
-        pathname: router.pathname,
-        query: { ...router.query, step: 3 },
-      });
-    },
-  });
-
-  const resendEmail = trpc.useMutation(['email.resendVerificationEmail']);
+  const resendCode = trpc.email.resendCode.useMutation();
   const userType = watch('userType');
   const connectionType = watch('connectionType');
   const emailAddress = watch('email');
+
+  const { connectAsync, connectors } = useConnect();
+  const { signIn, isLoading: signInIsLoading } = useSignIn();
+
+  const magicLinkRegister = trpc.register.magic.useMutation({
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onSuccess: async () => {
+      const didToken = await magicSignIn.mutateAsync(emailAddress);
+
+      await connectAsync({
+        connector: connectors.find((c) => c.id === 'magic'),
+      });
+
+      signIn('magic', {
+        token: didToken,
+        redirect: false,
+      });
+    },
+  });
+
+  const {
+    register: verificationRegister,
+    handleSubmit: handleSubmitVerification,
+  } = useZodForm({
+    schema: VerifiactionFormData,
+    mode: 'onChange',
+    reValidateMode: 'onChange',
+  });
 
   // Router effect
   useEffect(() => {
@@ -84,17 +107,31 @@ const Register: FC = () => {
     }
   }, [step, router, userType]);
 
+  const verificationCode = trpc.email.verifyCode.useMutation({
+    onSuccess: () => {
+      signIn('ethereum', {
+        message: ethereumRegister.variables?.message,
+        signature: ethereumRegister.variables?.signature,
+        redirect: false,
+      });
+    },
+  });
+
   const isLoading = useMemo(() => {
     return (
       ethereumRegister.isLoading ||
+      verificationCode.isLoading ||
       ethereumSignMessage.isLoading ||
       magicLinkRegister.isLoading ||
+      signInIsLoading ||
       magicSignIn.isLoading
     );
   }, [
     ethereumRegister.isLoading,
+    verificationCode.isLoading,
     ethereumSignMessage.isLoading,
     magicLinkRegister.isLoading,
+    signInIsLoading,
     magicSignIn.isLoading,
   ]);
 
@@ -114,7 +151,6 @@ const Register: FC = () => {
 
       magicLinkRegister.mutate({
         didToken: didToken,
-        email: data.email,
         name: data.name,
       });
     }
@@ -124,7 +160,7 @@ const Register: FC = () => {
     <PageWrapper>
       <TitleHelper title="Register" />
       <div className="flex flex-col items-center">
-        <div className="flex w-[512px] flex-col items-center gap-16">
+        <div className="flex max-w-lg flex-col items-center gap-16">
           <h1>
             <FormattedMessage id="register.title" />
           </h1>
@@ -251,33 +287,43 @@ const Register: FC = () => {
                   />
                 </h3>
                 {/* <p>Follow the instructions to finish your registration</p> */}
+                <form
+                  className="flex w-full min-w-[350px] flex-col items-center justify-center gap-8 text-left"
+                  onSubmit={handleSubmitVerification((data) => {
+                    verificationCode.mutate({
+                      email: emailAddress,
+                      code: data.code,
+                    });
+                  })}
+                >
+                  <input
+                    {...verificationRegister('code')}
+                    className="rounded p-3 py-2 text-black"
+                    placeholder="Verification code"
+                  />
+                  {isLoading ? (
+                    <Spinner />
+                  ) : (
+                    <button className="action-btn">
+                      <FormattedMessage id="submit" />
+                    </button>
+                  )}
+                </form>
                 <div className="flex gap-2 text-sm">
                   <p>
                     <FormattedMessage id="register.step3.email.notreceived" />
                   </p>
-                  {resendEmail.status !== 'success' && (
+                  {resendCode.status !== 'success' && (
                     <a
                       onClick={() => {
-                        if (resendEmail.status !== 'loading')
-                          resendEmail.mutateAsync({ email: emailAddress });
+                        if (resendCode.status !== 'loading')
+                          resendCode.mutateAsync({ email: emailAddress });
                       }}
                     >
                       <FormattedMessage id="register.step3.email.sendnew" />
                     </a>
                   )}
                 </div>
-              </div>
-            )}
-            {step === 3 && connectionType === 'Magic' && (
-              <div className="flex flex-col items-center justify-center gap-8">
-                <h3>
-                  <FormattedMessage id="register.step3.completed" />
-                </h3>
-                <Link href="/connect">
-                  <a>
-                    <FormattedMessage id="register.step3.gotoconnect" />
-                  </a>
-                </Link>
               </div>
             )}
           </div>

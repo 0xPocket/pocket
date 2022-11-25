@@ -6,13 +6,14 @@ import {
   faEllipsisVertical,
   faRightFromBracket,
 } from '@fortawesome/free-solid-svg-icons';
-import { useAuth } from '../../contexts/auth';
 import FormattedMessage from '../common/FormattedMessage';
 import LangToggler from './LangToggler';
-import { ThemeToggler } from './ThemeToggler';
+import { useSignOut } from '../../hooks/useSignOut';
+import { useSession } from 'next-auth/react';
 
 const DropdownMenu: FC = ({}) => {
-  const { signOut, loggedIn } = useAuth();
+  const signOut = useSignOut();
+  const { status } = useSession();
 
   return (
     <Menu as="div" className="relative z-50 inline-block text-left">
@@ -39,14 +40,12 @@ const DropdownMenu: FC = ({}) => {
                 static
                 className="container-classic absolute right-0 mt-2 flex w-56 origin-top-right flex-col items-center rounded-md p-4"
               >
-                <div className="flex w-full items-center justify-evenly py-2">
-                  <LangToggler />
-                  <div className="h-6  border-l"></div>
-                  <ThemeToggler />
-                </div>
-                {loggedIn && (
+                {status === 'authenticated' && (
                   <Menu.Item>
-                    <button onClick={() => signOut()} className="third-btn">
+                    <button
+                      onClick={() => signOut.mutate()}
+                      className="third-btn"
+                    >
                       <FontAwesomeIcon
                         icon={faRightFromBracket}
                         className="mr-2"

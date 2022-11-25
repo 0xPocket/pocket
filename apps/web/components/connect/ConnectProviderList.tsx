@@ -1,83 +1,30 @@
-import { type FC, useCallback, useState } from 'react';
-import { Connector, useAccount, useConnect } from 'wagmi';
-import Image from 'next/future/image';
-import { DialogPopupWrapper } from '../common/wrappers/DialogsWrapper';
-import EmailModalForm from './EmailModalForm';
-import { useEthereumSiwe } from '../../hooks/useEthereumSiwe';
-import { useSignIn } from '../../hooks/useSignIn';
+import { type FC } from 'react';
+import EmailConnectForm from './EmailConnectForm';
 import { Spinner } from '../common/Spinner';
 import { useIsMounted } from '../../hooks/useIsMounted';
+import RainbowKitButton from './RainbowKitButton';
+import FormattedMessage from '../common/FormattedMessage';
 
 const ProviderList: FC = () => {
-  const { connector: activeConnector, status } = useAccount();
   const isMounted = useIsMounted();
-  const ethereumSign = useEthereumSiwe({
-    onSuccess: ({ message, signature }) => {
-      signIn('ethereum', {
-        message: JSON.stringify(message),
-        signature,
-        redirect: false,
-      });
-    },
-  });
-
-  const { signIn, isLoading } = useSignIn();
-
-  const { connectors, connect } = useConnect({
-    onSuccess: async () => {
-      ethereumSign.mutate();
-    },
-  });
-  const [open, setIsOpen] = useState(false);
-
-  const handleConnect = useCallback(
-    async (connector: Connector) => {
-      if (connector.id === 'magic') {
-        setIsOpen(true);
-      } else {
-        if (connector.id !== activeConnector?.id) {
-          connect({ connector });
-        } else {
-          ethereumSign.mutate();
-        }
-      }
-    },
-    [activeConnector, connect, ethereumSign],
-  );
 
   return (
     <>
-      {isLoading ||
-      !isMounted ||
-      status === 'connecting' ||
-      ethereumSign.isLoading ? (
+      {!isMounted ? (
         <Spinner />
       ) : (
-        <div className={` flex w-full justify-center gap-8`}>
-          {connectors.map((connector) => (
-            <button
-              key={connector.id}
-              onClick={() => handleConnect(connector)}
-              className="provider-container disabled:opacity-50"
-            >
-              <div className="container-classic rounded-md p-8">
-                <div className="provider-img">
-                  <Image
-                    src={`/assets/providers/${connector.id}.svg`}
-                    width={128}
-                    height={128}
-                    alt={connector.name}
-                  />
-                </div>
-              </div>
-            </button>
-          ))}
+        <div className="flex w-full flex-col items-center justify-center gap-8">
+          <EmailConnectForm />
+          <div className="flex w-full items-center">
+            <div className="flex-grow border border-white border-opacity-50"></div>
+            <div className="mx-4 text-lg font-bold">
+              <FormattedMessage id="or" />
+            </div>
+            <div className="flex-grow border  border-white border-opacity-50"></div>
+          </div>
+          <RainbowKitButton />
         </div>
       )}
-
-      <DialogPopupWrapper isOpen={open} setIsOpen={setIsOpen}>
-        <EmailModalForm closeModal={() => setIsOpen(false)} />
-      </DialogPopupWrapper>
     </>
   );
 };

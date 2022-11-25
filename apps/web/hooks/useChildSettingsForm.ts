@@ -6,6 +6,8 @@ import { useIntl } from 'react-intl';
 import { useSendMetaTx } from './useSendMetaTx';
 import { env } from 'config/env/client';
 import { PocketFaucetAbi } from 'pocket-contract/abi';
+import { BigNumber } from 'ethers';
+import { Address } from 'abitype';
 
 type ChangeConfigProps = {
   ceiling: number;
@@ -13,7 +15,7 @@ type ChangeConfigProps = {
 };
 
 export function useChildSettingsForm(
-  childAddress: string | null,
+  childAddress: Address | null,
   addChild: boolean,
   returnFn: () => void,
 ) {
@@ -21,8 +23,8 @@ export function useChildSettingsForm(
   const intl = useIntl();
 
   const { write, isLoading } = useSendMetaTx({
-    contractAddress: env.NEXT_PUBLIC_CONTRACT_ADDRESS,
-    contractInterface: PocketFaucetAbi,
+    address: env.NEXT_PUBLIC_CONTRACT_ADDRESS,
+    abi: PocketFaucetAbi,
     functionName: addChild ? 'addChild' : 'changeConfig',
     onMutate: () => {
       toast.info(
@@ -54,24 +56,18 @@ export function useChildSettingsForm(
         if (write && childAddress) {
           if (addChild) {
             await write([
-              childAddress as `0x${string}`,
+              childAddress,
               {
-                ceiling: parseUnits(
-                  data.ceiling.toString(),
-                  erc20.data?.decimals,
-                ).toBigInt(),
-                periodicity: BigInt(data.periodicity),
-                tokenIndex: BigInt(0),
+                ceiling: parseUnits(data.ceiling.toString(), erc20?.decimals),
+                periodicity: BigNumber.from(data.periodicity),
+                tokenIndex: BigNumber.from(0),
               },
             ]);
           } else {
             await write([
-              childAddress as `0x${string}`,
-              parseUnits(
-                data.ceiling.toString(),
-                erc20.data?.decimals,
-              ).toBigInt(),
-              BigInt(data.periodicity),
+              childAddress,
+              parseUnits(data.ceiling.toString(), erc20?.decimals),
+              BigNumber.from(data.periodicity),
             ]);
           }
         } else {
@@ -79,7 +75,7 @@ export function useChildSettingsForm(
         }
       } catch (e) {}
     },
-    [childAddress, write, erc20.data?.decimals, addChild],
+    [childAddress, write, erc20?.decimals, addChild],
   );
 
   return { changeConfig, isLoading: isLoading };

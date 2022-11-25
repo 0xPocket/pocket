@@ -5,7 +5,6 @@
 // };
 
 module.exports = {
-  darkMode: 'class',
   content: [
     '../../packages/ui/**/*.{js,ts,jsx,tsx}',
     './pages/**/*.{js,ts,jsx,tsx}',
@@ -30,10 +29,10 @@ module.exports = {
         darkest: '#b5d8f7',
       },
       danger: 'rgba(197,48,48)',
-			success: {
-				DEFAULT :'#3deb57',
-				dark:'#00be26'
-			},
+      success: {
+        DEFAULT: '#3deb57',
+        dark: '#00be26',
+      },
       black: '#000',
       white: {
         DEFAULT: '#fff',
@@ -45,16 +44,19 @@ module.exports = {
         lightest: '#f1f5f9',
         DEFAULT: '#64748b',
       },
-			badges: {
-				bgblue : 'rgb(195 221 253)',
-				textblue: 'rgb(30 66 159)',
-				bggreen : 'rgb(188 240 218)',
-				textgreen: 'rgb(1 71 55)',
-				bgdefaultdark: 'rgb(55 65 81)',
-				textdefaultdark: 'rgb(209 213 219)',
-				bgdefaultlight: 'rgb(243 244 246)',
-				textdefaultlight: 'rgb(31 41 55)',
-			},
+      pink: {
+        DEFAULT: 'rgba(224,95,144,1)',
+      },
+      badges: {
+        bgblue: 'rgb(195 221 253)',
+        textblue: 'rgb(30 66 159)',
+        bggreen: 'rgb(188 240 218)',
+        textgreen: 'rgb(1 71 55)',
+        bgdefaultdark: 'rgb(55 65 81)',
+        textdefaultdark: 'rgb(209 213 219)',
+        bgdefaultlight: 'rgb(243 244 246)',
+        textdefaultlight: 'rgb(31 41 55)',
+      },
       transparent: 'transparent',
     },
     extend: {

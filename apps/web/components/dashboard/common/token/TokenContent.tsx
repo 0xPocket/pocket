@@ -1,6 +1,6 @@
 import { CovalentReturn } from '@lib/types/interfaces';
 import axios from 'axios';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import TokenTable from './TokenTable';
 import PieChartComp from './PieChart';
@@ -24,7 +24,7 @@ const fetchUserTokens = async (address: string) => {
 };
 
 function TokenContent({ childAddress }: TokenContentProps) {
-  const { data: blacklist, isSuccess } = trpc.useQuery(['token.blacklist']);
+  const { data: blacklist, isSuccess } = trpc.token.blacklist.useQuery();
 
   const { isLoading, data } = useQuery(
     ['child.token-content', childAddress],
@@ -69,11 +69,11 @@ function TokenContent({ childAddress }: TokenContentProps) {
         )}
         {data?.items && data?.items.length > 0 && (
           <>
-            <div className="relative flex w-full">
-              <div className="aspect-square w-1/5">
+            <div className="relative flex w-full flex-col md:flex-row">
+              <div className="aspect-square md:w-1/5">
                 <PieChartComp tokenList={data.items} />
               </div>
-              <div className="flex w-4/5 items-start overflow-y-auto">
+              <div className="flex min-h-[300px] items-start overflow-y-auto md:w-4/5">
                 <TokenTable tokenList={data.items} />
               </div>
             </div>
