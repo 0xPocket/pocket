@@ -11,7 +11,6 @@ import { useChildConfig } from '../hooks/useChildConfig';
 import useTransak from '../hooks/useTransak';
 import { useZodForm } from '../utils/useZodForm';
 import FormattedMessage from './common/FormattedMessage';
-import FormattedNumber from './common/FormattedNumber';
 import { Spinner } from './common/Spinner';
 import InputNumber from './InputNumber';
 import TransakStatus from './TransakStatus';
@@ -26,7 +25,7 @@ const PeriodicityValues = {
 const VaultFormWithTutorialSchema = z.object({
   periodicity: PeriodicityOptions,
   ceiling: z.number(),
-  amount: z.number(),
+  amount: z.number().min(1),
 });
 
 type VaultFormWithTutorialProps = {

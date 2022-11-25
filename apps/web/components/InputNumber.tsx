@@ -54,7 +54,7 @@ const InputNumber: FC<InputNumberProps> = ({
           placeholder="0"
           type="number"
           autoComplete="off"
-          min="0"
+          min="1"
           {...rest}
           onChange={onChangeHandler}
           ref={(e) => {
@@ -71,19 +71,21 @@ const InputNumber: FC<InputNumberProps> = ({
               <FormattedNumber value={erc20Balance.value} />
             </span>
           )}
-          <button
-            className="rounded bg-primary px-2 text-sm"
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              onMax?.();
-              amountRef.current!.style.width = `${
-                amountRef.current!.value.length || 1
-              }ch`;
-            }}
-          >
-            Max
-          </button>
+          {!erc20Balance?.value.isZero() && (
+            <button
+              className="rounded bg-primary px-2 text-sm"
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                onMax?.();
+                amountRef.current!.style.width = `${
+                  amountRef.current!.value.length || 1
+                }ch`;
+              }}
+            >
+              Max
+            </button>
+          )}
           {children}
         </div>
       )}
