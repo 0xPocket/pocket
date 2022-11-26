@@ -13,7 +13,7 @@ function ActivityTabHeaders({
     <Tab.List className="flex items-center space-x-8">
       <Tab
         className={({ selected }) =>
-          selected ? 'text-dark underline dark:text-white' : 'text-white-darker'
+          selected ? 'text-white underline' : 'text-white-darker'
         }
       >
         {leftHeader}
@@ -21,7 +21,7 @@ function ActivityTabHeaders({
 
       <Tab
         className={({ selected }) =>
-          selected ? 'text-dark underline dark:text-white' : 'text-white-darker'
+          selected ? 'text-white underline' : 'text-white-darker'
         }
       >
         {rightHeader}

@@ -24,7 +24,7 @@ const InputText: FC<InputTextProps> = ({
       <input
         type="text"
         id={id}
-        className="w-full rounded-md border border-dark border-opacity-10 bg-bright-dark px-3 py-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white-darker dark:bg-dark-light dark:shadow-lg"
+        className="w-full rounded-md border  border-white-darker  bg-dark-light px-3 py-2 shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
         placeholder={label}
         required={!optional}
         {...rest}
