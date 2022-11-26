@@ -31,7 +31,7 @@ export function TermsModal() {
             type="checkbox"
             className="h-8 w-8 md:h-4 md:w-4"
           />
-          <label className="text-gray-900 dark:text-gray-300 ml-2 text-sm font-medium">
+          <label className="text-gray-300 ml-2 text-sm font-medium">
             <FormattedMessage
               id="legal.terms.confirm"
               values={{
