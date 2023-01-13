@@ -64,19 +64,20 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
 
         const siwe = new SiweMessage(JSON.parse(message || "{}"));
 
-        const nextAuthUrl =
-          env.NEXTAUTH_URL ||
-          (env.VERCEL_URL ? `https://${env.VERCEL_URL}` : null);
+        // const nextAuthUrl =
+        //   env.NEXTAUTH_URL ||
+        //   (env.VERCEL_URL ? `https://${env.VERCEL_URL}` : null);
 
-        if (!nextAuthUrl) {
-          throw new Error("Invalid domain");
-        }
+        // if (!nextAuthUrl) {
+        //   throw new Error("Invalid domain");
+        // }
 
-        const nextAuthHost = new URL(nextAuthUrl).host;
+        // TODO: reimplement
+        // const nextAuthHost = new URL(nextAuthUrl).host;
 
-        if (siwe.domain !== nextAuthHost) {
-          throw new Error("Invalid domain");
-        }
+        // if (siwe.domain !== nextAuthHost) {
+        //   throw new Error("Invalid domain");
+        // }
 
         if (siwe.nonce !== (await getCsrfToken({ req }))) {
           throw new Error("Invalid nonce");
