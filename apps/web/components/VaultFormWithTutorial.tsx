@@ -181,6 +181,11 @@ const VaultFormWithTutorial: FC<VaultFormWithTutorialProps> = ({
         <InputNumber
           register={register('amount', { valueAsNumber: true })}
           withBalance={!erc20Balance?.value.isZero()}
+          onMax={() => {
+            setValue('amount', Number(erc20Balance?.formatted), {
+              shouldValidate: true,
+            });
+          }}
         />
       </div>
       <button
