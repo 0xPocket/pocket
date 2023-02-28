@@ -57,7 +57,7 @@ const PageWrapper: FC<PageWrapperProps> = ({
       <BackgoundSplit className="-top-80 -left-96" />
       <BackgoundSplit className="-bottom-[50vh] -right-96" />
       {!noFooter && <Footer />}
-      {!noTermsModal && <TermsModal />}
+      {/* {!noTermsModal && <TermsModal />} */}
     </div>
   );
 };
