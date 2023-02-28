@@ -37,7 +37,7 @@ function Header({}: HeaderProps) {
           </div>
           <div className="flex items-center text-sm sm:hidden">
             <CallToAction
-              url={'https://pocket-web-jade.vercel.app/'}
+              url={'https://app.gopocket.co/'}
               msg={<FormattedMessage id={'launch_pocket'} />}
             />
           </div>
